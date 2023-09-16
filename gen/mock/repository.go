@@ -49,6 +49,20 @@ func (mr *MockRepositoryMockRecorder) CreateProject(ctx, p interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockRepository)(nil).CreateProject), ctx, p)
 }
 
+// DeleteProject mocks base method.
+func (m *MockRepository) DeleteProject(ctx context.Context, id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteProject", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteProject indicates an expected call of DeleteProject.
+func (mr *MockRepositoryMockRecorder) DeleteProject(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteProject", reflect.TypeOf((*MockRepository)(nil).DeleteProject), ctx, id)
+}
+
 // GetProjectByID mocks base method.
 func (m *MockRepository) GetProjectByID(ctx context.Context, id string) (model.Project, error) {
 	m.ctrl.T.Helper()
@@ -65,9 +79,9 @@ func (mr *MockRepositoryMockRecorder) GetProjectByID(ctx, id interface{}) *gomoc
 }
 
 // GetProjectsByUserID mocks base method.
-func (m *MockRepository) GetProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
+func (m *MockRepository) ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetProjectsByUserID", ctx, userID, limit, offset)
+	ret := m.ctrl.Call(m, "ListProjectsByUserID", ctx, userID, limit, offset)
 	ret0, _ := ret[0].([]model.Project)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -76,7 +90,7 @@ func (m *MockRepository) GetProjectsByUserID(ctx context.Context, userID string,
 // GetProjectsByUserID indicates an expected call of GetProjectsByUserID.
 func (mr *MockRepositoryMockRecorder) GetProjectsByUserID(ctx, userID, limit, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProjectsByUserID", reflect.TypeOf((*MockRepository)(nil).GetProjectsByUserID), ctx, userID, limit, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjectsByUserID", reflect.TypeOf((*MockRepository)(nil).ListProjectsByUserID), ctx, userID, limit, offset)
 }
 
 // UpdateProject mocks base method.

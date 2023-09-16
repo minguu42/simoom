@@ -56,7 +56,7 @@ func (h projectHandler) CreateProject(ctx context.Context, req *connect.Request[
 }
 
 func (h projectHandler) ListProjects(ctx context.Context, _ *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.ProjectsResponse], error) {
-	ps, err := h.repo.GetProjectsByUserID(ctx, userID, 10, 0)
+	ps, err := h.repo.ListProjectsByUserID(ctx, userID, 10, 0)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}

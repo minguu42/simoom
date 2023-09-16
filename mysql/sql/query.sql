@@ -2,7 +2,7 @@
 INSERT INTO projects (id, user_id, name, color, is_archived, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
--- name: GetProjectsByUserID :many
+-- name: ListProjectsByUserID :many
 SELECT * FROM projects
 WHERE user_id = ?
 ORDER BY created_at DESC

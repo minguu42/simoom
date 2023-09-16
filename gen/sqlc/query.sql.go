@@ -67,21 +67,21 @@ func (q *Queries) GetProjectByID(ctx context.Context, id string) (Project, error
 	return i, err
 }
 
-const getProjectsByUserID = `-- name: GetProjectsByUserID :many
+const listProjectsByUserID = `-- name: ListProjectsByUserID :many
 SELECT id, user_id, name, color, is_archived, created_at, updated_at FROM projects
 WHERE user_id = ?
 ORDER BY created_at DESC
 LIMIT ? OFFSET ?
 `
 
-type GetProjectsByUserIDParams struct {
+type ListProjectsByUserIDParams struct {
 	UserID string
 	Limit  int32
 	Offset int32
 }
 
-func (q *Queries) GetProjectsByUserID(ctx context.Context, arg GetProjectsByUserIDParams) ([]Project, error) {
-	rows, err := q.db.QueryContext(ctx, getProjectsByUserID, arg.UserID, arg.Limit, arg.Offset)
+func (q *Queries) ListProjectsByUserID(ctx context.Context, arg ListProjectsByUserIDParams) ([]Project, error) {
+	rows, err := q.db.QueryContext(ctx, listProjectsByUserID, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

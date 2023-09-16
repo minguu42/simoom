@@ -44,8 +44,8 @@ func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, 
 	}, nil
 }
 
-func (c *Client) GetProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
-	ps, err := sqlc.New(c.sqlDB).GetProjectsByUserID(ctx, sqlc.GetProjectsByUserIDParams{
+func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
+	ps, err := sqlc.New(c.sqlDB).ListProjectsByUserID(ctx, sqlc.ListProjectsByUserIDParams{
 		UserID: userID,
 		Limit:  int32(limit),
 		Offset: int32(offset),
