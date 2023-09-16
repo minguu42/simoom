@@ -112,17 +112,23 @@ func (q *Queries) GetProjectsByUserID(ctx context.Context, arg GetProjectsByUser
 }
 
 const updateProject = `-- name: UpdateProject :exec
-UPDATE projects SET name = ?, color = ?
+UPDATE projects SET name = ?, color = ?, is_archived = ?
 WHERE id = ?
 `
 
 type UpdateProjectParams struct {
-	Name  string
-	Color string
-	ID    string
+	Name       string
+	Color      string
+	IsArchived bool
+	ID         string
 }
 
 func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) error {
-	_, err := q.db.ExecContext(ctx, updateProject, arg.Name, arg.Color, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateProject,
+		arg.Name,
+		arg.Color,
+		arg.IsArchived,
+		arg.ID,
+	)
 	return err
 }

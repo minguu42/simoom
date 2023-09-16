@@ -13,7 +13,7 @@ SELECT * FROM projects
 WHERE id = ?;
 
 -- name: UpdateProject :exec
-UPDATE projects SET name = ?, color = ?
+UPDATE projects SET name = ?, color = ?, is_archived = ?
 WHERE id = ?;
 
 -- name: DeleteProject :exec
