@@ -1,0 +1,10 @@
+run:
+  skip-dirs:
+    - gen/*
+linters-settings:
+  checks: ["all"]
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - staticcheck

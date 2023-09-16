@@ -1,0 +1,11 @@
+mysql/
+simoompb/
+.env
+.gitignore
+.golangci.yaml
+buf.gen.yaml
+buf.yaml
+compose.yaml
+Dockerfile
+Makefile
+sqlc.yaml

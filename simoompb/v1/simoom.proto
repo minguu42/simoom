@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package simoompb.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/minguu42/simoom/gen/simoompb/v1;simoompb";
+
+message CheckHealthRequest {}
+
+message CheckHealthResponse {
+  string revision = 1;
+}
+
+service MonitoringService {
+  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse);
+}
+
+message CreateProjectRequest {
+  string name = 1;
+  string color = 2;
+}
+
+message ListProjectsRequest {}
+
+message UpdateProjectRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string color = 3;
+  optional string is_archived = 4;
+}
+
+message DeleteProjectRequest {
+  string id = 1;
+}
+
+message ProjectResponse {
+  string id = 1;
+  string name = 2;
+  string color = 3;
+  bool is_archived = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message ProjectsResponse {
+  repeated ProjectResponse projects = 1;
+  bool has_next = 2;
+}
+
+service ProjectService {
+  rpc CreateProject(CreateProjectRequest) returns (ProjectResponse);
+  rpc ListProjects(ListProjectsRequest) returns (ProjectsResponse);
+  rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
+  rpc DeleteProject(DeleteProjectRequest) returns (google.protobuf.Empty);
+}
