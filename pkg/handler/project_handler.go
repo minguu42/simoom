@@ -17,6 +17,25 @@ type projectHandler struct {
 	repo repository.Repository
 }
 
+func newProjectResponse(p model.Project) *simoompb.ProjectResponse {
+	return &simoompb.ProjectResponse{
+		Id:         p.ID,
+		Name:       p.Name,
+		Color:      p.Color,
+		IsArchived: p.IsArchived,
+		CreatedAt:  timestamppb.New(p.CreatedAt),
+		UpdatedAt:  timestamppb.New(p.UpdatedAt),
+	}
+}
+
+func newProjectsResponse(ps []model.Project) []*simoompb.ProjectResponse {
+	projects := make([]*simoompb.ProjectResponse, 0, len(ps))
+	for _, p := range ps {
+		projects = append(projects, newProjectResponse(p))
+	}
+	return projects
+}
+
 func (h projectHandler) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.ProjectResponse], error) {
 	now := time.Now()
 	p := model.Project{
@@ -32,19 +51,17 @@ func (h projectHandler) CreateProject(ctx context.Context, req *connect.Request[
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 
-	return connect.NewResponse(&simoompb.ProjectResponse{
-		Id:         p.ID,
-		Name:       p.Name,
-		Color:      p.Color,
-		IsArchived: p.IsArchived,
-		CreatedAt:  timestamppb.New(p.CreatedAt),
-		UpdatedAt:  timestamppb.New(p.UpdatedAt),
-	}), nil
+	return connect.NewResponse(newProjectResponse(p)), nil
 }
 
-func (h projectHandler) ListProjects(_ context.Context, _ *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.ProjectsResponse], error) {
+func (h projectHandler) ListProjects(ctx context.Context, _ *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.ProjectsResponse], error) {
+	ps, err := h.repo.GetProjectsByUserID(ctx, userID, 10, 0)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+
 	return connect.NewResponse(&simoompb.ProjectsResponse{
-		Projects: nil,
+		Projects: newProjectsResponse(ps),
 		HasNext:  false,
 	}), nil
 }
