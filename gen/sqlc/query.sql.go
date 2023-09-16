@@ -67,21 +67,21 @@ func (q *Queries) GetProjectByID(ctx context.Context, id string) (Project, error
 	return i, err
 }
 
-const getProjectsByUserID = `-- name: GetProjectsByUserID :many
+const listProjectsByUserID = `-- name: ListProjectsByUserID :many
 SELECT id, user_id, name, color, is_archived, created_at, updated_at FROM projects
 WHERE user_id = ?
 ORDER BY created_at DESC
 LIMIT ? OFFSET ?
 `
 
-type GetProjectsByUserIDParams struct {
+type ListProjectsByUserIDParams struct {
 	UserID string
 	Limit  int32
 	Offset int32
 }
 
-func (q *Queries) GetProjectsByUserID(ctx context.Context, arg GetProjectsByUserIDParams) ([]Project, error) {
-	rows, err := q.db.QueryContext(ctx, getProjectsByUserID, arg.UserID, arg.Limit, arg.Offset)
+func (q *Queries) ListProjectsByUserID(ctx context.Context, arg ListProjectsByUserIDParams) ([]Project, error) {
+	rows, err := q.db.QueryContext(ctx, listProjectsByUserID, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -112,17 +112,23 @@ func (q *Queries) GetProjectsByUserID(ctx context.Context, arg GetProjectsByUser
 }
 
 const updateProject = `-- name: UpdateProject :exec
-UPDATE projects SET name = ?, color = ?
+UPDATE projects SET name = ?, color = ?, is_archived = ?
 WHERE id = ?
 `
 
 type UpdateProjectParams struct {
-	Name  string
-	Color string
-	ID    string
+	Name       string
+	Color      string
+	IsArchived bool
+	ID         string
 }
 
 func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) error {
-	_, err := q.db.ExecContext(ctx, updateProject, arg.Name, arg.Color, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateProject,
+		arg.Name,
+		arg.Color,
+		arg.IsArchived,
+		arg.ID,
+	)
 	return err
 }
