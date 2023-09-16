@@ -81,3 +81,10 @@ func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
 	}
 	return nil
 }
+
+func (c *Client) DeleteProject(ctx context.Context, id string) error {
+	if err := sqlc.New(c.sqlDB).DeleteProject(ctx, id); err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}

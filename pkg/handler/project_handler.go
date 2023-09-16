@@ -95,6 +95,20 @@ func (h projectHandler) UpdateProject(ctx context.Context, req *connect.Request[
 	return connect.NewResponse(newProjectResponse(p)), nil
 }
 
-func (h projectHandler) DeleteProject(_ context.Context, _ *connect.Request[simoompb.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {
+func (h projectHandler) DeleteProject(ctx context.Context, req *connect.Request[simoompb.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {
+	p, err := h.repo.GetProjectByID(ctx, req.Msg.Id)
+	if err != nil {
+		if errors.Is(err, repository.ErrModelNotFound) {
+			return nil, connect.NewError(connect.CodeNotFound, err)
+		}
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+	if p.UserID != userID {
+		return nil, connect.NewError(connect.CodeNotFound, errors.New("unauthenticated"))
+	}
+
+	if err := h.repo.DeleteProject(ctx, req.Msg.Id); err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
 	return connect.NewResponse(&emptypb.Empty{}), nil
 }

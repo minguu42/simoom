@@ -18,4 +18,5 @@ type Repository interface {
 	GetProjectByID(ctx context.Context, id string) (model.Project, error)
 	GetProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error)
 	UpdateProject(ctx context.Context, p model.Project) error
+	DeleteProject(ctx context.Context, id string) error
 }
