@@ -16,6 +16,7 @@ func New(repo repository.Repository) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewMonitoringServiceHandler(monitoringHandler{}))
 	mux.Handle(simoompbconnect.NewProjectServiceHandler(projectHandler{repo: repo}))
+	mux.Handle(simoompbconnect.NewTaskServiceHandler(taskHandler{repo: repo}))
 
 	return h2c.NewHandler(mux, &http2.Server{})
 }
