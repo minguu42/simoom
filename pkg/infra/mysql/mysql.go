@@ -14,12 +14,12 @@ import (
 
 // Client は repository.Repository を満たす MySQL クライアント
 type Client struct {
-	sqlDB *sql.DB
+	db *sql.DB
 }
 
 // Close は新しいクエリの実行を停止し、MySQL サーバとの接続を閉じる
 func (c *Client) Close() error {
-	return c.sqlDB.Close()
+	return c.db.Close()
 }
 
 // NewClient は MySQL サーバとの接続を確立し、クライアントを初期化する
@@ -52,5 +52,5 @@ func NewClient(conf env.MySQL) (*Client, error) {
 		break
 	}
 
-	return &Client{sqlDB: db}, nil
+	return &Client{db: db}, nil
 }
