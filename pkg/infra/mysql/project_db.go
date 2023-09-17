@@ -10,6 +10,26 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
+func newModelProject(p sqlc.Project) model.Project {
+	return model.Project{
+		ID:         p.ID,
+		UserID:     p.UserID,
+		Name:       p.Name,
+		Color:      p.Color,
+		IsArchived: p.IsArchived,
+		CreatedAt:  p.CreatedAt,
+		UpdatedAt:  p.UpdatedAt,
+	}
+}
+
+func newModelProjects(ps []sqlc.Project) []model.Project {
+	projects := make([]model.Project, 0, len(ps))
+	for _, p := range ps {
+		projects = append(projects, newModelProject(p))
+	}
+	return projects
+}
+
 func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 	if err := sqlc.New(c.db).CreateProject(ctx, sqlc.CreateProjectParams{
 		ID:         p.ID,
@@ -25,25 +45,6 @@ func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 	return nil
 }
 
-func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, error) {
-	p, err := sqlc.New(c.db).GetProjectByID(ctx, id)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return model.Project{}, repository.ErrModelNotFound
-		}
-		return model.Project{}, errors.WithStack(err)
-	}
-	return model.Project{
-		ID:         p.ID,
-		UserID:     p.UserID,
-		Name:       p.Name,
-		Color:      p.Color,
-		IsArchived: p.IsArchived,
-		CreatedAt:  p.CreatedAt,
-		UpdatedAt:  p.UpdatedAt,
-	}, nil
-}
-
 func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
 	ps, err := sqlc.New(c.db).ListProjectsByUserID(ctx, sqlc.ListProjectsByUserIDParams{
 		UserID: userID,
@@ -53,21 +54,18 @@ func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit,
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	return newModelProjects(ps), nil
+}
 
-	projects := make([]model.Project, 0, len(ps))
-	for _, p := range ps {
-		project := model.Project{
-			ID:         p.ID,
-			UserID:     p.UserID,
-			Name:       p.Name,
-			Color:      p.Color,
-			IsArchived: p.IsArchived,
-			CreatedAt:  p.CreatedAt,
-			UpdatedAt:  p.UpdatedAt,
+func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, error) {
+	p, err := sqlc.New(c.db).GetProjectByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Project{}, repository.ErrModelNotFound
 		}
-		projects = append(projects, project)
+		return model.Project{}, errors.WithStack(err)
 	}
-	return projects, nil
+	return newModelProject(p), nil
 }
 
 func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
