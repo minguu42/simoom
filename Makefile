@@ -11,7 +11,6 @@ setup:
 gen: ## コードを生成する
 	@buf generate
 	@sqlc generate
-	@go generate ./...
 	@make fmt
 
 build: ## 本番用APIサーバのコンテナイメージをビルドする

@@ -8,8 +8,6 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/model"
 )
 
-//go:generate mockgen -source=$GOFILE -destination=../../../gen/mock/$GOFILE -package=mock
-
 var ErrModelNotFound = errors.New("model not found in database")
 
 // Repository は DB による永続化を抽象化する
