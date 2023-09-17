@@ -78,7 +78,7 @@ func (mr *MockRepositoryMockRecorder) GetProjectByID(ctx, id interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProjectByID", reflect.TypeOf((*MockRepository)(nil).GetProjectByID), ctx, id)
 }
 
-// GetProjectsByUserID mocks base method.
+// ListProjectsByUserID mocks base method.
 func (m *MockRepository) ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListProjectsByUserID", ctx, userID, limit, offset)
@@ -87,8 +87,8 @@ func (m *MockRepository) ListProjectsByUserID(ctx context.Context, userID string
 	return ret0, ret1
 }
 
-// GetProjectsByUserID indicates an expected call of GetProjectsByUserID.
-func (mr *MockRepositoryMockRecorder) GetProjectsByUserID(ctx, userID, limit, offset interface{}) *gomock.Call {
+// ListProjectsByUserID indicates an expected call of ListProjectsByUserID.
+func (mr *MockRepositoryMockRecorder) ListProjectsByUserID(ctx, userID, limit, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjectsByUserID", reflect.TypeOf((*MockRepository)(nil).ListProjectsByUserID), ctx, userID, limit, offset)
 }

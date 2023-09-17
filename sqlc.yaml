@@ -1,7 +1,9 @@
 version: 2
 sql:
   - engine: mysql
-    queries: mysql/sql/query.sql
+    queries:
+      - mysql/sql/project_query.sql
+      - mysql/sql/task_query.sql
     schema: mysql/sql/schema.sql
     gen:
       go:
