@@ -27,6 +27,8 @@ const (
 	MonitoringServiceName = "simoompb.v1.MonitoringService"
 	// ProjectServiceName is the fully-qualified name of the ProjectService service.
 	ProjectServiceName = "simoompb.v1.ProjectService"
+	// TaskServiceName is the fully-qualified name of the TaskService service.
+	TaskServiceName = "simoompb.v1.TaskService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -52,6 +54,14 @@ const (
 	// ProjectServiceDeleteProjectProcedure is the fully-qualified name of the ProjectService's
 	// DeleteProject RPC.
 	ProjectServiceDeleteProjectProcedure = "/simoompb.v1.ProjectService/DeleteProject"
+	// TaskServiceCreateTaskProcedure is the fully-qualified name of the TaskService's CreateTask RPC.
+	TaskServiceCreateTaskProcedure = "/simoompb.v1.TaskService/CreateTask"
+	// TaskServiceListTasksProcedure is the fully-qualified name of the TaskService's ListTasks RPC.
+	TaskServiceListTasksProcedure = "/simoompb.v1.TaskService/ListTasks"
+	// TaskServiceUpdateTaskProcedure is the fully-qualified name of the TaskService's UpdateTask RPC.
+	TaskServiceUpdateTaskProcedure = "/simoompb.v1.TaskService/UpdateTask"
+	// TaskServiceDeleteTaskProcedure is the fully-qualified name of the TaskService's DeleteTask RPC.
+	TaskServiceDeleteTaskProcedure = "/simoompb.v1.TaskService/DeleteTask"
 )
 
 // MonitoringServiceClient is a client for the simoompb.v1.MonitoringService service.
@@ -256,4 +266,142 @@ func (UnimplementedProjectServiceHandler) UpdateProject(context.Context, *connec
 
 func (UnimplementedProjectServiceHandler) DeleteProject(context.Context, *connect.Request[v1.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.ProjectService.DeleteProject is not implemented"))
+}
+
+// TaskServiceClient is a client for the simoompb.v1.TaskService service.
+type TaskServiceClient interface {
+	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
+	ListTasks(context.Context, *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error)
+	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
+	DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error)
+}
+
+// NewTaskServiceClient constructs a client for the simoompb.v1.TaskService service. By default, it
+// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
+// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
+// connect.WithGRPCWeb() options.
+//
+// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
+// http://api.acme.com or https://acme.com/grpc).
+func NewTaskServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) TaskServiceClient {
+	baseURL = strings.TrimRight(baseURL, "/")
+	return &taskServiceClient{
+		createTask: connect.NewClient[v1.CreateTaskRequest, v1.TaskResponse](
+			httpClient,
+			baseURL+TaskServiceCreateTaskProcedure,
+			opts...,
+		),
+		listTasks: connect.NewClient[v1.ListTasksRequest, v1.TasksResponse](
+			httpClient,
+			baseURL+TaskServiceListTasksProcedure,
+			opts...,
+		),
+		updateTask: connect.NewClient[v1.UpdateTaskRequest, v1.TaskResponse](
+			httpClient,
+			baseURL+TaskServiceUpdateTaskProcedure,
+			opts...,
+		),
+		deleteTask: connect.NewClient[v1.DeleteTaskRequest, emptypb.Empty](
+			httpClient,
+			baseURL+TaskServiceDeleteTaskProcedure,
+			opts...,
+		),
+	}
+}
+
+// taskServiceClient implements TaskServiceClient.
+type taskServiceClient struct {
+	createTask *connect.Client[v1.CreateTaskRequest, v1.TaskResponse]
+	listTasks  *connect.Client[v1.ListTasksRequest, v1.TasksResponse]
+	updateTask *connect.Client[v1.UpdateTaskRequest, v1.TaskResponse]
+	deleteTask *connect.Client[v1.DeleteTaskRequest, emptypb.Empty]
+}
+
+// CreateTask calls simoompb.v1.TaskService.CreateTask.
+func (c *taskServiceClient) CreateTask(ctx context.Context, req *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+	return c.createTask.CallUnary(ctx, req)
+}
+
+// ListTasks calls simoompb.v1.TaskService.ListTasks.
+func (c *taskServiceClient) ListTasks(ctx context.Context, req *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error) {
+	return c.listTasks.CallUnary(ctx, req)
+}
+
+// UpdateTask calls simoompb.v1.TaskService.UpdateTask.
+func (c *taskServiceClient) UpdateTask(ctx context.Context, req *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+	return c.updateTask.CallUnary(ctx, req)
+}
+
+// DeleteTask calls simoompb.v1.TaskService.DeleteTask.
+func (c *taskServiceClient) DeleteTask(ctx context.Context, req *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
+	return c.deleteTask.CallUnary(ctx, req)
+}
+
+// TaskServiceHandler is an implementation of the simoompb.v1.TaskService service.
+type TaskServiceHandler interface {
+	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
+	ListTasks(context.Context, *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error)
+	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
+	DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error)
+}
+
+// NewTaskServiceHandler builds an HTTP handler from the service implementation. It returns the path
+// on which to mount the handler and the handler itself.
+//
+// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
+// and JSON codecs. They also support gzip compression.
+func NewTaskServiceHandler(svc TaskServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	taskServiceCreateTaskHandler := connect.NewUnaryHandler(
+		TaskServiceCreateTaskProcedure,
+		svc.CreateTask,
+		opts...,
+	)
+	taskServiceListTasksHandler := connect.NewUnaryHandler(
+		TaskServiceListTasksProcedure,
+		svc.ListTasks,
+		opts...,
+	)
+	taskServiceUpdateTaskHandler := connect.NewUnaryHandler(
+		TaskServiceUpdateTaskProcedure,
+		svc.UpdateTask,
+		opts...,
+	)
+	taskServiceDeleteTaskHandler := connect.NewUnaryHandler(
+		TaskServiceDeleteTaskProcedure,
+		svc.DeleteTask,
+		opts...,
+	)
+	return "/simoompb.v1.TaskService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case TaskServiceCreateTaskProcedure:
+			taskServiceCreateTaskHandler.ServeHTTP(w, r)
+		case TaskServiceListTasksProcedure:
+			taskServiceListTasksHandler.ServeHTTP(w, r)
+		case TaskServiceUpdateTaskProcedure:
+			taskServiceUpdateTaskHandler.ServeHTTP(w, r)
+		case TaskServiceDeleteTaskProcedure:
+			taskServiceDeleteTaskHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
+}
+
+// UnimplementedTaskServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedTaskServiceHandler struct{}
+
+func (UnimplementedTaskServiceHandler) CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.CreateTask is not implemented"))
+}
+
+func (UnimplementedTaskServiceHandler) ListTasks(context.Context, *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.ListTasks is not implemented"))
+}
+
+func (UnimplementedTaskServiceHandler) UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.UpdateTask is not implemented"))
+}
+
+func (UnimplementedTaskServiceHandler) DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.DeleteTask is not implemented"))
 }

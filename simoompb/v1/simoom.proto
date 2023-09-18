@@ -7,6 +7,12 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/minguu42/simoom/gen/simoompb/v1;simoompb";
 
+message Date {
+  uint32 year = 1;
+  uint32 month = 2;
+  uint32 day = 3;
+}
+
 message CheckHealthRequest {}
 
 message CheckHealthResponse {
@@ -54,4 +60,55 @@ service ProjectService {
   rpc ListProjects(ListProjectsRequest) returns (ProjectsResponse);
   rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
   rpc DeleteProject(DeleteProjectRequest) returns (google.protobuf.Empty);
+}
+
+message CreateTaskRequest {
+  string project_id = 1;
+  string title = 2;
+  uint32 priority = 3;
+}
+
+message ListTasksRequest {
+  string project_id = 1;
+  uint64 limit = 2;
+  uint64 offset = 3;
+}
+
+message UpdateTaskRequest {
+  string project_id = 1;
+  string id = 2;
+  optional string title = 3;
+  optional string content = 4;
+  optional uint32 priority = 5;
+  optional Date due_on = 6;
+  optional google.protobuf.Timestamp completed_at = 7;
+}
+
+message DeleteTaskRequest {
+  string project_id = 1;
+  string id = 2;
+}
+
+message TaskResponse {
+  string id = 1;
+  string project_id = 2;
+  string title = 3;
+  string content = 4;
+  uint32 priority = 5;
+  Date due_on = 6;
+  google.protobuf.Timestamp completed_at = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message TasksResponse {
+  repeated TaskResponse tasks = 1;
+  bool has_next = 2;
+}
+
+service TaskService {
+  rpc CreateTask(CreateTaskRequest) returns (TaskResponse);
+  rpc ListTasks(ListTasksRequest) returns (TasksResponse);
+  rpc UpdateTask(UpdateTaskRequest) returns (TaskResponse);
+  rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
 }

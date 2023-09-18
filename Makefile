@@ -1,7 +1,8 @@
 .DEFAULT_GOAL := help
-.PHONY: setup gen build run dev fmt lint test help
+.PHONY: setup gen build run migrate-dry-run migrate dev fmt lint test help
 
 setup:
+	brew install sqldef/sqldef/mysqldef
 	go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
 	go install github.com/bufbuild/buf/cmd/buf@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
@@ -11,7 +12,6 @@ setup:
 gen: ## コードを生成する
 	@buf generate
 	@sqlc generate
-	@go generate ./...
 	@make fmt
 
 build: ## 本番用APIサーバのコンテナイメージをビルドする
@@ -28,6 +28,12 @@ run: ## 本番用APIサーバを実行する
             -p 8080:8080 \
             --rm \
             simoom-api
+
+migrate-dry-run: ## DBのスキーマへの更新を確認する
+	@mysqldef -u root -h 127.0.0.1 simoom_local < ./mysql/sql/schema.sql
+
+migrate: ## DBのスキーマを更新する
+	@mysqldef -u root -h 127.0.0.1 simoom_local < ./mysql/sql/schema.sql
 
 dev: ## 開発用APIサーバを実行する
 	@docker compose run \
