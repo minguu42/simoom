@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id         CHAR(26) PRIMARY KEY,
   name       VARCHAR(15) NOT NULL UNIQUE,
@@ -7,7 +6,6 @@ CREATE TABLE users (
   updated_at DATETIME    NOT NULL
 );
 
-DROP TABLE IF EXISTS projects;
 CREATE TABLE projects (
   id          CHAR(26) PRIMARY KEY,
   user_id     CHAR(26)    NOT NULL,
@@ -18,7 +16,6 @@ CREATE TABLE projects (
   updated_at  DATETIME    NOT NULL
 );
 
-DROP TABLE IF EXISTS tasks;
 CREATE TABLE tasks (
   id           CHAR(26) PRIMARY KEY,
   project_id   CHAR(26)            NOT NULL,
@@ -31,7 +28,6 @@ CREATE TABLE tasks (
   updated_at   DATETIME            NOT NULL
 );
 
-DROP TABLE IF EXISTS steps;
 CREATE TABLE steps (
   id           CHAR(26) PRIMARY KEY,
   task_id      CHAR(26)    NOT NULL,
@@ -41,13 +37,11 @@ CREATE TABLE steps (
   updated_at   DATETIME    NOT NULL
 );
 
-DROP TABLE IF EXISTS tags;
 CREATE TABLE tags (
   id   CHAR(26) PRIMARY KEY,
   name VARCHAR(20) NOT NULL
 );
 
-DROP TABLE IF EXISTS tasks_tags;
 CREATE TABLE tasks_tags (
   task_id CHAR(26) NOT NULL,
   tag_id  CHAR(26) NOT NULL,
