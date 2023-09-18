@@ -109,7 +109,7 @@ func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoom
 		}
 		return nil, errInternal
 	}
-	if t.ProjectID != p.ID {
+	if !p.ContainsTask(t) {
 		return nil, errTaskNotFound
 	}
 
@@ -161,7 +161,7 @@ func (h taskHandler) DeleteTask(ctx context.Context, req *connect.Request[simoom
 		}
 		return nil, errInternal
 	}
-	if t.ProjectID != p.ID {
+	if !p.ContainsTask(t) {
 		return nil, errTaskNotFound
 	}
 
