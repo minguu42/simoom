@@ -8,7 +8,6 @@ require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/oklog/ulid/v2 v2.1.0
-	go.uber.org/mock v0.3.0
 	golang.org/x/net v0.15.0
 	google.golang.org/protobuf v1.31.0
 )
