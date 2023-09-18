@@ -49,7 +49,7 @@ func (h projectHandler) CreateProject(ctx context.Context, req *connect.Request[
 		UpdatedAt:  now,
 	}
 	if err := h.repo.CreateProject(ctx, p); err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		return nil, errInternal
 	}
 
 	return connect.NewResponse(newProjectResponse(p)), nil
@@ -58,7 +58,7 @@ func (h projectHandler) CreateProject(ctx context.Context, req *connect.Request[
 func (h projectHandler) ListProjects(ctx context.Context, _ *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.ProjectsResponse], error) {
 	ps, err := h.repo.ListProjectsByUserID(ctx, userID, 10, 0)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		return nil, errInternal
 	}
 
 	return connect.NewResponse(&simoompb.ProjectsResponse{
@@ -71,13 +71,13 @@ func (h projectHandler) UpdateProject(ctx context.Context, req *connect.Request[
 	p, err := h.repo.GetProjectByID(ctx, req.Msg.Id)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, connect.NewError(connect.CodeNotFound, err)
+			return nil, errProjectNotFound
 		}
-		return nil, connect.NewError(connect.CodeInternal, err)
+		return nil, errInternal
 	}
 
 	if req.Msg.Name == nil && req.Msg.Color == nil && req.Msg.IsArchived == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("must contain one or more fields"))
+		return nil, errInvalidArgument
 	}
 	if req.Msg.Name != nil {
 		p.Name = *req.Msg.Name
@@ -89,7 +89,7 @@ func (h projectHandler) UpdateProject(ctx context.Context, req *connect.Request[
 		p.IsArchived = *req.Msg.IsArchived
 	}
 	if err := h.repo.UpdateProject(ctx, p); err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		return nil, errInternal
 	}
 
 	return connect.NewResponse(newProjectResponse(p)), nil
@@ -99,16 +99,16 @@ func (h projectHandler) DeleteProject(ctx context.Context, req *connect.Request[
 	p, err := h.repo.GetProjectByID(ctx, req.Msg.Id)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, connect.NewError(connect.CodeNotFound, err)
+			return nil, errProjectNotFound
 		}
-		return nil, connect.NewError(connect.CodeInternal, err)
+		return nil, errInternal
 	}
 	if p.UserID != userID {
-		return nil, connect.NewError(connect.CodeNotFound, errors.New("unauthenticated"))
+		return nil, errProjectNotFound
 	}
 
 	if err := h.repo.DeleteProject(ctx, req.Msg.Id); err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		return nil, errInternal
 	}
 	return connect.NewResponse(&emptypb.Empty{}), nil
 }

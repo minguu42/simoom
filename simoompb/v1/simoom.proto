@@ -63,26 +63,30 @@ service ProjectService {
 }
 
 message CreateTaskRequest {
-  string title = 1;
-  uint32 priority = 2;
+  string project_id = 1;
+  string title = 2;
+  uint32 priority = 3;
 }
 
 message ListTasksRequest {
-  uint64 limit = 1;
-  uint64 offset = 2;
+  string project_id = 1;
+  uint64 limit = 2;
+  uint64 offset = 3;
 }
 
 message UpdateTaskRequest {
-  string id = 1;
-  optional string title = 2;
-  optional string content = 3;
-  optional uint32 priority = 4;
-  optional Date due_on = 5;
-  optional google.protobuf.Timestamp completed_at = 6;
+  string project_id = 1;
+  string id = 2;
+  optional string title = 3;
+  optional string content = 4;
+  optional uint32 priority = 5;
+  optional Date due_on = 6;
+  optional google.protobuf.Timestamp completed_at = 7;
 }
 
 message DeleteTaskRequest {
-  string id = 1;
+  string project_id = 1;
+  string id = 2;
 }
 
 message TaskResponse {
