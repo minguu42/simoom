@@ -12,7 +12,7 @@ import (
 )
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO tasks (id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at)
+INSERT INTO task (id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at)
 VALUES (?, ?, ?, '', ?, NULL, NULL, ?, ?)
 `
 
@@ -38,7 +38,7 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 }
 
 const deleteTask = `-- name: DeleteTask :exec
-DELETE FROM tasks WHERE id = ?
+DELETE FROM task WHERE id = ?
 `
 
 func (q *Queries) DeleteTask(ctx context.Context, id string) error {
@@ -47,7 +47,7 @@ func (q *Queries) DeleteTask(ctx context.Context, id string) error {
 }
 
 const getTaskByID = `-- name: GetTaskByID :one
-SELECT id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at FROM tasks
+SELECT id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at FROM task
 WHERE id = ?
 LIMIT 1
 `
@@ -70,7 +70,7 @@ func (q *Queries) GetTaskByID(ctx context.Context, id string) (Task, error) {
 }
 
 const listTasksByProjectID = `-- name: ListTasksByProjectID :many
-SELECT id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at FROM tasks
+SELECT id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at FROM task
 WHERE project_id = ?
 ORDER BY created_at DESC
 LIMIT ? OFFSET ?
@@ -116,7 +116,7 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 }
 
 const updateTask = `-- name: UpdateTask :exec
-UPDATE tasks SET title = ?, content = ?, priority = ?, due_on = ?, completed_at = ?
+UPDATE task SET title = ?, content = ?, priority = ?, due_on = ?, completed_at = ?
 WHERE id = ?
 `
 

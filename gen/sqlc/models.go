@@ -29,8 +29,10 @@ type Step struct {
 }
 
 type Tag struct {
-	ID   string
-	Name string
+	ID        string
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type Task struct {
@@ -45,7 +47,7 @@ type Task struct {
 	UpdatedAt   time.Time
 }
 
-type TasksTag struct {
+type TaskTag struct {
 	TaskID string
 	TagID  string
 }
