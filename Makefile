@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: setup gen build run migrate-dry-run migrate dev fmt lint test help
+.PHONY: setup gen build run migrate migrate-apply dev fmt lint test help
 
 setup:
 	brew install sqldef/sqldef/mysqldef
@@ -29,11 +29,11 @@ run: ## 本番用APIサーバを実行する
             --rm \
             simoom-api
 
-migrate-dry-run: ## DBのスキーマへの更新を確認する
-	@mysqldef -u root -h 127.0.0.1 simoom_local < ./mysql/sql/schema.sql
+migrate: ## DBのスキーマの変更を確認する
+	@mysqldef -u root -h 127.0.0.1 --dry-run --enable-drop-table simoom_local < ./mysql/sql/schema.sql
 
-migrate: ## DBのスキーマを更新する
-	@mysqldef -u root -h 127.0.0.1 simoom_local < ./mysql/sql/schema.sql
+migrate-apply: ## DBのスキーマの変更を適用する
+	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoom_local < ./mysql/sql/schema.sql
 
 dev: ## 開発用APIサーバを実行する
 	@docker compose run \
@@ -55,4 +55,4 @@ test: ## テストを実行する
 
 help: ## ヘルプを表示する
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-      | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
+      | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-14s\033[0m %s\n", $$1, $$2}'
