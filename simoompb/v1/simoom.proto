@@ -99,6 +99,7 @@ message TaskResponse {
   google.protobuf.Timestamp completed_at = 7;
   google.protobuf.Timestamp created_at = 8;
   google.protobuf.Timestamp updated_at = 9;
+  repeated StepResponse steps = 10;
 }
 
 message TasksResponse {
@@ -111,4 +112,34 @@ service TaskService {
   rpc ListTasks(ListTasksRequest) returns (TasksResponse);
   rpc UpdateTask(UpdateTaskRequest) returns (TaskResponse);
   rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
+}
+
+message CreateStepRequest {
+  string task_id = 1;
+  string title = 2;
+}
+
+message UpdateStepRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string completed_at = 3;
+}
+
+message DeleteStepRequest {
+  string id = 1;
+}
+
+message StepResponse {
+  string id = 1;
+  string task_id = 2;
+  string title = 3;
+  google.protobuf.Timestamp completed_at = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+service StepService {
+  rpc CreateStep(CreateStepRequest) returns (StepResponse);
+  rpc UpdateStep(UpdateStepRequest) returns (StepResponse);
+  rpc DeleteStep(DeleteStepRequest) returns (google.protobuf.Empty);
 }

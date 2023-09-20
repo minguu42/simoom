@@ -38,7 +38,9 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 }
 
 const deleteTask = `-- name: DeleteTask :exec
-DELETE FROM task WHERE id = ?
+DELETE
+FROM task
+WHERE id = ?
 `
 
 func (q *Queries) DeleteTask(ctx context.Context, id string) error {
@@ -116,7 +118,12 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 }
 
 const updateTask = `-- name: UpdateTask :exec
-UPDATE task SET title = ?, content = ?, priority = ?, due_on = ?, completed_at = ?
+UPDATE task
+SET title        = ?,
+    content      = ?,
+    priority     = ?,
+    due_on       = ?,
+    completed_at = ?
 WHERE id = ?
 `
 

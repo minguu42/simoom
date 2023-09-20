@@ -29,6 +29,8 @@ const (
 	ProjectServiceName = "simoompb.v1.ProjectService"
 	// TaskServiceName is the fully-qualified name of the TaskService service.
 	TaskServiceName = "simoompb.v1.TaskService"
+	// StepServiceName is the fully-qualified name of the StepService service.
+	StepServiceName = "simoompb.v1.StepService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -62,6 +64,12 @@ const (
 	TaskServiceUpdateTaskProcedure = "/simoompb.v1.TaskService/UpdateTask"
 	// TaskServiceDeleteTaskProcedure is the fully-qualified name of the TaskService's DeleteTask RPC.
 	TaskServiceDeleteTaskProcedure = "/simoompb.v1.TaskService/DeleteTask"
+	// StepServiceCreateStepProcedure is the fully-qualified name of the StepService's CreateStep RPC.
+	StepServiceCreateStepProcedure = "/simoompb.v1.StepService/CreateStep"
+	// StepServiceUpdateStepProcedure is the fully-qualified name of the StepService's UpdateStep RPC.
+	StepServiceUpdateStepProcedure = "/simoompb.v1.StepService/UpdateStep"
+	// StepServiceDeleteStepProcedure is the fully-qualified name of the StepService's DeleteStep RPC.
+	StepServiceDeleteStepProcedure = "/simoompb.v1.StepService/DeleteStep"
 )
 
 // MonitoringServiceClient is a client for the simoompb.v1.MonitoringService service.
@@ -404,4 +412,118 @@ func (UnimplementedTaskServiceHandler) UpdateTask(context.Context, *connect.Requ
 
 func (UnimplementedTaskServiceHandler) DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.DeleteTask is not implemented"))
+}
+
+// StepServiceClient is a client for the simoompb.v1.StepService service.
+type StepServiceClient interface {
+	CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error)
+	UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error)
+	DeleteStep(context.Context, *connect.Request[v1.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error)
+}
+
+// NewStepServiceClient constructs a client for the simoompb.v1.StepService service. By default, it
+// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
+// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
+// connect.WithGRPCWeb() options.
+//
+// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
+// http://api.acme.com or https://acme.com/grpc).
+func NewStepServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) StepServiceClient {
+	baseURL = strings.TrimRight(baseURL, "/")
+	return &stepServiceClient{
+		createStep: connect.NewClient[v1.CreateStepRequest, v1.StepResponse](
+			httpClient,
+			baseURL+StepServiceCreateStepProcedure,
+			opts...,
+		),
+		updateStep: connect.NewClient[v1.UpdateStepRequest, v1.StepResponse](
+			httpClient,
+			baseURL+StepServiceUpdateStepProcedure,
+			opts...,
+		),
+		deleteStep: connect.NewClient[v1.DeleteStepRequest, emptypb.Empty](
+			httpClient,
+			baseURL+StepServiceDeleteStepProcedure,
+			opts...,
+		),
+	}
+}
+
+// stepServiceClient implements StepServiceClient.
+type stepServiceClient struct {
+	createStep *connect.Client[v1.CreateStepRequest, v1.StepResponse]
+	updateStep *connect.Client[v1.UpdateStepRequest, v1.StepResponse]
+	deleteStep *connect.Client[v1.DeleteStepRequest, emptypb.Empty]
+}
+
+// CreateStep calls simoompb.v1.StepService.CreateStep.
+func (c *stepServiceClient) CreateStep(ctx context.Context, req *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+	return c.createStep.CallUnary(ctx, req)
+}
+
+// UpdateStep calls simoompb.v1.StepService.UpdateStep.
+func (c *stepServiceClient) UpdateStep(ctx context.Context, req *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+	return c.updateStep.CallUnary(ctx, req)
+}
+
+// DeleteStep calls simoompb.v1.StepService.DeleteStep.
+func (c *stepServiceClient) DeleteStep(ctx context.Context, req *connect.Request[v1.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
+	return c.deleteStep.CallUnary(ctx, req)
+}
+
+// StepServiceHandler is an implementation of the simoompb.v1.StepService service.
+type StepServiceHandler interface {
+	CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error)
+	UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error)
+	DeleteStep(context.Context, *connect.Request[v1.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error)
+}
+
+// NewStepServiceHandler builds an HTTP handler from the service implementation. It returns the path
+// on which to mount the handler and the handler itself.
+//
+// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
+// and JSON codecs. They also support gzip compression.
+func NewStepServiceHandler(svc StepServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	stepServiceCreateStepHandler := connect.NewUnaryHandler(
+		StepServiceCreateStepProcedure,
+		svc.CreateStep,
+		opts...,
+	)
+	stepServiceUpdateStepHandler := connect.NewUnaryHandler(
+		StepServiceUpdateStepProcedure,
+		svc.UpdateStep,
+		opts...,
+	)
+	stepServiceDeleteStepHandler := connect.NewUnaryHandler(
+		StepServiceDeleteStepProcedure,
+		svc.DeleteStep,
+		opts...,
+	)
+	return "/simoompb.v1.StepService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case StepServiceCreateStepProcedure:
+			stepServiceCreateStepHandler.ServeHTTP(w, r)
+		case StepServiceUpdateStepProcedure:
+			stepServiceUpdateStepHandler.ServeHTTP(w, r)
+		case StepServiceDeleteStepProcedure:
+			stepServiceDeleteStepHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
+}
+
+// UnimplementedStepServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedStepServiceHandler struct{}
+
+func (UnimplementedStepServiceHandler) CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.StepService.CreateStep is not implemented"))
+}
+
+func (UnimplementedStepServiceHandler) UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.StepService.UpdateStep is not implemented"))
+}
+
+func (UnimplementedStepServiceHandler) DeleteStep(context.Context, *connect.Request[v1.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.StepService.DeleteStep is not implemented"))
 }
