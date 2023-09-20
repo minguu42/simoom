@@ -1,21 +1,21 @@
 -- name: CreateProject :exec
-INSERT INTO projects (id, user_id, name, color, is_archived, created_at, updated_at)
+INSERT INTO project (id, user_id, name, color, is_archived, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 -- name: GetProjectByID :one
-SELECT * FROM projects
+SELECT * FROM project
 WHERE id = ?
 LIMIT 1;
 
 -- name: ListProjectsByUserID :many
-SELECT * FROM projects
+SELECT * FROM project
 WHERE user_id = ?
 ORDER BY created_at DESC
 LIMIT ? OFFSET ?;
 
 -- name: UpdateProject :exec
-UPDATE projects SET name = ?, color = ?, is_archived = ?
+UPDATE project SET name = ?, color = ?, is_archived = ?
 WHERE id = ?;
 
 -- name: DeleteProject :exec
-DELETE FROM projects WHERE id = ?;
+DELETE FROM project WHERE id = ?;
