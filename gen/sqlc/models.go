@@ -21,6 +21,7 @@ type Project struct {
 
 type Step struct {
 	ID          string
+	UserID      string
 	TaskID      string
 	Title       string
 	CompletedAt sql.NullTime
@@ -30,6 +31,7 @@ type Step struct {
 
 type Tag struct {
 	ID        string
+	UserID    string
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -37,6 +39,7 @@ type Tag struct {
 
 type Task struct {
 	ID          string
+	UserID      string
 	ProjectID   string
 	Title       string
 	Content     string
