@@ -18,6 +18,7 @@ func newTaskResponse(t model.Task) *simoompb.TaskResponse {
 	return &simoompb.TaskResponse{
 		Id:          t.ID,
 		ProjectId:   t.ProjectID,
+		Steps:       newStepsResponse(t.Steps),
 		Title:       t.Title,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),

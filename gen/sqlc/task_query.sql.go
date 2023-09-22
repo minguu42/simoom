@@ -12,12 +12,13 @@ import (
 )
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO task (id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at)
-VALUES (?, ?, ?, '', ?, NULL, NULL, ?, ?)
+INSERT INTO task (id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at)
+VALUES (?, ?, ?, ?, '', ?, NULL, NULL, ?, ?)
 `
 
 type CreateTaskParams struct {
 	ID        string
+	UserID    string
 	ProjectID string
 	Title     string
 	Priority  uint32
@@ -28,6 +29,7 @@ type CreateTaskParams struct {
 func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 	_, err := q.db.ExecContext(ctx, createTask,
 		arg.ID,
+		arg.UserID,
 		arg.ProjectID,
 		arg.Title,
 		arg.Priority,
@@ -38,7 +40,9 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 }
 
 const deleteTask = `-- name: DeleteTask :exec
-DELETE FROM task WHERE id = ?
+DELETE
+FROM task
+WHERE id = ?
 `
 
 func (q *Queries) DeleteTask(ctx context.Context, id string) error {
@@ -47,9 +51,9 @@ func (q *Queries) DeleteTask(ctx context.Context, id string) error {
 }
 
 const getTaskByID = `-- name: GetTaskByID :one
-SELECT id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at FROM task
+SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
+FROM task
 WHERE id = ?
-LIMIT 1
 `
 
 func (q *Queries) GetTaskByID(ctx context.Context, id string) (Task, error) {
@@ -57,6 +61,7 @@ func (q *Queries) GetTaskByID(ctx context.Context, id string) (Task, error) {
 	var i Task
 	err := row.Scan(
 		&i.ID,
+		&i.UserID,
 		&i.ProjectID,
 		&i.Title,
 		&i.Content,
@@ -70,9 +75,10 @@ func (q *Queries) GetTaskByID(ctx context.Context, id string) (Task, error) {
 }
 
 const listTasksByProjectID = `-- name: ListTasksByProjectID :many
-SELECT id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at FROM task
+SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
+FROM task
 WHERE project_id = ?
-ORDER BY created_at DESC
+ORDER BY created_at
 LIMIT ? OFFSET ?
 `
 
@@ -93,6 +99,7 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 		var i Task
 		if err := rows.Scan(
 			&i.ID,
+			&i.UserID,
 			&i.ProjectID,
 			&i.Title,
 			&i.Content,
@@ -116,7 +123,12 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 }
 
 const updateTask = `-- name: UpdateTask :exec
-UPDATE task SET title = ?, content = ?, priority = ?, due_on = ?, completed_at = ?
+UPDATE task
+SET title        = ?,
+    content      = ?,
+    priority     = ?,
+    due_on       = ?,
+    completed_at = ?
 WHERE id = ?
 `
 

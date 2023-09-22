@@ -2,8 +2,9 @@ version: 2
 sql:
   - engine: mysql
     queries:
-      - mysql/sql/project_query.sql
-      - mysql/sql/task_query.sql
+      - pkg/infra/mysql/project_query.sql
+      - pkg/infra/mysql/step_query.sql
+      - pkg/infra/mysql/task_query.sql
     schema: mysql/sql/schema.sql
     gen:
       go:

@@ -2,14 +2,11 @@ package model
 
 import "time"
 
-type Task struct {
+type Step struct {
 	ID          string
-	Steps       []Step
-	ProjectID   string
+	UserID      string
+	TaskID      string
 	Title       string
-	Content     string
-	Priority    uint
-	DueOn       *time.Time
 	CompletedAt *time.Time
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

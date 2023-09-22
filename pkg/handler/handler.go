@@ -20,6 +20,7 @@ var (
 	errInvalidArgument = connect.NewError(connect.CodeInvalidArgument, errors.New("request contains an error"))
 	errProjectNotFound = connect.NewError(connect.CodeNotFound, errors.New("the specified project is not found"))
 	errTaskNotFound    = connect.NewError(connect.CodeNotFound, errors.New("the specified task is not found"))
+	errStepNotFound    = connect.NewError(connect.CodeNotFound, errors.New("the specified step is not found"))
 	errUnimplemented   = connect.NewError(connect.CodeUnimplemented, errors.New("this RPC method is not yet implemented"))
 	errInternal        = connect.NewError(connect.CodeInternal, errors.New("an unintentional error occurred on the server"))
 )
@@ -30,6 +31,7 @@ func New(repo repository.Repository) http.Handler {
 	mux.Handle(simoompbconnect.NewMonitoringServiceHandler(monitoringHandler{}))
 	mux.Handle(simoompbconnect.NewProjectServiceHandler(projectHandler{repo: repo}))
 	mux.Handle(simoompbconnect.NewTaskServiceHandler(taskHandler{repo: repo}))
+	mux.Handle(simoompbconnect.NewStepServiceHandler(stepHandler{repo: repo}))
 
 	return h2c.NewHandler(mux, &http2.Server{})
 }
