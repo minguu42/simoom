@@ -34,6 +34,7 @@ migrate: ## DBのスキーマの変更を確認する
 
 migrate-apply: ## DBのスキーマの変更を適用する
 	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoom_local < ./mysql/sql/schema.sql
+	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoom_local_test < ./mysql/sql/schema.sql
 
 dev: ## 開発用APIサーバを実行する
 	@docker compose run \
