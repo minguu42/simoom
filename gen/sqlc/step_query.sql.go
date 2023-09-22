@@ -69,7 +69,7 @@ func (q *Queries) GetStepByID(ctx context.Context, id string) (Step, error) {
 const listStepsByTaskID = `-- name: ListStepsByTaskID :many
 SELECT id, user_id, task_id, title, completed_at, created_at, updated_at FROM step
 WHERE task_id = ?
-ORDER BY created_at DESC
+ORDER BY created_at
 `
 
 func (q *Queries) ListStepsByTaskID(ctx context.Context, taskID string) ([]Step, error) {

@@ -6,21 +6,13 @@ VALUES (?, ?, ?, ?, '', ?, NULL, NULL, ?, ?);
 SELECT *
 FROM task
 WHERE project_id = ?
-ORDER BY created_at DESC
+ORDER BY created_at
 LIMIT ? OFFSET ?;
 
 -- name: GetTaskByID :one
-SELECT t.*,
-       s.id           AS step_id,
-       s.user_id      AS step_user_id,
-       s.task_id      AS step_task_id,
-       s.title        AS step_title,
-       s.completed_at AS step_completed_at,
-       s.created_at   AS step_created_at,
-       s.updated_at   AS step_updated_at
-FROM task AS t
-       INNER JOIN step AS s ON t.id = s.task_id
-WHERE t.id = ?;
+SELECT *
+FROM task
+WHERE id = ?;
 
 -- name: UpdateTask :exec
 UPDATE task

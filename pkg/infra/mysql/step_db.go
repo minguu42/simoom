@@ -22,6 +22,14 @@ func newModelStep(s sqlc.Step) model.Step {
 	}
 }
 
+func newModelSteps(ss []sqlc.Step) []model.Step {
+	steps := make([]model.Step, 0, len(ss))
+	for _, s := range ss {
+		steps = append(steps, newModelStep(s))
+	}
+	return steps
+}
+
 func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
 	if err := sqlc.New(c.db).CreateStep(ctx, sqlc.CreateStepParams{
 		ID:     s.ID,

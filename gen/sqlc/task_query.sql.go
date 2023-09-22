@@ -51,42 +51,14 @@ func (q *Queries) DeleteTask(ctx context.Context, id string) error {
 }
 
 const getTaskByID = `-- name: GetTaskByID :one
-SELECT t.id, t.user_id, t.project_id, t.title, t.content, t.priority, t.due_on, t.completed_at, t.created_at, t.updated_at,
-       s.id           AS step_id,
-       s.user_id      AS step_user_id,
-       s.task_id      AS step_task_id,
-       s.title        AS step_title,
-       s.completed_at AS step_completed_at,
-       s.created_at   AS step_created_at,
-       s.updated_at   AS step_updated_at
-FROM task AS t
-       INNER JOIN step AS s ON t.id = s.task_id
-WHERE t.id = ?
+SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
+FROM task
+WHERE id = ?
 `
 
-type GetTaskByIDRow struct {
-	ID              string
-	UserID          string
-	ProjectID       string
-	Title           string
-	Content         string
-	Priority        uint32
-	DueOn           sql.NullTime
-	CompletedAt     sql.NullTime
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	StepID          string
-	StepUserID      string
-	StepTaskID      string
-	StepTitle       string
-	StepCompletedAt sql.NullTime
-	StepCreatedAt   time.Time
-	StepUpdatedAt   time.Time
-}
-
-func (q *Queries) GetTaskByID(ctx context.Context, id string) (GetTaskByIDRow, error) {
+func (q *Queries) GetTaskByID(ctx context.Context, id string) (Task, error) {
 	row := q.db.QueryRowContext(ctx, getTaskByID, id)
-	var i GetTaskByIDRow
+	var i Task
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
@@ -98,13 +70,6 @@ func (q *Queries) GetTaskByID(ctx context.Context, id string) (GetTaskByIDRow, e
 		&i.CompletedAt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.StepID,
-		&i.StepUserID,
-		&i.StepTaskID,
-		&i.StepTitle,
-		&i.StepCompletedAt,
-		&i.StepCreatedAt,
-		&i.StepUpdatedAt,
 	)
 	return i, err
 }
@@ -113,7 +78,7 @@ const listTasksByProjectID = `-- name: ListTasksByProjectID :many
 SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
 FROM task
 WHERE project_id = ?
-ORDER BY created_at DESC
+ORDER BY created_at
 LIMIT ? OFFSET ?
 `
 
