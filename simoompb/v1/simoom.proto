@@ -122,7 +122,7 @@ message CreateStepRequest {
 message UpdateStepRequest {
   string id = 1;
   optional string title = 2;
-  optional string completed_at = 3;
+  optional google.protobuf.Timestamp completed_at = 3;
 }
 
 message DeleteStepRequest {
