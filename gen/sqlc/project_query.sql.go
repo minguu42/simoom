@@ -50,7 +50,6 @@ func (q *Queries) DeleteProject(ctx context.Context, id string) error {
 const getProjectByID = `-- name: GetProjectByID :one
 SELECT id, user_id, name, color, is_archived, created_at, updated_at FROM project
 WHERE id = ?
-LIMIT 1
 `
 
 func (q *Queries) GetProjectByID(ctx context.Context, id string) (Project, error) {
@@ -113,7 +112,10 @@ func (q *Queries) ListProjectsByUserID(ctx context.Context, arg ListProjectsByUs
 }
 
 const updateProject = `-- name: UpdateProject :exec
-UPDATE project SET name = ?, color = ?, is_archived = ?
+UPDATE project
+SET name        = ?,
+    color       = ?,
+    is_archived = ?
 WHERE id = ?
 `
 
