@@ -23,4 +23,9 @@ type Repository interface {
 	GetTaskByID(ctx context.Context, id string) (model.Task, error)
 	UpdateTask(ctx context.Context, t model.Task) error
 	DeleteTask(ctx context.Context, id string) error
+
+	CreateStep(ctx context.Context, s model.Step) error
+	GetStepByID(ctx context.Context, id string) (model.Step, error)
+	UpdateStep(ctx context.Context, s model.Step) error
+	DeleteStep(ctx context.Context, id string) error
 }
