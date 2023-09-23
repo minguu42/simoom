@@ -29,4 +29,10 @@ type Repository interface {
 	GetStepByID(ctx context.Context, id string) (model.Step, error)
 	UpdateStep(ctx context.Context, s model.Step) error
 	DeleteStep(ctx context.Context, id string) error
+
+	CreateTag(ctx context.Context, t model.Tag) error
+	ListTagsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Tag, error)
+	GetTagByID(ctx context.Context, id string) (model.Tag, error)
+	UpdateTag(ctx context.Context, t model.Tag) error
+	DeleteTag(ctx context.Context, id string) error
 }
