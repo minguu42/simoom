@@ -1,3 +1,4 @@
+// Package handler はハンドラを定義する
 package handler
 
 import (
@@ -21,7 +22,6 @@ var (
 	errProjectNotFound = connect.NewError(connect.CodeNotFound, errors.New("the specified project is not found"))
 	errTaskNotFound    = connect.NewError(connect.CodeNotFound, errors.New("the specified task is not found"))
 	errStepNotFound    = connect.NewError(connect.CodeNotFound, errors.New("the specified step is not found"))
-	errUnimplemented   = connect.NewError(connect.CodeUnimplemented, errors.New("this RPC method is not yet implemented"))
 	errInternal        = connect.NewError(connect.CodeInternal, errors.New("an unintentional error occurred on the server"))
 )
 
