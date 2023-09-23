@@ -5,7 +5,7 @@ sql:
       - pkg/infra/mysql/project_query.sql
       - pkg/infra/mysql/step_query.sql
       - pkg/infra/mysql/task_query.sql
-    schema: mysql/sql/schema.sql
+    schema: mysql/schema.sql
     gen:
       go:
         package: sqlc
