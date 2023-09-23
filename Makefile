@@ -53,7 +53,7 @@ lint: ## 静的解析を実行する
 	@staticcheck $$(go list ./... | grep -v /gen)
 
 test: ## テストを実行する
-	@go test ./...
+	@go test $$(go list ./... | grep -v /gen)
 
 help: ## ヘルプを表示する
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
