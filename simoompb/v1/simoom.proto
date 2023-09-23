@@ -68,8 +68,14 @@ message CreateTaskRequest {
   uint32 priority = 3;
 }
 
-message ListTasksRequest {
+message ListTasksByProjectIDRequest {
   string project_id = 1;
+  uint64 limit = 2;
+  uint64 offset = 3;
+}
+
+message ListTasksByTagIDRequest {
+  string tag_id = 1;
   uint64 limit = 2;
   uint64 offset = 3;
 }
@@ -100,6 +106,7 @@ message TaskResponse {
   google.protobuf.Timestamp created_at = 8;
   google.protobuf.Timestamp updated_at = 9;
   repeated StepResponse steps = 10;
+  repeated TagResponse tags = 11;
 }
 
 message TasksResponse {
@@ -109,7 +116,8 @@ message TasksResponse {
 
 service TaskService {
   rpc CreateTask(CreateTaskRequest) returns (TaskResponse);
-  rpc ListTasks(ListTasksRequest) returns (TasksResponse);
+  rpc ListTasksByProjectID(ListTasksByProjectIDRequest) returns (TasksResponse);
+  rpc ListTasksByTagID(ListTasksByTagIDRequest) returns (TasksResponse);
   rpc UpdateTask(UpdateTaskRequest) returns (TaskResponse);
   rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
 }
@@ -142,4 +150,37 @@ service StepService {
   rpc CreateStep(CreateStepRequest) returns (StepResponse);
   rpc UpdateStep(UpdateStepRequest) returns (StepResponse);
   rpc DeleteStep(DeleteStepRequest) returns (google.protobuf.Empty);
+}
+
+message CreateTagRequest {
+  string name = 1;
+}
+
+message ListTagsRequest {}
+
+message UpdateTagRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message DeleteTagRequest {
+  string id = 1;
+}
+
+message TagResponse {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message TagsResponse {
+  repeated TagResponse tags = 1;
+}
+
+service TagService {
+  rpc CreateTag(CreateTagRequest) returns (TagResponse);
+  rpc ListTags(ListTagsRequest) returns (TagsResponse);
+  rpc UpdateTag(UpdateTagRequest) returns (TagResponse);
+  rpc DeleteTag(DeleteTagRequest) returns (google.protobuf.Empty);
 }

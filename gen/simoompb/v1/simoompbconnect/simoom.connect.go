@@ -31,6 +31,8 @@ const (
 	TaskServiceName = "simoompb.v1.TaskService"
 	// StepServiceName is the fully-qualified name of the StepService service.
 	StepServiceName = "simoompb.v1.StepService"
+	// TagServiceName is the fully-qualified name of the TagService service.
+	TagServiceName = "simoompb.v1.TagService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -58,8 +60,12 @@ const (
 	ProjectServiceDeleteProjectProcedure = "/simoompb.v1.ProjectService/DeleteProject"
 	// TaskServiceCreateTaskProcedure is the fully-qualified name of the TaskService's CreateTask RPC.
 	TaskServiceCreateTaskProcedure = "/simoompb.v1.TaskService/CreateTask"
-	// TaskServiceListTasksProcedure is the fully-qualified name of the TaskService's ListTasks RPC.
-	TaskServiceListTasksProcedure = "/simoompb.v1.TaskService/ListTasks"
+	// TaskServiceListTasksByProjectIDProcedure is the fully-qualified name of the TaskService's
+	// ListTasksByProjectID RPC.
+	TaskServiceListTasksByProjectIDProcedure = "/simoompb.v1.TaskService/ListTasksByProjectID"
+	// TaskServiceListTasksByTagIDProcedure is the fully-qualified name of the TaskService's
+	// ListTasksByTagID RPC.
+	TaskServiceListTasksByTagIDProcedure = "/simoompb.v1.TaskService/ListTasksByTagID"
 	// TaskServiceUpdateTaskProcedure is the fully-qualified name of the TaskService's UpdateTask RPC.
 	TaskServiceUpdateTaskProcedure = "/simoompb.v1.TaskService/UpdateTask"
 	// TaskServiceDeleteTaskProcedure is the fully-qualified name of the TaskService's DeleteTask RPC.
@@ -70,6 +76,14 @@ const (
 	StepServiceUpdateStepProcedure = "/simoompb.v1.StepService/UpdateStep"
 	// StepServiceDeleteStepProcedure is the fully-qualified name of the StepService's DeleteStep RPC.
 	StepServiceDeleteStepProcedure = "/simoompb.v1.StepService/DeleteStep"
+	// TagServiceCreateTagProcedure is the fully-qualified name of the TagService's CreateTag RPC.
+	TagServiceCreateTagProcedure = "/simoompb.v1.TagService/CreateTag"
+	// TagServiceListTagsProcedure is the fully-qualified name of the TagService's ListTags RPC.
+	TagServiceListTagsProcedure = "/simoompb.v1.TagService/ListTags"
+	// TagServiceUpdateTagProcedure is the fully-qualified name of the TagService's UpdateTag RPC.
+	TagServiceUpdateTagProcedure = "/simoompb.v1.TagService/UpdateTag"
+	// TagServiceDeleteTagProcedure is the fully-qualified name of the TagService's DeleteTag RPC.
+	TagServiceDeleteTagProcedure = "/simoompb.v1.TagService/DeleteTag"
 )
 
 // MonitoringServiceClient is a client for the simoompb.v1.MonitoringService service.
@@ -279,7 +293,8 @@ func (UnimplementedProjectServiceHandler) DeleteProject(context.Context, *connec
 // TaskServiceClient is a client for the simoompb.v1.TaskService service.
 type TaskServiceClient interface {
 	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
-	ListTasks(context.Context, *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error)
+	ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error)
+	ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error)
 	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
 	DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error)
 }
@@ -299,9 +314,14 @@ func NewTaskServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			baseURL+TaskServiceCreateTaskProcedure,
 			opts...,
 		),
-		listTasks: connect.NewClient[v1.ListTasksRequest, v1.TasksResponse](
+		listTasksByProjectID: connect.NewClient[v1.ListTasksByProjectIDRequest, v1.TasksResponse](
 			httpClient,
-			baseURL+TaskServiceListTasksProcedure,
+			baseURL+TaskServiceListTasksByProjectIDProcedure,
+			opts...,
+		),
+		listTasksByTagID: connect.NewClient[v1.ListTasksByTagIDRequest, v1.TasksResponse](
+			httpClient,
+			baseURL+TaskServiceListTasksByTagIDProcedure,
 			opts...,
 		),
 		updateTask: connect.NewClient[v1.UpdateTaskRequest, v1.TaskResponse](
@@ -319,10 +339,11 @@ func NewTaskServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 
 // taskServiceClient implements TaskServiceClient.
 type taskServiceClient struct {
-	createTask *connect.Client[v1.CreateTaskRequest, v1.TaskResponse]
-	listTasks  *connect.Client[v1.ListTasksRequest, v1.TasksResponse]
-	updateTask *connect.Client[v1.UpdateTaskRequest, v1.TaskResponse]
-	deleteTask *connect.Client[v1.DeleteTaskRequest, emptypb.Empty]
+	createTask           *connect.Client[v1.CreateTaskRequest, v1.TaskResponse]
+	listTasksByProjectID *connect.Client[v1.ListTasksByProjectIDRequest, v1.TasksResponse]
+	listTasksByTagID     *connect.Client[v1.ListTasksByTagIDRequest, v1.TasksResponse]
+	updateTask           *connect.Client[v1.UpdateTaskRequest, v1.TaskResponse]
+	deleteTask           *connect.Client[v1.DeleteTaskRequest, emptypb.Empty]
 }
 
 // CreateTask calls simoompb.v1.TaskService.CreateTask.
@@ -330,9 +351,14 @@ func (c *taskServiceClient) CreateTask(ctx context.Context, req *connect.Request
 	return c.createTask.CallUnary(ctx, req)
 }
 
-// ListTasks calls simoompb.v1.TaskService.ListTasks.
-func (c *taskServiceClient) ListTasks(ctx context.Context, req *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error) {
-	return c.listTasks.CallUnary(ctx, req)
+// ListTasksByProjectID calls simoompb.v1.TaskService.ListTasksByProjectID.
+func (c *taskServiceClient) ListTasksByProjectID(ctx context.Context, req *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+	return c.listTasksByProjectID.CallUnary(ctx, req)
+}
+
+// ListTasksByTagID calls simoompb.v1.TaskService.ListTasksByTagID.
+func (c *taskServiceClient) ListTasksByTagID(ctx context.Context, req *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+	return c.listTasksByTagID.CallUnary(ctx, req)
 }
 
 // UpdateTask calls simoompb.v1.TaskService.UpdateTask.
@@ -348,7 +374,8 @@ func (c *taskServiceClient) DeleteTask(ctx context.Context, req *connect.Request
 // TaskServiceHandler is an implementation of the simoompb.v1.TaskService service.
 type TaskServiceHandler interface {
 	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
-	ListTasks(context.Context, *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error)
+	ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error)
+	ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error)
 	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
 	DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error)
 }
@@ -364,9 +391,14 @@ func NewTaskServiceHandler(svc TaskServiceHandler, opts ...connect.HandlerOption
 		svc.CreateTask,
 		opts...,
 	)
-	taskServiceListTasksHandler := connect.NewUnaryHandler(
-		TaskServiceListTasksProcedure,
-		svc.ListTasks,
+	taskServiceListTasksByProjectIDHandler := connect.NewUnaryHandler(
+		TaskServiceListTasksByProjectIDProcedure,
+		svc.ListTasksByProjectID,
+		opts...,
+	)
+	taskServiceListTasksByTagIDHandler := connect.NewUnaryHandler(
+		TaskServiceListTasksByTagIDProcedure,
+		svc.ListTasksByTagID,
 		opts...,
 	)
 	taskServiceUpdateTaskHandler := connect.NewUnaryHandler(
@@ -383,8 +415,10 @@ func NewTaskServiceHandler(svc TaskServiceHandler, opts ...connect.HandlerOption
 		switch r.URL.Path {
 		case TaskServiceCreateTaskProcedure:
 			taskServiceCreateTaskHandler.ServeHTTP(w, r)
-		case TaskServiceListTasksProcedure:
-			taskServiceListTasksHandler.ServeHTTP(w, r)
+		case TaskServiceListTasksByProjectIDProcedure:
+			taskServiceListTasksByProjectIDHandler.ServeHTTP(w, r)
+		case TaskServiceListTasksByTagIDProcedure:
+			taskServiceListTasksByTagIDHandler.ServeHTTP(w, r)
 		case TaskServiceUpdateTaskProcedure:
 			taskServiceUpdateTaskHandler.ServeHTTP(w, r)
 		case TaskServiceDeleteTaskProcedure:
@@ -402,8 +436,12 @@ func (UnimplementedTaskServiceHandler) CreateTask(context.Context, *connect.Requ
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.CreateTask is not implemented"))
 }
 
-func (UnimplementedTaskServiceHandler) ListTasks(context.Context, *connect.Request[v1.ListTasksRequest]) (*connect.Response[v1.TasksResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.ListTasks is not implemented"))
+func (UnimplementedTaskServiceHandler) ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.ListTasksByProjectID is not implemented"))
+}
+
+func (UnimplementedTaskServiceHandler) ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TaskService.ListTasksByTagID is not implemented"))
 }
 
 func (UnimplementedTaskServiceHandler) UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
@@ -526,4 +564,142 @@ func (UnimplementedStepServiceHandler) UpdateStep(context.Context, *connect.Requ
 
 func (UnimplementedStepServiceHandler) DeleteStep(context.Context, *connect.Request[v1.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.StepService.DeleteStep is not implemented"))
+}
+
+// TagServiceClient is a client for the simoompb.v1.TagService service.
+type TagServiceClient interface {
+	CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error)
+	ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error)
+	UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error)
+	DeleteTag(context.Context, *connect.Request[v1.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error)
+}
+
+// NewTagServiceClient constructs a client for the simoompb.v1.TagService service. By default, it
+// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
+// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
+// connect.WithGRPCWeb() options.
+//
+// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
+// http://api.acme.com or https://acme.com/grpc).
+func NewTagServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) TagServiceClient {
+	baseURL = strings.TrimRight(baseURL, "/")
+	return &tagServiceClient{
+		createTag: connect.NewClient[v1.CreateTagRequest, v1.TagResponse](
+			httpClient,
+			baseURL+TagServiceCreateTagProcedure,
+			opts...,
+		),
+		listTags: connect.NewClient[v1.ListTagsRequest, v1.TagsResponse](
+			httpClient,
+			baseURL+TagServiceListTagsProcedure,
+			opts...,
+		),
+		updateTag: connect.NewClient[v1.UpdateTagRequest, v1.TagResponse](
+			httpClient,
+			baseURL+TagServiceUpdateTagProcedure,
+			opts...,
+		),
+		deleteTag: connect.NewClient[v1.DeleteTagRequest, emptypb.Empty](
+			httpClient,
+			baseURL+TagServiceDeleteTagProcedure,
+			opts...,
+		),
+	}
+}
+
+// tagServiceClient implements TagServiceClient.
+type tagServiceClient struct {
+	createTag *connect.Client[v1.CreateTagRequest, v1.TagResponse]
+	listTags  *connect.Client[v1.ListTagsRequest, v1.TagsResponse]
+	updateTag *connect.Client[v1.UpdateTagRequest, v1.TagResponse]
+	deleteTag *connect.Client[v1.DeleteTagRequest, emptypb.Empty]
+}
+
+// CreateTag calls simoompb.v1.TagService.CreateTag.
+func (c *tagServiceClient) CreateTag(ctx context.Context, req *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+	return c.createTag.CallUnary(ctx, req)
+}
+
+// ListTags calls simoompb.v1.TagService.ListTags.
+func (c *tagServiceClient) ListTags(ctx context.Context, req *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error) {
+	return c.listTags.CallUnary(ctx, req)
+}
+
+// UpdateTag calls simoompb.v1.TagService.UpdateTag.
+func (c *tagServiceClient) UpdateTag(ctx context.Context, req *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+	return c.updateTag.CallUnary(ctx, req)
+}
+
+// DeleteTag calls simoompb.v1.TagService.DeleteTag.
+func (c *tagServiceClient) DeleteTag(ctx context.Context, req *connect.Request[v1.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
+	return c.deleteTag.CallUnary(ctx, req)
+}
+
+// TagServiceHandler is an implementation of the simoompb.v1.TagService service.
+type TagServiceHandler interface {
+	CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error)
+	ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error)
+	UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error)
+	DeleteTag(context.Context, *connect.Request[v1.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error)
+}
+
+// NewTagServiceHandler builds an HTTP handler from the service implementation. It returns the path
+// on which to mount the handler and the handler itself.
+//
+// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
+// and JSON codecs. They also support gzip compression.
+func NewTagServiceHandler(svc TagServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	tagServiceCreateTagHandler := connect.NewUnaryHandler(
+		TagServiceCreateTagProcedure,
+		svc.CreateTag,
+		opts...,
+	)
+	tagServiceListTagsHandler := connect.NewUnaryHandler(
+		TagServiceListTagsProcedure,
+		svc.ListTags,
+		opts...,
+	)
+	tagServiceUpdateTagHandler := connect.NewUnaryHandler(
+		TagServiceUpdateTagProcedure,
+		svc.UpdateTag,
+		opts...,
+	)
+	tagServiceDeleteTagHandler := connect.NewUnaryHandler(
+		TagServiceDeleteTagProcedure,
+		svc.DeleteTag,
+		opts...,
+	)
+	return "/simoompb.v1.TagService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case TagServiceCreateTagProcedure:
+			tagServiceCreateTagHandler.ServeHTTP(w, r)
+		case TagServiceListTagsProcedure:
+			tagServiceListTagsHandler.ServeHTTP(w, r)
+		case TagServiceUpdateTagProcedure:
+			tagServiceUpdateTagHandler.ServeHTTP(w, r)
+		case TagServiceDeleteTagProcedure:
+			tagServiceDeleteTagHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
+}
+
+// UnimplementedTagServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedTagServiceHandler struct{}
+
+func (UnimplementedTagServiceHandler) CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TagService.CreateTag is not implemented"))
+}
+
+func (UnimplementedTagServiceHandler) ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TagService.ListTags is not implemented"))
+}
+
+func (UnimplementedTagServiceHandler) UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TagService.UpdateTag is not implemented"))
+}
+
+func (UnimplementedTagServiceHandler) DeleteTag(context.Context, *connect.Request[v1.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.TagService.DeleteTag is not implemented"))
 }
