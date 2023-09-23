@@ -160,7 +160,7 @@ message ListTagsRequest {}
 
 message UpdateTagRequest {
   string id = 1;
-  string name = 2;
+  optional string name = 2;
 }
 
 message DeleteTagRequest {
