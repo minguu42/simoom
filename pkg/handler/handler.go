@@ -22,6 +22,7 @@ var (
 	errProjectNotFound = connect.NewError(connect.CodeNotFound, errors.New("the specified project is not found"))
 	errTaskNotFound    = connect.NewError(connect.CodeNotFound, errors.New("the specified task is not found"))
 	errStepNotFound    = connect.NewError(connect.CodeNotFound, errors.New("the specified step is not found"))
+	errTagNotFound     = connect.NewError(connect.CodeNotFound, errors.New("the specified tag is not found"))
 	errInternal        = connect.NewError(connect.CodeInternal, errors.New("an unintentional error occurred on the server"))
 )
 
@@ -32,6 +33,7 @@ func New(repo repository.Repository) http.Handler {
 	mux.Handle(simoompbconnect.NewProjectServiceHandler(projectHandler{repo: repo}))
 	mux.Handle(simoompbconnect.NewTaskServiceHandler(taskHandler{repo: repo}))
 	mux.Handle(simoompbconnect.NewStepServiceHandler(stepHandler{repo: repo}))
+	mux.Handle(simoompbconnect.NewTagServiceHandler(tagHandler{repo: repo}))
 
 	return h2c.NewHandler(mux, &http2.Server{})
 }
