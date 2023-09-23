@@ -1,11 +1,11 @@
 .DEFAULT_GOAL := help
 .PHONY: setup gen build run migrate migrate-apply dev fmt lint test help
 
-setup:
+setup: ## 開発に必要なツールをインストールする
 	brew install sqldef/sqldef/mysqldef
 	go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
+	go install honnef.co/go/tools/cmd/staticcheck@latest
 	go install github.com/bufbuild/buf/cmd/buf@latest
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
@@ -49,7 +49,8 @@ fmt: ## コードを整形する
 
 lint: ## 静的解析を実行する
 	@buf lint
-	@golangci-lint run ./...
+	@go vet $$(go list ./... | grep -v /gen)
+	@staticcheck $$(go list ./... | grep -v /gen)
 
 test: ## テストを実行する
 	@go test ./...
