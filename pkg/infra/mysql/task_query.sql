@@ -9,6 +9,14 @@ WHERE project_id = ?
 ORDER BY created_at
 LIMIT ? OFFSET ?;
 
+-- name: ListTasksByTagID :many
+SELECT t1.*
+FROM task AS t1
+       INNER JOIN task_tag AS tt ON t1.id = tt.task_id
+WHERE tt.tag_id = ?
+ORDER BY t1.created_at
+LIMIT ? OFFSET ?;
+
 -- name: GetTaskByID :one
 SELECT *
 FROM task

@@ -10,10 +10,11 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-func newModelTask(t sqlc.Task, ss []sqlc.Step) model.Task {
+func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
 	return model.Task{
 		ID:          t.ID,
 		Steps:       newModelSteps(ss),
+		Tags:        newModelTags(ts),
 		ProjectID:   t.ProjectID,
 		Title:       t.Title,
 		Content:     t.Content,
@@ -55,7 +56,36 @@ func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, lim
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-		tasks = append(tasks, newModelTask(t, ss))
+		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		tasks = append(tasks, newModelTask(t, ss, tags))
+	}
+	return tasks, nil
+}
+
+func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offset uint) ([]model.Task, error) {
+	ts, err := sqlc.New(c.db).ListTasksByTagID(ctx, sqlc.ListTasksByTagIDParams{
+		TagID:  tagID,
+		Limit:  int32(limit),
+		Offset: int32(offset),
+	})
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	tasks := make([]model.Task, 0, len(ts))
+	for _, t := range ts {
+		ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		tasks = append(tasks, newModelTask(t, ss, tags))
 	}
 	return tasks, nil
 }
@@ -72,7 +102,11 @@ func (c *Client) GetTaskByID(ctx context.Context, id string) (model.Task, error)
 	if err != nil {
 		return model.Task{}, errors.WithStack(err)
 	}
-	return newModelTask(t, ss), nil
+	ts, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
+	if err != nil {
+		return model.Task{}, errors.WithStack(err)
+	}
+	return newModelTask(t, ss, ts), nil
 }
 
 func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
