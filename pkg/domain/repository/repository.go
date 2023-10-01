@@ -20,6 +20,7 @@ type Repository interface {
 
 	CreateTask(ctx context.Context, t model.Task) error
 	ListTasksByProjectID(ctx context.Context, projectID string, limit, offset uint) ([]model.Task, error)
+	ListTasksByTagID(ctx context.Context, tagID string, limit, offset uint) ([]model.Task, error)
 	GetTaskByID(ctx context.Context, id string) (model.Task, error)
 	UpdateTask(ctx context.Context, t model.Task) error
 	DeleteTask(ctx context.Context, id string) error
@@ -28,4 +29,10 @@ type Repository interface {
 	GetStepByID(ctx context.Context, id string) (model.Step, error)
 	UpdateStep(ctx context.Context, s model.Step) error
 	DeleteStep(ctx context.Context, id string) error
+
+	CreateTag(ctx context.Context, t model.Tag) error
+	ListTagsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Tag, error)
+	GetTagByID(ctx context.Context, id string) (model.Tag, error)
+	UpdateTag(ctx context.Context, t model.Tag) error
+	DeleteTag(ctx context.Context, id string) error
 }

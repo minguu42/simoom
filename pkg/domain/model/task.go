@@ -5,6 +5,7 @@ import "time"
 type Task struct {
 	ID          string
 	Steps       []Step
+	Tags        []Tag
 	ProjectID   string
 	Title       string
 	Content     string

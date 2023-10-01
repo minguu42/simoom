@@ -122,6 +122,55 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 	return items, nil
 }
 
+const listTasksByTagID = `-- name: ListTasksByTagID :many
+SELECT t1.id, t1.user_id, t1.project_id, t1.title, t1.content, t1.priority, t1.due_on, t1.completed_at, t1.created_at, t1.updated_at
+FROM task AS t1
+       INNER JOIN task_tag AS tt ON t1.id = tt.task_id
+WHERE tt.tag_id = ?
+ORDER BY t1.created_at
+LIMIT ? OFFSET ?
+`
+
+type ListTasksByTagIDParams struct {
+	TagID  string
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) ListTasksByTagID(ctx context.Context, arg ListTasksByTagIDParams) ([]Task, error) {
+	rows, err := q.db.QueryContext(ctx, listTasksByTagID, arg.TagID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Task
+	for rows.Next() {
+		var i Task
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.ProjectID,
+			&i.Title,
+			&i.Content,
+			&i.Priority,
+			&i.DueOn,
+			&i.CompletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateTask = `-- name: UpdateTask :exec
 UPDATE task
 SET title        = ?,

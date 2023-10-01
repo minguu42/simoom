@@ -19,6 +19,7 @@ func newTaskResponse(t model.Task) *simoompb.TaskResponse {
 		Id:          t.ID,
 		ProjectId:   t.ProjectID,
 		Steps:       newStepsResponse(t.Steps),
+		Tags:        newTagsResponse(t.Tags),
 		Title:       t.Title,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),
@@ -68,7 +69,7 @@ func (h taskHandler) CreateTask(ctx context.Context, req *connect.Request[simoom
 	return connect.NewResponse(newTaskResponse(t)), nil
 }
 
-func (h taskHandler) ListTasks(ctx context.Context, req *connect.Request[simoompb.ListTasksRequest]) (*connect.Response[simoompb.TasksResponse], error) {
+func (h taskHandler) ListTasksByProjectID(ctx context.Context, req *connect.Request[simoompb.ListTasksByProjectIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
 	p, err := h.repo.GetProjectByID(ctx, req.Msg.ProjectId)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -81,6 +82,29 @@ func (h taskHandler) ListTasks(ctx context.Context, req *connect.Request[simoomp
 	}
 
 	ts, err := h.repo.ListTasksByProjectID(ctx, req.Msg.ProjectId, uint(req.Msg.Limit), uint(req.Msg.Offset))
+	if err != nil {
+		return nil, errInternal
+	}
+
+	return connect.NewResponse(&simoompb.TasksResponse{
+		Tasks:   newTasksResponse(ts),
+		HasNext: false,
+	}), nil
+}
+
+func (h taskHandler) ListTasksByTagID(ctx context.Context, req *connect.Request[simoompb.ListTasksByTagIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
+	t, err := h.repo.GetTagByID(ctx, req.Msg.TagId)
+	if err != nil {
+		if errors.Is(err, repository.ErrModelNotFound) {
+			return nil, errTagNotFound
+		}
+		return nil, errInternal
+	}
+	if t.UserID != userID {
+		return nil, errTaskNotFound
+	}
+
+	ts, err := h.repo.ListTasksByTagID(ctx, req.Msg.TagId, uint(req.Msg.Limit), uint(req.Msg.Offset))
 	if err != nil {
 		return nil, errInternal
 	}
