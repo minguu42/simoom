@@ -32,9 +32,12 @@ func newModelSteps(ss []sqlc.Step) []model.Step {
 
 func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
 	if err := sqlc.New(c.db).CreateStep(ctx, sqlc.CreateStepParams{
-		ID:     s.ID,
-		TaskID: s.TaskID,
-		Title:  s.Title,
+		ID:        s.ID,
+		UserID:    s.UserID,
+		TaskID:    s.TaskID,
+		Title:     s.Title,
+		CreatedAt: s.CreatedAt,
+		UpdatedAt: s.UpdatedAt,
 	}); err != nil {
 		return errors.WithStack(err)
 	}
