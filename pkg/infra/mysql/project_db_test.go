@@ -2,16 +2,14 @@ package mysql
 
 import (
 	"context"
-	"log"
 	"testing"
 	"time"
 
 	"github.com/cockroachdb/errors"
-	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/minguu42/simoom/pkg/domain/repository"
-
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/minguu42/simoom/pkg/domain/model"
+	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
 var projectCmpOption = cmpopts.IgnoreFields(model.Project{}, "UpdatedAt")
@@ -35,8 +33,8 @@ func TestClient_CreateProject(t *testing.T) {
 					Name:       "新プロジェクト",
 					Color:      "#000000",
 					IsArchived: false,
-					CreatedAt:  time.Date(2020, 1, 1, 0, 0, 3, 0, time.UTC),
-					UpdatedAt:  time.Date(2020, 1, 1, 0, 0, 3, 0, time.UTC),
+					CreatedAt:  time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
+					UpdatedAt:  time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
 				},
 			},
 		},
@@ -46,16 +44,16 @@ func TestClient_CreateProject(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
 				if err := resetProject(ctx, tc.db); err != nil {
-					log.Fatalf("resetProject failed: %s", err)
+					t.Fatalf("%+v", err)
 				}
 			})
 			if err := tc.CreateProject(tt.args.ctx, tt.args.p); err != nil {
-				t.Fatalf("tc.CreateProject failed: %s", err)
+				t.Fatalf("%+v", err)
 			}
 
 			got, err := tc.GetProjectByID(ctx, tt.args.p.ID)
 			if err != nil {
-				t.Fatalf("tc.GetProjectByID failed: %s", err)
+				t.Fatalf("%+v", err)
 			}
 			if diff := cmp.Diff(tt.args.p, got); diff != "" {
 				t.Errorf("created project mismatch (-want +got):\n%s", diff)
@@ -111,7 +109,7 @@ func TestClient_ListProjectsByUserID(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tc.ListProjectsByUserID(tt.args.ctx, tt.args.userID, tt.args.limit, tt.args.offset)
 			if err != nil {
-				t.Fatalf("tc.ListProjectsByUserID failed: %s", err)
+				t.Fatalf("%+v", err)
 			}
 			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("tc.ListProjectsByUserID mismatch (-want +got):\n%s", diff)
@@ -146,15 +144,13 @@ func TestClient_GetProjectByID(t *testing.T) {
 				CreatedAt:  time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 				UpdatedAt:  time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 			},
-			wantErr: nil,
 		},
 		{
 			name: "存在しないプロジェクトを指定する",
 			args: args{
 				ctx: context.Background(),
-				id:  "project_99",
+				id:  "project_xx",
 			},
-			want:    model.Project{},
 			wantErr: repository.ErrModelNotFound,
 		},
 	}
@@ -169,7 +165,7 @@ func TestClient_GetProjectByID(t *testing.T) {
 					t.Errorf("tc.GetProjectByID error want %s, but got %s", tt.wantErr, err)
 					return
 				}
-				t.Fatalf("tc.GetProjectByID failed: %s", err)
+				t.Fatalf("%+v", err)
 			}
 			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("tc.GetProjectByID mismatch (-want +got):\n%s", diff)
@@ -207,16 +203,16 @@ func TestClient_UpdateProject(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
 				if err := resetProject(ctx, tc.db); err != nil {
-					t.Fatalf("resetProject failed: %s", err)
+					t.Fatalf("%+v", err)
 				}
 			})
 			if err := tc.UpdateProject(tt.args.ctx, tt.args.p); err != nil {
-				t.Fatalf("tc.UpdateProject failed: %s", err)
+				t.Fatalf("%+v", err)
 			}
 
 			got, err := tc.GetProjectByID(ctx, tt.args.p.ID)
 			if err != nil {
-				t.Fatalf("tc.GetProjectByID failed: %s", err)
+				t.Fatalf("%+v", err)
 			}
 			if diff := cmp.Diff(tt.args.p, got, projectCmpOption); diff != "" {
 				t.Errorf("updated project mismatch (-want +got):\n%s", diff)
@@ -247,11 +243,11 @@ func TestClient_DeleteProject(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
 				if err := resetProject(ctx, tc.db); err != nil {
-					t.Fatalf("resetProject failed: %s", err)
+					t.Fatalf("%+v", err)
 				}
 			})
 			if err := tc.DeleteProject(tt.args.ctx, tt.args.id); err != nil {
-				t.Fatalf("tc.DeleteProject failed: %s", err)
+				t.Fatalf("%+v", err)
 			}
 
 			if _, err := tc.GetProjectByID(ctx, tt.args.id); !errors.Is(err, repository.ErrModelNotFound) {
