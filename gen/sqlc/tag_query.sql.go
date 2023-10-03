@@ -67,7 +67,7 @@ func (q *Queries) GetTagByID(ctx context.Context, id string) (Tag, error) {
 const listTagsByTaskID = `-- name: ListTagsByTaskID :many
 SELECT t.id, t.user_id, t.name, t.created_at, t.updated_at
 FROM tag AS t
-  INNER JOIN task_tag AS tt ON t.id = tt.tag_id
+       INNER JOIN task_tag AS tt ON t.id = tt.tag_id
 WHERE tt.task_id = ?
 `
 
