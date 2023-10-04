@@ -106,7 +106,7 @@ func TestClient_GetStepByID(t *testing.T) {
 					return
 				}
 				if tt.wantErr != nil {
-					t.Errorf("tc.GetStepByID error want %s, but got %s", tt.wantErr, err)
+					t.Fatalf("tc.GetStepByID error want %s, but got %s", tt.wantErr, err)
 				}
 				t.Fatalf("%+v", err)
 			}

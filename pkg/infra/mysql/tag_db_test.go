@@ -156,8 +156,7 @@ func TestClient_GetTagByID(t *testing.T) {
 					return
 				}
 				if tt.wantErr != nil {
-					t.Errorf("tc.GetTagByID error want %s, but got %s", tt.wantErr, err)
-					return
+					t.Fatalf("tc.GetTagByID error want %s, but got %s", tt.wantErr, err)
 				}
 				t.Fatalf("%+v", err)
 			}

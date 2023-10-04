@@ -75,7 +75,7 @@ func TestClient_ListProjectsByUserID(t *testing.T) {
 		want []model.Project
 	}{
 		{
-			name: "ユーザIDからタスク一覧を取得する",
+			name: "ユーザIDからプロジェクト一覧を取得する",
 			args: args{
 				ctx:    context.Background(),
 				userID: "user_01",
@@ -162,8 +162,7 @@ func TestClient_GetProjectByID(t *testing.T) {
 					return
 				}
 				if tt.wantErr != nil {
-					t.Errorf("tc.GetProjectByID error want %s, but got %s", tt.wantErr, err)
-					return
+					t.Fatalf("tc.GetProjectByID error want %s, but got %s", tt.wantErr, err)
 				}
 				t.Fatalf("%+v", err)
 			}
