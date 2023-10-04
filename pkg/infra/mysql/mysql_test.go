@@ -15,7 +15,7 @@ func TestMain(m *testing.M) {
 	tc, err = NewClient(env.MySQL{
 		Host:               "localhost",
 		Port:               3306,
-		Database:           "simoom_local_test",
+		Database:           "maindb_test",
 		User:               "root",
 		Password:           "",
 		ConnMaxLifetimeMin: 5,
@@ -23,13 +23,13 @@ func TestMain(m *testing.M) {
 		MaxIdleConns:       25,
 	})
 	if err != nil {
-		log.Fatalf("NewClient failed: %s", err)
+		log.Fatalf("%+v", err)
 	}
 	defer tc.Close()
 
 	ctx := context.Background()
 	if err := initAllData(ctx, tc.db); err != nil {
-		log.Fatalf("tc.initAllData failed: %s", err)
+		log.Fatalf("%+v", err)
 	}
 
 	m.Run()
