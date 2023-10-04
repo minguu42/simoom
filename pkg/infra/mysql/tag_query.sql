@@ -6,6 +6,7 @@ VALUES (?, ?, ?, ?, ?);
 SELECT *
 FROM tag
 WHERE user_id = ?
+ORDER BY created_at
 LIMIT ? OFFSET ?;
 
 -- name: ListTagsByTaskID :many

@@ -15,6 +15,7 @@ func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
 		ID:          t.ID,
 		Steps:       newModelSteps(ss),
 		Tags:        newModelTags(ts),
+		UserID:      t.UserID,
 		ProjectID:   t.ProjectID,
 		Title:       t.Title,
 		Content:     t.Content,
@@ -29,6 +30,7 @@ func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
 func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
 	if err := sqlc.New(c.db).CreateTask(ctx, sqlc.CreateTaskParams{
 		ID:        t.ID,
+		UserID:    t.UserID,
 		ProjectID: t.ProjectID,
 		Title:     t.Title,
 		Priority:  uint32(t.Priority),

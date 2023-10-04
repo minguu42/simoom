@@ -57,6 +57,7 @@ func (h taskHandler) CreateTask(ctx context.Context, req *connect.Request[simoom
 	now := time.Now()
 	t := model.Task{
 		ID:        idgen.Generate(),
+		UserID:    userID,
 		ProjectID: req.Msg.ProjectId,
 		Title:     req.Msg.Title,
 		Priority:  uint(req.Msg.Priority),
