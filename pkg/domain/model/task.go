@@ -6,6 +6,7 @@ type Task struct {
 	ID          string
 	Steps       []Step
 	Tags        []Tag
+	UserID      string
 	ProjectID   string
 	Title       string
 	Content     string
