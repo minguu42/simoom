@@ -66,3 +66,18 @@ func resetStep(ctx context.Context, db *sql.DB) error {
 	}
 	return nil
 }
+
+func resetTag(ctx context.Context, db *sql.DB) error {
+	q := sqlc.New(db)
+	if err := q.DeleteAllTags(ctx); err != nil {
+		return errors.WithStack(err)
+	}
+
+	if err := q.ImportTag(ctx); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := q.ImportTaskTag(ctx); err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}

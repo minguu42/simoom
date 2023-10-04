@@ -104,6 +104,7 @@ const listTagsByUserID = `-- name: ListTagsByUserID :many
 SELECT id, user_id, name, created_at, updated_at
 FROM tag
 WHERE user_id = ?
+ORDER BY created_at
 LIMIT ? OFFSET ?
 `
 
