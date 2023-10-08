@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"strings"
 
 	"connectrpc.com/connect"
 	"github.com/cockroachdb/errors"
@@ -39,6 +40,9 @@ func (h projectHandler) CreateProject(ctx context.Context, req *connect.Request[
 	if req.Msg.Name == "" {
 		return nil, errors.New("name is required")
 	}
+	if !strings.HasPrefix(req.Msg.Color, "#") || len(req.Msg.Color) != 7 {
+		return nil, errors.New("color should be specified in the format #000000")
+	}
 
 	out, err := h.uc.CreateProject(ctx, usecase.CreateProjectInput{
 		Name:  req.Msg.Name,
@@ -66,6 +70,9 @@ func (h projectHandler) ListProjects(ctx context.Context, _ *connect.Request[sim
 }
 
 func (h projectHandler) UpdateProject(ctx context.Context, req *connect.Request[simoompb.UpdateProjectRequest]) (*connect.Response[simoompb.ProjectResponse], error) {
+	if len(req.Msg.Id) != 26 {
+		return nil, errors.New("id is required")
+	}
 	if req.Msg.Name == nil && req.Msg.Color == nil && req.Msg.IsArchived == nil {
 		return nil, errInvalidArgument
 	}
@@ -83,6 +90,10 @@ func (h projectHandler) UpdateProject(ctx context.Context, req *connect.Request[
 }
 
 func (h projectHandler) DeleteProject(ctx context.Context, req *connect.Request[simoompb.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {
+	if len(req.Msg.Id) != 26 {
+		return nil, errors.New("id is required")
+	}
+
 	if err := h.uc.DeleteProject(ctx, usecase.DeleteProjectInput{
 		ID: req.Msg.Id,
 	}); err != nil {
