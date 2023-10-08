@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"connectrpc.com/connect"
 	"context"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
 	"testing"
+
+	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/gen/simoompb/v1"
 )
 
 var ph = projectHandler{}
