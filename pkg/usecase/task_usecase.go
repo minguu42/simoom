@@ -11,7 +11,7 @@ import (
 )
 
 type TaskUsecase struct {
-	repo repository.Repository
+	Repo repository.Repository
 }
 
 type TaskOutput struct {
@@ -30,7 +30,7 @@ type CreateTaskInput struct {
 }
 
 func (uc TaskUsecase) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, error) {
-	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
+	p, err := uc.Repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TaskOutput{}, ErrProjectNotFound
@@ -51,7 +51,7 @@ func (uc TaskUsecase) CreateTask(ctx context.Context, in CreateTaskInput) (TaskO
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	if err := uc.repo.CreateTask(ctx, t); err != nil {
+	if err := uc.Repo.CreateTask(ctx, t); err != nil {
 		return TaskOutput{}, ErrUnkown
 	}
 	return TaskOutput{Task: t}, nil
@@ -64,7 +64,7 @@ type ListTasksByProjectIDInput struct {
 }
 
 func (uc TaskUsecase) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectIDInput) (TasksOutput, error) {
-	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
+	p, err := uc.Repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TasksOutput{}, ErrProjectNotFound
@@ -75,7 +75,7 @@ func (uc TaskUsecase) ListTasksByProjectID(ctx context.Context, in ListTasksByPr
 		return TasksOutput{}, ErrProjectNotFound
 	}
 
-	ts, err := uc.repo.ListTasksByProjectID(ctx, in.ProjectID, in.Limit, in.Offset)
+	ts, err := uc.Repo.ListTasksByProjectID(ctx, in.ProjectID, in.Limit, in.Offset)
 	if err != nil {
 		return TasksOutput{}, ErrUnkown
 	}
@@ -92,7 +92,7 @@ type ListTasksByTagIDInput struct {
 }
 
 func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (TasksOutput, error) {
-	t, err := uc.repo.GetTagByID(ctx, in.TagID)
+	t, err := uc.Repo.GetTagByID(ctx, in.TagID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TasksOutput{}, ErrTagNotFound
@@ -103,7 +103,7 @@ func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDI
 		return TasksOutput{}, ErrTagNotFound
 	}
 
-	ts, err := uc.repo.ListTasksByTagID(ctx, in.TagID, in.Limit, in.Offset)
+	ts, err := uc.Repo.ListTasksByTagID(ctx, in.TagID, in.Limit, in.Offset)
 	if err != nil {
 		return TasksOutput{}, ErrUnkown
 	}
@@ -124,7 +124,7 @@ type UpdateTaskInput struct {
 }
 
 func (uc TaskUsecase) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, error) {
-	t, err := uc.repo.GetTaskByID(ctx, in.ID)
+	t, err := uc.Repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TaskOutput{}, ErrTaskNotFound
@@ -150,7 +150,7 @@ func (uc TaskUsecase) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskO
 	if in.CompletedAt != nil {
 		t.CompletedAt = in.CompletedAt
 	}
-	if err := uc.repo.UpdateTask(ctx, t); err != nil {
+	if err := uc.Repo.UpdateTask(ctx, t); err != nil {
 		return TaskOutput{}, ErrUnkown
 	}
 	return TaskOutput{Task: t}, nil
@@ -161,7 +161,7 @@ type DeleteTaskInput struct {
 }
 
 func (uc TaskUsecase) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
-	t, err := uc.repo.GetTaskByID(ctx, in.ID)
+	t, err := uc.Repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrTaskNotFound
@@ -172,7 +172,7 @@ func (uc TaskUsecase) DeleteTask(ctx context.Context, in DeleteTaskInput) error 
 		return ErrTaskNotFound
 	}
 
-	if err := uc.repo.DeleteTask(ctx, in.ID); err != nil {
+	if err := uc.Repo.DeleteTask(ctx, in.ID); err != nil {
 		return ErrUnkown
 	}
 	return nil

@@ -11,7 +11,7 @@ import (
 )
 
 type ProjectUsecase struct {
-	repo repository.Repository
+	Repo repository.Repository
 }
 
 type ProjectOutput struct {
@@ -39,7 +39,7 @@ func (uc ProjectUsecase) CreateProject(ctx context.Context, in CreateProjectInpu
 		CreatedAt:  now,
 		UpdatedAt:  now,
 	}
-	if err := uc.repo.CreateProject(ctx, p); err != nil {
+	if err := uc.Repo.CreateProject(ctx, p); err != nil {
 		return ProjectOutput{}, ErrUnkown
 	}
 	return ProjectOutput{Project: p}, nil
@@ -51,7 +51,7 @@ type ListProjectsInput struct {
 }
 
 func (uc ProjectUsecase) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	ps, err := uc.repo.ListProjectsByUserID(ctx, userID, in.Limit, in.Offset)
+	ps, err := uc.Repo.ListProjectsByUserID(ctx, userID, in.Limit, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, ErrUnkown
 	}
@@ -69,7 +69,7 @@ type UpdateProjectInput struct {
 }
 
 func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
-	p, err := uc.repo.GetProjectByID(ctx, in.ID)
+	p, err := uc.Repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ProjectOutput{}, ErrProjectNotFound
@@ -89,7 +89,7 @@ func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInpu
 	if in.IsArchived != nil {
 		p.IsArchived = *in.IsArchived
 	}
-	if err := uc.repo.UpdateProject(ctx, p); err != nil {
+	if err := uc.Repo.UpdateProject(ctx, p); err != nil {
 		return ProjectOutput{}, ErrUnkown
 	}
 	return ProjectOutput{Project: p}, nil
@@ -100,7 +100,7 @@ type DeleteProjectInput struct {
 }
 
 func (uc ProjectUsecase) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
-	p, err := uc.repo.GetProjectByID(ctx, in.ID)
+	p, err := uc.Repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrProjectNotFound
@@ -111,7 +111,7 @@ func (uc ProjectUsecase) DeleteProject(ctx context.Context, in DeleteProjectInpu
 		return ErrProjectNotFound
 	}
 
-	if err := uc.repo.DeleteProject(ctx, in.ID); err != nil {
+	if err := uc.Repo.DeleteProject(ctx, in.ID); err != nil {
 		return ErrUnkown
 	}
 	return nil

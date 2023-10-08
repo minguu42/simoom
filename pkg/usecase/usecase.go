@@ -1,3 +1,4 @@
+// Package usecase はユースケースを定義する
 package usecase
 
 import "github.com/cockroachdb/errors"

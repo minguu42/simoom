@@ -11,7 +11,7 @@ import (
 )
 
 type TagUsecase struct {
-	repo repository.Repository
+	Repo repository.Repository
 }
 
 type TagOutput struct {
@@ -36,7 +36,7 @@ func (uc TagUsecase) CreateTag(ctx context.Context, in CreateTagInput) (TagOutpu
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	if err := uc.repo.CreateTag(ctx, t); err != nil {
+	if err := uc.Repo.CreateTag(ctx, t); err != nil {
 		return TagOutput{}, ErrUnkown
 	}
 	return TagOutput{Tag: t}, nil
@@ -48,7 +48,7 @@ type ListTagsInput struct {
 }
 
 func (uc TagUsecase) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
-	ts, err := uc.repo.ListTagsByUserID(ctx, userID, in.Limit, in.Offset)
+	ts, err := uc.Repo.ListTagsByUserID(ctx, userID, in.Limit, in.Offset)
 	if err != nil {
 		return TagsOutput{}, ErrUnkown
 	}
@@ -64,7 +64,7 @@ type UpdateTagInput struct {
 }
 
 func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, error) {
-	t, err := uc.repo.GetTagByID(ctx, in.ID)
+	t, err := uc.Repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TagOutput{}, ErrTagNotFound
@@ -78,7 +78,7 @@ func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutpu
 	if in.Name != nil {
 		t.Name = *in.Name
 	}
-	if err := uc.repo.UpdateTag(ctx, t); err != nil {
+	if err := uc.Repo.UpdateTag(ctx, t); err != nil {
 		return TagOutput{}, ErrUnkown
 	}
 	return TagOutput{Tag: t}, nil
@@ -89,7 +89,7 @@ type DeleteTagInput struct {
 }
 
 func (uc TagUsecase) DeleteTag(ctx context.Context, in DeleteTagInput) error {
-	t, err := uc.repo.GetTagByID(ctx, in.ID)
+	t, err := uc.Repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrTagNotFound
@@ -100,7 +100,7 @@ func (uc TagUsecase) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 		return ErrTagNotFound
 	}
 
-	if err := uc.repo.DeleteTag(ctx, in.ID); err != nil {
+	if err := uc.Repo.DeleteTag(ctx, in.ID); err != nil {
 		return ErrUnkown
 	}
 	return nil
