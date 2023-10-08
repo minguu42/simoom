@@ -15,8 +15,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-const userID = "01DXF6DT000000000000000000"
-
 var (
 	errInvalidArgument = connect.NewError(connect.CodeInvalidArgument, errors.New("request contains an error"))
 	errProjectNotFound = connect.NewError(connect.CodeNotFound, errors.New("the specified project is not found"))
