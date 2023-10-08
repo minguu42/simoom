@@ -2,14 +2,11 @@ package handler
 
 import (
 	"context"
-	"time"
 
 	"connectrpc.com/connect"
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/gen/simoompb/v1"
-	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
-	"github.com/minguu42/simoom/pkg/domain/repository"
+	"github.com/minguu42/simoom/pkg/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -39,161 +36,86 @@ func newTasksResponse(ts []model.Task) []*simoompb.TaskResponse {
 }
 
 type taskHandler struct {
-	repo repository.Repository
+	uc usecase.TaskUsecase
 }
 
 func (h taskHandler) CreateTask(ctx context.Context, req *connect.Request[simoompb.CreateTaskRequest]) (*connect.Response[simoompb.TaskResponse], error) {
-	p, err := h.repo.GetProjectByID(ctx, req.Msg.ProjectId)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, errProjectNotFound
-		}
-		return nil, errInternal
+	if req.Msg.ProjectId != "" {
+		return nil, errInvalidArgument
 	}
-	if p.UserID != userID {
-		return nil, errProjectNotFound
+	if req.Msg.Title != "" {
+		return nil, errInvalidArgument
 	}
 
-	now := time.Now()
-	t := model.Task{
-		ID:        idgen.Generate(),
-		UserID:    userID,
+	out, err := h.uc.CreateTask(ctx, usecase.CreateTaskInput{
 		ProjectID: req.Msg.ProjectId,
 		Title:     req.Msg.Title,
 		Priority:  uint(req.Msg.Priority),
-		CreatedAt: now,
-		UpdatedAt: now,
+	})
+	if err != nil {
+		return nil, err
 	}
-	if err := h.repo.CreateTask(ctx, t); err != nil {
-		return nil, errInternal
-	}
-	return connect.NewResponse(newTaskResponse(t)), nil
+	return connect.NewResponse(newTaskResponse(out.Task)), nil
 }
 
 func (h taskHandler) ListTasksByProjectID(ctx context.Context, req *connect.Request[simoompb.ListTasksByProjectIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
-	p, err := h.repo.GetProjectByID(ctx, req.Msg.ProjectId)
+	out, err := h.uc.ListTasksByProjectID(ctx, usecase.ListTasksByProjectIDInput{
+		ProjectID: req.Msg.ProjectId,
+		Limit:     uint(req.Msg.Limit),
+		Offset:    uint(req.Msg.Offset),
+	})
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, errProjectNotFound
-		}
-		return nil, errInternal
+		return nil, err
 	}
-	if p.UserID != userID {
-		return nil, errProjectNotFound
-	}
-
-	ts, err := h.repo.ListTasksByProjectID(ctx, req.Msg.ProjectId, uint(req.Msg.Limit), uint(req.Msg.Offset))
-	if err != nil {
-		return nil, errInternal
-	}
-
 	return connect.NewResponse(&simoompb.TasksResponse{
-		Tasks:   newTasksResponse(ts),
-		HasNext: false,
+		Tasks:   newTasksResponse(out.Tasks),
+		HasNext: out.HasNext,
 	}), nil
 }
 
 func (h taskHandler) ListTasksByTagID(ctx context.Context, req *connect.Request[simoompb.ListTasksByTagIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
-	t, err := h.repo.GetTagByID(ctx, req.Msg.TagId)
+	out, err := h.uc.ListTasksByTagID(ctx, usecase.ListTasksByTagIDInput{
+		TagID:  req.Msg.TagId,
+		Limit:  uint(req.Msg.Limit),
+		Offset: uint(req.Msg.Offset),
+	})
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, errTagNotFound
-		}
-		return nil, errInternal
+		return nil, err
 	}
-	if t.UserID != userID {
-		return nil, errTaskNotFound
-	}
-
-	ts, err := h.repo.ListTasksByTagID(ctx, req.Msg.TagId, uint(req.Msg.Limit), uint(req.Msg.Offset))
-	if err != nil {
-		return nil, errInternal
-	}
-
 	return connect.NewResponse(&simoompb.TasksResponse{
-		Tasks:   newTasksResponse(ts),
+		Tasks:   newTasksResponse(out.Tasks),
 		HasNext: false,
 	}), nil
 }
 
 func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.TaskResponse], error) {
-	p, err := h.repo.GetProjectByID(ctx, req.Msg.ProjectId)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, errProjectNotFound
-		}
-		return nil, errInternal
-	}
-	if p.UserID != userID {
-		return nil, errProjectNotFound
-	}
-
-	t, err := h.repo.GetTaskByID(ctx, req.Msg.Id)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, errTaskNotFound
-		}
-		return nil, errInternal
-	}
-	if !p.ContainsTask(t) {
-		return nil, errTaskNotFound
-	}
-
-	if req.Msg.Title == nil && req.Msg.Content == nil && req.Msg.Priority == nil &&
-		req.Msg.DueOn == nil && req.Msg.CompletedAt == nil {
+	if req.Msg.Id == "" {
 		return nil, errInvalidArgument
 	}
-	if req.Msg.Title != nil {
-		t.Title = *req.Msg.Title
-	}
-	if req.Msg.Content != nil {
-		t.Content = *req.Msg.Content
-	}
-	if req.Msg.Priority != nil {
-		t.Priority = uint(*req.Msg.Priority)
-	}
-	if req.Msg.DueOn != nil {
-		dueOn := time.Date(int(req.Msg.DueOn.Year), time.Month(req.Msg.DueOn.Month), int(req.Msg.DueOn.Day), 0, 0, 0, 0, time.UTC)
-		t.DueOn = &dueOn
-	}
-	if req.Msg.CompletedAt != nil {
-		completedAt := req.Msg.CompletedAt.AsTime()
-		t.CompletedAt = &completedAt
+	if req.Msg.Title == nil && req.Msg.Content == nil && req.Msg.Priority == nil && req.Msg.DueOn == nil && req.Msg.CompletedAt == nil {
+		return nil, errInvalidArgument
 	}
 
-	if err := h.repo.UpdateTask(ctx, t); err != nil {
-		return nil, errInternal
+	out, err := h.uc.UpdateTask(ctx, usecase.UpdateTaskInput{
+		ID:          req.Msg.Id,
+		ProjectID:   req.Msg.ProjectId,
+		Title:       req.Msg.Title,
+		Content:     req.Msg.Content,
+		Priority:    nil,
+		DueOn:       nil,
+		CompletedAt: nil,
+	})
+	if err != nil {
+		return nil, err
 	}
-
-	return connect.NewResponse(newTaskResponse(t)), nil
+	return connect.NewResponse(newTaskResponse(out.Task)), nil
 }
 
 func (h taskHandler) DeleteTask(ctx context.Context, req *connect.Request[simoompb.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
-	p, err := h.repo.GetProjectByID(ctx, req.Msg.ProjectId)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, errProjectNotFound
-		}
-		return nil, errInternal
+	if err := h.uc.DeleteTask(ctx, usecase.DeleteTaskInput{
+		ID: req.Msg.Id,
+	}); err != nil {
+		return nil, err
 	}
-	if p.UserID != userID {
-		return nil, errProjectNotFound
-	}
-
-	t, err := h.repo.GetTaskByID(ctx, req.Msg.Id)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
-			return nil, errTaskNotFound
-		}
-		return nil, errInternal
-	}
-	if !p.ContainsTask(t) {
-		return nil, errTaskNotFound
-	}
-
-	if err := h.repo.DeleteTask(ctx, req.Msg.Id); err != nil {
-		return nil, errInternal
-	}
-
 	return connect.NewResponse(&emptypb.Empty{}), nil
 }
