@@ -1,3 +1,4 @@
+// Package applog はアプリケーションのログを扱うパッケージである
 package applog
 
 import (
@@ -26,9 +27,8 @@ func InitDefault() {
 }
 
 // SetLogger は ctx にリクエストスコープのロガーをセットする
-func SetLogger(ctx context.Context, args ...any) {
-	l := slog.Default().With(args)
-	ctx = context.WithValue(ctx, loggerKey{}, l)
+func SetLogger(ctx context.Context, logger *slog.Logger) context.Context {
+	return context.WithValue(ctx, loggerKey{}, logger)
 }
 
 // Logger は ctx からリクエストスコープのロガーを取り出す

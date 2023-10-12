@@ -11,7 +11,7 @@ import (
 func NewSetContext() connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			applog.SetLogger(ctx, slog.String("procedure", req.Spec().Procedure))
+			ctx = applog.SetLogger(ctx, slog.Default().With(slog.String("procedure", req.Spec().Procedure)))
 			return next(ctx, req)
 		}
 	}
