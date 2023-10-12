@@ -40,7 +40,7 @@ func (uc ProjectUsecase) CreateProject(ctx context.Context, in CreateProjectInpu
 		UpdatedAt:  now,
 	}
 	if err := uc.Repo.CreateProject(ctx, p); err != nil {
-		return ProjectOutput{}, ErrUnkown
+		return ProjectOutput{}, errors.WithStack(err)
 	}
 	return ProjectOutput{Project: p}, nil
 }
@@ -53,7 +53,7 @@ type ListProjectsInput struct {
 func (uc ProjectUsecase) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
 	ps, err := uc.Repo.ListProjectsByUserID(ctx, userID, in.Limit, in.Offset)
 	if err != nil {
-		return ProjectsOutput{}, ErrUnkown
+		return ProjectsOutput{}, errors.WithStack(err)
 	}
 	return ProjectsOutput{
 		Projects: ps,
@@ -74,7 +74,7 @@ func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInpu
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ProjectOutput{}, ErrProjectNotFound
 		}
-		return ProjectOutput{}, ErrUnkown
+		return ProjectOutput{}, errors.WithStack(err)
 	}
 	if userID != p.UserID {
 		return ProjectOutput{}, ErrProjectNotFound
@@ -90,7 +90,7 @@ func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInpu
 		p.IsArchived = *in.IsArchived
 	}
 	if err := uc.Repo.UpdateProject(ctx, p); err != nil {
-		return ProjectOutput{}, ErrUnkown
+		return ProjectOutput{}, errors.WithStack(err)
 	}
 	return ProjectOutput{Project: p}, nil
 }
@@ -105,14 +105,14 @@ func (uc ProjectUsecase) DeleteProject(ctx context.Context, in DeleteProjectInpu
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrProjectNotFound
 		}
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	if userID != p.UserID {
 		return ErrProjectNotFound
 	}
 
 	if err := uc.Repo.DeleteProject(ctx, in.ID); err != nil {
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	return nil
 }

@@ -37,7 +37,7 @@ func (uc TagUsecase) CreateTag(ctx context.Context, in CreateTagInput) (TagOutpu
 		UpdatedAt: now,
 	}
 	if err := uc.Repo.CreateTag(ctx, t); err != nil {
-		return TagOutput{}, ErrUnkown
+		return TagOutput{}, errors.WithStack(err)
 	}
 	return TagOutput{Tag: t}, nil
 }
@@ -50,7 +50,7 @@ type ListTagsInput struct {
 func (uc TagUsecase) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
 	ts, err := uc.Repo.ListTagsByUserID(ctx, userID, in.Limit, in.Offset)
 	if err != nil {
-		return TagsOutput{}, ErrUnkown
+		return TagsOutput{}, errors.WithStack(err)
 	}
 	return TagsOutput{
 		Tags:    ts,
@@ -69,7 +69,7 @@ func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutpu
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TagOutput{}, ErrTagNotFound
 		}
-		return TagOutput{}, ErrUnkown
+		return TagOutput{}, errors.WithStack(err)
 	}
 	if userID != t.UserID {
 		return TagOutput{}, ErrTagNotFound
@@ -79,7 +79,7 @@ func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutpu
 		t.Name = *in.Name
 	}
 	if err := uc.Repo.UpdateTag(ctx, t); err != nil {
-		return TagOutput{}, ErrUnkown
+		return TagOutput{}, errors.WithStack(err)
 	}
 	return TagOutput{Tag: t}, nil
 }
@@ -94,14 +94,14 @@ func (uc TagUsecase) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrTagNotFound
 		}
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	if userID != t.UserID {
 		return ErrTagNotFound
 	}
 
 	if err := uc.Repo.DeleteTag(ctx, in.ID); err != nil {
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	return nil
 }

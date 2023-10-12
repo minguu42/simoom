@@ -34,7 +34,7 @@ func (uc StepUsecase) CreateStep(ctx context.Context, in CreateStepInput) (StepO
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrTaskNotFound
 		}
-		return StepOutput{}, ErrUnkown
+		return StepOutput{}, errors.WithStack(err)
 	}
 	if userID != t.UserID {
 		return StepOutput{}, ErrTaskNotFound
@@ -50,7 +50,7 @@ func (uc StepUsecase) CreateStep(ctx context.Context, in CreateStepInput) (StepO
 		UpdatedAt: now,
 	}
 	if err := uc.Repo.CreateStep(ctx, s); err != nil {
-		return StepOutput{}, ErrUnkown
+		return StepOutput{}, errors.WithStack(err)
 	}
 	return StepOutput{Step: s}, nil
 }
@@ -67,7 +67,7 @@ func (uc StepUsecase) UpdateStep(ctx context.Context, in UpdateStepInput) (StepO
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrStepNotFound
 		}
-		return StepOutput{}, ErrUnkown
+		return StepOutput{}, errors.WithStack(err)
 	}
 	if userID != s.UserID {
 		return StepOutput{}, ErrStepNotFound
@@ -80,7 +80,7 @@ func (uc StepUsecase) UpdateStep(ctx context.Context, in UpdateStepInput) (StepO
 		s.CompletedAt = in.CompletedAt
 	}
 	if err := uc.Repo.UpdateStep(ctx, s); err != nil {
-		return StepOutput{}, ErrUnkown
+		return StepOutput{}, errors.WithStack(err)
 	}
 	return StepOutput{Step: s}, nil
 }
@@ -95,14 +95,14 @@ func (uc StepUsecase) DeleteStep(ctx context.Context, in DeleteStepInput) error 
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrStepNotFound
 		}
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	if userID != s.UserID {
 		return ErrStepNotFound
 	}
 
 	if err := uc.Repo.DeleteStep(ctx, in.ID); err != nil {
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	return nil
 }
