@@ -22,6 +22,8 @@ var errInvalidArgument = connect.NewError(connect.CodeInvalidArgument, errors.Ne
 // New はハンドラを生成する
 func New(repo repository.Repository) http.Handler {
 	opt := connect.WithInterceptors(
+		interceptor.NewSetContext(),
+		interceptor.NewAccessLog(),
 		interceptor.NewErrorJudge(),
 	)
 
