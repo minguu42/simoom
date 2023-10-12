@@ -10,5 +10,4 @@ var (
 	ErrStepNotFound    = errors.New("the specified step is not found")
 	ErrTagNotFound     = errors.New("the specified tag is not found")
 	ErrTaskNotFound    = errors.New("the specified task is not found")
-	ErrUnkown          = errors.New("an unintentional error occurred on the server")
 )

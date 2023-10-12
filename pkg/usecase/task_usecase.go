@@ -35,7 +35,7 @@ func (uc TaskUsecase) CreateTask(ctx context.Context, in CreateTaskInput) (TaskO
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TaskOutput{}, ErrProjectNotFound
 		}
-		return TaskOutput{}, ErrUnkown
+		return TaskOutput{}, errors.WithStack(err)
 	}
 	if userID != p.UserID {
 		return TaskOutput{}, ErrProjectNotFound
@@ -52,7 +52,7 @@ func (uc TaskUsecase) CreateTask(ctx context.Context, in CreateTaskInput) (TaskO
 		UpdatedAt: now,
 	}
 	if err := uc.Repo.CreateTask(ctx, t); err != nil {
-		return TaskOutput{}, ErrUnkown
+		return TaskOutput{}, errors.WithStack(err)
 	}
 	return TaskOutput{Task: t}, nil
 }
@@ -69,7 +69,7 @@ func (uc TaskUsecase) ListTasksByProjectID(ctx context.Context, in ListTasksByPr
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TasksOutput{}, ErrProjectNotFound
 		}
-		return TasksOutput{}, ErrUnkown
+		return TasksOutput{}, errors.WithStack(err)
 	}
 	if userID != p.UserID {
 		return TasksOutput{}, ErrProjectNotFound
@@ -77,7 +77,7 @@ func (uc TaskUsecase) ListTasksByProjectID(ctx context.Context, in ListTasksByPr
 
 	ts, err := uc.Repo.ListTasksByProjectID(ctx, in.ProjectID, in.Limit, in.Offset)
 	if err != nil {
-		return TasksOutput{}, ErrUnkown
+		return TasksOutput{}, errors.WithStack(err)
 	}
 	return TasksOutput{
 		Tasks:   ts,
@@ -97,7 +97,7 @@ func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDI
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TasksOutput{}, ErrTagNotFound
 		}
-		return TasksOutput{}, ErrUnkown
+		return TasksOutput{}, errors.WithStack(err)
 	}
 	if userID != t.UserID {
 		return TasksOutput{}, ErrTagNotFound
@@ -105,7 +105,7 @@ func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDI
 
 	ts, err := uc.Repo.ListTasksByTagID(ctx, in.TagID, in.Limit, in.Offset)
 	if err != nil {
-		return TasksOutput{}, ErrUnkown
+		return TasksOutput{}, errors.WithStack(err)
 	}
 	return TasksOutput{
 		Tasks:   ts,
@@ -129,7 +129,7 @@ func (uc TaskUsecase) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskO
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TaskOutput{}, ErrTaskNotFound
 		}
-		return TaskOutput{}, ErrUnkown
+		return TaskOutput{}, errors.WithStack(err)
 	}
 	if userID != t.UserID {
 		return TaskOutput{}, ErrTaskNotFound
@@ -151,7 +151,7 @@ func (uc TaskUsecase) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskO
 		t.CompletedAt = in.CompletedAt
 	}
 	if err := uc.Repo.UpdateTask(ctx, t); err != nil {
-		return TaskOutput{}, ErrUnkown
+		return TaskOutput{}, errors.WithStack(err)
 	}
 	return TaskOutput{Task: t}, nil
 }
@@ -166,14 +166,14 @@ func (uc TaskUsecase) DeleteTask(ctx context.Context, in DeleteTaskInput) error 
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrTaskNotFound
 		}
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	if userID != t.UserID {
 		return ErrTaskNotFound
 	}
 
 	if err := uc.Repo.DeleteTask(ctx, in.ID); err != nil {
-		return ErrUnkown
+		return errors.WithStack(err)
 	}
 	return nil
 }

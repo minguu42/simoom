@@ -7,10 +7,15 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/minguu42/simoom/pkg/applog"
 	"github.com/minguu42/simoom/pkg/env"
 	"github.com/minguu42/simoom/pkg/handler"
 	"github.com/minguu42/simoom/pkg/infra/mysql"
 )
+
+func init() {
+	applog.InitDefault()
+}
 
 func main() {
 	time.Local = time.UTC
