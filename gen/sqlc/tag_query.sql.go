@@ -11,7 +11,7 @@ import (
 )
 
 const createTag = `-- name: CreateTag :exec
-INSERT INTO tag (id, user_id, name, created_at, updated_at)
+INSERT INTO tags (id, user_id, name, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?)
 `
 
@@ -36,7 +36,7 @@ func (q *Queries) CreateTag(ctx context.Context, arg CreateTagParams) error {
 
 const deleteTag = `-- name: DeleteTag :exec
 DELETE
-FROM tag
+FROM tags
 WHERE id = ?
 `
 
@@ -47,7 +47,7 @@ func (q *Queries) DeleteTag(ctx context.Context, id string) error {
 
 const getTagByID = `-- name: GetTagByID :one
 SELECT id, user_id, name, created_at, updated_at
-FROM tag
+FROM tags
 WHERE id = ?
 `
 
@@ -66,8 +66,8 @@ func (q *Queries) GetTagByID(ctx context.Context, id string) (Tag, error) {
 
 const listTagsByTaskID = `-- name: ListTagsByTaskID :many
 SELECT t.id, t.user_id, t.name, t.created_at, t.updated_at
-FROM tag AS t
-       INNER JOIN task_tag AS tt ON t.id = tt.tag_id
+FROM tags AS t
+    INNER JOIN tasks_tags AS tt ON t.id = tt.tag_id
 WHERE tt.task_id = ?
 `
 
@@ -102,7 +102,7 @@ func (q *Queries) ListTagsByTaskID(ctx context.Context, taskID string) ([]Tag, e
 
 const listTagsByUserID = `-- name: ListTagsByUserID :many
 SELECT id, user_id, name, created_at, updated_at
-FROM tag
+FROM tags
 WHERE user_id = ?
 ORDER BY created_at
 LIMIT ? OFFSET ?
@@ -144,7 +144,7 @@ func (q *Queries) ListTagsByUserID(ctx context.Context, arg ListTagsByUserIDPara
 }
 
 const updateTag = `-- name: UpdateTag :exec
-UPDATE tag
+UPDATE tags
 SET name = ?
 WHERE id = ?
 `

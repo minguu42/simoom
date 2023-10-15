@@ -15,7 +15,7 @@ func TestMain(m *testing.M) {
 	tc, err = NewClient(env.MySQL{
 		Host:               "localhost",
 		Port:               3306,
-		Database:           "maindb_test",
+		Database:           "simoomdb_test",
 		User:               "root",
 		Password:           "",
 		ConnMaxLifetimeMin: 5,

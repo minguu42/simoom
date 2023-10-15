@@ -1,21 +1,25 @@
 -- name: CreateStep :exec
-INSERT INTO step (id, user_id, task_id, title, completed_at, created_at, updated_at)
+INSERT INTO steps (id, user_id, task_id, title, completed_at, created_at, updated_at)
 VALUES (?, ?, ?, ?, NULL, ?, ?);
 
 -- name: ListStepsByTaskID :many
-SELECT * FROM step
+SELECT *
+FROM steps
 WHERE task_id = ?
 ORDER BY created_at;
 
 -- name: GetStepByID :one
-SELECT * FROM step
+SELECT *
+FROM steps
 WHERE id = ?;
 
 -- name: UpdateStep :exec
-UPDATE step
+UPDATE steps
 SET title        = ?,
     completed_at = ?
 WHERE id = ?;
 
 -- name: DeleteStep :exec
-DELETE FROM step WHERE id = ?;
+DELETE
+FROM steps
+WHERE id = ?;

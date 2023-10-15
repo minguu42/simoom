@@ -12,7 +12,8 @@ import (
 )
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO task (id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at)
+INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at,
+                   created_at, updated_at)
 VALUES (?, ?, ?, ?, '', ?, NULL, NULL, ?, ?)
 `
 
@@ -41,7 +42,7 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 
 const deleteTask = `-- name: DeleteTask :exec
 DELETE
-FROM task
+FROM tasks
 WHERE id = ?
 `
 
@@ -52,7 +53,7 @@ func (q *Queries) DeleteTask(ctx context.Context, id string) error {
 
 const getTaskByID = `-- name: GetTaskByID :one
 SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
-FROM task
+FROM tasks
 WHERE id = ?
 `
 
@@ -76,7 +77,7 @@ func (q *Queries) GetTaskByID(ctx context.Context, id string) (Task, error) {
 
 const listTasksByProjectID = `-- name: ListTasksByProjectID :many
 SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
-FROM task
+FROM tasks
 WHERE project_id = ?
 ORDER BY created_at
 LIMIT ? OFFSET ?
@@ -124,8 +125,8 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 
 const listTasksByTagID = `-- name: ListTasksByTagID :many
 SELECT t1.id, t1.user_id, t1.project_id, t1.title, t1.content, t1.priority, t1.due_on, t1.completed_at, t1.created_at, t1.updated_at
-FROM task AS t1
-       INNER JOIN task_tag AS tt ON t1.id = tt.task_id
+FROM tasks AS t1
+    INNER JOIN tasks_tags AS tt ON t1.id = tt.task_id
 WHERE tt.tag_id = ?
 ORDER BY t1.created_at
 LIMIT ? OFFSET ?
@@ -172,7 +173,7 @@ func (q *Queries) ListTasksByTagID(ctx context.Context, arg ListTasksByTagIDPara
 }
 
 const updateTask = `-- name: UpdateTask :exec
-UPDATE task
+UPDATE tasks
 SET title        = ?,
     content      = ?,
     priority     = ?,
