@@ -11,7 +11,7 @@ import (
 )
 
 const createProject = `-- name: CreateProject :exec
-INSERT INTO project (id, user_id, name, color, is_archived, created_at, updated_at)
+INSERT INTO projects (id, user_id, name, color, is_archived, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
@@ -39,7 +39,9 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) er
 }
 
 const deleteProject = `-- name: DeleteProject :exec
-DELETE FROM project WHERE id = ?
+DELETE
+FROM projects
+WHERE id = ?
 `
 
 func (q *Queries) DeleteProject(ctx context.Context, id string) error {
@@ -48,7 +50,8 @@ func (q *Queries) DeleteProject(ctx context.Context, id string) error {
 }
 
 const getProjectByID = `-- name: GetProjectByID :one
-SELECT id, user_id, name, color, is_archived, created_at, updated_at FROM project
+SELECT id, user_id, name, color, is_archived, created_at, updated_at
+FROM projects
 WHERE id = ?
 `
 
@@ -68,7 +71,8 @@ func (q *Queries) GetProjectByID(ctx context.Context, id string) (Project, error
 }
 
 const listProjectsByUserID = `-- name: ListProjectsByUserID :many
-SELECT id, user_id, name, color, is_archived, created_at, updated_at FROM project
+SELECT id, user_id, name, color, is_archived, created_at, updated_at
+FROM projects
 WHERE user_id = ?
 ORDER BY created_at DESC
 LIMIT ? OFFSET ?
@@ -112,7 +116,7 @@ func (q *Queries) ListProjectsByUserID(ctx context.Context, arg ListProjectsByUs
 }
 
 const updateProject = `-- name: UpdateProject :exec
-UPDATE project
+UPDATE projects
 SET name        = ?,
     color       = ?,
     is_archived = ?

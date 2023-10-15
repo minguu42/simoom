@@ -10,7 +10,7 @@ import (
 )
 
 const deleteAllProjects = `-- name: DeleteAllProjects :exec
-DELETE FROM project
+DELETE FROM projects
 `
 
 func (q *Queries) DeleteAllProjects(ctx context.Context) error {
@@ -19,7 +19,7 @@ func (q *Queries) DeleteAllProjects(ctx context.Context) error {
 }
 
 const deleteAllSteps = `-- name: DeleteAllSteps :exec
-DELETE FROM step
+DELETE FROM steps
 `
 
 func (q *Queries) DeleteAllSteps(ctx context.Context) error {
@@ -28,7 +28,7 @@ func (q *Queries) DeleteAllSteps(ctx context.Context) error {
 }
 
 const deleteAllTags = `-- name: DeleteAllTags :exec
-DELETE FROM tag
+DELETE FROM tags
 `
 
 func (q *Queries) DeleteAllTags(ctx context.Context) error {
@@ -37,7 +37,7 @@ func (q *Queries) DeleteAllTags(ctx context.Context) error {
 }
 
 const deleteAllTaskTags = `-- name: DeleteAllTaskTags :exec
-DELETE FROM task_tag
+DELETE FROM tasks_tags
 `
 
 func (q *Queries) DeleteAllTaskTags(ctx context.Context) error {
@@ -46,7 +46,7 @@ func (q *Queries) DeleteAllTaskTags(ctx context.Context) error {
 }
 
 const deleteAllTasks = `-- name: DeleteAllTasks :exec
-DELETE FROM task
+DELETE FROM tasks
 `
 
 func (q *Queries) DeleteAllTasks(ctx context.Context) error {
@@ -55,7 +55,7 @@ func (q *Queries) DeleteAllTasks(ctx context.Context) error {
 }
 
 const deleteAllUsers = `-- name: DeleteAllUsers :exec
-DELETE FROM user
+DELETE FROM users
 `
 
 func (q *Queries) DeleteAllUsers(ctx context.Context) error {
@@ -64,7 +64,7 @@ func (q *Queries) DeleteAllUsers(ctx context.Context) error {
 }
 
 const importProject = `-- name: ImportProject :exec
-INSERT INTO project (id, user_id, name, color, is_archived, created_at, updated_at)
+INSERT INTO projects (id, user_id, name, color, is_archived, created_at, updated_at)
 VALUES ('project_01', 'user_01', 'プロジェクト1', '#1a2b3c', FALSE, '2020-01-01 00:00:01', '2020-01-01 00:00:01'),
        ('project_02', 'user_01', 'プロジェクト2', '#ffffff', FALSE, '2020-01-01 00:00:02', '2020-01-01 00:00:02')
 `
@@ -75,7 +75,7 @@ func (q *Queries) ImportProject(ctx context.Context) error {
 }
 
 const importStep = `-- name: ImportStep :exec
-INSERT INTO step (id, user_id, task_id, title, completed_at, created_at, updated_at)
+INSERT INTO steps (id, user_id, task_id, title, completed_at, created_at, updated_at)
 VALUES ('step_01', 'user_01', 'task_01', 'ステップ1', NULL, '2020-01-01 00:00:01', '2020-01-01 00:00:01'),
        ('step_02', 'user_01', 'task_01', 'ステップ2', NULL, '2020-01-01 00:00:02', '2020-01-01 00:00:02')
 `
@@ -86,7 +86,7 @@ func (q *Queries) ImportStep(ctx context.Context) error {
 }
 
 const importTag = `-- name: ImportTag :exec
-INSERT INTO tag (id, user_id, name, created_at, updated_at)
+INSERT INTO tags (id, user_id, name, created_at, updated_at)
 VALUES ('tag_01', 'user_01', 'タグ1', '2020-01-01 00:00:01', '2020-01-01 00:00:01'),
        ('tag_02', 'user_01', 'タグ2', '2020-01-01 00:00:02', '2020-01-01 00:00:02')
 `
@@ -97,7 +97,7 @@ func (q *Queries) ImportTag(ctx context.Context) error {
 }
 
 const importTask = `-- name: ImportTask :exec
-INSERT INTO task (id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at)
+INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at)
 VALUES ('task_01', 'user_01', 'project_01', 'タスク1', 'コンテンツ1', 3, '2020-01-02', NULL, '2020-01-01 00:00:01', '2020-01-01 00:00:01'),
        ('task_2', 'user_01', 'project_01', 'タスク2', '', 0, NULL, NULL, '2020-01-01 00:00:02', '2020-01-01 00:00:02')
 `
@@ -108,7 +108,7 @@ func (q *Queries) ImportTask(ctx context.Context) error {
 }
 
 const importTaskTag = `-- name: ImportTaskTag :exec
-INSERT INTO task_tag (task_id, tag_id)
+INSERT INTO tasks_tags (task_id, tag_id)
 VALUES ('task_01', 'tag_01'),
        ('task_01', 'tag_02')
 `
@@ -121,7 +121,7 @@ func (q *Queries) ImportTaskTag(ctx context.Context) error {
 const importUser = `-- name: ImportUser :exec
 # noinspection SqlWithoutWhereForFile
 
-INSERT INTO user (id, name, api_key, created_at, updated_at)
+INSERT INTO users (id, name, api_key, created_at, updated_at)
 VALUES ('user_01', 'ユーザ1', 'some-api-key', '2020-01-01 00:00:01', '2020-01-01 00:00:01')
 `
 

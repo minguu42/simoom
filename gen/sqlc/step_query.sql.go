@@ -12,7 +12,7 @@ import (
 )
 
 const createStep = `-- name: CreateStep :exec
-INSERT INTO step (id, user_id, task_id, title, completed_at, created_at, updated_at)
+INSERT INTO steps (id, user_id, task_id, title, completed_at, created_at, updated_at)
 VALUES (?, ?, ?, ?, NULL, ?, ?)
 `
 
@@ -38,7 +38,9 @@ func (q *Queries) CreateStep(ctx context.Context, arg CreateStepParams) error {
 }
 
 const deleteStep = `-- name: DeleteStep :exec
-DELETE FROM step WHERE id = ?
+DELETE
+FROM steps
+WHERE id = ?
 `
 
 func (q *Queries) DeleteStep(ctx context.Context, id string) error {
@@ -47,7 +49,8 @@ func (q *Queries) DeleteStep(ctx context.Context, id string) error {
 }
 
 const getStepByID = `-- name: GetStepByID :one
-SELECT id, user_id, task_id, title, completed_at, created_at, updated_at FROM step
+SELECT id, user_id, task_id, title, completed_at, created_at, updated_at
+FROM steps
 WHERE id = ?
 `
 
@@ -67,7 +70,8 @@ func (q *Queries) GetStepByID(ctx context.Context, id string) (Step, error) {
 }
 
 const listStepsByTaskID = `-- name: ListStepsByTaskID :many
-SELECT id, user_id, task_id, title, completed_at, created_at, updated_at FROM step
+SELECT id, user_id, task_id, title, completed_at, created_at, updated_at
+FROM steps
 WHERE task_id = ?
 ORDER BY created_at
 `
@@ -104,7 +108,7 @@ func (q *Queries) ListStepsByTaskID(ctx context.Context, taskID string) ([]Step,
 }
 
 const updateStep = `-- name: UpdateStep :exec
-UPDATE step
+UPDATE steps
 SET title        = ?,
     completed_at = ?
 WHERE id = ?

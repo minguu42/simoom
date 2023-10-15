@@ -50,7 +50,7 @@ type Task struct {
 	UpdatedAt   time.Time
 }
 
-type TaskTag struct {
+type TasksTag struct {
 	TaskID string
 	TagID  string
 }
