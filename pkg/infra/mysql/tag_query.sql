@@ -1,31 +1,31 @@
 -- name: CreateTag :exec
-INSERT INTO tag (id, user_id, name, created_at, updated_at)
+INSERT INTO tags (id, user_id, name, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?);
 
 -- name: ListTagsByUserID :many
 SELECT *
-FROM tag
+FROM tags
 WHERE user_id = ?
 ORDER BY created_at
 LIMIT ? OFFSET ?;
 
 -- name: ListTagsByTaskID :many
 SELECT t.*
-FROM tag AS t
-       INNER JOIN task_tag AS tt ON t.id = tt.tag_id
+FROM tags AS t
+    INNER JOIN tasks_tags AS tt ON t.id = tt.tag_id
 WHERE tt.task_id = ?;
 
 -- name: GetTagByID :one
 SELECT *
-FROM tag
+FROM tags
 WHERE id = ?;
 
 -- name: UpdateTag :exec
-UPDATE tag
+UPDATE tags
 SET name = ?
 WHERE id = ?;
 
 -- name: DeleteTag :exec
 DELETE
-FROM tag
+FROM tags
 WHERE id = ?;
