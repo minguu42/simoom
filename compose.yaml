@@ -14,19 +14,19 @@ services:
     volumes:
       - .:/go/src/app
     depends_on:
-      - mysql
-  mysql:
+      - db
+  db:
     image: mysql:8.0
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
-    container_name: simoom-mysql
+    container_name: simoom-db
     restart: always
     ports:
       - 3306:3306
     volumes:
       - ./mysql/initdb:/docker-entrypoint-initdb.d
       - ./mysql/schema.sql:/schema.sql
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
 
 volumes:
-  mysql_data:
+  db_data:
