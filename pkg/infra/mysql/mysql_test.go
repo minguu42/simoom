@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"testing"
 
@@ -11,16 +12,21 @@ import (
 var tc *Client
 
 func TestMain(m *testing.M) {
-	var err error
+	appEnv, err := env.Load()
+	if err != nil {
+		log.Fatalf("%+v", err)
+	}
+
+	mysql := appEnv.MySQL
 	tc, err = NewClient(env.MySQL{
 		Host:               "localhost",
-		Port:               3306,
-		Database:           "simoomdb_test",
-		User:               "root",
-		Password:           "",
-		ConnMaxLifetimeMin: 5,
-		MaxOpenConns:       25,
-		MaxIdleConns:       25,
+		Port:               mysql.Port,
+		Database:           fmt.Sprintf("%s_test", mysql.Database),
+		User:               mysql.User,
+		Password:           mysql.Password,
+		ConnMaxLifetimeMin: mysql.ConnMaxLifetimeMin,
+		MaxOpenConns:       mysql.MaxOpenConns,
+		MaxIdleConns:       mysql.MaxIdleConns,
 	})
 	if err != nil {
 		log.Fatalf("%+v", err)
