@@ -14,7 +14,7 @@ setup: ## 開発に必要なツールをインストールする
 gen: ## コードを生成する
 	@buf generate
 	@sqlc generate
-	@make fmt
+	@$(MAKE) fmt
 
 build: ## 本番用APIサーバのコンテナイメージをビルドする
 	@docker build \
