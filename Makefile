@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := help
 .PHONY: setup gen build run migrate migrate-apply dev fmt lint test help
 
+export
+include $(PWD)/.env
+
 setup: ## 開発に必要なツールをインストールする
 	brew install sqldef/sqldef/mysqldef
 	go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
@@ -12,7 +15,7 @@ setup: ## 開発に必要なツールをインストールする
 gen: ## コードを生成する
 	@buf generate
 	@sqlc generate
-	@make fmt
+	@$(MAKE) fmt
 
 build: ## 本番用APIサーバのコンテナイメージをビルドする
 	@docker build \
@@ -53,8 +56,8 @@ lint: ## 静的解析を実行する
 	@staticcheck $$(go list ./... | grep -v /gen)
 
 test: ## テストを実行する
-	@go test $$(go list ./... | grep -v /gen)
+	@go test $(option) $$(go list ./... | grep -v /gen)
 
 help: ## ヘルプを表示する
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) \
       | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-14s\033[0m %s\n", $$1, $$2}'
