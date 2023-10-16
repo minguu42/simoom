@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := help
 .PHONY: setup gen build run migrate migrate-apply dev fmt lint test help
 
+export
 include $(PWD)/.env
 
 setup: ## 開発に必要なツールをインストールする
