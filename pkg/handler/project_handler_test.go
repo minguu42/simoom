@@ -6,9 +6,10 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/pkg/pointers"
 )
 
-var ph = projectHandler{}
+var tph = projectHandler{}
 
 func TestProjectHandler_CreateProject(t *testing.T) {
 	type args struct {
@@ -21,7 +22,7 @@ func TestProjectHandler_CreateProject(t *testing.T) {
 		hasError bool
 	}{
 		{
-			name: "Nameは必須である",
+			name: "nameに空文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateProjectRequest{
@@ -32,7 +33,7 @@ func TestProjectHandler_CreateProject(t *testing.T) {
 			hasError: true,
 		},
 		{
-			name: "Colorは#000000の形式で指定する",
+			name: "colorは#000000の形式で指定する",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateProjectRequest{
@@ -45,11 +46,38 @@ func TestProjectHandler_CreateProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if !tt.hasError {
-				return
+			if _, err := tph.CreateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("tph.CreateProject should return an error")
 			}
-			if _, err := ph.CreateProject(tt.args.ctx, tt.args.req); err == nil {
-				t.Errorf("ph.CreateProject should return an error")
+		})
+	}
+}
+
+func TestProjectHandler_ListProjects(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		req *connect.Request[simoompb.ListProjectsRequest]
+	}
+	tests := []struct {
+		name     string
+		args     args
+		hasError bool
+	}{
+		{
+			name: "limitは1以上である",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.ListProjectsRequest{
+					Limit: 0,
+				}),
+			},
+			hasError: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if _, err := tph.ListProjects(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("tph.ListProjects should return an error")
 			}
 		})
 	}
@@ -66,7 +94,7 @@ func TestProjectHandler_UpdateProject(t *testing.T) {
 		hasError bool
 	}{
 		{
-			name: "IDは26文字である",
+			name: "idは26文字の文字列である",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateProjectRequest{
@@ -76,7 +104,7 @@ func TestProjectHandler_UpdateProject(t *testing.T) {
 			hasError: true,
 		},
 		{
-			name: "いずれかのパラメータは必要である",
+			name: "いずれかの引数は必要である",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateProjectRequest{
@@ -88,14 +116,33 @@ func TestProjectHandler_UpdateProject(t *testing.T) {
 			},
 			hasError: true,
 		},
+		{
+			name: "nameに空文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.UpdateProjectRequest{
+					Id:   "01DXF6DT000000000000000000",
+					Name: pointers.Ref(""),
+				}),
+			},
+			hasError: true,
+		},
+		{
+			name: "colorは#000000の形式で指定する",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.UpdateProjectRequest{
+					Id:    "01DXF6DT000000000000000000",
+					Color: pointers.Ref("red"),
+				}),
+			},
+			hasError: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if !tt.hasError {
-				return
-			}
-			if _, err := ph.UpdateProject(tt.args.ctx, tt.args.req); err == nil {
-				t.Errorf("ph.UpdateProject should return an error")
+			if _, err := tph.UpdateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("tph.UpdateProject should return an error")
 			}
 		})
 	}
@@ -112,7 +159,7 @@ func TestProjectHandler_DeleteProject(t *testing.T) {
 		hasError bool
 	}{
 		{
-			name: "IDは26文字である",
+			name: "idは26文字の文字列である",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.DeleteProjectRequest{
@@ -124,11 +171,8 @@ func TestProjectHandler_DeleteProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if !tt.hasError {
-				return
-			}
-			if _, err := ph.DeleteProject(tt.args.ctx, tt.args.req); err == nil {
-				t.Errorf("ph.UpdateProject should return an error")
+			if _, err := tph.DeleteProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("tph.DeleteProject should return an error")
 			}
 		})
 	}
