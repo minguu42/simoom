@@ -17,6 +17,10 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+func newErrInvalidArgument(message string) *connect.Error {
+	return connect.NewError(connect.CodeInvalidArgument, errors.New(message))
+}
+
 var errInvalidArgument = connect.NewError(connect.CodeInvalidArgument, errors.New("request contains an error"))
 
 // New はハンドラを生成する
