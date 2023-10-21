@@ -115,7 +115,6 @@ func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDI
 
 type UpdateTaskInput struct {
 	ID          string
-	ProjectID   string
 	Title       *string
 	Content     *string
 	Priority    *uint

@@ -84,18 +84,16 @@ message ListTasksByTagIDRequest {
 }
 
 message UpdateTaskRequest {
-  string project_id = 1;
-  string id = 2;
-  optional string title = 3;
-  optional string content = 4;
-  optional uint32 priority = 5;
-  optional Date due_on = 6;
-  optional google.protobuf.Timestamp completed_at = 7;
+  string id = 1;
+  optional string title = 2;
+  optional string content = 3;
+  optional uint32 priority = 4;
+  optional Date due_on = 5;
+  optional google.protobuf.Timestamp completed_at = 6;
 }
 
 message DeleteTaskRequest {
-  string project_id = 1;
-  string id = 2;
+  string id = 1;
 }
 
 message TaskResponse {

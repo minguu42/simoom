@@ -106,9 +106,6 @@ func (h taskHandler) ListTasksByTagID(ctx context.Context, req *connect.Request[
 }
 
 func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.TaskResponse], error) {
-	if len(req.Msg.ProjectId) != 26 {
-		return nil, newErrInvalidArgument("project_id is a 26-character string")
-	}
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
@@ -124,7 +121,6 @@ func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoom
 
 	out, err := h.uc.UpdateTask(ctx, usecase.UpdateTaskInput{
 		ID:          req.Msg.Id,
-		ProjectID:   req.Msg.ProjectId,
 		Title:       req.Msg.Title,
 		Content:     req.Msg.Content,
 		Priority:    nil,
@@ -138,9 +134,6 @@ func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoom
 }
 
 func (h taskHandler) DeleteTask(ctx context.Context, req *connect.Request[simoompb.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
-	if len(req.Msg.ProjectId) != 26 {
-		return nil, newErrInvalidArgument("project_id is a 26-character string")
-	}
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
