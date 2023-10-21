@@ -40,11 +40,14 @@ type taskHandler struct {
 }
 
 func (h taskHandler) CreateTask(ctx context.Context, req *connect.Request[simoompb.CreateTaskRequest]) (*connect.Response[simoompb.TaskResponse], error) {
-	if req.Msg.ProjectId != "" {
-		return nil, errInvalidArgument
+	if len(req.Msg.ProjectId) != 26 {
+		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}
 	if req.Msg.Title != "" {
-		return nil, errInvalidArgument
+		return nil, newErrInvalidArgument("title cannot be an empty string")
+	}
+	if req.Msg.Priority > 3 {
+		return nil, newErrInvalidArgument("priority is specified by 0 to 3")
 	}
 
 	out, err := h.uc.CreateTask(ctx, usecase.CreateTaskInput{
@@ -59,6 +62,13 @@ func (h taskHandler) CreateTask(ctx context.Context, req *connect.Request[simoom
 }
 
 func (h taskHandler) ListTasksByProjectID(ctx context.Context, req *connect.Request[simoompb.ListTasksByProjectIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
+	if len(req.Msg.ProjectId) != 26 {
+		return nil, newErrInvalidArgument("project_id is a 26-character string")
+	}
+	if req.Msg.Limit == 0 {
+		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
+	}
+
 	out, err := h.uc.ListTasksByProjectID(ctx, usecase.ListTasksByProjectIDInput{
 		ProjectID: req.Msg.ProjectId,
 		Limit:     uint(req.Msg.Limit),
@@ -74,6 +84,13 @@ func (h taskHandler) ListTasksByProjectID(ctx context.Context, req *connect.Requ
 }
 
 func (h taskHandler) ListTasksByTagID(ctx context.Context, req *connect.Request[simoompb.ListTasksByTagIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
+	if len(req.Msg.TagId) != 26 {
+		return nil, newErrInvalidArgument("tag_id is a 26-character string")
+	}
+	if req.Msg.Limit == 0 {
+		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
+	}
+
 	out, err := h.uc.ListTasksByTagID(ctx, usecase.ListTasksByTagIDInput{
 		TagID:  req.Msg.TagId,
 		Limit:  uint(req.Msg.Limit),
@@ -89,11 +106,20 @@ func (h taskHandler) ListTasksByTagID(ctx context.Context, req *connect.Request[
 }
 
 func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.TaskResponse], error) {
-	if req.Msg.Id == "" {
-		return nil, errInvalidArgument
+	if len(req.Msg.ProjectId) != 26 {
+		return nil, newErrInvalidArgument("project_id is a 26-character string")
+	}
+	if len(req.Msg.Id) != 26 {
+		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
 	if req.Msg.Title == nil && req.Msg.Content == nil && req.Msg.Priority == nil && req.Msg.DueOn == nil && req.Msg.CompletedAt == nil {
-		return nil, errInvalidArgument
+		return nil, newErrInvalidArgument("must contain some argument other than id")
+	}
+	if req.Msg.Title != nil && *req.Msg.Title != "" {
+		return nil, newErrInvalidArgument("title cannot be an empty string")
+	}
+	if req.Msg.Priority != nil && *req.Msg.Priority > 3 {
+		return nil, newErrInvalidArgument("priority is specified by 0 to 3")
 	}
 
 	out, err := h.uc.UpdateTask(ctx, usecase.UpdateTaskInput{
@@ -112,6 +138,13 @@ func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoom
 }
 
 func (h taskHandler) DeleteTask(ctx context.Context, req *connect.Request[simoompb.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
+	if len(req.Msg.ProjectId) != 26 {
+		return nil, newErrInvalidArgument("project_id is a 26-character string")
+	}
+	if len(req.Msg.Id) != 26 {
+		return nil, newErrInvalidArgument("id is a 26-character string")
+	}
+
 	if err := h.uc.DeleteTask(ctx, usecase.DeleteTaskInput{
 		ID: req.Msg.Id,
 	}); err != nil {
