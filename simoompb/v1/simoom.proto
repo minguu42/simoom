@@ -159,7 +159,10 @@ message CreateTagRequest {
   string name = 1;
 }
 
-message ListTagsRequest {}
+message ListTagsRequest {
+  uint64 limit = 1;
+  uint64 offset = 2;
+}
 
 message UpdateTagRequest {
   string id = 1;
