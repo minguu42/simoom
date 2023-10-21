@@ -28,7 +28,10 @@ message CreateProjectRequest {
   string color = 2;
 }
 
-message ListProjectsRequest {}
+message ListProjectsRequest {
+  uint64 limit = 1;
+  uint64 offset = 2;
+}
 
 message UpdateProjectRequest {
   string id = 1;
