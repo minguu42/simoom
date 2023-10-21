@@ -33,6 +33,10 @@ type tagHandler struct {
 }
 
 func (h tagHandler) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
+	if req.Msg.Name == "" {
+		return nil, newErrInvalidArgument("name cannot be an empty string")
+	}
+
 	out, err := h.uc.CreateTag(ctx, usecase.CreateTagInput{
 		Name: req.Msg.Name,
 	})
@@ -42,10 +46,14 @@ func (h tagHandler) CreateTag(ctx context.Context, req *connect.Request[simoompb
 	return connect.NewResponse(newTagResponse(out.Tag)), nil
 }
 
-func (h tagHandler) ListTags(ctx context.Context, _ *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.TagsResponse], error) {
+func (h tagHandler) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.TagsResponse], error) {
+	if req.Msg.Limit == 0 {
+		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
+	}
+
 	out, err := h.uc.ListTags(ctx, usecase.ListTagsInput{
-		Limit:  10,
-		Offset: 0,
+		Limit:  uint(req.Msg.Limit),
+		Offset: uint(req.Msg.Offset),
 	})
 	if err != nil {
 		return nil, err
@@ -56,8 +64,14 @@ func (h tagHandler) ListTags(ctx context.Context, _ *connect.Request[simoompb.Li
 }
 
 func (h tagHandler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.UpdateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
+	if len(req.Msg.Id) != 26 {
+		return nil, newErrInvalidArgument("id is a 26-character string")
+	}
 	if req.Msg.Name == nil {
-		return nil, errInvalidArgument
+		return nil, newErrInvalidArgument("must contain some argument other than id")
+	}
+	if req.Msg.Name != nil && *req.Msg.Name == "" {
+		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 
 	out, err := h.uc.UpdateTag(ctx, usecase.UpdateTagInput{
@@ -71,6 +85,10 @@ func (h tagHandler) UpdateTag(ctx context.Context, req *connect.Request[simoompb
 }
 
 func (h tagHandler) DeleteTag(ctx context.Context, req *connect.Request[simoompb.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
+	if len(req.Msg.Id) != 26 {
+		return nil, newErrInvalidArgument("id is a 26-character string")
+	}
+
 	if err := h.uc.DeleteTag(ctx, usecase.DeleteTagInput{ID: req.Msg.Id}); err != nil {
 		return nil, err
 	}
