@@ -43,7 +43,7 @@ func (h taskHandler) CreateTask(ctx context.Context, req *connect.Request[simoom
 	if len(req.Msg.ProjectId) != 26 {
 		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}
-	if req.Msg.Title != "" {
+	if req.Msg.Title == "" {
 		return nil, newErrInvalidArgument("title cannot be an empty string")
 	}
 	if req.Msg.Priority > 3 {
@@ -65,7 +65,7 @@ func (h taskHandler) ListTasksByProjectID(ctx context.Context, req *connect.Requ
 	if len(req.Msg.ProjectId) != 26 {
 		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}
-	if req.Msg.Limit == 0 {
+	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
 
@@ -87,7 +87,7 @@ func (h taskHandler) ListTasksByTagID(ctx context.Context, req *connect.Request[
 	if len(req.Msg.TagId) != 26 {
 		return nil, newErrInvalidArgument("tag_id is a 26-character string")
 	}
-	if req.Msg.Limit == 0 {
+	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
 
@@ -112,7 +112,7 @@ func (h taskHandler) UpdateTask(ctx context.Context, req *connect.Request[simoom
 	if req.Msg.Title == nil && req.Msg.Content == nil && req.Msg.Priority == nil && req.Msg.DueOn == nil && req.Msg.CompletedAt == nil {
 		return nil, newErrInvalidArgument("must contain some argument other than id")
 	}
-	if req.Msg.Title != nil && *req.Msg.Title != "" {
+	if req.Msg.Title != nil && *req.Msg.Title == "" {
 		return nil, newErrInvalidArgument("title cannot be an empty string")
 	}
 	if req.Msg.Priority != nil && *req.Msg.Priority > 3 {

@@ -54,7 +54,7 @@ func (h projectHandler) CreateProject(ctx context.Context, req *connect.Request[
 }
 
 func (h projectHandler) ListProjects(ctx context.Context, req *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.ProjectsResponse], error) {
-	if req.Msg.Limit == 0 {
+	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
 

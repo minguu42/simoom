@@ -17,10 +17,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func newErrInvalidArgument(message string) *connect.Error {
-	return connect.NewError(connect.CodeInvalidArgument, errors.New(message))
-}
-
 // New はハンドラを生成する
 func New(repo repository.Repository) http.Handler {
 	opt := connect.WithInterceptors(
@@ -37,6 +33,10 @@ func New(repo repository.Repository) http.Handler {
 	mux.Handle(simoompbconnect.NewTaskServiceHandler(taskHandler{uc: usecase.TaskUsecase{Repo: repo}}, opt))
 
 	return h2c.NewHandler(mux, &http2.Server{})
+}
+
+func newErrInvalidArgument(message string) *connect.Error {
+	return connect.NewError(connect.CodeInvalidArgument, errors.New(message))
 }
 
 func newDate(t *time.Time) *simoompb.Date {

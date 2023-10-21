@@ -47,7 +47,7 @@ func (h tagHandler) CreateTag(ctx context.Context, req *connect.Request[simoompb
 }
 
 func (h tagHandler) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.TagsResponse], error) {
-	if req.Msg.Limit == 0 {
+	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
 
