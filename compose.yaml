@@ -16,7 +16,7 @@ services:
     depends_on:
       - db
   db:
-    image: mysql:8.0
+    image: mysql:8.0.32
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
     container_name: simoom-db
