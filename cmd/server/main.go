@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
+	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/cockroachdb/errors"
@@ -31,11 +36,25 @@ func main() {
 	}
 	defer c.Close()
 
-	log.Println("Start accepting requests")
-	addr := fmt.Sprintf("%s:%d", appEnv.API.Host, appEnv.API.Port)
-	if err := http.ListenAndServe(addr, handler.New(c)); errors.Is(err, http.ErrServerClosed) {
-		log.Println(err)
-		return
+	s := &http.Server{
+		Addr:              net.JoinHostPort(appEnv.API.Host, strconv.Itoa(appEnv.API.Port)),
+		Handler:           handler.New(c),
+		ReadTimeout:       10 * time.Second,
+		ReadHeaderTimeout: 10 * time.Second,
+		MaxHeaderBytes:    1 << 20,
 	}
-	log.Println("server started")
+	go func() {
+		log.Println("Start accepting requests")
+		if err := s.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+			log.Printf("%+v", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, os.Interrupt)
+	<-quit
+	if err := s.Shutdown(context.Background()); err != nil {
+		log.Fatalf("s.Shutdown failed: %s", err)
+	}
+	log.Println("Stop accepting requests")
 }

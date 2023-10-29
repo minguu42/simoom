@@ -53,7 +53,7 @@ args_bin = ["hello", "world"]
 # Show log time
 time = false
 # Only show main log (silences watcher, build, runner)
-main_only = false
+main_only = true
 
 [color]
 # Customize each part's color. If no color found, use the raw app log.
