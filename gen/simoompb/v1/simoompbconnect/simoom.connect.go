@@ -87,21 +87,21 @@ const (
 // SimoomServiceClient is a client for the simoompb.v1.SimoomService service.
 type SimoomServiceClient interface {
 	CheckHealth(context.Context, *connect.Request[v1.CheckHealthRequest]) (*connect.Response[v1.CheckHealthResponse], error)
-	CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.ProjectResponse], error)
-	ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.ProjectsResponse], error)
-	UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.ProjectResponse], error)
+	CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.Project], error)
+	ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.Projects], error)
+	UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.Project], error)
 	DeleteProject(context.Context, *connect.Request[v1.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error)
-	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
-	ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error)
-	ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error)
-	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
+	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.Task], error)
+	ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.Tasks], error)
+	ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.Tasks], error)
+	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.Task], error)
 	DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error)
-	CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error)
-	UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error)
+	CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.Step], error)
+	UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.Step], error)
 	DeleteStep(context.Context, *connect.Request[v1.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error)
-	CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error)
-	ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error)
-	UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error)
+	CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.Tag], error)
+	ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.Tags], error)
+	UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.Tag], error)
 	DeleteTag(context.Context, *connect.Request[v1.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error)
 }
 
@@ -120,17 +120,17 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			baseURL+SimoomServiceCheckHealthProcedure,
 			opts...,
 		),
-		createProject: connect.NewClient[v1.CreateProjectRequest, v1.ProjectResponse](
+		createProject: connect.NewClient[v1.CreateProjectRequest, v1.Project](
 			httpClient,
 			baseURL+SimoomServiceCreateProjectProcedure,
 			opts...,
 		),
-		listProjects: connect.NewClient[v1.ListProjectsRequest, v1.ProjectsResponse](
+		listProjects: connect.NewClient[v1.ListProjectsRequest, v1.Projects](
 			httpClient,
 			baseURL+SimoomServiceListProjectsProcedure,
 			opts...,
 		),
-		updateProject: connect.NewClient[v1.UpdateProjectRequest, v1.ProjectResponse](
+		updateProject: connect.NewClient[v1.UpdateProjectRequest, v1.Project](
 			httpClient,
 			baseURL+SimoomServiceUpdateProjectProcedure,
 			opts...,
@@ -140,22 +140,22 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			baseURL+SimoomServiceDeleteProjectProcedure,
 			opts...,
 		),
-		createTask: connect.NewClient[v1.CreateTaskRequest, v1.TaskResponse](
+		createTask: connect.NewClient[v1.CreateTaskRequest, v1.Task](
 			httpClient,
 			baseURL+SimoomServiceCreateTaskProcedure,
 			opts...,
 		),
-		listTasksByProjectID: connect.NewClient[v1.ListTasksByProjectIDRequest, v1.TasksResponse](
+		listTasksByProjectID: connect.NewClient[v1.ListTasksByProjectIDRequest, v1.Tasks](
 			httpClient,
 			baseURL+SimoomServiceListTasksByProjectIDProcedure,
 			opts...,
 		),
-		listTasksByTagID: connect.NewClient[v1.ListTasksByTagIDRequest, v1.TasksResponse](
+		listTasksByTagID: connect.NewClient[v1.ListTasksByTagIDRequest, v1.Tasks](
 			httpClient,
 			baseURL+SimoomServiceListTasksByTagIDProcedure,
 			opts...,
 		),
-		updateTask: connect.NewClient[v1.UpdateTaskRequest, v1.TaskResponse](
+		updateTask: connect.NewClient[v1.UpdateTaskRequest, v1.Task](
 			httpClient,
 			baseURL+SimoomServiceUpdateTaskProcedure,
 			opts...,
@@ -165,12 +165,12 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			baseURL+SimoomServiceDeleteTaskProcedure,
 			opts...,
 		),
-		createStep: connect.NewClient[v1.CreateStepRequest, v1.StepResponse](
+		createStep: connect.NewClient[v1.CreateStepRequest, v1.Step](
 			httpClient,
 			baseURL+SimoomServiceCreateStepProcedure,
 			opts...,
 		),
-		updateStep: connect.NewClient[v1.UpdateStepRequest, v1.StepResponse](
+		updateStep: connect.NewClient[v1.UpdateStepRequest, v1.Step](
 			httpClient,
 			baseURL+SimoomServiceUpdateStepProcedure,
 			opts...,
@@ -180,17 +180,17 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			baseURL+SimoomServiceDeleteStepProcedure,
 			opts...,
 		),
-		createTag: connect.NewClient[v1.CreateTagRequest, v1.TagResponse](
+		createTag: connect.NewClient[v1.CreateTagRequest, v1.Tag](
 			httpClient,
 			baseURL+SimoomServiceCreateTagProcedure,
 			opts...,
 		),
-		listTags: connect.NewClient[v1.ListTagsRequest, v1.TagsResponse](
+		listTags: connect.NewClient[v1.ListTagsRequest, v1.Tags](
 			httpClient,
 			baseURL+SimoomServiceListTagsProcedure,
 			opts...,
 		),
-		updateTag: connect.NewClient[v1.UpdateTagRequest, v1.TagResponse](
+		updateTag: connect.NewClient[v1.UpdateTagRequest, v1.Tag](
 			httpClient,
 			baseURL+SimoomServiceUpdateTagProcedure,
 			opts...,
@@ -206,21 +206,21 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 // simoomServiceClient implements SimoomServiceClient.
 type simoomServiceClient struct {
 	checkHealth          *connect.Client[v1.CheckHealthRequest, v1.CheckHealthResponse]
-	createProject        *connect.Client[v1.CreateProjectRequest, v1.ProjectResponse]
-	listProjects         *connect.Client[v1.ListProjectsRequest, v1.ProjectsResponse]
-	updateProject        *connect.Client[v1.UpdateProjectRequest, v1.ProjectResponse]
+	createProject        *connect.Client[v1.CreateProjectRequest, v1.Project]
+	listProjects         *connect.Client[v1.ListProjectsRequest, v1.Projects]
+	updateProject        *connect.Client[v1.UpdateProjectRequest, v1.Project]
 	deleteProject        *connect.Client[v1.DeleteProjectRequest, emptypb.Empty]
-	createTask           *connect.Client[v1.CreateTaskRequest, v1.TaskResponse]
-	listTasksByProjectID *connect.Client[v1.ListTasksByProjectIDRequest, v1.TasksResponse]
-	listTasksByTagID     *connect.Client[v1.ListTasksByTagIDRequest, v1.TasksResponse]
-	updateTask           *connect.Client[v1.UpdateTaskRequest, v1.TaskResponse]
+	createTask           *connect.Client[v1.CreateTaskRequest, v1.Task]
+	listTasksByProjectID *connect.Client[v1.ListTasksByProjectIDRequest, v1.Tasks]
+	listTasksByTagID     *connect.Client[v1.ListTasksByTagIDRequest, v1.Tasks]
+	updateTask           *connect.Client[v1.UpdateTaskRequest, v1.Task]
 	deleteTask           *connect.Client[v1.DeleteTaskRequest, emptypb.Empty]
-	createStep           *connect.Client[v1.CreateStepRequest, v1.StepResponse]
-	updateStep           *connect.Client[v1.UpdateStepRequest, v1.StepResponse]
+	createStep           *connect.Client[v1.CreateStepRequest, v1.Step]
+	updateStep           *connect.Client[v1.UpdateStepRequest, v1.Step]
 	deleteStep           *connect.Client[v1.DeleteStepRequest, emptypb.Empty]
-	createTag            *connect.Client[v1.CreateTagRequest, v1.TagResponse]
-	listTags             *connect.Client[v1.ListTagsRequest, v1.TagsResponse]
-	updateTag            *connect.Client[v1.UpdateTagRequest, v1.TagResponse]
+	createTag            *connect.Client[v1.CreateTagRequest, v1.Tag]
+	listTags             *connect.Client[v1.ListTagsRequest, v1.Tags]
+	updateTag            *connect.Client[v1.UpdateTagRequest, v1.Tag]
 	deleteTag            *connect.Client[v1.DeleteTagRequest, emptypb.Empty]
 }
 
@@ -230,17 +230,17 @@ func (c *simoomServiceClient) CheckHealth(ctx context.Context, req *connect.Requ
 }
 
 // CreateProject calls simoompb.v1.SimoomService.CreateProject.
-func (c *simoomServiceClient) CreateProject(ctx context.Context, req *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.ProjectResponse], error) {
+func (c *simoomServiceClient) CreateProject(ctx context.Context, req *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.Project], error) {
 	return c.createProject.CallUnary(ctx, req)
 }
 
 // ListProjects calls simoompb.v1.SimoomService.ListProjects.
-func (c *simoomServiceClient) ListProjects(ctx context.Context, req *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.ProjectsResponse], error) {
+func (c *simoomServiceClient) ListProjects(ctx context.Context, req *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.Projects], error) {
 	return c.listProjects.CallUnary(ctx, req)
 }
 
 // UpdateProject calls simoompb.v1.SimoomService.UpdateProject.
-func (c *simoomServiceClient) UpdateProject(ctx context.Context, req *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.ProjectResponse], error) {
+func (c *simoomServiceClient) UpdateProject(ctx context.Context, req *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.Project], error) {
 	return c.updateProject.CallUnary(ctx, req)
 }
 
@@ -250,22 +250,22 @@ func (c *simoomServiceClient) DeleteProject(ctx context.Context, req *connect.Re
 }
 
 // CreateTask calls simoompb.v1.SimoomService.CreateTask.
-func (c *simoomServiceClient) CreateTask(ctx context.Context, req *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+func (c *simoomServiceClient) CreateTask(ctx context.Context, req *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.Task], error) {
 	return c.createTask.CallUnary(ctx, req)
 }
 
 // ListTasksByProjectID calls simoompb.v1.SimoomService.ListTasksByProjectID.
-func (c *simoomServiceClient) ListTasksByProjectID(ctx context.Context, req *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+func (c *simoomServiceClient) ListTasksByProjectID(ctx context.Context, req *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.Tasks], error) {
 	return c.listTasksByProjectID.CallUnary(ctx, req)
 }
 
 // ListTasksByTagID calls simoompb.v1.SimoomService.ListTasksByTagID.
-func (c *simoomServiceClient) ListTasksByTagID(ctx context.Context, req *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+func (c *simoomServiceClient) ListTasksByTagID(ctx context.Context, req *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.Tasks], error) {
 	return c.listTasksByTagID.CallUnary(ctx, req)
 }
 
 // UpdateTask calls simoompb.v1.SimoomService.UpdateTask.
-func (c *simoomServiceClient) UpdateTask(ctx context.Context, req *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+func (c *simoomServiceClient) UpdateTask(ctx context.Context, req *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.Task], error) {
 	return c.updateTask.CallUnary(ctx, req)
 }
 
@@ -275,12 +275,12 @@ func (c *simoomServiceClient) DeleteTask(ctx context.Context, req *connect.Reque
 }
 
 // CreateStep calls simoompb.v1.SimoomService.CreateStep.
-func (c *simoomServiceClient) CreateStep(ctx context.Context, req *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+func (c *simoomServiceClient) CreateStep(ctx context.Context, req *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.Step], error) {
 	return c.createStep.CallUnary(ctx, req)
 }
 
 // UpdateStep calls simoompb.v1.SimoomService.UpdateStep.
-func (c *simoomServiceClient) UpdateStep(ctx context.Context, req *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+func (c *simoomServiceClient) UpdateStep(ctx context.Context, req *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.Step], error) {
 	return c.updateStep.CallUnary(ctx, req)
 }
 
@@ -290,17 +290,17 @@ func (c *simoomServiceClient) DeleteStep(ctx context.Context, req *connect.Reque
 }
 
 // CreateTag calls simoompb.v1.SimoomService.CreateTag.
-func (c *simoomServiceClient) CreateTag(ctx context.Context, req *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+func (c *simoomServiceClient) CreateTag(ctx context.Context, req *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.Tag], error) {
 	return c.createTag.CallUnary(ctx, req)
 }
 
 // ListTags calls simoompb.v1.SimoomService.ListTags.
-func (c *simoomServiceClient) ListTags(ctx context.Context, req *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error) {
+func (c *simoomServiceClient) ListTags(ctx context.Context, req *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.Tags], error) {
 	return c.listTags.CallUnary(ctx, req)
 }
 
 // UpdateTag calls simoompb.v1.SimoomService.UpdateTag.
-func (c *simoomServiceClient) UpdateTag(ctx context.Context, req *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+func (c *simoomServiceClient) UpdateTag(ctx context.Context, req *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.Tag], error) {
 	return c.updateTag.CallUnary(ctx, req)
 }
 
@@ -312,21 +312,21 @@ func (c *simoomServiceClient) DeleteTag(ctx context.Context, req *connect.Reques
 // SimoomServiceHandler is an implementation of the simoompb.v1.SimoomService service.
 type SimoomServiceHandler interface {
 	CheckHealth(context.Context, *connect.Request[v1.CheckHealthRequest]) (*connect.Response[v1.CheckHealthResponse], error)
-	CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.ProjectResponse], error)
-	ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.ProjectsResponse], error)
-	UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.ProjectResponse], error)
+	CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.Project], error)
+	ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.Projects], error)
+	UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.Project], error)
 	DeleteProject(context.Context, *connect.Request[v1.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error)
-	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
-	ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error)
-	ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error)
-	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error)
+	CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.Task], error)
+	ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.Tasks], error)
+	ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.Tasks], error)
+	UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.Task], error)
 	DeleteTask(context.Context, *connect.Request[v1.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error)
-	CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error)
-	UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error)
+	CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.Step], error)
+	UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.Step], error)
 	DeleteStep(context.Context, *connect.Request[v1.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error)
-	CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error)
-	ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error)
-	UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error)
+	CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.Tag], error)
+	ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.Tags], error)
+	UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.Tag], error)
 	DeleteTag(context.Context, *connect.Request[v1.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error)
 }
 
@@ -470,15 +470,15 @@ func (UnimplementedSimoomServiceHandler) CheckHealth(context.Context, *connect.R
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.CheckHealth is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.ProjectResponse], error) {
+func (UnimplementedSimoomServiceHandler) CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.Project], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.CreateProject is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.ProjectsResponse], error) {
+func (UnimplementedSimoomServiceHandler) ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.Projects], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.ListProjects is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.ProjectResponse], error) {
+func (UnimplementedSimoomServiceHandler) UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.Project], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.UpdateProject is not implemented"))
 }
 
@@ -486,19 +486,19 @@ func (UnimplementedSimoomServiceHandler) DeleteProject(context.Context, *connect
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.DeleteProject is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+func (UnimplementedSimoomServiceHandler) CreateTask(context.Context, *connect.Request[v1.CreateTaskRequest]) (*connect.Response[v1.Task], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.CreateTask is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+func (UnimplementedSimoomServiceHandler) ListTasksByProjectID(context.Context, *connect.Request[v1.ListTasksByProjectIDRequest]) (*connect.Response[v1.Tasks], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.ListTasksByProjectID is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.TasksResponse], error) {
+func (UnimplementedSimoomServiceHandler) ListTasksByTagID(context.Context, *connect.Request[v1.ListTasksByTagIDRequest]) (*connect.Response[v1.Tasks], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.ListTasksByTagID is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.TaskResponse], error) {
+func (UnimplementedSimoomServiceHandler) UpdateTask(context.Context, *connect.Request[v1.UpdateTaskRequest]) (*connect.Response[v1.Task], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.UpdateTask is not implemented"))
 }
 
@@ -506,11 +506,11 @@ func (UnimplementedSimoomServiceHandler) DeleteTask(context.Context, *connect.Re
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.DeleteTask is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+func (UnimplementedSimoomServiceHandler) CreateStep(context.Context, *connect.Request[v1.CreateStepRequest]) (*connect.Response[v1.Step], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.CreateStep is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.StepResponse], error) {
+func (UnimplementedSimoomServiceHandler) UpdateStep(context.Context, *connect.Request[v1.UpdateStepRequest]) (*connect.Response[v1.Step], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.UpdateStep is not implemented"))
 }
 
@@ -518,15 +518,15 @@ func (UnimplementedSimoomServiceHandler) DeleteStep(context.Context, *connect.Re
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.DeleteStep is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+func (UnimplementedSimoomServiceHandler) CreateTag(context.Context, *connect.Request[v1.CreateTagRequest]) (*connect.Response[v1.Tag], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.CreateTag is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.TagsResponse], error) {
+func (UnimplementedSimoomServiceHandler) ListTags(context.Context, *connect.Request[v1.ListTagsRequest]) (*connect.Response[v1.Tags], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.ListTags is not implemented"))
 }
 
-func (UnimplementedSimoomServiceHandler) UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.TagResponse], error) {
+func (UnimplementedSimoomServiceHandler) UpdateTag(context.Context, *connect.Request[v1.UpdateTagRequest]) (*connect.Response[v1.Tag], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.UpdateTag is not implemented"))
 }
 
