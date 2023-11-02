@@ -13,14 +13,34 @@ message Date {
   uint32 day = 3;
 }
 
+service SimoomService {
+  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse);
+
+  rpc CreateProject(CreateProjectRequest) returns (ProjectResponse);
+  rpc ListProjects(ListProjectsRequest) returns (ProjectsResponse);
+  rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
+  rpc DeleteProject(DeleteProjectRequest) returns (google.protobuf.Empty);
+
+  rpc CreateTask(CreateTaskRequest) returns (TaskResponse);
+  rpc ListTasksByProjectID(ListTasksByProjectIDRequest) returns (TasksResponse);
+  rpc ListTasksByTagID(ListTasksByTagIDRequest) returns (TasksResponse);
+  rpc UpdateTask(UpdateTaskRequest) returns (TaskResponse);
+  rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
+
+  rpc CreateStep(CreateStepRequest) returns (StepResponse);
+  rpc UpdateStep(UpdateStepRequest) returns (StepResponse);
+  rpc DeleteStep(DeleteStepRequest) returns (google.protobuf.Empty);
+
+  rpc CreateTag(CreateTagRequest) returns (TagResponse);
+  rpc ListTags(ListTagsRequest) returns (TagsResponse);
+  rpc UpdateTag(UpdateTagRequest) returns (TagResponse);
+  rpc DeleteTag(DeleteTagRequest) returns (google.protobuf.Empty);
+}
+
 message CheckHealthRequest {}
 
 message CheckHealthResponse {
   string revision = 1;
-}
-
-service MonitoringService {
-  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse);
 }
 
 message CreateProjectRequest {
@@ -56,13 +76,6 @@ message ProjectResponse {
 message ProjectsResponse {
   repeated ProjectResponse projects = 1;
   bool has_next = 2;
-}
-
-service ProjectService {
-  rpc CreateProject(CreateProjectRequest) returns (ProjectResponse);
-  rpc ListProjects(ListProjectsRequest) returns (ProjectsResponse);
-  rpc UpdateProject(UpdateProjectRequest) returns (ProjectResponse);
-  rpc DeleteProject(DeleteProjectRequest) returns (google.protobuf.Empty);
 }
 
 message CreateTaskRequest {
@@ -115,14 +128,6 @@ message TasksResponse {
   bool has_next = 2;
 }
 
-service TaskService {
-  rpc CreateTask(CreateTaskRequest) returns (TaskResponse);
-  rpc ListTasksByProjectID(ListTasksByProjectIDRequest) returns (TasksResponse);
-  rpc ListTasksByTagID(ListTasksByTagIDRequest) returns (TasksResponse);
-  rpc UpdateTask(UpdateTaskRequest) returns (TaskResponse);
-  rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
-}
-
 message CreateStepRequest {
   string task_id = 1;
   string title = 2;
@@ -145,12 +150,6 @@ message StepResponse {
   google.protobuf.Timestamp completed_at = 4;
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
-}
-
-service StepService {
-  rpc CreateStep(CreateStepRequest) returns (StepResponse);
-  rpc UpdateStep(UpdateStepRequest) returns (StepResponse);
-  rpc DeleteStep(DeleteStepRequest) returns (google.protobuf.Empty);
 }
 
 message CreateTagRequest {
@@ -180,11 +179,4 @@ message TagResponse {
 
 message TagsResponse {
   repeated TagResponse tags = 1;
-}
-
-service TagService {
-  rpc CreateTag(CreateTagRequest) returns (TagResponse);
-  rpc ListTags(ListTagsRequest) returns (TagsResponse);
-  rpc UpdateTag(UpdateTagRequest) returns (TagResponse);
-  rpc DeleteTag(DeleteTagRequest) returns (google.protobuf.Empty);
 }
