@@ -12,8 +12,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func newProjectResponse(p model.Project) *simoompb.ProjectResponse {
-	return &simoompb.ProjectResponse{
+func newProject(p model.Project) *simoompb.Project {
+	return &simoompb.Project{
 		Id:         p.ID,
 		Name:       p.Name,
 		Color:      p.Color,
@@ -23,15 +23,15 @@ func newProjectResponse(p model.Project) *simoompb.ProjectResponse {
 	}
 }
 
-func newProjectsResponse(ps []model.Project) []*simoompb.ProjectResponse {
-	projects := make([]*simoompb.ProjectResponse, 0, len(ps))
+func newProjects(ps []model.Project) []*simoompb.Project {
+	projects := make([]*simoompb.Project, 0, len(ps))
 	for _, p := range ps {
-		projects = append(projects, newProjectResponse(p))
+		projects = append(projects, newProject(p))
 	}
 	return projects
 }
 
-func (s simoom) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.ProjectResponse], error) {
+func (s simoom) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
 	if req.Msg.Name == "" {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
@@ -46,10 +46,10 @@ func (s simoom) CreateProject(ctx context.Context, req *connect.Request[simoompb
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newProjectResponse(out.Project)), nil
+	return connect.NewResponse(newProject(out.Project)), nil
 }
 
-func (s simoom) ListProjects(ctx context.Context, req *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.ProjectsResponse], error) {
+func (s simoom) ListProjects(ctx context.Context, req *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.Projects], error) {
 	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
@@ -61,13 +61,13 @@ func (s simoom) ListProjects(ctx context.Context, req *connect.Request[simoompb.
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(&simoompb.ProjectsResponse{
-		Projects: newProjectsResponse(out.Projects),
+	return connect.NewResponse(&simoompb.Projects{
+		Projects: newProjects(out.Projects),
 		HasNext:  out.HasNext,
 	}), nil
 }
 
-func (s simoom) UpdateProject(ctx context.Context, req *connect.Request[simoompb.UpdateProjectRequest]) (*connect.Response[simoompb.ProjectResponse], error) {
+func (s simoom) UpdateProject(ctx context.Context, req *connect.Request[simoompb.UpdateProjectRequest]) (*connect.Response[simoompb.Project], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
@@ -90,7 +90,7 @@ func (s simoom) UpdateProject(ctx context.Context, req *connect.Request[simoompb
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newProjectResponse(out.Project)), nil
+	return connect.NewResponse(newProject(out.Project)), nil
 }
 
 func (s simoom) DeleteProject(ctx context.Context, req *connect.Request[simoompb.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {

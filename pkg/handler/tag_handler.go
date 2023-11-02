@@ -11,8 +11,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func newTagResponse(t model.Tag) *simoompb.TagResponse {
-	return &simoompb.TagResponse{
+func newTag(t model.Tag) *simoompb.Tag {
+	return &simoompb.Tag{
 		Id:        t.ID,
 		Name:      t.Name,
 		CreatedAt: timestamppb.New(t.CreatedAt),
@@ -20,15 +20,15 @@ func newTagResponse(t model.Tag) *simoompb.TagResponse {
 	}
 }
 
-func newTagsResponse(ts []model.Tag) []*simoompb.TagResponse {
-	tags := make([]*simoompb.TagResponse, 0, len(ts))
+func newTags(ts []model.Tag) []*simoompb.Tag {
+	tags := make([]*simoompb.Tag, 0, len(ts))
 	for _, t := range ts {
-		tags = append(tags, newTagResponse(t))
+		tags = append(tags, newTag(t))
 	}
 	return tags
 }
 
-func (s simoom) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
+func (s simoom) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.Tag], error) {
 	if req.Msg.Name == "" {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
@@ -39,10 +39,10 @@ func (s simoom) CreateTag(ctx context.Context, req *connect.Request[simoompb.Cre
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newTagResponse(out.Tag)), nil
+	return connect.NewResponse(newTag(out.Tag)), nil
 }
 
-func (s simoom) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.TagsResponse], error) {
+func (s simoom) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.Tags], error) {
 	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
@@ -54,12 +54,12 @@ func (s simoom) ListTags(ctx context.Context, req *connect.Request[simoompb.List
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(&simoompb.TagsResponse{
-		Tags: newTagsResponse(out.Tags),
+	return connect.NewResponse(&simoompb.Tags{
+		Tags: newTags(out.Tags),
 	}), nil
 }
 
-func (s simoom) UpdateTag(ctx context.Context, req *connect.Request[simoompb.UpdateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
+func (s simoom) UpdateTag(ctx context.Context, req *connect.Request[simoompb.UpdateTagRequest]) (*connect.Response[simoompb.Tag], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
@@ -77,7 +77,7 @@ func (s simoom) UpdateTag(ctx context.Context, req *connect.Request[simoompb.Upd
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newTagResponse(out.Tag)), nil
+	return connect.NewResponse(newTag(out.Tag)), nil
 }
 
 func (s simoom) DeleteTag(ctx context.Context, req *connect.Request[simoompb.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {

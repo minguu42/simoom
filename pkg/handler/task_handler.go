@@ -11,12 +11,12 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func newTaskResponse(t model.Task) *simoompb.TaskResponse {
-	return &simoompb.TaskResponse{
+func newTask(t model.Task) *simoompb.Task {
+	return &simoompb.Task{
 		Id:          t.ID,
 		ProjectId:   t.ProjectID,
-		Steps:       newStepsResponse(t.Steps),
-		Tags:        newTagsResponse(t.Tags),
+		Steps:       newSteps(t.Steps),
+		Tags:        newTags(t.Tags),
 		Title:       t.Title,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),
@@ -27,15 +27,15 @@ func newTaskResponse(t model.Task) *simoompb.TaskResponse {
 	}
 }
 
-func newTasksResponse(ts []model.Task) []*simoompb.TaskResponse {
-	tasks := make([]*simoompb.TaskResponse, 0, len(ts))
+func newTasksResponse(ts []model.Task) []*simoompb.Task {
+	tasks := make([]*simoompb.Task, 0, len(ts))
 	for _, t := range ts {
-		tasks = append(tasks, newTaskResponse(t))
+		tasks = append(tasks, newTask(t))
 	}
 	return tasks
 }
 
-func (s simoom) CreateTask(ctx context.Context, req *connect.Request[simoompb.CreateTaskRequest]) (*connect.Response[simoompb.TaskResponse], error) {
+func (s simoom) CreateTask(ctx context.Context, req *connect.Request[simoompb.CreateTaskRequest]) (*connect.Response[simoompb.Task], error) {
 	if len(req.Msg.ProjectId) != 26 {
 		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}
@@ -54,10 +54,10 @@ func (s simoom) CreateTask(ctx context.Context, req *connect.Request[simoompb.Cr
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newTaskResponse(out.Task)), nil
+	return connect.NewResponse(newTask(out.Task)), nil
 }
 
-func (s simoom) ListTasksByProjectID(ctx context.Context, req *connect.Request[simoompb.ListTasksByProjectIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
+func (s simoom) ListTasksByProjectID(ctx context.Context, req *connect.Request[simoompb.ListTasksByProjectIDRequest]) (*connect.Response[simoompb.Tasks], error) {
 	if len(req.Msg.ProjectId) != 26 {
 		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}
@@ -73,13 +73,13 @@ func (s simoom) ListTasksByProjectID(ctx context.Context, req *connect.Request[s
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(&simoompb.TasksResponse{
+	return connect.NewResponse(&simoompb.Tasks{
 		Tasks:   newTasksResponse(out.Tasks),
 		HasNext: out.HasNext,
 	}), nil
 }
 
-func (s simoom) ListTasksByTagID(ctx context.Context, req *connect.Request[simoompb.ListTasksByTagIDRequest]) (*connect.Response[simoompb.TasksResponse], error) {
+func (s simoom) ListTasksByTagID(ctx context.Context, req *connect.Request[simoompb.ListTasksByTagIDRequest]) (*connect.Response[simoompb.Tasks], error) {
 	if len(req.Msg.TagId) != 26 {
 		return nil, newErrInvalidArgument("tag_id is a 26-character string")
 	}
@@ -95,13 +95,13 @@ func (s simoom) ListTasksByTagID(ctx context.Context, req *connect.Request[simoo
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(&simoompb.TasksResponse{
+	return connect.NewResponse(&simoompb.Tasks{
 		Tasks:   newTasksResponse(out.Tasks),
 		HasNext: false,
 	}), nil
 }
 
-func (s simoom) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.TaskResponse], error) {
+func (s simoom) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.Task], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
@@ -126,7 +126,7 @@ func (s simoom) UpdateTask(ctx context.Context, req *connect.Request[simoompb.Up
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newTaskResponse(out.Task)), nil
+	return connect.NewResponse(newTask(out.Task)), nil
 }
 
 func (s simoom) DeleteTask(ctx context.Context, req *connect.Request[simoompb.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
