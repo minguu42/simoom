@@ -9,8 +9,6 @@ import (
 	"github.com/minguu42/simoom/pkg/pointers"
 )
 
-var testTaskHandler = taskHandler{}
-
 func TestTaskHandler_CreateTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
@@ -58,8 +56,8 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := testTaskHandler.CreateTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("testTaskHandler.CreateTask should return an error")
+			if _, err := th.CreateTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.CreateTask should return an error")
 			}
 		})
 	}
@@ -98,8 +96,8 @@ func TestTaskHandler_ListTasksByProjectID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := testTaskHandler.ListTasksByProjectID(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("testTaskHandler.ListTasksByProjectID should return an error")
+			if _, err := th.ListTasksByProjectID(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.ListTasksByProjectID should return an error")
 			}
 		})
 	}
@@ -138,8 +136,8 @@ func TestTaskHandler_ListTasksByTagID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := testTaskHandler.ListTasksByTagID(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("testTaskHandler.ListTasksByTagID should return an error")
+			if _, err := th.ListTasksByTagID(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.ListTasksByTagID should return an error")
 			}
 		})
 	}
@@ -205,8 +203,8 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := testTaskHandler.UpdateTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("testTaskHandler.UpdateTask should return an error")
+			if _, err := th.UpdateTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.UpdateTask should return an error")
 			}
 		})
 	}
@@ -235,8 +233,8 @@ func TestTaskHandler_DeleteTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := testTaskHandler.DeleteTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("testTaskHandler.DeleteTask should return an error")
+			if _, err := th.DeleteTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.DeleteTask should return an error")
 			}
 		})
 	}

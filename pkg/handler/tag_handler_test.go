@@ -9,8 +9,6 @@ import (
 	"github.com/minguu42/simoom/pkg/pointers"
 )
 
-var tth = tagHandler{}
-
 func TestTagHandler_CreateTag(t *testing.T) {
 	type args struct {
 		ctx context.Context
@@ -34,8 +32,8 @@ func TestTagHandler_CreateTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tth.CreateTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tth.CreateTag should return an error")
+			if _, err := th.CreateTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.CreateTag should return an error")
 			}
 		})
 	}
@@ -64,8 +62,8 @@ func TestTagHandler_ListTags(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tth.ListTags(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tth.ListTags should return an error")
+			if _, err := th.ListTags(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.ListTags should return an error")
 			}
 		})
 	}
@@ -116,8 +114,8 @@ func TestTagHandler_UpdateTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tth.UpdateTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tth.UpdateTag should return an error")
+			if _, err := th.UpdateTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.UpdateTag should return an error")
 			}
 		})
 	}
@@ -146,8 +144,8 @@ func TestTagHandler_DeleteTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tth.DeleteTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tth.DeleteTag should return an error")
+			if _, err := th.DeleteTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.DeleteTag should return an error")
 			}
 		})
 	}
