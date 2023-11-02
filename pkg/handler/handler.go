@@ -17,6 +17,14 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+type simoom struct {
+	monitoring usecase.MonitoringUsecase
+	project    usecase.ProjectUsecase
+	step       usecase.StepUsecase
+	tag        usecase.TagUsecase
+	task       usecase.TaskUsecase
+}
+
 // New はハンドラを生成する
 func New(repo repository.Repository) http.Handler {
 	opt := connect.WithInterceptors(
@@ -26,11 +34,13 @@ func New(repo repository.Repository) http.Handler {
 	)
 
 	mux := http.NewServeMux()
-	mux.Handle(simoompbconnect.NewMonitoringServiceHandler(monitoringHandler{}, opt))
-	mux.Handle(simoompbconnect.NewProjectServiceHandler(projectHandler{uc: usecase.ProjectUsecase{Repo: repo}}, opt))
-	mux.Handle(simoompbconnect.NewStepServiceHandler(stepHandler{uc: usecase.StepUsecase{Repo: repo}}, opt))
-	mux.Handle(simoompbconnect.NewTagServiceHandler(tagHandler{uc: usecase.TagUsecase{Repo: repo}}, opt))
-	mux.Handle(simoompbconnect.NewTaskServiceHandler(taskHandler{uc: usecase.TaskUsecase{Repo: repo}}, opt))
+	mux.Handle(simoompbconnect.NewSimoomServiceHandler(simoom{
+		monitoring: usecase.MonitoringUsecase{},
+		project:    usecase.ProjectUsecase{Repo: repo},
+		step:       usecase.StepUsecase{Repo: repo},
+		tag:        usecase.TagUsecase{Repo: repo},
+		task:       usecase.TaskUsecase{Repo: repo},
+	}, opt))
 
 	return h2c.NewHandler(mux, &http2.Server{})
 }

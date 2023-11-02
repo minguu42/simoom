@@ -9,8 +9,6 @@ import (
 	"github.com/minguu42/simoom/pkg/pointers"
 )
 
-var tph = projectHandler{}
-
 func TestProjectHandler_CreateProject(t *testing.T) {
 	type args struct {
 		ctx context.Context
@@ -46,8 +44,8 @@ func TestProjectHandler_CreateProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tph.CreateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tph.CreateProject should return an error")
+			if _, err := th.CreateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.CreateProject should return an error")
 			}
 		})
 	}
@@ -76,8 +74,8 @@ func TestProjectHandler_ListProjects(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tph.ListProjects(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tph.ListProjects should return an error")
+			if _, err := th.ListProjects(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.ListProjects should return an error")
 			}
 		})
 	}
@@ -141,8 +139,8 @@ func TestProjectHandler_UpdateProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tph.UpdateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tph.UpdateProject should return an error")
+			if _, err := th.UpdateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.UpdateProject should return an error")
 			}
 		})
 	}
@@ -171,8 +169,8 @@ func TestProjectHandler_DeleteProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := tph.DeleteProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("tph.DeleteProject should return an error")
+			if _, err := th.DeleteProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.DeleteProject should return an error")
 			}
 		})
 	}

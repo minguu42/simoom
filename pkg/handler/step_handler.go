@@ -11,8 +11,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func newStepResponse(s model.Step) *simoompb.StepResponse {
-	return &simoompb.StepResponse{
+func newStep(s model.Step) *simoompb.Step {
+	return &simoompb.Step{
 		Id:          s.ID,
 		TaskId:      s.TaskID,
 		Title:       s.Title,
@@ -22,19 +22,15 @@ func newStepResponse(s model.Step) *simoompb.StepResponse {
 	}
 }
 
-func newStepsResponse(ss []model.Step) []*simoompb.StepResponse {
-	steps := make([]*simoompb.StepResponse, 0, len(ss))
+func newSteps(ss []model.Step) []*simoompb.Step {
+	steps := make([]*simoompb.Step, 0, len(ss))
 	for _, s := range ss {
-		steps = append(steps, newStepResponse(s))
+		steps = append(steps, newStep(s))
 	}
 	return steps
 }
 
-type stepHandler struct {
-	uc usecase.StepUsecase
-}
-
-func (h stepHandler) CreateStep(ctx context.Context, req *connect.Request[simoompb.CreateStepRequest]) (*connect.Response[simoompb.StepResponse], error) {
+func (s simoom) CreateStep(ctx context.Context, req *connect.Request[simoompb.CreateStepRequest]) (*connect.Response[simoompb.Step], error) {
 	if len(req.Msg.TaskId) != 26 {
 		return nil, newErrInvalidArgument("task_id is a 26-character string")
 	}
@@ -42,17 +38,17 @@ func (h stepHandler) CreateStep(ctx context.Context, req *connect.Request[simoom
 		return nil, newErrInvalidArgument("title cannot be an empty string")
 	}
 
-	out, err := h.uc.CreateStep(ctx, usecase.CreateStepInput{
+	out, err := s.step.CreateStep(ctx, usecase.CreateStepInput{
 		TaskID: req.Msg.TaskId,
 		Title:  req.Msg.Title,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newStepResponse(out.Step)), nil
+	return connect.NewResponse(newStep(out.Step)), nil
 }
 
-func (h stepHandler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.UpdateStepRequest]) (*connect.Response[simoompb.StepResponse], error) {
+func (s simoom) UpdateStep(ctx context.Context, req *connect.Request[simoompb.UpdateStepRequest]) (*connect.Response[simoompb.Step], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
@@ -64,7 +60,7 @@ func (h stepHandler) UpdateStep(ctx context.Context, req *connect.Request[simoom
 	}
 
 	c := req.Msg.CompletedAt.AsTime()
-	out, err := h.uc.UpdateStep(ctx, usecase.UpdateStepInput{
+	out, err := s.step.UpdateStep(ctx, usecase.UpdateStepInput{
 		ID:          req.Msg.Id,
 		Title:       req.Msg.Title,
 		CompletedAt: &c,
@@ -72,15 +68,15 @@ func (h stepHandler) UpdateStep(ctx context.Context, req *connect.Request[simoom
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(newStepResponse(out.Step)), nil
+	return connect.NewResponse(newStep(out.Step)), nil
 }
 
-func (h stepHandler) DeleteStep(ctx context.Context, req *connect.Request[simoompb.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
+func (s simoom) DeleteStep(ctx context.Context, req *connect.Request[simoompb.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
 
-	if err := h.uc.DeleteStep(ctx, usecase.DeleteStepInput{ID: req.Msg.Id}); err != nil {
+	if err := s.step.DeleteStep(ctx, usecase.DeleteStepInput{ID: req.Msg.Id}); err != nil {
 		return nil, err
 	}
 	return connect.NewResponse(&emptypb.Empty{}), nil
