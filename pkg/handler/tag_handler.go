@@ -28,12 +28,12 @@ func newTagsResponse(ts []model.Tag) []*simoompb.TagResponse {
 	return tags
 }
 
-func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
+func (s simoom) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
 	if req.Msg.Name == "" {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 
-	out, err := h.tag.CreateTag(ctx, usecase.CreateTagInput{
+	out, err := s.tag.CreateTag(ctx, usecase.CreateTagInput{
 		Name: req.Msg.Name,
 	})
 	if err != nil {
@@ -42,12 +42,12 @@ func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.Cr
 	return connect.NewResponse(newTagResponse(out.Tag)), nil
 }
 
-func (h handler) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.TagsResponse], error) {
+func (s simoom) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.TagsResponse], error) {
 	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
 
-	out, err := h.tag.ListTags(ctx, usecase.ListTagsInput{
+	out, err := s.tag.ListTags(ctx, usecase.ListTagsInput{
 		Limit:  uint(req.Msg.Limit),
 		Offset: uint(req.Msg.Offset),
 	})
@@ -59,7 +59,7 @@ func (h handler) ListTags(ctx context.Context, req *connect.Request[simoompb.Lis
 	}), nil
 }
 
-func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.UpdateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
+func (s simoom) UpdateTag(ctx context.Context, req *connect.Request[simoompb.UpdateTagRequest]) (*connect.Response[simoompb.TagResponse], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
@@ -70,7 +70,7 @@ func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.Up
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 
-	out, err := h.tag.UpdateTag(ctx, usecase.UpdateTagInput{
+	out, err := s.tag.UpdateTag(ctx, usecase.UpdateTagInput{
 		ID:   req.Msg.Id,
 		Name: req.Msg.Name,
 	})
@@ -80,12 +80,12 @@ func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.Up
 	return connect.NewResponse(newTagResponse(out.Tag)), nil
 }
 
-func (h handler) DeleteTag(ctx context.Context, req *connect.Request[simoompb.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
+func (s simoom) DeleteTag(ctx context.Context, req *connect.Request[simoompb.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
 
-	if err := h.tag.DeleteTag(ctx, usecase.DeleteTagInput{ID: req.Msg.Id}); err != nil {
+	if err := s.tag.DeleteTag(ctx, usecase.DeleteTagInput{ID: req.Msg.Id}); err != nil {
 		return nil, err
 	}
 	return connect.NewResponse(&emptypb.Empty{}), nil
