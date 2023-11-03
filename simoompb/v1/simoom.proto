@@ -16,6 +16,10 @@ message Date {
 service SimoomService {
   rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse);
 
+  rpc SignIn(SignInRequest) returns (SignInResponse);
+  rpc SignUp(SignUpRequest) returns (SignUpResponse);
+  rpc RefreshAccessToken(RefreshAccessTokenRequest) returns (RefreshAccessTokenResponse);
+
   rpc CreateProject(CreateProjectRequest) returns (Project);
   rpc ListProjects(ListProjectsRequest) returns (Projects);
   rpc UpdateProject(UpdateProjectRequest) returns (Project);
@@ -41,6 +45,36 @@ message CheckHealthRequest {}
 
 message CheckHealthResponse {
   string revision = 1;
+}
+
+message SignInRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message SignInResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message SignUpRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message SignUpResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message RefreshAccessTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshAccessTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message CreateProjectRequest {
