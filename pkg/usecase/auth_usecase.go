@@ -90,3 +90,39 @@ func (u AuthUsecase) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, 
 		RefreshToken: refreshToken,
 	}, nil
 }
+
+type RefreshAccessTokenInput struct {
+	RefreshToken string
+}
+
+type RefreshAccessTokenOutput struct {
+	AccessToken  string
+	RefreshToken string
+}
+
+func (u AuthUsecase) RefreshAccessToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
+	id, err := auth.ExtractIDFromToken(in.RefreshToken, u.Env.API.RefreshTokenSecret)
+	if err != nil {
+		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+	}
+	user, err := u.Repo.GetUserByID(ctx, id)
+	if err != nil {
+		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+	}
+
+	accessToken, err := auth.CreateAccessToken(user, u.Env.API.AccessTokenSecret, u.Env.API.AccessTokenExpiryHour)
+	if err != nil {
+		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+	}
+	refreshToken, err := auth.CreateRefreshToken(user, u.Env.API.RefreshTokenSecret, u.Env.API.RefreshTokenExpiryHour)
+	if err != nil {
+		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+	}
+	if err := u.Repo.CreateUser(ctx, user); err != nil {
+		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+	}
+	return RefreshAccessTokenOutput{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
+}

@@ -38,6 +38,13 @@ func (s simoom) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUp
 	}), nil
 }
 
-func (s simoom) RefreshAccessToken(_ context.Context, _ *connect.Request[simoompb.RefreshAccessTokenRequest]) (*connect.Response[simoompb.RefreshAccessTokenResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("unimplemented"))
+func (s simoom) RefreshAccessToken(ctx context.Context, req *connect.Request[simoompb.RefreshAccessTokenRequest]) (*connect.Response[simoompb.RefreshAccessTokenResponse], error) {
+	out, err := s.auth.RefreshAccessToken(ctx, usecase.RefreshAccessTokenInput{RefreshToken: req.Msg.RefreshToken})
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return connect.NewResponse(&simoompb.RefreshAccessTokenResponse{
+		AccessToken:  out.AccessToken,
+		RefreshToken: out.RefreshToken,
+	}), nil
 }
