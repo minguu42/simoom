@@ -33,11 +33,11 @@ run: ## 本番用APIサーバを実行する
             simoom-api
 
 migrate: ## DBのスキーマの変更を確認する
-	@mysqldef -u root -h 127.0.0.1 --dry-run --enable-drop-table simoom_local < ./mysql/sql/schema.sql
+	@mysqldef -u root -h 127.0.0.1 --dry-run --enable-drop-table simoomdb < ./mysql/schema.sql
 
 migrate-apply: ## DBのスキーマの変更を適用する
-	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoom_local < ./mysql/sql/schema.sql
-	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoom_local_test < ./mysql/sql/schema.sql
+	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./mysql/schema.sql
+	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb_test < ./mysql/schema.sql
 
 dev: ## 開発用APIサーバを実行する
 	@docker compose run \
