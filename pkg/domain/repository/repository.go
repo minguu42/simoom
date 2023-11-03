@@ -35,4 +35,6 @@ type Repository interface {
 	GetTagByID(ctx context.Context, id string) (model.Tag, error)
 	UpdateTag(ctx context.Context, t model.Tag) error
 	DeleteTag(ctx context.Context, id string) error
+
+	CreateUser(ctx context.Context, u model.User) error
 }
