@@ -37,4 +37,5 @@ type Repository interface {
 	DeleteTag(ctx context.Context, id string) error
 
 	CreateUser(ctx context.Context, u model.User) error
+	GetUserByEmail(ctx context.Context, email string) (model.User, error)
 }
