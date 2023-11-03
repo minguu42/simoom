@@ -9,8 +9,18 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-func (s simoom) SignIn(_ context.Context, _ *connect.Request[simoompb.SignInRequest]) (*connect.Response[simoompb.SignInResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("unimplemented"))
+func (s simoom) SignIn(ctx context.Context, req *connect.Request[simoompb.SignInRequest]) (*connect.Response[simoompb.SignInResponse], error) {
+	out, err := s.auth.SignIn(ctx, usecase.SignInInput{
+		Email:    req.Msg.Email,
+		Password: req.Msg.Password,
+	})
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return connect.NewResponse(&simoompb.SignInResponse{
+		AccessToken:  out.AccessToken,
+		RefreshToken: out.RefreshToken,
+	}), nil
 }
 
 func (s simoom) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
