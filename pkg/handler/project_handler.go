@@ -31,7 +31,7 @@ func newProjects(ps []model.Project) []*simoompb.Project {
 	return projects
 }
 
-func (s simoom) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
+func (h handler) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
 	if req.Msg.Name == "" {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
@@ -39,7 +39,7 @@ func (s simoom) CreateProject(ctx context.Context, req *connect.Request[simoompb
 		return nil, newErrInvalidArgument("color is specified in the format #000000")
 	}
 
-	out, err := s.project.CreateProject(ctx, usecase.CreateProjectInput{
+	out, err := h.project.CreateProject(ctx, usecase.CreateProjectInput{
 		Name:  req.Msg.Name,
 		Color: req.Msg.Color,
 	})
@@ -49,12 +49,12 @@ func (s simoom) CreateProject(ctx context.Context, req *connect.Request[simoompb
 	return connect.NewResponse(newProject(out.Project)), nil
 }
 
-func (s simoom) ListProjects(ctx context.Context, req *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.Projects], error) {
+func (h handler) ListProjects(ctx context.Context, req *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.Projects], error) {
 	if req.Msg.Limit < 1 {
 		return nil, newErrInvalidArgument("limit is greater than or equal to 1")
 	}
 
-	out, err := s.project.ListProjects(ctx, usecase.ListProjectsInput{
+	out, err := h.project.ListProjects(ctx, usecase.ListProjectsInput{
 		Limit:  uint(req.Msg.Limit),
 		Offset: uint(req.Msg.Offset),
 	})
@@ -67,7 +67,7 @@ func (s simoom) ListProjects(ctx context.Context, req *connect.Request[simoompb.
 	}), nil
 }
 
-func (s simoom) UpdateProject(ctx context.Context, req *connect.Request[simoompb.UpdateProjectRequest]) (*connect.Response[simoompb.Project], error) {
+func (h handler) UpdateProject(ctx context.Context, req *connect.Request[simoompb.UpdateProjectRequest]) (*connect.Response[simoompb.Project], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
@@ -81,7 +81,7 @@ func (s simoom) UpdateProject(ctx context.Context, req *connect.Request[simoompb
 		return nil, newErrInvalidArgument("color is specified in the format #000000")
 	}
 
-	out, err := s.project.UpdateProject(ctx, usecase.UpdateProjectInput{
+	out, err := h.project.UpdateProject(ctx, usecase.UpdateProjectInput{
 		ID:         req.Msg.Id,
 		Name:       req.Msg.Name,
 		Color:      req.Msg.Color,
@@ -93,12 +93,12 @@ func (s simoom) UpdateProject(ctx context.Context, req *connect.Request[simoompb
 	return connect.NewResponse(newProject(out.Project)), nil
 }
 
-func (s simoom) DeleteProject(ctx context.Context, req *connect.Request[simoompb.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {
+func (h handler) DeleteProject(ctx context.Context, req *connect.Request[simoompb.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
 
-	if err := s.project.DeleteProject(ctx, usecase.DeleteProjectInput{
+	if err := h.project.DeleteProject(ctx, usecase.DeleteProjectInput{
 		ID: req.Msg.Id,
 	}); err != nil {
 		return nil, err
