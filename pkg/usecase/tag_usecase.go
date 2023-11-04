@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -31,7 +32,7 @@ func (uc TagUsecase) CreateTag(ctx context.Context, in CreateTagInput) (TagOutpu
 	now := time.Now()
 	t := model.Tag{
 		ID:        idgen.Generate(),
-		UserID:    userID,
+		UserID:    auth.GetUserID(ctx),
 		Name:      in.Name,
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -48,7 +49,7 @@ type ListTagsInput struct {
 }
 
 func (uc TagUsecase) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
-	ts, err := uc.Repo.ListTagsByUserID(ctx, userID, in.Limit, in.Offset)
+	ts, err := uc.Repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit, in.Offset)
 	if err != nil {
 		return TagsOutput{}, errors.WithStack(err)
 	}
@@ -71,7 +72,7 @@ func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutpu
 		}
 		return TagOutput{}, errors.WithStack(err)
 	}
-	if userID != t.UserID {
+	if auth.GetUserID(ctx) != t.UserID {
 		return TagOutput{}, ErrTagNotFound
 	}
 
@@ -96,7 +97,7 @@ func (uc TagUsecase) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 		}
 		return errors.WithStack(err)
 	}
-	if userID != t.UserID {
+	if auth.GetUserID(ctx) != t.UserID {
 		return ErrTagNotFound
 	}
 

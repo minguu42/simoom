@@ -2,6 +2,7 @@ package interceptor
 
 import (
 	"context"
+	"slices"
 	"strings"
 
 	"connectrpc.com/connect"
@@ -9,13 +10,16 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/auth"
 )
 
-type authKey struct{}
-
 // NewAuth はユーザ認証を行うインターセプタを返す
 // secret はアクセスシークレットを受け取る
 func NewAuth(secret string) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshAccessToken"}
+			if slices.Contains(excludedProcedures, strings.Split(req.Spec().Procedure, "/")[2]) {
+				return next(ctx, req)
+			}
+
 			authHeader := req.Header().Get("Authorization")
 			t := strings.Split(authHeader, " ")
 			if len(t) != 2 {
@@ -33,7 +37,7 @@ func NewAuth(secret string) connect.UnaryInterceptorFunc {
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
-			ctx = context.WithValue(ctx, authKey{}, userID)
+			ctx = auth.SetUserID(ctx, userID)
 			return next(ctx, req)
 		}
 	}

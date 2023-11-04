@@ -3,8 +3,6 @@ package usecase
 
 import "github.com/cockroachdb/errors"
 
-const userID = "01DXF6DT000000000000000000"
-
 var (
 	ErrProjectNotFound = errors.New("the specified project is not found")
 	ErrStepNotFound    = errors.New("the specified step is not found")

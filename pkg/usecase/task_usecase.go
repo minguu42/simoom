@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -37,14 +38,14 @@ func (uc TaskUsecase) CreateTask(ctx context.Context, in CreateTaskInput) (TaskO
 		}
 		return TaskOutput{}, errors.WithStack(err)
 	}
-	if userID != p.UserID {
+	if auth.GetUserID(ctx) != p.UserID {
 		return TaskOutput{}, ErrProjectNotFound
 	}
 
 	now := time.Now()
 	t := model.Task{
 		ID:        idgen.Generate(),
-		UserID:    userID,
+		UserID:    auth.GetUserID(ctx),
 		ProjectID: in.ProjectID,
 		Title:     in.Title,
 		Priority:  in.Priority,
@@ -71,7 +72,7 @@ func (uc TaskUsecase) ListTasksByProjectID(ctx context.Context, in ListTasksByPr
 		}
 		return TasksOutput{}, errors.WithStack(err)
 	}
-	if userID != p.UserID {
+	if auth.GetUserID(ctx) != p.UserID {
 		return TasksOutput{}, ErrProjectNotFound
 	}
 
@@ -99,7 +100,7 @@ func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDI
 		}
 		return TasksOutput{}, errors.WithStack(err)
 	}
-	if userID != t.UserID {
+	if auth.GetUserID(ctx) != t.UserID {
 		return TasksOutput{}, ErrTagNotFound
 	}
 
@@ -130,7 +131,7 @@ func (uc TaskUsecase) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskO
 		}
 		return TaskOutput{}, errors.WithStack(err)
 	}
-	if userID != t.UserID {
+	if auth.GetUserID(ctx) != t.UserID {
 		return TaskOutput{}, ErrTaskNotFound
 	}
 
@@ -167,7 +168,7 @@ func (uc TaskUsecase) DeleteTask(ctx context.Context, in DeleteTaskInput) error 
 		}
 		return errors.WithStack(err)
 	}
-	if userID != t.UserID {
+	if auth.GetUserID(ctx) != t.UserID {
 		return ErrTaskNotFound
 	}
 
