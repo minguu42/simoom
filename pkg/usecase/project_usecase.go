@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -32,7 +33,7 @@ func (uc ProjectUsecase) CreateProject(ctx context.Context, in CreateProjectInpu
 	now := time.Now()
 	p := model.Project{
 		ID:         idgen.Generate(),
-		UserID:     userID,
+		UserID:     auth.GetUserID(ctx),
 		Name:       in.Name,
 		Color:      in.Color,
 		IsArchived: false,
@@ -51,7 +52,7 @@ type ListProjectsInput struct {
 }
 
 func (uc ProjectUsecase) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	ps, err := uc.Repo.ListProjectsByUserID(ctx, userID, in.Limit, in.Offset)
+	ps, err := uc.Repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, errors.WithStack(err)
 	}
@@ -76,7 +77,7 @@ func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInpu
 		}
 		return ProjectOutput{}, errors.WithStack(err)
 	}
-	if userID != p.UserID {
+	if auth.GetUserID(ctx) != p.UserID {
 		return ProjectOutput{}, ErrProjectNotFound
 	}
 
@@ -107,7 +108,7 @@ func (uc ProjectUsecase) DeleteProject(ctx context.Context, in DeleteProjectInpu
 		}
 		return errors.WithStack(err)
 	}
-	if userID != p.UserID {
+	if auth.GetUserID(ctx) != p.UserID {
 		return ErrProjectNotFound
 	}
 

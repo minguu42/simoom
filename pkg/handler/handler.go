@@ -10,6 +10,7 @@ import (
 	"github.com/minguu42/simoom/gen/simoompb/v1"
 	"github.com/minguu42/simoom/gen/simoompb/v1/simoompbconnect"
 	"github.com/minguu42/simoom/pkg/domain/repository"
+	"github.com/minguu42/simoom/pkg/env"
 	"github.com/minguu42/simoom/pkg/handler/interceptor"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"golang.org/x/net/http2"
@@ -18,6 +19,7 @@ import (
 )
 
 type simoom struct {
+	auth       usecase.AuthUsecase
 	monitoring usecase.MonitoringUsecase
 	project    usecase.ProjectUsecase
 	step       usecase.StepUsecase
@@ -26,15 +28,17 @@ type simoom struct {
 }
 
 // New はハンドラを生成する
-func New(repo repository.Repository) http.Handler {
+func New(repo repository.Repository, appEnv env.Env) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewAccessLog(),
 		interceptor.NewErrorJudge(),
+		interceptor.NewAuth("some-access-secret"),
 	)
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(simoom{
+		auth:       usecase.AuthUsecase{Repo: repo, Env: appEnv},
 		monitoring: usecase.MonitoringUsecase{},
 		project:    usecase.ProjectUsecase{Repo: repo},
 		step:       usecase.StepUsecase{Repo: repo},

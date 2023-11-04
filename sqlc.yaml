@@ -7,6 +7,7 @@ sql:
       - pkg/infra/mysql/tag_query.sql
       - pkg/infra/mysql/task_query.sql
       - pkg/infra/mysql/test_util.sql
+      - pkg/infra/mysql/user_query.sql
     schema: mysql/schema.sql
     gen:
       go:

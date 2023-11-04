@@ -58,7 +58,8 @@ type TasksTag struct {
 type User struct {
 	ID        string
 	Name      string
-	ApiKey    string
+	Email     string
+	Password  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

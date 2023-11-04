@@ -38,6 +38,13 @@ const (
 	// SimoomServiceCheckHealthProcedure is the fully-qualified name of the SimoomService's CheckHealth
 	// RPC.
 	SimoomServiceCheckHealthProcedure = "/simoompb.v1.SimoomService/CheckHealth"
+	// SimoomServiceSignInProcedure is the fully-qualified name of the SimoomService's SignIn RPC.
+	SimoomServiceSignInProcedure = "/simoompb.v1.SimoomService/SignIn"
+	// SimoomServiceSignUpProcedure is the fully-qualified name of the SimoomService's SignUp RPC.
+	SimoomServiceSignUpProcedure = "/simoompb.v1.SimoomService/SignUp"
+	// SimoomServiceRefreshAccessTokenProcedure is the fully-qualified name of the SimoomService's
+	// RefreshAccessToken RPC.
+	SimoomServiceRefreshAccessTokenProcedure = "/simoompb.v1.SimoomService/RefreshAccessToken"
 	// SimoomServiceCreateProjectProcedure is the fully-qualified name of the SimoomService's
 	// CreateProject RPC.
 	SimoomServiceCreateProjectProcedure = "/simoompb.v1.SimoomService/CreateProject"
@@ -87,6 +94,9 @@ const (
 // SimoomServiceClient is a client for the simoompb.v1.SimoomService service.
 type SimoomServiceClient interface {
 	CheckHealth(context.Context, *connect.Request[v1.CheckHealthRequest]) (*connect.Response[v1.CheckHealthResponse], error)
+	SignIn(context.Context, *connect.Request[v1.SignInRequest]) (*connect.Response[v1.SignInResponse], error)
+	SignUp(context.Context, *connect.Request[v1.SignUpRequest]) (*connect.Response[v1.SignUpResponse], error)
+	RefreshAccessToken(context.Context, *connect.Request[v1.RefreshAccessTokenRequest]) (*connect.Response[v1.RefreshAccessTokenResponse], error)
 	CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.Project], error)
 	ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.Projects], error)
 	UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.Project], error)
@@ -118,6 +128,21 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 		checkHealth: connect.NewClient[v1.CheckHealthRequest, v1.CheckHealthResponse](
 			httpClient,
 			baseURL+SimoomServiceCheckHealthProcedure,
+			opts...,
+		),
+		signIn: connect.NewClient[v1.SignInRequest, v1.SignInResponse](
+			httpClient,
+			baseURL+SimoomServiceSignInProcedure,
+			opts...,
+		),
+		signUp: connect.NewClient[v1.SignUpRequest, v1.SignUpResponse](
+			httpClient,
+			baseURL+SimoomServiceSignUpProcedure,
+			opts...,
+		),
+		refreshAccessToken: connect.NewClient[v1.RefreshAccessTokenRequest, v1.RefreshAccessTokenResponse](
+			httpClient,
+			baseURL+SimoomServiceRefreshAccessTokenProcedure,
 			opts...,
 		),
 		createProject: connect.NewClient[v1.CreateProjectRequest, v1.Project](
@@ -206,6 +231,9 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 // simoomServiceClient implements SimoomServiceClient.
 type simoomServiceClient struct {
 	checkHealth          *connect.Client[v1.CheckHealthRequest, v1.CheckHealthResponse]
+	signIn               *connect.Client[v1.SignInRequest, v1.SignInResponse]
+	signUp               *connect.Client[v1.SignUpRequest, v1.SignUpResponse]
+	refreshAccessToken   *connect.Client[v1.RefreshAccessTokenRequest, v1.RefreshAccessTokenResponse]
 	createProject        *connect.Client[v1.CreateProjectRequest, v1.Project]
 	listProjects         *connect.Client[v1.ListProjectsRequest, v1.Projects]
 	updateProject        *connect.Client[v1.UpdateProjectRequest, v1.Project]
@@ -227,6 +255,21 @@ type simoomServiceClient struct {
 // CheckHealth calls simoompb.v1.SimoomService.CheckHealth.
 func (c *simoomServiceClient) CheckHealth(ctx context.Context, req *connect.Request[v1.CheckHealthRequest]) (*connect.Response[v1.CheckHealthResponse], error) {
 	return c.checkHealth.CallUnary(ctx, req)
+}
+
+// SignIn calls simoompb.v1.SimoomService.SignIn.
+func (c *simoomServiceClient) SignIn(ctx context.Context, req *connect.Request[v1.SignInRequest]) (*connect.Response[v1.SignInResponse], error) {
+	return c.signIn.CallUnary(ctx, req)
+}
+
+// SignUp calls simoompb.v1.SimoomService.SignUp.
+func (c *simoomServiceClient) SignUp(ctx context.Context, req *connect.Request[v1.SignUpRequest]) (*connect.Response[v1.SignUpResponse], error) {
+	return c.signUp.CallUnary(ctx, req)
+}
+
+// RefreshAccessToken calls simoompb.v1.SimoomService.RefreshAccessToken.
+func (c *simoomServiceClient) RefreshAccessToken(ctx context.Context, req *connect.Request[v1.RefreshAccessTokenRequest]) (*connect.Response[v1.RefreshAccessTokenResponse], error) {
+	return c.refreshAccessToken.CallUnary(ctx, req)
 }
 
 // CreateProject calls simoompb.v1.SimoomService.CreateProject.
@@ -312,6 +355,9 @@ func (c *simoomServiceClient) DeleteTag(ctx context.Context, req *connect.Reques
 // SimoomServiceHandler is an implementation of the simoompb.v1.SimoomService service.
 type SimoomServiceHandler interface {
 	CheckHealth(context.Context, *connect.Request[v1.CheckHealthRequest]) (*connect.Response[v1.CheckHealthResponse], error)
+	SignIn(context.Context, *connect.Request[v1.SignInRequest]) (*connect.Response[v1.SignInResponse], error)
+	SignUp(context.Context, *connect.Request[v1.SignUpRequest]) (*connect.Response[v1.SignUpResponse], error)
+	RefreshAccessToken(context.Context, *connect.Request[v1.RefreshAccessTokenRequest]) (*connect.Response[v1.RefreshAccessTokenResponse], error)
 	CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.Project], error)
 	ListProjects(context.Context, *connect.Request[v1.ListProjectsRequest]) (*connect.Response[v1.Projects], error)
 	UpdateProject(context.Context, *connect.Request[v1.UpdateProjectRequest]) (*connect.Response[v1.Project], error)
@@ -339,6 +385,21 @@ func NewSimoomServiceHandler(svc SimoomServiceHandler, opts ...connect.HandlerOp
 	simoomServiceCheckHealthHandler := connect.NewUnaryHandler(
 		SimoomServiceCheckHealthProcedure,
 		svc.CheckHealth,
+		opts...,
+	)
+	simoomServiceSignInHandler := connect.NewUnaryHandler(
+		SimoomServiceSignInProcedure,
+		svc.SignIn,
+		opts...,
+	)
+	simoomServiceSignUpHandler := connect.NewUnaryHandler(
+		SimoomServiceSignUpProcedure,
+		svc.SignUp,
+		opts...,
+	)
+	simoomServiceRefreshAccessTokenHandler := connect.NewUnaryHandler(
+		SimoomServiceRefreshAccessTokenProcedure,
+		svc.RefreshAccessToken,
 		opts...,
 	)
 	simoomServiceCreateProjectHandler := connect.NewUnaryHandler(
@@ -425,6 +486,12 @@ func NewSimoomServiceHandler(svc SimoomServiceHandler, opts ...connect.HandlerOp
 		switch r.URL.Path {
 		case SimoomServiceCheckHealthProcedure:
 			simoomServiceCheckHealthHandler.ServeHTTP(w, r)
+		case SimoomServiceSignInProcedure:
+			simoomServiceSignInHandler.ServeHTTP(w, r)
+		case SimoomServiceSignUpProcedure:
+			simoomServiceSignUpHandler.ServeHTTP(w, r)
+		case SimoomServiceRefreshAccessTokenProcedure:
+			simoomServiceRefreshAccessTokenHandler.ServeHTTP(w, r)
 		case SimoomServiceCreateProjectProcedure:
 			simoomServiceCreateProjectHandler.ServeHTTP(w, r)
 		case SimoomServiceListProjectsProcedure:
@@ -468,6 +535,18 @@ type UnimplementedSimoomServiceHandler struct{}
 
 func (UnimplementedSimoomServiceHandler) CheckHealth(context.Context, *connect.Request[v1.CheckHealthRequest]) (*connect.Response[v1.CheckHealthResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.CheckHealth is not implemented"))
+}
+
+func (UnimplementedSimoomServiceHandler) SignIn(context.Context, *connect.Request[v1.SignInRequest]) (*connect.Response[v1.SignInResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.SignIn is not implemented"))
+}
+
+func (UnimplementedSimoomServiceHandler) SignUp(context.Context, *connect.Request[v1.SignUpRequest]) (*connect.Response[v1.SignUpResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.SignUp is not implemented"))
+}
+
+func (UnimplementedSimoomServiceHandler) RefreshAccessToken(context.Context, *connect.Request[v1.RefreshAccessTokenRequest]) (*connect.Response[v1.RefreshAccessTokenResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("simoompb.v1.SimoomService.RefreshAccessToken is not implemented"))
 }
 
 func (UnimplementedSimoomServiceHandler) CreateProject(context.Context, *connect.Request[v1.CreateProjectRequest]) (*connect.Response[v1.Project], error) {

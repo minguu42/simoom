@@ -1,9 +1,10 @@
 CREATE TABLE users (
-    id         CHAR(26)    NOT NULL,
-    name       VARCHAR(15) NOT NULL UNIQUE,
-    api_key    CHAR(64)    NOT NULL UNIQUE,
-    created_at DATETIME    NOT NULL,
-    updated_at DATETIME    NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    id         CHAR(26)     NOT NULL,
+    name       VARCHAR(15)  NOT NULL UNIQUE,
+    email      VARCHAR(254) NOT NULL UNIQUE,
+    password   CHAR(60)     NOT NULL UNIQUE,
+    created_at DATETIME     NOT NULL,
+    updated_at DATETIME     NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );
 

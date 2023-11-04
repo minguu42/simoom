@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -36,14 +37,14 @@ func (uc StepUsecase) CreateStep(ctx context.Context, in CreateStepInput) (StepO
 		}
 		return StepOutput{}, errors.WithStack(err)
 	}
-	if userID != t.UserID {
+	if auth.GetUserID(ctx) != t.UserID {
 		return StepOutput{}, ErrTaskNotFound
 	}
 
 	now := time.Now()
 	s := model.Step{
 		ID:        idgen.Generate(),
-		UserID:    userID,
+		UserID:    auth.GetUserID(ctx),
 		TaskID:    in.TaskID,
 		Title:     in.Title,
 		CreatedAt: now,
@@ -69,7 +70,7 @@ func (uc StepUsecase) UpdateStep(ctx context.Context, in UpdateStepInput) (StepO
 		}
 		return StepOutput{}, errors.WithStack(err)
 	}
-	if userID != s.UserID {
+	if auth.GetUserID(ctx) != s.UserID {
 		return StepOutput{}, ErrStepNotFound
 	}
 
@@ -97,7 +98,7 @@ func (uc StepUsecase) DeleteStep(ctx context.Context, in DeleteStepInput) error 
 		}
 		return errors.WithStack(err)
 	}
-	if userID != s.UserID {
+	if auth.GetUserID(ctx) != s.UserID {
 		return ErrStepNotFound
 	}
 

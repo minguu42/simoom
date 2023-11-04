@@ -38,7 +38,7 @@ func main() {
 
 	s := &http.Server{
 		Addr:              net.JoinHostPort(appEnv.API.Host, strconv.Itoa(appEnv.API.Port)),
-		Handler:           handler.New(c),
+		Handler:           handler.New(c, appEnv),
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		MaxHeaderBytes:    1 << 20,
