@@ -18,7 +18,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type simoom struct {
+type handler struct {
 	auth       usecase.AuthUsecase
 	monitoring usecase.MonitoringUsecase
 	project    usecase.ProjectUsecase
@@ -37,7 +37,7 @@ func New(repo repository.Repository, appEnv env.Env) http.Handler {
 	)
 
 	mux := http.NewServeMux()
-	mux.Handle(simoompbconnect.NewSimoomServiceHandler(simoom{
+	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
 		auth:       usecase.AuthUsecase{Repo: repo, Env: appEnv},
 		monitoring: usecase.MonitoringUsecase{},
 		project:    usecase.ProjectUsecase{Repo: repo},
