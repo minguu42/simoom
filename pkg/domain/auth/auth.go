@@ -70,8 +70,8 @@ func CreateRefreshToken(user model.User, secret string, expiry int) (string, err
 }
 
 // IsAuthorized は requestToken が認可されているかどうかをチェックする
-func IsAuthorized(requestToken string, secret string) (bool, error) {
-	_, err := jwt.Parse(requestToken, func(token *jwt.Token) (any, error) {
+func IsAuthorized(tokenString string, secret string) (bool, error) {
+	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New(fmt.Sprintf("unexpected signing method: %s", token.Header["alg"]))
 		}
@@ -84,8 +84,8 @@ func IsAuthorized(requestToken string, secret string) (bool, error) {
 }
 
 // ExtractIDFromToken はトークン作成時にエンコードされたIDをデコードして取り出す
-func ExtractIDFromToken(requestToken string, secret string) (string, error) {
-	token, err := jwt.Parse(requestToken, func(token *jwt.Token) (any, error) {
+func ExtractIDFromToken(tokenString string, secret string) (string, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New(fmt.Sprintf("unexpected signing method: %s", token.Header["alg"]))
 		}
