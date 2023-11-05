@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"time"
 
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/config"
@@ -68,11 +69,14 @@ func (u AuthUsecase) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, 
 		return SignUpOutput{}, errors.WithStack(err)
 	}
 
+	now := time.Now()
 	user := model.User{
-		ID:       idgen.Generate(),
-		Name:     in.Name,
-		Email:    in.Email,
-		Password: string(encryptedPassword),
+		ID:        idgen.Generate(),
+		Name:      in.Name,
+		Email:     in.Email,
+		Password:  string(encryptedPassword),
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 	accessToken, err := auth.CreateAccessToken(user, u.Env.API.AccessTokenSecret, u.Env.API.AccessTokenExpiryHour)
 	if err != nil {

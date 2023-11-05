@@ -14,7 +14,7 @@ type loggerKey struct{}
 // この関数はコンテキスト中のロガーのベースとなるロガーを定義している。
 func InitDefault() {
 	h := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: true,
+		AddSource: false,
 		Level:     nil,
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.MessageKey {
