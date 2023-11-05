@@ -25,15 +25,15 @@ func NewAuth(secret string) connect.UnaryInterceptorFunc {
 			if len(t) != 2 {
 				return nil, errors.New("the Authorization header should include a value in the form 'Bearer xxx'")
 			}
-			authToken := t[1]
-			authorized, err := auth.IsAuthorized(authToken, secret)
+			token := t[1]
+			authorized, err := auth.IsAuthorized(token, secret)
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
 			if !authorized {
 				return nil, errors.New("authentication failed")
 			}
-			userID, err := auth.ExtractIDFromToken(authToken, secret)
+			userID, err := auth.ExtractIDFromToken(token, secret)
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}

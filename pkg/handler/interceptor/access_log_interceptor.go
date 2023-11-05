@@ -2,7 +2,6 @@ package interceptor
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 
@@ -16,13 +15,8 @@ func NewAccessLog() connect.UnaryInterceptorFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			resp, err := next(ctx, req)
 			if err != nil {
-				code := connect.CodeUnknown
-				var connectErr *connect.Error
-				if errors.As(err, &connectErr) {
-					code = connectErr.Code()
-				}
 				applog.Logger(ctx).LogAttrs(ctx, slog.LevelInfo,
-					fmt.Sprintf("%s - %s %s", code, req.HTTPMethod(), req.Spec().Procedure),
+					fmt.Sprintf("%s %s", req.HTTPMethod(), req.Spec().Procedure),
 					slog.String("stack_trace", fmt.Sprintf("%+v", err)),
 				)
 				return resp, err

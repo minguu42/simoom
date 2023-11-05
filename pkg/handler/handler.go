@@ -31,9 +31,9 @@ type handler struct {
 func New(repo repository.Repository, conf config.Env) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
-		interceptor.NewAccessLog(),
 		interceptor.NewErrorJudge(),
-		interceptor.NewAuth("some-access-secret"),
+		interceptor.NewAccessLog(),
+		interceptor.NewAuth(conf.API.AccessTokenSecret),
 	)
 
 	mux := http.NewServeMux()
