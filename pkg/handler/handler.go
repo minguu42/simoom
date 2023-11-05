@@ -9,8 +9,8 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/gen/simoompb/v1"
 	"github.com/minguu42/simoom/gen/simoompb/v1/simoompbconnect"
+	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/repository"
-	"github.com/minguu42/simoom/pkg/env"
 	"github.com/minguu42/simoom/pkg/handler/interceptor"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"golang.org/x/net/http2"
@@ -28,7 +28,7 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(repo repository.Repository, appEnv env.Env) http.Handler {
+func New(repo repository.Repository, conf config.Env) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewAccessLog(),
@@ -38,7 +38,7 @@ func New(repo repository.Repository, appEnv env.Env) http.Handler {
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
-		auth:       usecase.AuthUsecase{Repo: repo, Env: appEnv},
+		auth:       usecase.AuthUsecase{Repo: repo, Env: conf},
 		monitoring: usecase.MonitoringUsecase{},
 		project:    usecase.ProjectUsecase{Repo: repo},
 		step:       usecase.StepUsecase{Repo: repo},

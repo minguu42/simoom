@@ -9,7 +9,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/minguu42/simoom/pkg/env"
+	"github.com/minguu42/simoom/pkg/config"
 )
 
 // Client は repository.Repository を満たす MySQL クライアント
@@ -23,7 +23,7 @@ func (c *Client) Close() error {
 }
 
 // NewClient は MySQL サーバとの接続を確立し、クライアントを初期化する
-func NewClient(conf env.MySQL) (*Client, error) {
+func NewClient(conf config.MySQL) (*Client, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true",
 		conf.User,
 		conf.Password,
