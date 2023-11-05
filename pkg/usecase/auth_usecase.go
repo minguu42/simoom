@@ -4,17 +4,17 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors"
+	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
-	"github.com/minguu42/simoom/pkg/env"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthUsecase struct {
 	Repo repository.Repository
-	Env  env.Env
+	Env  config.Env
 }
 
 type SignInInput struct {

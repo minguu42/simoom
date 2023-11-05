@@ -13,7 +13,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/applog"
-	"github.com/minguu42/simoom/pkg/env"
+	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/handler"
 	"github.com/minguu42/simoom/pkg/infra/mysql"
 )
@@ -25,20 +25,20 @@ func init() {
 func main() {
 	time.Local = time.UTC
 
-	appEnv, err := env.Load()
+	conf, err := config.Load()
 	if err != nil {
 		log.Fatalf("env.Load() failed: %s", err)
 	}
 
-	c, err := mysql.NewClient(appEnv.MySQL)
+	c, err := mysql.NewClient(conf.MySQL)
 	if err != nil {
 		log.Printf("%+v", err)
 	}
 	defer c.Close()
 
 	s := &http.Server{
-		Addr:              net.JoinHostPort(appEnv.API.Host, strconv.Itoa(appEnv.API.Port)),
-		Handler:           handler.New(c, appEnv),
+		Addr:              net.JoinHostPort(conf.API.Host, strconv.Itoa(conf.API.Port)),
+		Handler:           handler.New(c, conf),
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		MaxHeaderBytes:    1 << 20,

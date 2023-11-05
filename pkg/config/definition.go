@@ -1,4 +1,4 @@
-package env
+package config
 
 // Env はアプリケーションで使用する環境変数
 type Env struct {

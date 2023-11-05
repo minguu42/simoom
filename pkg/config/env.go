@@ -1,5 +1,5 @@
-// Package env は環境変数に関するパッケージ
-package env
+// Package config はアプリケーションの設定値を扱うパッケージ
+package config
 
 import (
 	"github.com/cockroachdb/errors"
@@ -8,9 +8,9 @@ import (
 
 // Load は環境変数を読み込み、取得する
 func Load() (Env, error) {
-	var appEnv Env
-	if err := envconfig.Process("", &appEnv); err != nil {
+	var conf Env
+	if err := envconfig.Process("", &conf); err != nil {
 		return Env{}, errors.WithStack(err)
 	}
-	return appEnv, nil
+	return conf, nil
 }
