@@ -34,7 +34,7 @@ func TestMain(m *testing.M) {
 	defer tc.Close()
 
 	ctx := context.Background()
-	if err := initAllData(ctx, tc.db); err != nil {
+	if err := InitAllData(ctx, tc); err != nil {
 		log.Fatalf("%+v", err)
 	}
 

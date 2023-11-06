@@ -48,7 +48,7 @@ func TestClient_CreateTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetTask(ctx, tc.db); err != nil {
+				if err := ResetTask(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
@@ -417,7 +417,7 @@ func TestClient_UpdateTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetTask(ctx, tc.db); err != nil {
+				if err := ResetTask(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
@@ -457,7 +457,7 @@ func TestClient_DeleteTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetTask(ctx, tc.db); err != nil {
+				if err := ResetTask(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
