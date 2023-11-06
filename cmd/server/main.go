@@ -15,6 +15,7 @@ import (
 	"github.com/minguu42/simoom/pkg/applog"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/handler"
+	"github.com/minguu42/simoom/pkg/infra/jwtauth"
 	"github.com/minguu42/simoom/pkg/infra/mysql"
 )
 
@@ -24,6 +25,8 @@ func init() {
 
 func main() {
 	time.Local = time.UTC
+
+	auth := jwtauth.Authenticator{}
 
 	conf, err := config.Load()
 	if err != nil {
@@ -38,7 +41,7 @@ func main() {
 
 	s := &http.Server{
 		Addr:              net.JoinHostPort(conf.API.Host, strconv.Itoa(conf.API.Port)),
-		Handler:           handler.New(c, conf),
+		Handler:           handler.New(auth, c, conf),
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		MaxHeaderBytes:    1 << 20,

@@ -10,6 +10,7 @@ import (
 	"github.com/minguu42/simoom/gen/simoompb/v1"
 	"github.com/minguu42/simoom/gen/simoompb/v1/simoompbconnect"
 	"github.com/minguu42/simoom/pkg/config"
+	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 	"github.com/minguu42/simoom/pkg/handler/interceptor"
 	"github.com/minguu42/simoom/pkg/usecase"
@@ -28,12 +29,12 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(repo repository.Repository, conf config.Env) http.Handler {
+func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Env) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewErrorJudge(),
 		interceptor.NewAccessLog(),
-		interceptor.NewAuth(conf.API.AccessTokenSecret),
+		interceptor.NewAuth(authenticator, conf.API.AccessTokenSecret),
 	)
 
 	mux := http.NewServeMux()
