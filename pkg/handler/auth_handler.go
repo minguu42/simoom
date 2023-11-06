@@ -9,20 +9,6 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignInRequest]) (*connect.Response[simoompb.SignInResponse], error) {
-	out, err := h.auth.SignIn(ctx, usecase.SignInInput{
-		Email:    req.Msg.Email,
-		Password: req.Msg.Password,
-	})
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	return connect.NewResponse(&simoompb.SignInResponse{
-		AccessToken:  out.AccessToken,
-		RefreshToken: out.RefreshToken,
-	}), nil
-}
-
 func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
 	out, err := h.auth.SingUp(ctx, usecase.SignUpInput{
 		Name:     req.Msg.Name,
@@ -33,6 +19,20 @@ func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignU
 		return nil, errors.WithStack(err)
 	}
 	return connect.NewResponse(&simoompb.SignUpResponse{
+		AccessToken:  out.AccessToken,
+		RefreshToken: out.RefreshToken,
+	}), nil
+}
+
+func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignInRequest]) (*connect.Response[simoompb.SignInResponse], error) {
+	out, err := h.auth.SignIn(ctx, usecase.SignInInput{
+		Email:    req.Msg.Email,
+		Password: req.Msg.Password,
+	})
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return connect.NewResponse(&simoompb.SignInResponse{
 		AccessToken:  out.AccessToken,
 		RefreshToken: out.RefreshToken,
 	}), nil
