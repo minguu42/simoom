@@ -171,116 +171,6 @@ func (x *CheckHealthResponse) GetRevision() string {
 	return ""
 }
 
-type SignInRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Email    string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-}
-
-func (x *SignInRequest) Reset() {
-	*x = SignInRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_simoompb_v1_simoom_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *SignInRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SignInRequest) ProtoMessage() {}
-
-func (x *SignInRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_simoompb_v1_simoom_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SignInRequest.ProtoReflect.Descriptor instead.
-func (*SignInRequest) Descriptor() ([]byte, []int) {
-	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *SignInRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *SignInRequest) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
-type SignInResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	AccessToken  string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	RefreshToken string `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
-}
-
-func (x *SignInResponse) Reset() {
-	*x = SignInResponse{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_simoompb_v1_simoom_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *SignInResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SignInResponse) ProtoMessage() {}
-
-func (x *SignInResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_simoompb_v1_simoom_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SignInResponse.ProtoReflect.Descriptor instead.
-func (*SignInResponse) Descriptor() ([]byte, []int) {
-	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *SignInResponse) GetAccessToken() string {
-	if x != nil {
-		return x.AccessToken
-	}
-	return ""
-}
-
-func (x *SignInResponse) GetRefreshToken() string {
-	if x != nil {
-		return x.RefreshToken
-	}
-	return ""
-}
-
 type SignUpRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -294,7 +184,7 @@ type SignUpRequest struct {
 func (x *SignUpRequest) Reset() {
 	*x = SignUpRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_simoompb_v1_simoom_proto_msgTypes[5]
+		mi := &file_simoompb_v1_simoom_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -307,7 +197,7 @@ func (x *SignUpRequest) String() string {
 func (*SignUpRequest) ProtoMessage() {}
 
 func (x *SignUpRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_simoompb_v1_simoom_proto_msgTypes[5]
+	mi := &file_simoompb_v1_simoom_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -320,7 +210,7 @@ func (x *SignUpRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SignUpRequest.ProtoReflect.Descriptor instead.
 func (*SignUpRequest) Descriptor() ([]byte, []int) {
-	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{5}
+	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SignUpRequest) GetName() string {
@@ -356,7 +246,7 @@ type SignUpResponse struct {
 func (x *SignUpResponse) Reset() {
 	*x = SignUpResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_simoompb_v1_simoom_proto_msgTypes[6]
+		mi := &file_simoompb_v1_simoom_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -369,7 +259,7 @@ func (x *SignUpResponse) String() string {
 func (*SignUpResponse) ProtoMessage() {}
 
 func (x *SignUpResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_simoompb_v1_simoom_proto_msgTypes[6]
+	mi := &file_simoompb_v1_simoom_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -382,7 +272,7 @@ func (x *SignUpResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SignUpResponse.ProtoReflect.Descriptor instead.
 func (*SignUpResponse) Descriptor() ([]byte, []int) {
-	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{6}
+	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *SignUpResponse) GetAccessToken() string {
@@ -393,6 +283,116 @@ func (x *SignUpResponse) GetAccessToken() string {
 }
 
 func (x *SignUpResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+type SignInRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Email    string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+}
+
+func (x *SignInRequest) Reset() {
+	*x = SignInRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_simoompb_v1_simoom_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SignInRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SignInRequest) ProtoMessage() {}
+
+func (x *SignInRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_simoompb_v1_simoom_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SignInRequest.ProtoReflect.Descriptor instead.
+func (*SignInRequest) Descriptor() ([]byte, []int) {
+	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *SignInRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *SignInRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type SignInResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccessToken  string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	RefreshToken string `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+}
+
+func (x *SignInResponse) Reset() {
+	*x = SignInResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_simoompb_v1_simoom_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SignInResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SignInResponse) ProtoMessage() {}
+
+func (x *SignInResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_simoompb_v1_simoom_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SignInResponse.ProtoReflect.Descriptor instead.
+func (*SignInResponse) Descriptor() ([]byte, []int) {
+	return file_simoompb_v1_simoom_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SignInResponse) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *SignInResponse) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
 	}
@@ -1968,22 +1968,22 @@ var file_simoompb_v1_simoom_proto_rawDesc = []byte{
 	0x31, 0x0a, 0x13, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x48, 0x65, 0x61, 0x6c, 0x74, 0x68, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69,
 	0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69,
-	0x6f, 0x6e, 0x22, 0x41, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73,
-	0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73,
-	0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x58, 0x0a, 0x0e, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73,
-	0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61,
-	0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x23, 0x0a, 0x0d, 0x72, 0x65,
-	0x66, 0x72, 0x65, 0x73, 0x68, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0c, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22,
-	0x55, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
-	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x02, 0x20,
+	0x6f, 0x6e, 0x22, 0x55, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x1a, 0x0a,
+	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x58, 0x0a, 0x0e, 0x53, 0x69, 0x67,
+	0x6e, 0x55, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x61,
+	0x63, 0x63, 0x65, 0x73, 0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x23,
+	0x0a, 0x0d, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x72, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x22, 0x41, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61,
-	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61,
-	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x58, 0x0a, 0x0e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70,
+	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61,
+	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x58, 0x0a, 0x0e, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e,
 	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65,
 	0x73, 0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
 	0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x23, 0x0a, 0x0d, 0x72,
@@ -2178,14 +2178,14 @@ var file_simoompb_v1_simoom_proto_rawDesc = []byte{
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d,
 	0x70, 0x62, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x48, 0x65, 0x61, 0x6c, 0x74,
 	0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x41, 0x0a, 0x06, 0x53, 0x69, 0x67,
-	0x6e, 0x49, 0x6e, 0x12, 0x1a, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d, 0x70, 0x62, 0x2e, 0x76,
-	0x31, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x6e, 0x55, 0x70, 0x12, 0x1a, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d, 0x70, 0x62, 0x2e, 0x76,
+	0x31, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
 	0x1b, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d, 0x70, 0x62, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x69,
-	0x67, 0x6e, 0x49, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x41, 0x0a, 0x06,
-	0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x12, 0x1a, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d, 0x70,
-	0x62, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x41, 0x0a, 0x06,
+	0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x12, 0x1a, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d, 0x70,
+	0x62, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65,
 	0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d, 0x70, 0x62, 0x2e, 0x76, 0x31,
-	0x2e, 0x53, 0x69, 0x67, 0x6e, 0x55, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x2e, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
 	0x65, 0x0a, 0x12, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x41, 0x63, 0x63, 0x65, 0x73, 0x73,
 	0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x26, 0x2e, 0x73, 0x69, 0x6d, 0x6f, 0x6f, 0x6d, 0x70, 0x62,
 	0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x66, 0x72, 0x65, 0x73, 0x68, 0x41, 0x63, 0x63, 0x65, 0x73,
@@ -2285,10 +2285,10 @@ var file_simoompb_v1_simoom_proto_goTypes = []interface{}{
 	(*Date)(nil),                        // 0: simoompb.v1.Date
 	(*CheckHealthRequest)(nil),          // 1: simoompb.v1.CheckHealthRequest
 	(*CheckHealthResponse)(nil),         // 2: simoompb.v1.CheckHealthResponse
-	(*SignInRequest)(nil),               // 3: simoompb.v1.SignInRequest
-	(*SignInResponse)(nil),              // 4: simoompb.v1.SignInResponse
-	(*SignUpRequest)(nil),               // 5: simoompb.v1.SignUpRequest
-	(*SignUpResponse)(nil),              // 6: simoompb.v1.SignUpResponse
+	(*SignUpRequest)(nil),               // 3: simoompb.v1.SignUpRequest
+	(*SignUpResponse)(nil),              // 4: simoompb.v1.SignUpResponse
+	(*SignInRequest)(nil),               // 5: simoompb.v1.SignInRequest
+	(*SignInResponse)(nil),              // 6: simoompb.v1.SignInResponse
 	(*RefreshAccessTokenRequest)(nil),   // 7: simoompb.v1.RefreshAccessTokenRequest
 	(*RefreshAccessTokenResponse)(nil),  // 8: simoompb.v1.RefreshAccessTokenResponse
 	(*CreateProjectRequest)(nil),        // 9: simoompb.v1.CreateProjectRequest
@@ -2338,8 +2338,8 @@ var file_simoompb_v1_simoom_proto_depIdxs = []int32{
 	32, // 17: simoompb.v1.Tag.updated_at:type_name -> google.protobuf.Timestamp
 	30, // 18: simoompb.v1.Tags.tags:type_name -> simoompb.v1.Tag
 	1,  // 19: simoompb.v1.SimoomService.CheckHealth:input_type -> simoompb.v1.CheckHealthRequest
-	3,  // 20: simoompb.v1.SimoomService.SignIn:input_type -> simoompb.v1.SignInRequest
-	5,  // 21: simoompb.v1.SimoomService.SignUp:input_type -> simoompb.v1.SignUpRequest
+	3,  // 20: simoompb.v1.SimoomService.SignUp:input_type -> simoompb.v1.SignUpRequest
+	5,  // 21: simoompb.v1.SimoomService.SignIn:input_type -> simoompb.v1.SignInRequest
 	7,  // 22: simoompb.v1.SimoomService.RefreshAccessToken:input_type -> simoompb.v1.RefreshAccessTokenRequest
 	9,  // 23: simoompb.v1.SimoomService.CreateProject:input_type -> simoompb.v1.CreateProjectRequest
 	10, // 24: simoompb.v1.SimoomService.ListProjects:input_type -> simoompb.v1.ListProjectsRequest
@@ -2358,8 +2358,8 @@ var file_simoompb_v1_simoom_proto_depIdxs = []int32{
 	28, // 37: simoompb.v1.SimoomService.UpdateTag:input_type -> simoompb.v1.UpdateTagRequest
 	29, // 38: simoompb.v1.SimoomService.DeleteTag:input_type -> simoompb.v1.DeleteTagRequest
 	2,  // 39: simoompb.v1.SimoomService.CheckHealth:output_type -> simoompb.v1.CheckHealthResponse
-	4,  // 40: simoompb.v1.SimoomService.SignIn:output_type -> simoompb.v1.SignInResponse
-	6,  // 41: simoompb.v1.SimoomService.SignUp:output_type -> simoompb.v1.SignUpResponse
+	4,  // 40: simoompb.v1.SimoomService.SignUp:output_type -> simoompb.v1.SignUpResponse
+	6,  // 41: simoompb.v1.SimoomService.SignIn:output_type -> simoompb.v1.SignInResponse
 	8,  // 42: simoompb.v1.SimoomService.RefreshAccessToken:output_type -> simoompb.v1.RefreshAccessTokenResponse
 	13, // 43: simoompb.v1.SimoomService.CreateProject:output_type -> simoompb.v1.Project
 	14, // 44: simoompb.v1.SimoomService.ListProjects:output_type -> simoompb.v1.Projects
@@ -2427,30 +2427,6 @@ func file_simoompb_v1_simoom_proto_init() {
 			}
 		}
 		file_simoompb_v1_simoom_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SignInRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_simoompb_v1_simoom_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SignInResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_simoompb_v1_simoom_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SignUpRequest); i {
 			case 0:
 				return &v.state
@@ -2462,8 +2438,32 @@ func file_simoompb_v1_simoom_proto_init() {
 				return nil
 			}
 		}
-		file_simoompb_v1_simoom_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_simoompb_v1_simoom_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SignUpResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_simoompb_v1_simoom_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SignInRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_simoompb_v1_simoom_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SignInResponse); i {
 			case 0:
 				return &v.state
 			case 1:
