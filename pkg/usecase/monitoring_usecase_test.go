@@ -1,30 +1,31 @@
-package usecase
+package usecase_test
 
 import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var testMonitoring = MonitoringUsecase{}
+var monitoring = usecase.MonitoringUsecase{}
 
 func TestMonitoringUsecase_CheckHealth(t *testing.T) {
 	tests := []struct {
 		name string
-		want CheckHealthOutput
+		want usecase.CheckHealthOutput
 	}{
 		{
 			name: "アプリケーションのrevisionを返す",
-			want: CheckHealthOutput{
+			want: usecase.CheckHealthOutput{
 				Revision: "xxxxxxx",
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := testMonitoring.CheckHealth()
+			got := monitoring.CheckHealth()
 			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("testMonitoring.CheckHealth mismatch (-want +got):\n%s", diff)
+				t.Errorf("monitoring.CheckHealth mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
