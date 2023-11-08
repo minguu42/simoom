@@ -132,7 +132,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 		want usecase.ProjectOutput
 	}{
 		{
-			name: "",
+			name: "改プロジェクト1に更新する",
 			args: args{
 				ctx: ctx,
 				in: usecase.UpdateProjectInput{
