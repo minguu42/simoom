@@ -50,7 +50,7 @@ func TestProjectUsecase_CreateProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
 				if err := mysql.ResetProject(context.Background(), tc); err != nil {
-					t.Fatalf("mysql.ResetProject failed: %s", err)
+					t.Fatalf("%+v", err)
 				}
 			})
 
@@ -149,7 +149,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
 				if err := mysql.ResetProject(context.Background(), tc); err != nil {
-					t.Fatalf("mysql.ResetProject failed: %s", err)
+					t.Fatalf("%+v", err)
 				}
 			})
 
@@ -185,7 +185,7 @@ func TestProjectUsecase_DeleteProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
 				if err := mysql.ResetProject(context.Background(), tc); err != nil {
-					t.Fatalf("mysql.ResetProject failed: %s", err)
+					t.Fatalf("%+v", err)
 				}
 			})
 
