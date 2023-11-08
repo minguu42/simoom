@@ -13,10 +13,16 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var projectCmpOption = cmpopts.IgnoreFields(usecase.ProjectOutput{},
-	"Project.ID",
-	"Project.CreatedAt",
-	"Project.UpdatedAt",
+var (
+	createProjectOption = cmpopts.IgnoreFields(usecase.ProjectOutput{},
+		"Project.ID",
+		"Project.CreatedAt",
+		"Project.UpdatedAt",
+	)
+	updateProjectOption = cmpopts.IgnoreFields(usecase.ProjectOutput{},
+		"Project.CreatedAt",
+		"Project.UpdatedAt",
+	)
 )
 
 func TestProjectUsecase_CreateProject(t *testing.T) {
@@ -58,7 +64,7 @@ func TestProjectUsecase_CreateProject(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, projectCmpOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got, createProjectOption); diff != "" {
 				t.Errorf("project.CreateProject mismatch (-want +got):\n%s", diff)
 			}
 		})
@@ -157,7 +163,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, projectCmpOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got, updateProjectOption); diff != "" {
 				t.Errorf("project.UpdateProject mismatch (-want +got):\n%s", diff)
 			}
 		})
