@@ -2,7 +2,7 @@
 
 -- name: ImportUser :exec
 INSERT INTO users (id, name, email, password, created_at, updated_at)
-VALUES ('user_01', 'ユーザ1', 'minguu42@example.com', 'some-password','2020-01-01 00:00:01', '2020-01-01 00:00:01');
+VALUES ('user_01', 'ユーザ1', 'user01@example.com', 'some-password','2020-01-01 00:00:01', '2020-01-01 00:00:01');
 
 -- name: DeleteAllUsers :exec
 DELETE FROM users;

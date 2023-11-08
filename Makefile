@@ -56,7 +56,9 @@ lint: ## 静的解析を実行する
 	@staticcheck $$(go list ./... | grep -v /gen)
 
 test: ## テストを実行する
-	@go test $(option) $$(go list ./... | grep -v /gen)
+	@go test $(option) $$(go list ./... | grep -v -e /gen -e /pkg/infra/mysql -e /pkg/usecase)
+	@go test ./pkg/infra/mysql
+	@go test ./pkg/usecase
 
 help: ## ヘルプを表示する
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) \

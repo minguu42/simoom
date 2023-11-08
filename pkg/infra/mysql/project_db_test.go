@@ -43,7 +43,7 @@ func TestClient_CreateProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetProject(ctx, tc.db); err != nil {
+				if err := ResetProject(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
@@ -201,7 +201,7 @@ func TestClient_UpdateProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetProject(ctx, tc.db); err != nil {
+				if err := ResetProject(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
@@ -241,7 +241,7 @@ func TestClient_DeleteProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetProject(ctx, tc.db); err != nil {
+				if err := ResetProject(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})

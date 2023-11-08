@@ -43,7 +43,7 @@ func TestClient_CreateStep(t *testing.T) {
 		t.Run(t.Name(), func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetStep(ctx, tc.db); err != nil {
+				if err := ResetStep(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
@@ -145,7 +145,7 @@ func TestClient_UpdateStep(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetStep(ctx, tc.db); err != nil {
+				if err := ResetStep(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
@@ -185,7 +185,7 @@ func TestClient_DeleteStep(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := resetStep(ctx, tc.db); err != nil {
+				if err := ResetStep(ctx, tc); err != nil {
 					t.Fatalf("%+v", err)
 				}
 			})
