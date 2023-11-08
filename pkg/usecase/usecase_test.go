@@ -16,6 +16,7 @@ var (
 	ctx     = auth.SetUserID(context.Background(), "user_01")
 	project usecase.ProjectUsecase
 	step    usecase.StepUsecase
+	tag     usecase.TagUsecase
 )
 
 func TestMain(m *testing.M) {
@@ -36,6 +37,7 @@ func TestMain(m *testing.M) {
 	defer tc.Close()
 	project = usecase.ProjectUsecase{Repo: tc}
 	step = usecase.StepUsecase{Repo: tc}
+	tag = usecase.TagUsecase{Repo: tc}
 
 	if err := mysql.InitAllData(context.Background(), tc); err != nil {
 		log.Fatalf("%+v", err)
