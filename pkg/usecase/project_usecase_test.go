@@ -19,10 +19,7 @@ var (
 		"Project.CreatedAt",
 		"Project.UpdatedAt",
 	)
-	updateProjectOption = cmpopts.IgnoreFields(usecase.ProjectOutput{},
-		"Project.CreatedAt",
-		"Project.UpdatedAt",
-	)
+	updateProjectOption = cmpopts.IgnoreFields(usecase.ProjectOutput{}, "Project.UpdatedAt")
 )
 
 func TestProjectUsecase_CreateProject(t *testing.T) {
@@ -148,6 +145,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 				Name:       "改プロジェクト1",
 				Color:      "#0f1e2d",
 				IsArchived: true,
+				CreatedAt:  time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 			}},
 		},
 	}

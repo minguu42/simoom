@@ -19,10 +19,7 @@ var (
 		"Step.CreatedAt",
 		"Step.UpdatedAt",
 	)
-	updateStepOption = cmpopts.IgnoreFields(usecase.StepOutput{},
-		"Step.CreatedAt",
-		"Step.UpdatedAt",
-	)
+	updateStepOption = cmpopts.IgnoreFields(usecase.StepOutput{}, "Step.UpdatedAt")
 )
 
 func TestStepUsecase_CreateStep(t *testing.T) {
@@ -97,6 +94,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 				TaskID:      "task_01",
 				Title:       "改ステップ1",
 				CompletedAt: pointers.Ref(time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)),
+				CreatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 			}},
 		},
 	}
