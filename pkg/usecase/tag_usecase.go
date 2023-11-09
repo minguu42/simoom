@@ -53,13 +53,19 @@ type ListTagsInput struct {
 }
 
 func (uc TagUsecase) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
-	ts, err := uc.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit, in.Offset)
+	ts, err := uc.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return TagsOutput{}, errors.WithStack(err)
 	}
+
+	hasNext := false
+	if len(ts) == int(in.Limit+1) {
+		ts = ts[:in.Limit]
+		hasNext = true
+	}
 	return TagsOutput{
 		Tags:    ts,
-		HasNext: false,
+		HasNext: hasNext,
 	}, nil
 }
 
