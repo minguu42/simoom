@@ -36,7 +36,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("%+v", err)
 	}
 	defer tc.Close()
-	project = usecase.ProjectUsecase{Repo: tc}
+	project = usecase.NewProject(tc)
 	step = usecase.StepUsecase{Repo: tc}
 	tag = usecase.TagUsecase{Repo: tc}
 	task = usecase.TaskUsecase{Repo: tc}

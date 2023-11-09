@@ -41,7 +41,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
 		auth:       usecase.AuthUsecase{Repo: repo, Env: conf},
 		monitoring: usecase.MonitoringUsecase{},
-		project:    usecase.ProjectUsecase{Repo: repo},
+		project:    usecase.NewProject(repo),
 		step:       usecase.StepUsecase{Repo: repo},
 		tag:        usecase.TagUsecase{Repo: repo},
 		task:       usecase.TaskUsecase{Repo: repo},
