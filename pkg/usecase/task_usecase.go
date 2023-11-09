@@ -80,13 +80,19 @@ func (uc TaskUsecase) ListTasksByProjectID(ctx context.Context, in ListTasksByPr
 		return TasksOutput{}, ErrProjectNotFound
 	}
 
-	ts, err := uc.repo.ListTasksByProjectID(ctx, in.ProjectID, in.Limit, in.Offset)
+	ts, err := uc.repo.ListTasksByProjectID(ctx, in.ProjectID, in.Limit+1, in.Offset)
 	if err != nil {
 		return TasksOutput{}, errors.WithStack(err)
 	}
+
+	hasNext := false
+	if len(ts) == int(in.Limit+1) {
+		ts = ts[:in.Limit]
+		hasNext = true
+	}
 	return TasksOutput{
 		Tasks:   ts,
-		HasNext: false,
+		HasNext: hasNext,
 	}, nil
 }
 
@@ -108,13 +114,19 @@ func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDI
 		return TasksOutput{}, ErrTagNotFound
 	}
 
-	ts, err := uc.repo.ListTasksByTagID(ctx, in.TagID, in.Limit, in.Offset)
+	ts, err := uc.repo.ListTasksByTagID(ctx, in.TagID, in.Limit+1, in.Offset)
 	if err != nil {
 		return TasksOutput{}, errors.WithStack(err)
 	}
+
+	hasNext := false
+	if len(ts) == int(in.Limit+1) {
+		ts = ts[:in.Limit]
+		hasNext = true
+	}
 	return TasksOutput{
 		Tasks:   ts,
-		HasNext: false,
+		HasNext: hasNext,
 	}, nil
 }
 
