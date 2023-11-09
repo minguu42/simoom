@@ -6,11 +6,11 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-// Load は環境変数を読み込み、取得する
-func Load() (Env, error) {
-	var conf Env
+// Load は環境変数から設定値を読み込んだ Config を返す
+func Load() (Config, error) {
+	var conf Config
 	if err := envconfig.Process("", &conf); err != nil {
-		return Env{}, errors.WithStack(err)
+		return Config{}, errors.WithStack(err)
 	}
 	return conf, nil
 }

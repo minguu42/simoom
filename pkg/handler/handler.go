@@ -29,22 +29,22 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Env) http.Handler {
+func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
-		interceptor.NewErrorJudge(),
-		interceptor.NewAccessLog(),
-		interceptor.NewAuth(authenticator, conf.API.AccessTokenSecret),
+		interceptor.NewJudgeError(),
+		interceptor.NewRecordAccess(),
+		interceptor.NewAuthenticate(authenticator, conf.Auth.AccessTokenSecret),
 	)
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
-		auth:       usecase.AuthUsecase{Repo: repo, Env: conf},
+		auth:       usecase.NewAuth(authenticator, repo, conf.Auth),
 		monitoring: usecase.MonitoringUsecase{},
-		project:    usecase.ProjectUsecase{Repo: repo},
-		step:       usecase.StepUsecase{Repo: repo},
-		tag:        usecase.TagUsecase{Repo: repo},
-		task:       usecase.TaskUsecase{Repo: repo},
+		project:    usecase.NewProject(repo),
+		step:       usecase.NewStep(repo),
+		tag:        usecase.NewTag(repo),
+		task:       usecase.NewTask(repo),
 	}, opt))
 
 	return h2c.NewHandler(mux, &http2.Server{})

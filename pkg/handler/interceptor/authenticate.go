@@ -10,9 +10,8 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/auth"
 )
 
-// NewAuth はユーザ認証を行うインターセプタを返す
-// secret はアクセスシークレットを受け取る
-func NewAuth(authenticator auth.Authenticator, secret string) connect.UnaryInterceptorFunc {
+// NewAuthenticate はユーザ認証を行うインターセプタを返す
+func NewAuthenticate(authenticator auth.Authenticator, secret string) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshAccessToken"}

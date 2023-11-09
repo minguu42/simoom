@@ -9,8 +9,8 @@ import (
 	"github.com/minguu42/simoom/pkg/applog"
 )
 
-// NewAccessLog はリクエスト毎のアクセスログ/エラーログを表示するインターセプタを返す
-func NewAccessLog() connect.UnaryInterceptorFunc {
+// NewRecordAccess はリクエスト毎のアクセスログ/エラーログを出力するインターセプタを返す
+func NewRecordAccess() connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			resp, err := next(ctx, req)
