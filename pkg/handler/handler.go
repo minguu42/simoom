@@ -42,9 +42,9 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 		auth:       usecase.AuthUsecase{Repo: repo, Env: conf},
 		monitoring: usecase.MonitoringUsecase{},
 		project:    usecase.NewProject(repo),
-		step:       usecase.StepUsecase{Repo: repo},
-		tag:        usecase.TagUsecase{Repo: repo},
-		task:       usecase.TaskUsecase{Repo: repo},
+		step:       usecase.NewStep(repo),
+		tag:        usecase.NewTag(repo),
+		task:       usecase.NewTask(repo),
 	}, opt))
 
 	return h2c.NewHandler(mux, &http2.Server{})

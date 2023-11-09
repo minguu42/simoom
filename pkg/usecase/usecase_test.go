@@ -37,9 +37,9 @@ func TestMain(m *testing.M) {
 	}
 	defer tc.Close()
 	project = usecase.NewProject(tc)
-	step = usecase.StepUsecase{Repo: tc}
-	tag = usecase.TagUsecase{Repo: tc}
-	task = usecase.TaskUsecase{Repo: tc}
+	step = usecase.NewStep(tc)
+	tag = usecase.NewTag(tc)
+	task = usecase.NewTask(tc)
 
 	if err := mysql.InitAllData(context.Background(), tc); err != nil {
 		log.Fatalf("%+v", err)
