@@ -55,7 +55,8 @@ func (h handler) ListTags(ctx context.Context, req *connect.Request[simoompb.Lis
 		return nil, err
 	}
 	return connect.NewResponse(&simoompb.Tags{
-		Tags: newTags(out.Tags),
+		Tags:    newTags(out.Tags),
+		HasNext: false,
 	}), nil
 }
 
