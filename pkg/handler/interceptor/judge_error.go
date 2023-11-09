@@ -8,8 +8,8 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-// NewErrorJudge はハンドラから返されたエラーの種類を判定し、適切なConnectエラーに変換するインターセプトを返す
-func NewErrorJudge() connect.UnaryInterceptorFunc {
+// NewJudgeError はハンドラから返されたエラーの種類を判定し、適切なConnectエラーに変換するインターセプトを返す
+func NewJudgeError() connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			res, err := next(ctx, req)
