@@ -29,17 +29,17 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Env) http.Handler {
+func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewErrorJudge(),
 		interceptor.NewAccessLog(),
-		interceptor.NewAuth(authenticator, conf.API.AccessTokenSecret),
+		interceptor.NewAuth(authenticator, conf.Auth.AccessTokenSecret),
 	)
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
-		auth:       usecase.AuthUsecase{Repo: repo, Env: conf},
+		auth:       usecase.NewAuthn(authenticator, repo, conf.Auth),
 		monitoring: usecase.MonitoringUsecase{},
 		project:    usecase.NewProject(repo),
 		step:       usecase.NewStep(repo),

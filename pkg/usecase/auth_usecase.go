@@ -14,9 +14,17 @@ import (
 )
 
 type AuthUsecase struct {
-	Auth auth.Authenticator
-	Repo repository.Repository
-	Env  config.Env
+	authenticator auth.Authenticator
+	repo          repository.Repository
+	conf          config.Auth
+}
+
+func NewAuthn(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth) AuthUsecase {
+	return AuthUsecase{
+		authenticator: authenticator,
+		repo:          repo,
+		conf:          conf,
+	}
 }
 
 type SignUpInput struct {
@@ -45,15 +53,15 @@ func (u AuthUsecase) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, 
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	accessToken, err := u.Auth.CreateAccessToken(user, u.Env.API.AccessTokenSecret, u.Env.API.AccessTokenExpiryHour)
+	accessToken, err := u.authenticator.CreateAccessToken(user, u.conf.AccessTokenSecret, u.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
 	}
-	refreshToken, err := u.Auth.CreateRefreshToken(user, u.Env.API.RefreshTokenSecret, u.Env.API.RefreshTokenExpiryHour)
+	refreshToken, err := u.authenticator.CreateRefreshToken(user, u.conf.RefreshTokenSecret, u.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
 	}
-	if err := u.Repo.CreateUser(ctx, user); err != nil {
+	if err := u.repo.CreateUser(ctx, user); err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
 	}
 	return SignUpOutput{
@@ -73,7 +81,7 @@ type SignInOutput struct {
 }
 
 func (u AuthUsecase) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error) {
-	user, err := u.Repo.GetUserByEmail(ctx, in.Email)
+	user, err := u.repo.GetUserByEmail(ctx, in.Email)
 	if err != nil {
 		return SignInOutput{}, errors.WithStack(err)
 	}
@@ -82,11 +90,11 @@ func (u AuthUsecase) SignIn(ctx context.Context, in SignInInput) (SignInOutput, 
 		return SignInOutput{}, errors.New("password is not valid")
 	}
 
-	accessToken, err := u.Auth.CreateAccessToken(user, u.Env.API.AccessTokenSecret, u.Env.API.AccessTokenExpiryHour)
+	accessToken, err := u.authenticator.CreateAccessToken(user, u.conf.AccessTokenSecret, u.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return SignInOutput{}, errors.WithStack(err)
 	}
-	refreshToken, err := u.Auth.CreateRefreshToken(user, u.Env.API.RefreshTokenSecret, u.Env.API.RefreshTokenExpiryHour)
+	refreshToken, err := u.authenticator.CreateRefreshToken(user, u.conf.RefreshTokenSecret, u.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return SignInOutput{}, errors.WithStack(err)
 	}
@@ -106,24 +114,24 @@ type RefreshAccessTokenOutput struct {
 }
 
 func (u AuthUsecase) RefreshAccessToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
-	id, err := u.Auth.ExtractIDFromToken(in.RefreshToken, u.Env.API.RefreshTokenSecret)
+	id, err := u.authenticator.ExtractIDFromToken(in.RefreshToken, u.conf.RefreshTokenSecret)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
-	user, err := u.Repo.GetUserByID(ctx, id)
+	user, err := u.repo.GetUserByID(ctx, id)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
 
-	accessToken, err := u.Auth.CreateAccessToken(user, u.Env.API.AccessTokenSecret, u.Env.API.AccessTokenExpiryHour)
+	accessToken, err := u.authenticator.CreateAccessToken(user, u.conf.AccessTokenSecret, u.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
-	refreshToken, err := u.Auth.CreateRefreshToken(user, u.Env.API.RefreshTokenSecret, u.Env.API.RefreshTokenExpiryHour)
+	refreshToken, err := u.authenticator.CreateRefreshToken(user, u.conf.RefreshTokenSecret, u.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
-	if err := u.Repo.CreateUser(ctx, user); err != nil {
+	if err := u.repo.CreateUser(ctx, user); err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
 	return RefreshAccessTokenOutput{
