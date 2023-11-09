@@ -19,7 +19,7 @@ type AuthUsecase struct {
 	conf          config.Auth
 }
 
-func NewAuthn(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth) AuthUsecase {
+func NewAuth(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth) AuthUsecase {
 	return AuthUsecase{
 		authenticator: authenticator,
 		repo:          repo,

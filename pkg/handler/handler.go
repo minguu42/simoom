@@ -39,7 +39,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
-		auth:       usecase.NewAuthn(authenticator, repo, conf.Auth),
+		auth:       usecase.NewAuth(authenticator, repo, conf.Auth),
 		monitoring: usecase.MonitoringUsecase{},
 		project:    usecase.NewProject(repo),
 		step:       usecase.NewStep(repo),
