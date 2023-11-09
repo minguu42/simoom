@@ -56,13 +56,19 @@ type ListProjectsInput struct {
 }
 
 func (uc ProjectUsecase) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit, in.Offset)
+	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, errors.WithStack(err)
 	}
+
+	hasNext := false
+	if len(ps) == int(in.Limit+1) {
+		ps = ps[:in.Limit]
+		hasNext = true
+	}
 	return ProjectsOutput{
 		Projects: ps,
-		HasNext:  false,
+		HasNext:  hasNext,
 	}, nil
 }
 
