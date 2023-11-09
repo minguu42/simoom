@@ -93,7 +93,7 @@ func TestTagUsecase_ListTags(t *testing.T) {
 						UpdatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 					},
 				},
-				HasNext: false, // TODO: ページングの実装後に対応する
+				HasNext: true,
 			},
 		},
 	}

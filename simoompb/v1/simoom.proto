@@ -213,4 +213,5 @@ message Tag {
 
 message Tags {
   repeated Tag tags = 1;
+  bool has_next = 2;
 }

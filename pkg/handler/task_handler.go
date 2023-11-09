@@ -97,7 +97,7 @@ func (h handler) ListTasksByTagID(ctx context.Context, req *connect.Request[simo
 	}
 	return connect.NewResponse(&simoompb.Tasks{
 		Tasks:   newTasksResponse(out.Tasks),
-		HasNext: false,
+		HasNext: out.HasNext,
 	}), nil
 }
 
