@@ -11,12 +11,12 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-type StepUsecase struct {
+type Step struct {
 	repo repository.Repository
 }
 
-func NewStep(repo repository.Repository) StepUsecase {
-	return StepUsecase{repo: repo}
+func NewStep(repo repository.Repository) Step {
+	return Step{repo: repo}
 }
 
 type StepOutput struct {
@@ -33,8 +33,8 @@ type CreateStepInput struct {
 	Title  string
 }
 
-func (uc StepUsecase) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
-	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
+func (u Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
+	t, err := u.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrTaskNotFound
@@ -54,7 +54,7 @@ func (uc StepUsecase) CreateStep(ctx context.Context, in CreateStepInput) (StepO
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	if err := uc.repo.CreateStep(ctx, s); err != nil {
+	if err := u.repo.CreateStep(ctx, s); err != nil {
 		return StepOutput{}, errors.WithStack(err)
 	}
 	return StepOutput{Step: s}, nil
@@ -66,8 +66,8 @@ type UpdateStepInput struct {
 	CompletedAt *time.Time
 }
 
-func (uc StepUsecase) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
-	s, err := uc.repo.GetStepByID(ctx, in.ID)
+func (u Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
+	s, err := u.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrStepNotFound
@@ -84,7 +84,7 @@ func (uc StepUsecase) UpdateStep(ctx context.Context, in UpdateStepInput) (StepO
 	if in.CompletedAt != nil {
 		s.CompletedAt = in.CompletedAt
 	}
-	if err := uc.repo.UpdateStep(ctx, s); err != nil {
+	if err := u.repo.UpdateStep(ctx, s); err != nil {
 		return StepOutput{}, errors.WithStack(err)
 	}
 	return StepOutput{Step: s}, nil
@@ -94,8 +94,8 @@ type DeleteStepInput struct {
 	ID string
 }
 
-func (uc StepUsecase) DeleteStep(ctx context.Context, in DeleteStepInput) error {
-	s, err := uc.repo.GetStepByID(ctx, in.ID)
+func (u Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
+	s, err := u.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrStepNotFound
@@ -106,7 +106,7 @@ func (uc StepUsecase) DeleteStep(ctx context.Context, in DeleteStepInput) error 
 		return ErrStepNotFound
 	}
 
-	if err := uc.repo.DeleteStep(ctx, in.ID); err != nil {
+	if err := u.repo.DeleteStep(ctx, in.ID); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

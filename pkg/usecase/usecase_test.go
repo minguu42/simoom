@@ -15,7 +15,7 @@ var (
 	tc      *mysql.Client
 	ctx     = auth.SetUserID(context.Background(), "user_01")
 	project usecase.Project
-	step    usecase.StepUsecase
+	step    usecase.Step
 	tag     usecase.TagUsecase
 	task    usecase.TaskUsecase
 )

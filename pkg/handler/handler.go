@@ -23,7 +23,7 @@ type handler struct {
 	auth       usecase.AuthUsecase
 	monitoring usecase.Monitoring
 	project    usecase.Project
-	step       usecase.StepUsecase
+	step       usecase.Step
 	tag        usecase.TagUsecase
 	task       usecase.TaskUsecase
 }
