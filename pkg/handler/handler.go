@@ -21,7 +21,7 @@ import (
 
 type handler struct {
 	auth       usecase.AuthUsecase
-	monitoring usecase.MonitoringUsecase
+	monitoring usecase.Monitoring
 	project    usecase.ProjectUsecase
 	step       usecase.StepUsecase
 	tag        usecase.TagUsecase
@@ -40,7 +40,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
 		auth:       usecase.NewAuth(authenticator, repo, conf.Auth),
-		monitoring: usecase.MonitoringUsecase{},
+		monitoring: usecase.Monitoring{},
 		project:    usecase.NewProject(repo),
 		step:       usecase.NewStep(repo),
 		tag:        usecase.NewTag(repo),
