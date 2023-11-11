@@ -33,8 +33,8 @@ type CreateStepInput struct {
 	Title  string
 }
 
-func (u Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
-	t, err := u.repo.GetTaskByID(ctx, in.TaskID)
+func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
+	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrTaskNotFound
@@ -54,7 +54,7 @@ func (u Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, e
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	if err := u.repo.CreateStep(ctx, s); err != nil {
+	if err := uc.repo.CreateStep(ctx, s); err != nil {
 		return StepOutput{}, errors.WithStack(err)
 	}
 	return StepOutput{Step: s}, nil
@@ -66,8 +66,8 @@ type UpdateStepInput struct {
 	CompletedAt *time.Time
 }
 
-func (u Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
-	s, err := u.repo.GetStepByID(ctx, in.ID)
+func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
+	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrStepNotFound
@@ -84,7 +84,7 @@ func (u Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, e
 	if in.CompletedAt != nil {
 		s.CompletedAt = in.CompletedAt
 	}
-	if err := u.repo.UpdateStep(ctx, s); err != nil {
+	if err := uc.repo.UpdateStep(ctx, s); err != nil {
 		return StepOutput{}, errors.WithStack(err)
 	}
 	return StepOutput{Step: s}, nil
@@ -94,8 +94,8 @@ type DeleteStepInput struct {
 	ID string
 }
 
-func (u Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
-	s, err := u.repo.GetStepByID(ctx, in.ID)
+func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
+	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrStepNotFound
@@ -106,7 +106,7 @@ func (u Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
 		return ErrStepNotFound
 	}
 
-	if err := u.repo.DeleteStep(ctx, in.ID); err != nil {
+	if err := uc.repo.DeleteStep(ctx, in.ID); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

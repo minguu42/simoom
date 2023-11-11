@@ -33,7 +33,7 @@ type CreateProjectInput struct {
 	Color string
 }
 
-func (u Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
+func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
 	now := time.Now()
 	p := model.Project{
 		ID:         idgen.Generate(),
@@ -44,7 +44,7 @@ func (u Project) CreateProject(ctx context.Context, in CreateProjectInput) (Proj
 		CreatedAt:  now,
 		UpdatedAt:  now,
 	}
-	if err := u.repo.CreateProject(ctx, p); err != nil {
+	if err := uc.repo.CreateProject(ctx, p); err != nil {
 		return ProjectOutput{}, errors.WithStack(err)
 	}
 	return ProjectOutput{Project: p}, nil
@@ -55,8 +55,8 @@ type ListProjectsInput struct {
 	Offset uint
 }
 
-func (u Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	ps, err := u.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
+func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
+	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, errors.WithStack(err)
 	}
@@ -79,8 +79,8 @@ type UpdateProjectInput struct {
 	IsArchived *bool
 }
 
-func (u Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
-	p, err := u.repo.GetProjectByID(ctx, in.ID)
+func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
+	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ProjectOutput{}, ErrProjectNotFound
@@ -100,7 +100,7 @@ func (u Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Proj
 	if in.IsArchived != nil {
 		p.IsArchived = *in.IsArchived
 	}
-	if err := u.repo.UpdateProject(ctx, p); err != nil {
+	if err := uc.repo.UpdateProject(ctx, p); err != nil {
 		return ProjectOutput{}, errors.WithStack(err)
 	}
 	return ProjectOutput{Project: p}, nil
@@ -110,8 +110,8 @@ type DeleteProjectInput struct {
 	ID string
 }
 
-func (u Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
-	p, err := u.repo.GetProjectByID(ctx, in.ID)
+func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
+	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrProjectNotFound
@@ -122,7 +122,7 @@ func (u Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error
 		return ErrProjectNotFound
 	}
 
-	if err := u.repo.DeleteProject(ctx, in.ID); err != nil {
+	if err := uc.repo.DeleteProject(ctx, in.ID); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

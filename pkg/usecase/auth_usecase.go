@@ -38,7 +38,7 @@ type SignUpOutput struct {
 	RefreshToken string
 }
 
-func (u Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
+func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
@@ -53,15 +53,15 @@ func (u Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) 
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	accessToken, err := u.authenticator.CreateAccessToken(user, u.conf.AccessTokenSecret, u.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
 	}
-	refreshToken, err := u.authenticator.CreateRefreshToken(user, u.conf.RefreshTokenSecret, u.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
 	}
-	if err := u.repo.CreateUser(ctx, user); err != nil {
+	if err := uc.repo.CreateUser(ctx, user); err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
 	}
 	return SignUpOutput{
@@ -80,8 +80,8 @@ type SignInOutput struct {
 	RefreshToken string
 }
 
-func (u Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error) {
-	user, err := u.repo.GetUserByEmail(ctx, in.Email)
+func (uc Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error) {
+	user, err := uc.repo.GetUserByEmail(ctx, in.Email)
 	if err != nil {
 		return SignInOutput{}, errors.WithStack(err)
 	}
@@ -90,11 +90,11 @@ func (u Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error) 
 		return SignInOutput{}, errors.New("password is not valid")
 	}
 
-	accessToken, err := u.authenticator.CreateAccessToken(user, u.conf.AccessTokenSecret, u.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return SignInOutput{}, errors.WithStack(err)
 	}
-	refreshToken, err := u.authenticator.CreateRefreshToken(user, u.conf.RefreshTokenSecret, u.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return SignInOutput{}, errors.WithStack(err)
 	}
@@ -113,25 +113,25 @@ type RefreshAccessTokenOutput struct {
 	RefreshToken string
 }
 
-func (u Auth) RefreshAccessToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
-	id, err := u.authenticator.ExtractIDFromToken(in.RefreshToken, u.conf.RefreshTokenSecret)
+func (uc Auth) RefreshAccessToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
+	id, err := uc.authenticator.ExtractIDFromToken(in.RefreshToken, uc.conf.RefreshTokenSecret)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
-	user, err := u.repo.GetUserByID(ctx, id)
+	user, err := uc.repo.GetUserByID(ctx, id)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
 
-	accessToken, err := u.authenticator.CreateAccessToken(user, u.conf.AccessTokenSecret, u.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
-	refreshToken, err := u.authenticator.CreateRefreshToken(user, u.conf.RefreshTokenSecret, u.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
-	if err := u.repo.CreateUser(ctx, user); err != nil {
+	if err := uc.repo.CreateUser(ctx, user); err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
 	}
 	return RefreshAccessTokenOutput{
