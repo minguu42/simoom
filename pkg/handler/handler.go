@@ -24,7 +24,7 @@ type handler struct {
 	monitoring usecase.Monitoring
 	project    usecase.Project
 	step       usecase.Step
-	tag        usecase.TagUsecase
+	tag        usecase.Tag
 	task       usecase.TaskUsecase
 }
 

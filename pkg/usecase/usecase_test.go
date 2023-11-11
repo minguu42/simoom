@@ -16,7 +16,7 @@ var (
 	ctx     = auth.SetUserID(context.Background(), "user_01")
 	project usecase.Project
 	step    usecase.Step
-	tag     usecase.TagUsecase
+	tag     usecase.Tag
 	task    usecase.TaskUsecase
 )
 

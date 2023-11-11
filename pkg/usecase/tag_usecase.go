@@ -11,12 +11,12 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-type TagUsecase struct {
+type Tag struct {
 	repo repository.Repository
 }
 
-func NewTag(repo repository.Repository) TagUsecase {
-	return TagUsecase{repo: repo}
+func NewTag(repo repository.Repository) Tag {
+	return Tag{repo: repo}
 }
 
 type TagOutput struct {
@@ -32,7 +32,7 @@ type CreateTagInput struct {
 	Name string
 }
 
-func (uc TagUsecase) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
+func (u Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
 	now := time.Now()
 	t := model.Tag{
 		ID:        idgen.Generate(),
@@ -41,7 +41,7 @@ func (uc TagUsecase) CreateTag(ctx context.Context, in CreateTagInput) (TagOutpu
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	if err := uc.repo.CreateTag(ctx, t); err != nil {
+	if err := u.repo.CreateTag(ctx, t); err != nil {
 		return TagOutput{}, errors.WithStack(err)
 	}
 	return TagOutput{Tag: t}, nil
@@ -52,8 +52,8 @@ type ListTagsInput struct {
 	Offset uint
 }
 
-func (uc TagUsecase) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
-	ts, err := uc.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
+func (u Tag) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
+	ts, err := u.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return TagsOutput{}, errors.WithStack(err)
 	}
@@ -74,8 +74,8 @@ type UpdateTagInput struct {
 	Name *string
 }
 
-func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, error) {
-	t, err := uc.repo.GetTagByID(ctx, in.ID)
+func (u Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, error) {
+	t, err := u.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TagOutput{}, ErrTagNotFound
@@ -89,7 +89,7 @@ func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutpu
 	if in.Name != nil {
 		t.Name = *in.Name
 	}
-	if err := uc.repo.UpdateTag(ctx, t); err != nil {
+	if err := u.repo.UpdateTag(ctx, t); err != nil {
 		return TagOutput{}, errors.WithStack(err)
 	}
 	return TagOutput{Tag: t}, nil
@@ -99,8 +99,8 @@ type DeleteTagInput struct {
 	ID string
 }
 
-func (uc TagUsecase) DeleteTag(ctx context.Context, in DeleteTagInput) error {
-	t, err := uc.repo.GetTagByID(ctx, in.ID)
+func (u Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
+	t, err := u.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrTagNotFound
@@ -111,7 +111,7 @@ func (uc TagUsecase) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 		return ErrTagNotFound
 	}
 
-	if err := uc.repo.DeleteTag(ctx, in.ID); err != nil {
+	if err := u.repo.DeleteTag(ctx, in.ID); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil
