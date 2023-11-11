@@ -25,7 +25,7 @@ type handler struct {
 	project    usecase.Project
 	step       usecase.Step
 	tag        usecase.Tag
-	task       usecase.TaskUsecase
+	task       usecase.Task
 }
 
 // New はハンドラを生成する

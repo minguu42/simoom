@@ -17,7 +17,7 @@ var (
 	project usecase.Project
 	step    usecase.Step
 	tag     usecase.Tag
-	task    usecase.TaskUsecase
+	task    usecase.Task
 )
 
 func TestMain(m *testing.M) {
