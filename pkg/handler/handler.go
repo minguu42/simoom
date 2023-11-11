@@ -20,7 +20,7 @@ import (
 )
 
 type handler struct {
-	auth       usecase.AuthUsecase
+	auth       usecase.Auth
 	monitoring usecase.Monitoring
 	project    usecase.Project
 	step       usecase.Step

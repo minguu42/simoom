@@ -13,14 +13,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthUsecase struct {
+type Auth struct {
 	authenticator auth.Authenticator
 	repo          repository.Repository
 	conf          config.Auth
 }
 
-func NewAuth(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth) AuthUsecase {
-	return AuthUsecase{
+func NewAuth(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth) Auth {
+	return Auth{
 		authenticator: authenticator,
 		repo:          repo,
 		conf:          conf,
@@ -38,7 +38,7 @@ type SignUpOutput struct {
 	RefreshToken string
 }
 
-func (u AuthUsecase) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
+func (u Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return SignUpOutput{}, errors.WithStack(err)
@@ -80,7 +80,7 @@ type SignInOutput struct {
 	RefreshToken string
 }
 
-func (u AuthUsecase) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error) {
+func (u Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error) {
 	user, err := u.repo.GetUserByEmail(ctx, in.Email)
 	if err != nil {
 		return SignInOutput{}, errors.WithStack(err)
@@ -113,7 +113,7 @@ type RefreshAccessTokenOutput struct {
 	RefreshToken string
 }
 
-func (u AuthUsecase) RefreshAccessToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
+func (u Auth) RefreshAccessToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
 	id, err := u.authenticator.ExtractIDFromToken(in.RefreshToken, u.conf.RefreshTokenSecret)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
