@@ -11,12 +11,12 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-type ProjectUsecase struct {
+type Project struct {
 	repo repository.Repository
 }
 
-func NewProject(repo repository.Repository) ProjectUsecase {
-	return ProjectUsecase{repo: repo}
+func NewProject(repo repository.Repository) Project {
+	return Project{repo: repo}
 }
 
 type ProjectOutput struct {
@@ -33,7 +33,7 @@ type CreateProjectInput struct {
 	Color string
 }
 
-func (uc ProjectUsecase) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
+func (u Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
 	now := time.Now()
 	p := model.Project{
 		ID:         idgen.Generate(),
@@ -44,7 +44,7 @@ func (uc ProjectUsecase) CreateProject(ctx context.Context, in CreateProjectInpu
 		CreatedAt:  now,
 		UpdatedAt:  now,
 	}
-	if err := uc.repo.CreateProject(ctx, p); err != nil {
+	if err := u.repo.CreateProject(ctx, p); err != nil {
 		return ProjectOutput{}, errors.WithStack(err)
 	}
 	return ProjectOutput{Project: p}, nil
@@ -55,8 +55,8 @@ type ListProjectsInput struct {
 	Offset uint
 }
 
-func (uc ProjectUsecase) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
+func (u Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
+	ps, err := u.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, errors.WithStack(err)
 	}
@@ -79,8 +79,8 @@ type UpdateProjectInput struct {
 	IsArchived *bool
 }
 
-func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
-	p, err := uc.repo.GetProjectByID(ctx, in.ID)
+func (u Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
+	p, err := u.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ProjectOutput{}, ErrProjectNotFound
@@ -100,7 +100,7 @@ func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInpu
 	if in.IsArchived != nil {
 		p.IsArchived = *in.IsArchived
 	}
-	if err := uc.repo.UpdateProject(ctx, p); err != nil {
+	if err := u.repo.UpdateProject(ctx, p); err != nil {
 		return ProjectOutput{}, errors.WithStack(err)
 	}
 	return ProjectOutput{Project: p}, nil
@@ -110,8 +110,8 @@ type DeleteProjectInput struct {
 	ID string
 }
 
-func (uc ProjectUsecase) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
-	p, err := uc.repo.GetProjectByID(ctx, in.ID)
+func (u Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
+	p, err := u.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrProjectNotFound
@@ -122,7 +122,7 @@ func (uc ProjectUsecase) DeleteProject(ctx context.Context, in DeleteProjectInpu
 		return ErrProjectNotFound
 	}
 
-	if err := uc.repo.DeleteProject(ctx, in.ID); err != nil {
+	if err := u.repo.DeleteProject(ctx, in.ID); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

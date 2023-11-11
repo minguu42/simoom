@@ -14,7 +14,7 @@ import (
 var (
 	tc      *mysql.Client
 	ctx     = auth.SetUserID(context.Background(), "user_01")
-	project usecase.ProjectUsecase
+	project usecase.Project
 	step    usecase.StepUsecase
 	tag     usecase.TagUsecase
 	task    usecase.TaskUsecase

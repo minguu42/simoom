@@ -22,7 +22,7 @@ import (
 type handler struct {
 	auth       usecase.AuthUsecase
 	monitoring usecase.Monitoring
-	project    usecase.ProjectUsecase
+	project    usecase.Project
 	step       usecase.StepUsecase
 	tag        usecase.TagUsecase
 	task       usecase.TaskUsecase
