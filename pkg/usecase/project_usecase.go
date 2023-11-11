@@ -11,12 +11,12 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-type ProjectUsecase struct {
+type Project struct {
 	repo repository.Repository
 }
 
-func NewProject(repo repository.Repository) ProjectUsecase {
-	return ProjectUsecase{repo: repo}
+func NewProject(repo repository.Repository) Project {
+	return Project{repo: repo}
 }
 
 type ProjectOutput struct {
@@ -33,7 +33,7 @@ type CreateProjectInput struct {
 	Color string
 }
 
-func (uc ProjectUsecase) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
+func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
 	now := time.Now()
 	p := model.Project{
 		ID:         idgen.Generate(),
@@ -55,7 +55,7 @@ type ListProjectsInput struct {
 	Offset uint
 }
 
-func (uc ProjectUsecase) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
+func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
 	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, errors.WithStack(err)
@@ -79,7 +79,7 @@ type UpdateProjectInput struct {
 	IsArchived *bool
 }
 
-func (uc ProjectUsecase) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
+func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -110,7 +110,7 @@ type DeleteProjectInput struct {
 	ID string
 }
 
-func (uc ProjectUsecase) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
+func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {

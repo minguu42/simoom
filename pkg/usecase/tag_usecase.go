@@ -11,12 +11,12 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-type TagUsecase struct {
+type Tag struct {
 	repo repository.Repository
 }
 
-func NewTag(repo repository.Repository) TagUsecase {
-	return TagUsecase{repo: repo}
+func NewTag(repo repository.Repository) Tag {
+	return Tag{repo: repo}
 }
 
 type TagOutput struct {
@@ -32,7 +32,7 @@ type CreateTagInput struct {
 	Name string
 }
 
-func (uc TagUsecase) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
+func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
 	now := time.Now()
 	t := model.Tag{
 		ID:        idgen.Generate(),
@@ -52,7 +52,7 @@ type ListTagsInput struct {
 	Offset uint
 }
 
-func (uc TagUsecase) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
+func (uc Tag) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
 	ts, err := uc.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return TagsOutput{}, errors.WithStack(err)
@@ -74,7 +74,7 @@ type UpdateTagInput struct {
 	Name *string
 }
 
-func (uc TagUsecase) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, error) {
+func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, error) {
 	t, err := uc.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -99,7 +99,7 @@ type DeleteTagInput struct {
 	ID string
 }
 
-func (uc TagUsecase) DeleteTag(ctx context.Context, in DeleteTagInput) error {
+func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 	t, err := uc.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {

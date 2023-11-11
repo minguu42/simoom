@@ -7,7 +7,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var monitoring = usecase.MonitoringUsecase{}
+var monitoring = usecase.Monitoring{}
 
 func TestMonitoringUsecase_CheckHealth(t *testing.T) {
 	tests := []struct {

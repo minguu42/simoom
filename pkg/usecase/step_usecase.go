@@ -11,12 +11,12 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-type StepUsecase struct {
+type Step struct {
 	repo repository.Repository
 }
 
-func NewStep(repo repository.Repository) StepUsecase {
-	return StepUsecase{repo: repo}
+func NewStep(repo repository.Repository) Step {
+	return Step{repo: repo}
 }
 
 type StepOutput struct {
@@ -33,7 +33,7 @@ type CreateStepInput struct {
 	Title  string
 }
 
-func (uc StepUsecase) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
+func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
 	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -66,7 +66,7 @@ type UpdateStepInput struct {
 	CompletedAt *time.Time
 }
 
-func (uc StepUsecase) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
+func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -94,7 +94,7 @@ type DeleteStepInput struct {
 	ID string
 }
 
-func (uc StepUsecase) DeleteStep(ctx context.Context, in DeleteStepInput) error {
+func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {

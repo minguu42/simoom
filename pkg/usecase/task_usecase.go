@@ -11,12 +11,12 @@ import (
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
-type TaskUsecase struct {
+type Task struct {
 	repo repository.Repository
 }
 
-func NewTask(repo repository.Repository) TaskUsecase {
-	return TaskUsecase{repo: repo}
+func NewTask(repo repository.Repository) Task {
+	return Task{repo: repo}
 }
 
 type TaskOutput struct {
@@ -34,7 +34,7 @@ type CreateTaskInput struct {
 	Priority  uint
 }
 
-func (uc TaskUsecase) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, error) {
+func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, error) {
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -68,7 +68,7 @@ type ListTasksByProjectIDInput struct {
 	Offset    uint
 }
 
-func (uc TaskUsecase) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectIDInput) (TasksOutput, error) {
+func (uc Task) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectIDInput) (TasksOutput, error) {
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -102,7 +102,7 @@ type ListTasksByTagIDInput struct {
 	Offset uint
 }
 
-func (uc TaskUsecase) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (TasksOutput, error) {
+func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (TasksOutput, error) {
 	t, err := uc.repo.GetTagByID(ctx, in.TagID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -139,7 +139,7 @@ type UpdateTaskInput struct {
 	CompletedAt *time.Time
 }
 
-func (uc TaskUsecase) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, error) {
+func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, error) {
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -176,7 +176,7 @@ type DeleteTaskInput struct {
 	ID string
 }
 
-func (uc TaskUsecase) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
+func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {

@@ -14,10 +14,10 @@ import (
 var (
 	tc      *mysql.Client
 	ctx     = auth.SetUserID(context.Background(), "user_01")
-	project usecase.ProjectUsecase
-	step    usecase.StepUsecase
-	tag     usecase.TagUsecase
-	task    usecase.TaskUsecase
+	project usecase.Project
+	step    usecase.Step
+	tag     usecase.Tag
+	task    usecase.Task
 )
 
 func TestMain(m *testing.M) {

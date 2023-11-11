@@ -20,12 +20,12 @@ import (
 )
 
 type handler struct {
-	auth       usecase.AuthUsecase
-	monitoring usecase.MonitoringUsecase
-	project    usecase.ProjectUsecase
-	step       usecase.StepUsecase
-	tag        usecase.TagUsecase
-	task       usecase.TaskUsecase
+	auth       usecase.Auth
+	monitoring usecase.Monitoring
+	project    usecase.Project
+	step       usecase.Step
+	tag        usecase.Tag
+	task       usecase.Task
 }
 
 // New はハンドラを生成する
@@ -40,7 +40,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
 		auth:       usecase.NewAuth(authenticator, repo, conf.Auth),
-		monitoring: usecase.MonitoringUsecase{},
+		monitoring: usecase.Monitoring{},
 		project:    usecase.NewProject(repo),
 		step:       usecase.NewStep(repo),
 		tag:        usecase.NewTag(repo),
