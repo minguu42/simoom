@@ -10,6 +10,7 @@ func newCmdRoot() *cobra.Command {
 	}
 	cmd.AddCommand(newCmdProject())
 	cmd.AddCommand(newCmdStep())
+	cmd.AddCommand(newCmdTag())
 	cmd.AddCommand(newCmdTask())
 	return cmd
 }
