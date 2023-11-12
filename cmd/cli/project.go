@@ -5,7 +5,7 @@ import "github.com/spf13/cobra"
 func newCmdProject() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "project",
-		Short: "Work with projects.",
+		Short: "Work with projects",
 	}
 	cmd.AddCommand(newCmdProjectCreate())
 	cmd.AddCommand(newCmdProjectDelete())
