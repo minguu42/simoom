@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -34,7 +33,6 @@ func mainRun() exitCode {
 
 	rootCmd := newCmdRoot(c)
 	if err := rootCmd.ExecuteContext(context.Background()); err != nil {
-		fmt.Printf("failed to execute root command: %s\n", err)
 		return exitError
 	}
 	return exitOK
