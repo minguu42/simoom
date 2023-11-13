@@ -8,6 +8,7 @@ func newCmdRoot() *cobra.Command {
 		Short: "Simoom CLI",
 		Long:  `Work seamlessly with Simoom from the command line.`,
 	}
+	cmd.AddCommand(newCmdAuth())
 	cmd.AddCommand(newCmdProject())
 	cmd.AddCommand(newCmdStep())
 	cmd.AddCommand(newCmdTag())
