@@ -52,12 +52,12 @@ func runAuthSignup(ctx context.Context, core cmdutil.Core, opts authSignupOpts) 
 		Password: opts.password,
 	}))
 	if err != nil {
-		return fmt.Errorf("failed to sign up: %w", err)
+		return fmt.Errorf("failed to call SignUp method: %w", err)
 	}
 
 	data, err := json.MarshalIndent(resp.Msg, "", "  ")
 	if err != nil {
-		return fmt.Errorf("failed to marshal json: %w", err)
+		return fmt.Errorf("failed to marshal: %w", err)
 	}
 	fmt.Println(string(data))
 	return nil
