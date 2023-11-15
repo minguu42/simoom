@@ -45,6 +45,7 @@ func runProjectCreate(ctx context.Context, core cmdutil.Core, opts projectCreate
 		Color: opts.color,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
+
 	resp, err := core.Client.CreateProject(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call CreateProject method: %w", err)
