@@ -14,7 +14,7 @@ func newCmdRoot(core cmdutil.Core) *cobra.Command {
 	cmd.AddCommand(newCmdAuth(core))
 	cmd.AddCommand(newCmdProject(core))
 	cmd.AddCommand(newCmdStep())
-	cmd.AddCommand(newCmdTag())
+	cmd.AddCommand(newCmdTag(core))
 	cmd.AddCommand(newCmdTask())
 	return cmd
 }
