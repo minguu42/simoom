@@ -12,7 +12,7 @@ func newCmdProject(core cmdutil.Core) *cobra.Command {
 	}
 	cmd.AddCommand(newCmdProjectCreate(core))
 	cmd.AddCommand(newCmdProjectDelete())
-	cmd.AddCommand(newCmdProjectEdit())
+	cmd.AddCommand(newCmdProjectEdit(core))
 	cmd.AddCommand(newCmdProjectList(core))
 	return cmd
 }
