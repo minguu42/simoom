@@ -39,6 +39,7 @@ func runProjectList(ctx context.Context, core cmdutil.Core, opts projectListOpts
 		Offset: opts.offset,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
+
 	resp, err := core.Client.ListProjects(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call ListProjects method: %w", err)

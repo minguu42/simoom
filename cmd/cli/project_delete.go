@@ -30,8 +30,7 @@ func runProjectDelete(ctx context.Context, core cmdutil.Core, opts projectDelete
 	req := connect.NewRequest(&simoompb.DeleteProjectRequest{Id: opts.id})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 
-	_, err := core.Client.DeleteProject(ctx, req)
-	if err != nil {
+	if _, err := core.Client.DeleteProject(ctx, req); err != nil {
 		return fmt.Errorf("failed to call DeleteProject method: %w", err)
 	}
 
