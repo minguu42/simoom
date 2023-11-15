@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"connectrpc.com/connect"
@@ -39,13 +38,11 @@ func runAuthRefresh(ctx context.Context, core cmdutil.Core, opts authRefreshOpts
 		RefreshToken: opts.refreshToken,
 	}))
 	if err != nil {
-		return fmt.Errorf("failed to call RefreshAccessToken method. %w", err)
+		return fmt.Errorf("failed to call RefreshAccessToken method: %w", err)
 	}
 
-	data, err := json.MarshalIndent(resp.Msg, "", "  ")
-	if err != nil {
-		return fmt.Errorf("failed to marshal: %w", err)
+	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
+		return fmt.Errorf("failed to print json output: %w", err)
 	}
-	fmt.Println(string(data))
 	return nil
 }

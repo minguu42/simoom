@@ -12,7 +12,7 @@ func newCmdRoot(core cmdutil.Core) *cobra.Command {
 		Long:  `Work seamlessly with Simoom from the command line.`,
 	}
 	cmd.AddCommand(newCmdAuth(core))
-	cmd.AddCommand(newCmdProject())
+	cmd.AddCommand(newCmdProject(core))
 	cmd.AddCommand(newCmdStep())
 	cmd.AddCommand(newCmdTag())
 	cmd.AddCommand(newCmdTask())
