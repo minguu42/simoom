@@ -11,7 +11,7 @@ func newCmdProject(core cmdutil.Core) *cobra.Command {
 		Short: "Work with projects",
 	}
 	cmd.AddCommand(newCmdProjectCreate(core))
-	cmd.AddCommand(newCmdProjectDelete())
+	cmd.AddCommand(newCmdProjectDelete(core))
 	cmd.AddCommand(newCmdProjectEdit(core))
 	cmd.AddCommand(newCmdProjectList(core))
 	return cmd
