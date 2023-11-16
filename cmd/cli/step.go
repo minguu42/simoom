@@ -1,14 +1,17 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/minguu42/simoom/cmd/cli/cmdutil"
+	"github.com/spf13/cobra"
+)
 
-func newCmdStep() *cobra.Command {
+func newCmdStep(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "step",
 		Short: "Work with steps",
 	}
-	cmd.AddCommand(newCmdStepCreate())
-	cmd.AddCommand(newCmdStepDelete())
-	cmd.AddCommand(newCmdStepEdit())
+	cmd.AddCommand(newCmdStepCreate(core))
+	cmd.AddCommand(newCmdStepDelete(core))
+	cmd.AddCommand(newCmdStepEdit(core))
 	return cmd
 }
