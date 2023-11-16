@@ -1,15 +1,18 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/minguu42/simoom/cmd/cli/cmdutil"
+	"github.com/spf13/cobra"
+)
 
-func newCmdTask() *cobra.Command {
+func newCmdTask(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "task",
 		Short: "Work with tasks",
 	}
-	cmd.AddCommand(newCmdTaskCreate())
-	cmd.AddCommand(newCmdTaskDelete())
-	cmd.AddCommand(newCmdTaskEdit())
-	cmd.AddCommand(newCmdTaskList())
+	cmd.AddCommand(newCmdTaskCreate(core))
+	cmd.AddCommand(newCmdTaskDelete(core))
+	cmd.AddCommand(newCmdTaskEdit(core))
+	cmd.AddCommand(newCmdTaskList(core))
 	return cmd
 }
