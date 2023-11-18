@@ -18,7 +18,7 @@ service SimoomService {
 
   rpc SignUp(SignUpRequest) returns (SignUpResponse);
   rpc SignIn(SignInRequest) returns (SignInResponse);
-  rpc RefreshAccessToken(RefreshAccessTokenRequest) returns (RefreshAccessTokenResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
 
   rpc CreateProject(CreateProjectRequest) returns (Project);
   rpc ListProjects(ListProjectsRequest) returns (Projects);
@@ -68,11 +68,11 @@ message SignInResponse {
   string refresh_token = 2;
 }
 
-message RefreshAccessTokenRequest {
+message RefreshTokenRequest {
   string refresh_token = 1;
 }
 
-message RefreshAccessTokenResponse {
+message RefreshTokenResponse {
   string access_token = 1;
   string refresh_token = 2;
 }

@@ -55,16 +55,16 @@ func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignI
 	}), nil
 }
 
-func (h handler) RefreshAccessToken(ctx context.Context, req *connect.Request[simoompb.RefreshAccessTokenRequest]) (*connect.Response[simoompb.RefreshAccessTokenResponse], error) {
+func (h handler) RefreshToken(ctx context.Context, req *connect.Request[simoompb.RefreshTokenRequest]) (*connect.Response[simoompb.RefreshTokenResponse], error) {
 	if req.Msg.RefreshToken == "" {
 		return nil, newErrInvalidArgument("refresh_token cannot be an empty string")
 	}
 
-	out, err := h.auth.RefreshAccessToken(ctx, usecase.RefreshAccessTokenInput{RefreshToken: req.Msg.RefreshToken})
+	out, err := h.auth.RefreshToken(ctx, usecase.RefreshAccessTokenInput{RefreshToken: req.Msg.RefreshToken})
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-	return connect.NewResponse(&simoompb.RefreshAccessTokenResponse{
+	return connect.NewResponse(&simoompb.RefreshTokenResponse{
 		AccessToken:  out.AccessToken,
 		RefreshToken: out.RefreshToken,
 	}), nil

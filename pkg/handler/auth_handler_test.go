@@ -109,7 +109,7 @@ func TestHandler_SignIn(t *testing.T) {
 func TestHandler_RefreshAccessToken(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.RefreshAccessTokenRequest]
+		req *connect.Request[simoompb.RefreshTokenRequest]
 	}
 	tests := []struct {
 		name     string
@@ -120,7 +120,7 @@ func TestHandler_RefreshAccessToken(t *testing.T) {
 			name: "refresh_tokenに空文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
-				req: connect.NewRequest(&simoompb.RefreshAccessTokenRequest{
+				req: connect.NewRequest(&simoompb.RefreshTokenRequest{
 					RefreshToken: "",
 				}),
 			},
@@ -129,8 +129,8 @@ func TestHandler_RefreshAccessToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.RefreshAccessToken(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.RefreshAccessToken returned wrong result")
+			if _, err := th.RefreshToken(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
+				t.Errorf("th.RefreshToken returned wrong result")
 			}
 		})
 	}

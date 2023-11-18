@@ -34,11 +34,11 @@ func newCmdAuthRefresh(core cmdutil.Core) *cobra.Command {
 }
 
 func runAuthRefresh(ctx context.Context, core cmdutil.Core, opts authRefreshOpts) error {
-	resp, err := core.Client.RefreshAccessToken(ctx, connect.NewRequest(&simoompb.RefreshAccessTokenRequest{
+	resp, err := core.Client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
 		RefreshToken: opts.refreshToken,
 	}))
 	if err != nil {
-		return fmt.Errorf("failed to call RefreshAccessToken method: %w", err)
+		return fmt.Errorf("failed to call RefreshToken method: %w", err)
 	}
 
 	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
