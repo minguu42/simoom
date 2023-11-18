@@ -7,11 +7,11 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/cockroachdb/errors"
-	auth2 "github.com/minguu42/simoom/backend/pkg/domain/auth"
+	"github.com/minguu42/simoom/backend/pkg/domain/auth"
 )
 
 // NewAuthenticate はユーザ認証を行うインターセプタを返す
-func NewAuthenticate(authenticator auth2.Authenticator, secret string) connect.UnaryInterceptorFunc {
+func NewAuthenticate(authenticator auth.Authenticator, secret string) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshAccessToken"}
@@ -36,7 +36,7 @@ func NewAuthenticate(authenticator auth2.Authenticator, secret string) connect.U
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
-			ctx = auth2.SetUserID(ctx, userID)
+			ctx = auth.SetUserID(ctx, userID)
 			return next(ctx, req)
 		}
 	}

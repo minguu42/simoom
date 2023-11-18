@@ -31,7 +31,7 @@ func newProjects(ps []model.Project) []*simoompb.Project {
 	return projects
 }
 
-func (h handler) CreateProject(ctx context.Context, req *connect.Request[simoompb.simoompb]) (*connect.Response[simoompb.Project], error) {
+func (h handler) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
 	if req.Msg.Name == "" {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}

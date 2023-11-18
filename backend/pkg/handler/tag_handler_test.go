@@ -12,7 +12,7 @@ import (
 func TestTagHandler_CreateTag(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.simoompb]
+		req *connect.Request[simoompb.CreateTagRequest]
 	}
 	tests := []struct {
 		name     string

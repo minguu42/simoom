@@ -6,19 +6,19 @@ import (
 	"log"
 	"testing"
 
-	config2 "github.com/minguu42/simoom/backend/pkg/config"
+	"github.com/minguu42/simoom/backend/pkg/config"
 )
 
 var tc *Client
 
 func TestMain(m *testing.M) {
-	conf, err := config2.Load()
+	conf, err := config.Load()
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
 
 	mysql := conf.MySQL
-	tc, err = NewClient(config2.MySQL{
+	tc, err = NewClient(config.MySQL{
 		Host:               "localhost",
 		Port:               mysql.Port,
 		Database:           fmt.Sprintf("%s_test", mysql.Database),

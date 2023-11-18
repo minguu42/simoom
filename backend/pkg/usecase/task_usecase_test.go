@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	model2 "github.com/minguu42/simoom/backend/pkg/domain/model"
+	"github.com/minguu42/simoom/backend/pkg/domain/model"
 	"github.com/minguu42/simoom/backend/pkg/infra/mysql"
 	"github.com/minguu42/simoom/backend/pkg/pointers"
 	"github.com/minguu42/simoom/backend/pkg/usecase"
@@ -42,7 +42,7 @@ func TestTaskUsecase_CreateTask(t *testing.T) {
 					Priority:  3,
 				},
 			},
-			want: usecase.TaskOutput{Task: model2.Task{
+			want: usecase.TaskOutput{Task: model.Task{
 				UserID:    "user_01",
 				ProjectID: "project_01",
 				Title:     "新タスク",
@@ -93,9 +93,9 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 					CompletedAt: pointers.Ref(time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC)),
 				},
 			},
-			want: usecase.TaskOutput{Task: model2.Task{
+			want: usecase.TaskOutput{Task: model.Task{
 				ID: "task_01",
-				Steps: []model2.Step{
+				Steps: []model.Step{
 					{
 						ID:          "step_01",
 						UserID:      "user_01",
@@ -115,7 +115,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 						UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
 					},
 				},
-				Tags: []model2.Tag{
+				Tags: []model.Tag{
 					{
 						ID:        "tag_01",
 						UserID:    "user_01",

@@ -8,16 +8,16 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	model2 "github.com/minguu42/simoom/backend/pkg/domain/model"
+	"github.com/minguu42/simoom/backend/pkg/domain/model"
 	"github.com/minguu42/simoom/backend/pkg/domain/repository"
 )
 
-var taskCmpOption = cmpopts.IgnoreFields(model2.Task{}, "UpdatedAt")
+var taskCmpOption = cmpopts.IgnoreFields(model.Task{}, "UpdatedAt")
 
 func TestClient_CreateTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		t   model2.Task
+		t   model.Task
 	}
 	tests := []struct {
 		name string
@@ -27,10 +27,10 @@ func TestClient_CreateTask(t *testing.T) {
 			name: "新タスクを作成する",
 			args: args{
 				ctx: context.Background(),
-				t: model2.Task{
+				t: model.Task{
 					ID:          "task_99",
-					Steps:       []model2.Step{},
-					Tags:        []model2.Tag{},
+					Steps:       []model.Step{},
+					Tags:        []model.Tag{},
 					UserID:      "user_01",
 					ProjectID:   "project_01",
 					Title:       "新タスク",
@@ -78,7 +78,7 @@ func TestClient_ListTasksByProjectID(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []model2.Task
+		want []model.Task
 	}{
 		{
 			name: "プロジェクトIDからタスク一覧を取得する",
@@ -88,10 +88,10 @@ func TestClient_ListTasksByProjectID(t *testing.T) {
 				limit:     1,
 				offset:    0,
 			},
-			want: []model2.Task{
+			want: []model.Task{
 				{
 					ID: "task_01",
-					Steps: []model2.Step{
+					Steps: []model.Step{
 						{
 							ID:          "step_01",
 							UserID:      "user_01",
@@ -111,7 +111,7 @@ func TestClient_ListTasksByProjectID(t *testing.T) {
 							UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
 						},
 					},
-					Tags: []model2.Tag{
+					Tags: []model.Tag{
 						{
 							ID:        "tag_01",
 							UserID:    "user_01",
@@ -147,7 +147,7 @@ func TestClient_ListTasksByProjectID(t *testing.T) {
 				limit:     10,
 				offset:    1000,
 			},
-			want: []model2.Task{},
+			want: []model.Task{},
 		},
 	}
 	for _, tt := range tests {
@@ -174,7 +174,7 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []model2.Task
+		want []model.Task
 	}{
 		{
 			name: "タグIDからタスク一覧を取得する",
@@ -184,10 +184,10 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 				limit:  1,
 				offset: 0,
 			},
-			want: []model2.Task{
+			want: []model.Task{
 				{
 					ID: "task_01",
-					Steps: []model2.Step{
+					Steps: []model.Step{
 						{
 							ID:          "step_01",
 							UserID:      "user_01",
@@ -207,7 +207,7 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 							UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
 						},
 					},
-					Tags: []model2.Tag{
+					Tags: []model.Tag{
 						{
 							ID:        "tag_01",
 							UserID:    "user_01",
@@ -243,7 +243,7 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 				limit:  10,
 				offset: 1000,
 			},
-			want: []model2.Task{},
+			want: []model.Task{},
 		},
 	}
 	for _, tt := range tests {
@@ -268,7 +268,7 @@ func TestClient_GetTaskByID(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    model2.Task
+		want    model.Task
 		wantErr error
 	}{
 		{
@@ -277,9 +277,9 @@ func TestClient_GetTaskByID(t *testing.T) {
 				ctx: context.Background(),
 				id:  "task_01",
 			},
-			want: model2.Task{
+			want: model.Task{
 				ID: "task_01",
-				Steps: []model2.Step{
+				Steps: []model.Step{
 					{
 						ID:          "step_01",
 						UserID:      "user_01",
@@ -299,7 +299,7 @@ func TestClient_GetTaskByID(t *testing.T) {
 						UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
 					},
 				},
-				Tags: []model2.Tag{
+				Tags: []model.Tag{
 					{
 						ID:        "tag_01",
 						UserID:    "user_01",
@@ -357,7 +357,7 @@ func TestClient_GetTaskByID(t *testing.T) {
 func TestClient_UpdateTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		t   model2.Task
+		t   model.Task
 	}
 	tests := []struct {
 		name string
@@ -367,9 +367,9 @@ func TestClient_UpdateTask(t *testing.T) {
 			name: "改タスク1に更新する",
 			args: args{
 				ctx: context.Background(),
-				t: model2.Task{
+				t: model.Task{
 					ID: "task_01",
-					Steps: []model2.Step{
+					Steps: []model.Step{
 						{
 							ID:          "step_01",
 							UserID:      "user_01",
@@ -389,7 +389,7 @@ func TestClient_UpdateTask(t *testing.T) {
 							UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
 						},
 					},
-					Tags: []model2.Tag{
+					Tags: []model.Tag{
 						{
 							ID:        "tag_01",
 							UserID:    "user_01",

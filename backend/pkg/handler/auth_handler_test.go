@@ -11,7 +11,7 @@ import (
 func TestHandler_SignUp(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.simoompb]
+		req *connect.Request[simoompb.SignUpRequest]
 	}
 	tests := []struct {
 		name     string

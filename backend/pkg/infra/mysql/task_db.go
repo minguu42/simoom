@@ -7,10 +7,10 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/backend/pkg/domain/model"
 	"github.com/minguu42/simoom/backend/pkg/domain/repository"
-	sqlc2 "github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
+	"github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
 )
 
-func newModelTask(t sqlc2.Task, ss []sqlc2.Step, ts []sqlc2.Tag) model.Task {
+func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
 	return model.Task{
 		ID:          t.ID,
 		Steps:       newModelSteps(ss),
@@ -28,7 +28,7 @@ func newModelTask(t sqlc2.Task, ss []sqlc2.Step, ts []sqlc2.Tag) model.Task {
 }
 
 func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
-	if err := sqlc2.New(c.db).CreateTask(ctx, sqlc2.CreateTaskParams{
+	if err := sqlc.New(c.db).CreateTask(ctx, sqlc.CreateTaskParams{
 		ID:        t.ID,
 		UserID:    t.UserID,
 		ProjectID: t.ProjectID,
@@ -43,7 +43,7 @@ func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
 }
 
 func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, limit, offset uint) ([]model.Task, error) {
-	ts, err := sqlc2.New(c.db).ListTasksByProjectID(ctx, sqlc2.ListTasksByProjectIDParams{
+	ts, err := sqlc.New(c.db).ListTasksByProjectID(ctx, sqlc.ListTasksByProjectIDParams{
 		ProjectID: projectID,
 		Limit:     int32(limit),
 		Offset:    int32(offset),
@@ -54,11 +54,11 @@ func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, lim
 
 	tasks := make([]model.Task, 0, len(ts))
 	for _, t := range ts {
-		ss, err := sqlc2.New(c.db).ListStepsByTaskID(ctx, t.ID)
+		ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-		tags, err := sqlc2.New(c.db).ListTagsByTaskID(ctx, t.ID)
+		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
@@ -68,7 +68,7 @@ func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, lim
 }
 
 func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offset uint) ([]model.Task, error) {
-	ts, err := sqlc2.New(c.db).ListTasksByTagID(ctx, sqlc2.ListTasksByTagIDParams{
+	ts, err := sqlc.New(c.db).ListTasksByTagID(ctx, sqlc.ListTasksByTagIDParams{
 		TagID:  tagID,
 		Limit:  int32(limit),
 		Offset: int32(offset),
@@ -79,11 +79,11 @@ func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offs
 
 	tasks := make([]model.Task, 0, len(ts))
 	for _, t := range ts {
-		ss, err := sqlc2.New(c.db).ListStepsByTaskID(ctx, t.ID)
+		ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-		tags, err := sqlc2.New(c.db).ListTagsByTaskID(ctx, t.ID)
+		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
@@ -93,18 +93,18 @@ func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offs
 }
 
 func (c *Client) GetTaskByID(ctx context.Context, id string) (model.Task, error) {
-	t, err := sqlc2.New(c.db).GetTaskByID(ctx, id)
+	t, err := sqlc.New(c.db).GetTaskByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Task{}, repository.ErrModelNotFound
 		}
 		return model.Task{}, errors.WithStack(err)
 	}
-	ss, err := sqlc2.New(c.db).ListStepsByTaskID(ctx, t.ID)
+	ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
 	if err != nil {
 		return model.Task{}, errors.WithStack(err)
 	}
-	ts, err := sqlc2.New(c.db).ListTagsByTaskID(ctx, t.ID)
+	ts, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
 	if err != nil {
 		return model.Task{}, errors.WithStack(err)
 	}
@@ -112,7 +112,7 @@ func (c *Client) GetTaskByID(ctx context.Context, id string) (model.Task, error)
 }
 
 func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
-	if err := sqlc2.New(c.db).UpdateTask(ctx, sqlc2.UpdateTaskParams{
+	if err := sqlc.New(c.db).UpdateTask(ctx, sqlc.UpdateTaskParams{
 		Title:       t.Title,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),
@@ -126,7 +126,7 @@ func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
 }
 
 func (c *Client) DeleteTask(ctx context.Context, id string) error {
-	if err := sqlc2.New(c.db).DeleteTask(ctx, id); err != nil {
+	if err := sqlc.New(c.db).DeleteTask(ctx, id); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

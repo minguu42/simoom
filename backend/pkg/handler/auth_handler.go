@@ -9,7 +9,7 @@ import (
 	"github.com/minguu42/simoom/library/simoompb/v1"
 )
 
-func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.simoompb]) (*connect.Response[simoompb.SignUpResponse], error) {
+func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
 	if req.Msg.Name == "" {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}

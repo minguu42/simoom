@@ -12,7 +12,7 @@ import (
 func TestTaskHandler_CreateTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.simoompb]
+		req *connect.Request[simoompb.CreateTaskRequest]
 	}
 	tests := []struct {
 		name     string

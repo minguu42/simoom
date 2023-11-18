@@ -7,10 +7,10 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/backend/pkg/domain/model"
 	"github.com/minguu42/simoom/backend/pkg/domain/repository"
-	sqlc2 "github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
+	"github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
 )
 
-func newModelStep(s sqlc2.Step) model.Step {
+func newModelStep(s sqlc.Step) model.Step {
 	return model.Step{
 		ID:          s.ID,
 		UserID:      s.UserID,
@@ -22,7 +22,7 @@ func newModelStep(s sqlc2.Step) model.Step {
 	}
 }
 
-func newModelSteps(ss []sqlc2.Step) []model.Step {
+func newModelSteps(ss []sqlc.Step) []model.Step {
 	steps := make([]model.Step, 0, len(ss))
 	for _, s := range ss {
 		steps = append(steps, newModelStep(s))
@@ -31,7 +31,7 @@ func newModelSteps(ss []sqlc2.Step) []model.Step {
 }
 
 func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
-	if err := sqlc2.New(c.db).CreateStep(ctx, sqlc2.CreateStepParams{
+	if err := sqlc.New(c.db).CreateStep(ctx, sqlc.CreateStepParams{
 		ID:        s.ID,
 		UserID:    s.UserID,
 		TaskID:    s.TaskID,
@@ -45,7 +45,7 @@ func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
 }
 
 func (c *Client) GetStepByID(ctx context.Context, id string) (model.Step, error) {
-	s, err := sqlc2.New(c.db).GetStepByID(ctx, id)
+	s, err := sqlc.New(c.db).GetStepByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Step{}, repository.ErrModelNotFound
@@ -56,7 +56,7 @@ func (c *Client) GetStepByID(ctx context.Context, id string) (model.Step, error)
 }
 
 func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
-	if err := sqlc2.New(c.db).UpdateStep(ctx, sqlc2.UpdateStepParams{
+	if err := sqlc.New(c.db).UpdateStep(ctx, sqlc.UpdateStepParams{
 		Title:       s.Title,
 		CompletedAt: newNullTime(s.CompletedAt),
 		ID:          s.ID,
@@ -67,7 +67,7 @@ func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
 }
 
 func (c *Client) DeleteStep(ctx context.Context, id string) error {
-	if err := sqlc2.New(c.db).DeleteStep(ctx, id); err != nil {
+	if err := sqlc.New(c.db).DeleteStep(ctx, id); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

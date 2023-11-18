@@ -7,10 +7,10 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/backend/pkg/domain/model"
 	"github.com/minguu42/simoom/backend/pkg/domain/repository"
-	sqlc2 "github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
+	"github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
 )
 
-func newModelProject(p sqlc2.Project) model.Project {
+func newModelProject(p sqlc.Project) model.Project {
 	return model.Project{
 		ID:         p.ID,
 		UserID:     p.UserID,
@@ -22,7 +22,7 @@ func newModelProject(p sqlc2.Project) model.Project {
 	}
 }
 
-func newModelProjects(ps []sqlc2.Project) []model.Project {
+func newModelProjects(ps []sqlc.Project) []model.Project {
 	projects := make([]model.Project, 0, len(ps))
 	for _, p := range ps {
 		projects = append(projects, newModelProject(p))
@@ -31,7 +31,7 @@ func newModelProjects(ps []sqlc2.Project) []model.Project {
 }
 
 func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
-	if err := sqlc2.New(c.db).CreateProject(ctx, sqlc2.CreateProjectParams{
+	if err := sqlc.New(c.db).CreateProject(ctx, sqlc.CreateProjectParams{
 		ID:         p.ID,
 		UserID:     p.UserID,
 		Name:       p.Name,
@@ -46,7 +46,7 @@ func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 }
 
 func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
-	ps, err := sqlc2.New(c.db).ListProjectsByUserID(ctx, sqlc2.ListProjectsByUserIDParams{
+	ps, err := sqlc.New(c.db).ListProjectsByUserID(ctx, sqlc.ListProjectsByUserIDParams{
 		UserID: userID,
 		Limit:  int32(limit),
 		Offset: int32(offset),
@@ -58,7 +58,7 @@ func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit,
 }
 
 func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, error) {
-	p, err := sqlc2.New(c.db).GetProjectByID(ctx, id)
+	p, err := sqlc.New(c.db).GetProjectByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Project{}, repository.ErrModelNotFound
@@ -69,7 +69,7 @@ func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, 
 }
 
 func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
-	if err := sqlc2.New(c.db).UpdateProject(ctx, sqlc2.UpdateProjectParams{
+	if err := sqlc.New(c.db).UpdateProject(ctx, sqlc.UpdateProjectParams{
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
@@ -81,7 +81,7 @@ func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
 }
 
 func (c *Client) DeleteProject(ctx context.Context, id string) error {
-	if err := sqlc2.New(c.db).DeleteProject(ctx, id); err != nil {
+	if err := sqlc.New(c.db).DeleteProject(ctx, id); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

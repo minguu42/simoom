@@ -30,7 +30,7 @@ func newSteps(ss []model.Step) []*simoompb.Step {
 	return steps
 }
 
-func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.simoompb]) (*connect.Response[simoompb.Step], error) {
+func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.CreateStepRequest]) (*connect.Response[simoompb.Step], error) {
 	if len(req.Msg.TaskId) != 26 {
 		return nil, newErrInvalidArgument("task_id is a 26-character string")
 	}

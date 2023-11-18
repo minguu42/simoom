@@ -7,10 +7,10 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/backend/pkg/domain/model"
 	"github.com/minguu42/simoom/backend/pkg/domain/repository"
-	sqlc2 "github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
+	"github.com/minguu42/simoom/backend/pkg/infra/mysql/sqlc"
 )
 
-func newModelUser(u sqlc2.User) model.User {
+func newModelUser(u sqlc.User) model.User {
 	return model.User{
 		ID:        u.ID,
 		Name:      u.Name,
@@ -22,7 +22,7 @@ func newModelUser(u sqlc2.User) model.User {
 }
 
 func (c *Client) CreateUser(ctx context.Context, u model.User) error {
-	if err := sqlc2.New(c.db).CreateUser(ctx, sqlc2.CreateUserParams{
+	if err := sqlc.New(c.db).CreateUser(ctx, sqlc.CreateUserParams{
 		ID:        u.ID,
 		Name:      u.Name,
 		Email:     u.Email,
@@ -36,7 +36,7 @@ func (c *Client) CreateUser(ctx context.Context, u model.User) error {
 }
 
 func (c *Client) GetUserByID(ctx context.Context, id string) (model.User, error) {
-	u, err := sqlc2.New(c.db).GetUserByID(ctx, id)
+	u, err := sqlc.New(c.db).GetUserByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.User{}, repository.ErrModelNotFound
@@ -47,7 +47,7 @@ func (c *Client) GetUserByID(ctx context.Context, id string) (model.User, error)
 }
 
 func (c *Client) GetUserByEmail(ctx context.Context, email string) (model.User, error) {
-	u, err := sqlc2.New(c.db).GetUserByEmail(ctx, email)
+	u, err := sqlc.New(c.db).GetUserByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.User{}, repository.ErrModelNotFound

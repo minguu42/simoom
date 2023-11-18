@@ -7,7 +7,7 @@ import (
 	"github.com/minguu42/simoom/library/simoompb/v1"
 )
 
-func (h handler) CheckHealth(_ context.Context, _ *connect.Request[simoompb.simoompb]) (*connect.Response[simoompb.CheckHealthResponse], error) {
+func (h handler) CheckHealth(_ context.Context, _ *connect.Request[simoompb.CheckHealthRequest]) (*connect.Response[simoompb.CheckHealthResponse], error) {
 	out := h.monitoring.CheckHealth()
 	return connect.NewResponse(&simoompb.CheckHealthResponse{Revision: out.Revision}), nil
 }

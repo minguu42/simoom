@@ -35,7 +35,7 @@ func newTasksResponse(ts []model.Task) []*simoompb.Task {
 	return tasks
 }
 
-func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.simoompb]) (*connect.Response[simoompb.Task], error) {
+func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.CreateTaskRequest]) (*connect.Response[simoompb.Task], error) {
 	if len(req.Msg.ProjectId) != 26 {
 		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}

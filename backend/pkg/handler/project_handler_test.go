@@ -12,7 +12,7 @@ import (
 func TestProjectHandler_CreateProject(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.simoompb]
+		req *connect.Request[simoompb.CreateProjectRequest]
 	}
 	tests := []struct {
 		name     string

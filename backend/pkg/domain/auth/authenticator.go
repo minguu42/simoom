@@ -1,8 +1,6 @@
 package auth
 
-import (
-	"github.com/minguu42/simoom/backend/pkg/domain/model"
-)
+import "github.com/minguu42/simoom/backend/pkg/domain/model"
 
 // Authenticator はユーザ認証を抽象化する
 type Authenticator interface {

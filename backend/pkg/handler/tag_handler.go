@@ -28,7 +28,7 @@ func newTags(ts []model.Tag) []*simoompb.Tag {
 	return tags
 }
 
-func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.simoompb]) (*connect.Response[simoompb.Tag], error) {
+func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.Tag], error) {
 	if req.Msg.Name == "" {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}

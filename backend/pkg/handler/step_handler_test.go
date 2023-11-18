@@ -12,7 +12,7 @@ import (
 func TestStepHandler_CreateStep(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.simoompb]
+		req *connect.Request[simoompb.CreateStepRequest]
 	}
 	tests := []struct {
 		name     string
