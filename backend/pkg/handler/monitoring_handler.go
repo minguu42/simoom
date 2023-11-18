@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/library/simoompb/v1"
+	"github.com/minguu42/simoom/lib/simoompb/v1"
 )
 
 func (h handler) CheckHealth(_ context.Context, _ *connect.Request[simoompb.CheckHealthRequest]) (*connect.Response[simoompb.CheckHealthResponse], error) {

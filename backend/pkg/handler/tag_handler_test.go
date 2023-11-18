@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/backend/pkg/pointers"
-	"github.com/minguu42/simoom/library/simoompb/v1"
+	"github.com/minguu42/simoom/lib/simoompb/v1"
 )
 
 func TestTagHandler_CreateTag(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/backend/pkg/domain/model"
 	"github.com/minguu42/simoom/backend/pkg/usecase"
-	"github.com/minguu42/simoom/library/simoompb/v1"
+	"github.com/minguu42/simoom/lib/simoompb/v1"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

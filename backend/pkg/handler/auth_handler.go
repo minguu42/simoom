@@ -6,7 +6,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/backend/pkg/usecase"
-	"github.com/minguu42/simoom/library/simoompb/v1"
+	"github.com/minguu42/simoom/lib/simoompb/v1"
 )
 
 func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
