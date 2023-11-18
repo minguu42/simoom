@@ -1,13 +1,13 @@
-name: Integrate backend application
+name: Integrate api
 
 on:
   push:
     paths:
-      - backend/**
+      - api/**
 
 defaults:
   run:
-    working-directory: backend
+    working-directory: api
 
 jobs:
   check-style:
