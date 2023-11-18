@@ -3,11 +3,11 @@ services:
     image: simoom-api-dev
     build:
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: Dockerfile
       target: dev
     container_name: simoom-api
     env_file:
-      - api/.env
+      - .env
     tty: true
     ports:
       - 8080:8080
