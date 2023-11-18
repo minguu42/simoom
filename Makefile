@@ -4,6 +4,9 @@ fmt: ## Protocol Buffersを整形する
 lint: ## Protocol Buffersの静的解析を実行する
 	@buf lint
 
+gen: ## Connectのコードを生成する
+	@buf generate
+
 migrate: ## DBのスキーマの変更を確認する
 	@mysqldef -u root -h 127.0.0.1 --dry-run --enable-drop-table simoomdb < ./mysql/schema.sql
 

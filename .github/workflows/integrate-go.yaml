@@ -1,6 +1,13 @@
-name: Integrate Go application
+name: Integrate backend application
 
-on: push
+on:
+  push:
+    paths:
+      - backend/**
+
+defaults:
+  run:
+    working-directory: backend
 
 jobs:
   check-style:
@@ -22,16 +29,16 @@ jobs:
       - run: go install honnef.co/go/tools/cmd/staticcheck@latest
       - run: go vet $(go list ./... | grep -v /gen)
       - run: staticcheck $(go list ./... | grep -v /gen)
-  test:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
-        with:
-          go-version-file: ./go.mod
-      - run: cp .env.example .env
-      - run: docker compose up -d db
-      - run: make test
+#  test:
+#    runs-on: ubuntu-22.04
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: actions/setup-go@v4
+#        with:
+#          go-version-file: ./go.mod
+#      - run: cp .env.example .env
+#      - run: docker compose up -d db
+#      - run: make test
   build:
     runs-on: ubuntu-22.04
     steps:

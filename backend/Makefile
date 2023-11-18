@@ -13,9 +13,7 @@ setup: ## 開発に必要なツールをインストールする
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
 gen: ## コードを生成する
-	@buf generate
 	@sqlc generate
-	@$(MAKE) fmt
 
 build: ## 本番用APIサーバのコンテナイメージをビルドする
 	@docker build \
