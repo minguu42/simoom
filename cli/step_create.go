@@ -7,7 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +40,7 @@ func newCmdStepCreate(core cmdutil.Core) *cobra.Command {
 }
 
 func runStepCreate(ctx context.Context, core cmdutil.Core, opts stepCreateOpts) error {
-	req := connect.NewRequest(&simoompb.CreateStepRequest{
+	req := connect.NewRequest(&simoompb.simoompb{
 		TaskId: opts.taskID,
 		Title:  opts.title,
 	})

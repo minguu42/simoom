@@ -7,7 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +34,7 @@ func newCmdAuthRefresh(core cmdutil.Core) *cobra.Command {
 }
 
 func runAuthRefresh(ctx context.Context, core cmdutil.Core, opts authRefreshOpts) error {
-	resp, err := core.Client.RefreshAccessToken(ctx, connect.NewRequest(&simoompb.RefreshAccessTokenRequest{
+	resp, err := core.Client.RefreshAccessToken(ctx, connect.NewRequest(&simoompb.simoompb{
 		RefreshToken: opts.refreshToken,
 	}))
 	if err != nil {

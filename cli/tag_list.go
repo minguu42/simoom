@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +34,7 @@ func newCmdTagList(core cmdutil.Core) *cobra.Command {
 }
 
 func runTagList(ctx context.Context, core cmdutil.Core, opts tagListOpts) error {
-	req := connect.NewRequest(&simoompb.ListTagsRequest{
+	req := connect.NewRequest(&simoompb.simoompb{
 		Limit:  opts.limit,
 		Offset: opts.offset,
 	})

@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,7 @@ func newCmdTaskList(core cmdutil.Core) *cobra.Command {
 }
 
 func runTaskList(ctx context.Context, core cmdutil.Core, opts taskListOpts) error {
-	req := connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
+	req := connect.NewRequest(&simoompb.simoompb{
 		ProjectId: opts.projectID,
 		Limit:     opts.limit,
 		Offset:    opts.offset,

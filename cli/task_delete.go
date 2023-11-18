@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +27,7 @@ func newCmdTaskDelete(core cmdutil.Core) *cobra.Command {
 }
 
 func runTaskDelete(ctx context.Context, core cmdutil.Core, opts taskDeleteOpts) error {
-	req := connect.NewRequest(&simoompb.DeleteTaskRequest{Id: opts.id})
+	req := connect.NewRequest(&simoompb.simoompb{Id: opts.id})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 
 	if _, err := core.Client.DeleteTask(ctx, req); err != nil {

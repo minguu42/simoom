@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +34,7 @@ func newCmdTagCreate(core cmdutil.Core) *cobra.Command {
 }
 
 func runTagCreate(ctx context.Context, core cmdutil.Core, opts tagCreateOpts) error {
-	req := connect.NewRequest(&simoompb.CreateTagRequest{
+	req := connect.NewRequest(&simoompb.simoompb{
 		Name: opts.name,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))

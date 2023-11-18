@@ -8,7 +8,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +41,7 @@ func newCmdAuthSignin(core cmdutil.Core) *cobra.Command {
 }
 
 func runAuthSignin(ctx context.Context, core cmdutil.Core, opts authSigninOpts) error {
-	resp, err := core.Client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
+	resp, err := core.Client.SignIn(ctx, connect.NewRequest(&simoompb.simoompb{
 		Email:    opts.email,
 		Password: opts.password,
 	}))

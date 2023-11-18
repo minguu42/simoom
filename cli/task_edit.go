@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -59,7 +59,7 @@ func runTaskEdit(ctx context.Context, core cmdutil.Core, opts taskEditOpts) erro
 	if opts.completed {
 		completedAt = timestamppb.Now()
 	}
-	req := connect.NewRequest(&simoompb.UpdateTaskRequest{
+	req := connect.NewRequest(&simoompb.simoompb{
 		Id:          opts.id,
 		Title:       title,
 		Content:     content,

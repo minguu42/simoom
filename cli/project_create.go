@@ -7,7 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +40,7 @@ func newCmdProjectCreate(core cmdutil.Core) *cobra.Command {
 }
 
 func runProjectCreate(ctx context.Context, core cmdutil.Core, opts projectCreateOpts) error {
-	req := connect.NewRequest(&simoompb.CreateProjectRequest{
+	req := connect.NewRequest(&simoompb.simoompb{
 		Name:  opts.name,
 		Color: opts.color,
 	})

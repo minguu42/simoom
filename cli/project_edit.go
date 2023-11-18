@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/library/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
@@ -49,7 +49,7 @@ func runProjectEdit(ctx context.Context, core cmdutil.Core, opts projectEditOpts
 	if opts.isArchived {
 		isArchived = &opts.isArchived
 	}
-	req := connect.NewRequest(&simoompb.UpdateProjectRequest{
+	req := connect.NewRequest(&simoompb.simoompb{
 		Id:         opts.id,
 		Name:       name,
 		Color:      color,
