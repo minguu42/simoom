@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/cmd/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/gen/simoompb/v1"
 	"github.com/spf13/cobra"
 )
