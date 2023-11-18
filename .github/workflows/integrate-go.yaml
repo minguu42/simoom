@@ -20,8 +20,8 @@ jobs:
         with:
           go-version-file: ./go.mod
       - run: go install honnef.co/go/tools/cmd/staticcheck@latest
-      - run: go vet $(go list ./... | grep -v /gen)
-      - run: staticcheck $(go list ./... | grep -v /gen)
+      - run: go vet $(go list ./... | grep -v -e /simoompb -e /sqlc)
+      - run: staticcheck $(go list ./... | grep -v -e /simoompb -e /sqlc)
   test:
     runs-on: ubuntu-22.04
     steps:
