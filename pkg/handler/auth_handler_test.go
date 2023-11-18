@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
+	"github.com/minguu42/simoom/pkg/simoompb/v1"
 )
 
 func TestHandler_SignUp(t *testing.T) {

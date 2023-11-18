@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/gen/simoompb/v1/simoompbconnect"
+	"github.com/minguu42/simoom/pkg/simoompb/v1/simoompbconnect"
 )
 
 type exitCode int
