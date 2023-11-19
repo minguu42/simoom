@@ -4,11 +4,10 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/minguu42/simoom/pkg/domain/repository"
-
 	"github.com/cockroachdb/errors"
-	"github.com/minguu42/simoom/gen/sqlc"
 	"github.com/minguu42/simoom/pkg/domain/model"
+	"github.com/minguu42/simoom/pkg/domain/repository"
+	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
 )
 
 func newModelTag(t sqlc.Tag) model.Tag {

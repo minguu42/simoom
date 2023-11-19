@@ -14,7 +14,7 @@ import (
 func NewAuthenticate(authenticator auth.Authenticator, secret string) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshAccessToken"}
+			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshToken"}
 			if slices.Contains(excludedProcedures, strings.Split(req.Spec().Procedure, "/")[2]) {
 				return next(ctx, req)
 			}

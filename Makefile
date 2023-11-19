@@ -52,8 +52,8 @@ fmt: ## コードを整形する
 
 lint: ## 静的解析を実行する
 	@buf lint
-	@go vet $$(go list ./... | grep -v /gen)
-	@staticcheck $$(go list ./... | grep -v /gen)
+	@go vet $$(go list ./... | grep -v -e /simoompb -e /sqlc)
+	@staticcheck $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 
 test: ## テストを実行する
 	@go test $(option) $$(go list ./... | grep -v -e /gen -e /pkg/infra/mysql -e /pkg/usecase)

@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/pointers"
+	"github.com/minguu42/simoom/pkg/simoompb/v1"
 )
 
 func TestProjectHandler_CreateProject(t *testing.T) {

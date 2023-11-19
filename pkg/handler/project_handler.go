@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/gen/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/domain/model"
+	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"

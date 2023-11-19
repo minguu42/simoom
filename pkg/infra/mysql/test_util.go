@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors"
-	"github.com/minguu42/simoom/gen/sqlc"
+	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
 )
 
 func InitAllData(ctx context.Context, client *Client) error {

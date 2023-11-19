@@ -113,7 +113,7 @@ type RefreshAccessTokenOutput struct {
 	RefreshToken string
 }
 
-func (uc Auth) RefreshAccessToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
+func (uc Auth) RefreshToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
 	id, err := uc.authenticator.ExtractIDFromToken(in.RefreshToken, uc.conf.RefreshTokenSecret)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, errors.WithStack(err)
