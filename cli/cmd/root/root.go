@@ -1,4 +1,5 @@
-package main
+// Package root パッケージはルートコマンドを定義する
+package root
 
 import (
 	"github.com/minguu42/simoom/cli/cmd/auth"
@@ -10,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newCmdRoot(core cmdutil.Core) *cobra.Command {
+func NewCmdRoot(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "simoom",
 		Short: "Simoom CLI",

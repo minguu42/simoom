@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/minguu42/simoom/cli/cmd/root"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/pkg/simoompb/v1/simoompbconnect"
 )
@@ -31,7 +32,7 @@ func mainRun() exitCode {
 		},
 	}
 
-	rootCmd := newCmdRoot(c)
+	rootCmd := root.NewCmdRoot(c)
 	if err := rootCmd.ExecuteContext(context.Background()); err != nil {
 		return exitError
 	}
