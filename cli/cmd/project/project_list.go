@@ -1,4 +1,4 @@
-package main
+package project
 
 import (
 	"context"
@@ -10,20 +10,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type tagListOpts struct {
+type projectListOpts struct {
 	limit  uint64
 	offset uint64
 }
 
-func newCmdTagList(core cmdutil.Core) *cobra.Command {
-	var opts tagListOpts
+func newCmdProjectList(core cmdutil.Core) *cobra.Command {
+	var opts projectListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List the tags",
+		Short:   "List the projects",
 		Aliases: []string{"ls"},
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return runTagList(cmd.Context(), core, opts)
+			return runProjectList(cmd.Context(), core, opts)
 		},
 	}
 
@@ -33,16 +33,16 @@ func newCmdTagList(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runTagList(ctx context.Context, core cmdutil.Core, opts tagListOpts) error {
-	req := connect.NewRequest(&simoompb.ListTagsRequest{
+func runProjectList(ctx context.Context, core cmdutil.Core, opts projectListOpts) error {
+	req := connect.NewRequest(&simoompb.ListProjectsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 
-	resp, err := core.Client.ListTags(ctx, req)
+	resp, err := core.Client.ListProjects(ctx, req)
 	if err != nil {
-		return fmt.Errorf("failed to call ListTags method: %w", err)
+		return fmt.Errorf("failed to call ListProjects method: %w", err)
 	}
 
 	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
