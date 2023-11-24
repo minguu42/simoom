@@ -1,8 +1,11 @@
 .DEFAULT_GOAL := help
 .PHONY: setup gen build run migrate migrate-apply dev fmt lint-protobuf lint test help
 
+# testターゲットを実行する前に.envファイルから環境変数を読み込む
 export
-include $(PWD)/.env
+ifeq ($(MAKECMDGOALS), test)
+	include $(PWD)/.env
+endif
 
 setup: ## 開発に必要なツールをインストールする
 	brew install sqldef/sqldef/mysqldef
