@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: setup gen build run migrate migrate-apply dev fmt lint test help
+.PHONY: setup gen build run migrate migrate-apply dev fmt lint-protobuf lint test help
 
 export
 include $(PWD)/.env
@@ -50,8 +50,10 @@ fmt: ## コードを整形する
 	@buf format --write
 	@goimports -w .
 
-lint: ## 静的解析を実行する
+lint-protobuf: # Protocol Buffersファイルの静的解析を実行する
 	@buf lint
+
+lint: lint-protobuf ## 静的解析を実行する
 	@go vet $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 	@staticcheck $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 
