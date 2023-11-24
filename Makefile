@@ -1,8 +1,11 @@
 .DEFAULT_GOAL := help
-.PHONY: setup gen build run migrate migrate-apply dev fmt lint test help
+.PHONY: setup gen build run migrate migrate-apply dev fmt lint-protobuf lint test help
 
+# testターゲットを実行する前に.envファイルから環境変数を読み込む
 export
-include $(PWD)/.env
+ifeq ($(MAKECMDGOALS), test)
+	include $(PWD)/.env
+endif
 
 setup: ## 開発に必要なツールをインストールする
 	brew install sqldef/sqldef/mysqldef
@@ -50,8 +53,10 @@ fmt: ## コードを整形する
 	@buf format --write
 	@goimports -w .
 
-lint: ## 静的解析を実行する
+lint-protobuf: # Protocol Buffersファイルの静的解析を実行する
 	@buf lint
+
+lint: lint-protobuf ## 静的解析を実行する
 	@go vet $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 	@staticcheck $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 

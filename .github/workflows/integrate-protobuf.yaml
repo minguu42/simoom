@@ -1,0 +1,24 @@
+name: Integrate Protocol Buffers files
+
+on:
+  push:
+    paths:
+      - .github/workflows/integrate-protobuf.yaml
+      - "simoompb/**"
+      - buf.gen.yaml
+      - buf.yaml
+      - Makefile
+
+jobs:
+  check-style:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bufbuild/buf-setup-action@v1.28.1
+      - run: buf format --exit-code
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bufbuild/buf-setup-action@v1.28.1
+      - run: make lint-protobuf
