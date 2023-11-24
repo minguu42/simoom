@@ -1,6 +1,12 @@
 name: Integrate Go application
 
-on: push
+on:
+  push:
+    paths-ignore:
+      - .github/workflows/integrate-protobuf.yaml
+      - "simoompb/**"
+      - buf.gen.yaml
+      - buf.yaml
 
 jobs:
   check-style:
