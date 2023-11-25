@@ -166,6 +166,7 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 	if in.CompletedAt != nil {
 		t.CompletedAt = in.CompletedAt
 	}
+	t.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateTask(ctx, t); err != nil {
 		return TaskOutput{}, errors.WithStack(err)
 	}

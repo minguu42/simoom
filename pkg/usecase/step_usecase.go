@@ -84,6 +84,7 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 	if in.CompletedAt != nil {
 		s.CompletedAt = in.CompletedAt
 	}
+	s.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateStep(ctx, s); err != nil {
 		return StepOutput{}, errors.WithStack(err)
 	}

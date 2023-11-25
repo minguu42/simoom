@@ -89,6 +89,7 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 	if in.Name != nil {
 		t.Name = *in.Name
 	}
+	t.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateTag(ctx, t); err != nil {
 		return TagOutput{}, errors.WithStack(err)
 	}

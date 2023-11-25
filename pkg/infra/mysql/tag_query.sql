@@ -22,7 +22,8 @@ WHERE id = ?;
 
 -- name: UpdateTag :exec
 UPDATE tags
-SET name = ?
+SET name       = ?,
+    updated_at = ?
 WHERE id = ?;
 
 -- name: DeleteTag :exec

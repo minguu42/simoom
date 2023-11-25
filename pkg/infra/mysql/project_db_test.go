@@ -7,12 +7,9 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
-
-var projectCmpOption = cmpopts.IgnoreFields(model.Project{}, "UpdatedAt")
 
 func TestClient_CreateProject(t *testing.T) {
 	type args struct {
@@ -193,6 +190,7 @@ func TestClient_UpdateProject(t *testing.T) {
 					Color:      "#0f1e2d",
 					IsArchived: false,
 					CreatedAt:  time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+					UpdatedAt:  time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC),
 				},
 			},
 		},
@@ -213,7 +211,7 @@ func TestClient_UpdateProject(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.args.p, got, projectCmpOption); diff != "" {
+			if diff := cmp.Diff(tt.args.p, got); diff != "" {
 				t.Errorf("updated project mismatch (-want +got):\n%s", diff)
 			}
 		})
