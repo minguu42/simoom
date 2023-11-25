@@ -7,12 +7,9 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
-
-var tagCmpOption = cmpopts.IgnoreFields(model.Tag{}, "UpdatedAt")
 
 func TestClient_CreateTag(t *testing.T) {
 	type args struct {
