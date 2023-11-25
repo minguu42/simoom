@@ -100,6 +100,7 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 	if in.IsArchived != nil {
 		p.IsArchived = *in.IsArchived
 	}
+	p.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateProject(ctx, p); err != nil {
 		return ProjectOutput{}, errors.WithStack(err)
 	}
