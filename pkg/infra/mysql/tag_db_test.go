@@ -185,6 +185,7 @@ func TestClient_UpdateTag(t *testing.T) {
 					UserID:    "user_01",
 					Name:      "改タグ1",
 					CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+					UpdatedAt: time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC),
 				},
 			},
 		},
@@ -205,7 +206,7 @@ func TestClient_UpdateTag(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.args.t, got, tagCmpOption); diff != "" {
+			if diff := cmp.Diff(tt.args.t, got); diff != "" {
 				t.Errorf("updated tag mismatch (-want +got):\n%s", diff)
 			}
 		})

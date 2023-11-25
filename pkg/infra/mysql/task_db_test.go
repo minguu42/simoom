@@ -7,12 +7,9 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
-
-var taskCmpOption = cmpopts.IgnoreFields(model.Task{}, "UpdatedAt")
 
 func TestClient_CreateTask(t *testing.T) {
 	type args struct {
@@ -409,6 +406,7 @@ func TestClient_UpdateTask(t *testing.T) {
 					UserID:    "user_01",
 					Title:     "改タスク1",
 					CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+					UpdatedAt: time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC),
 				},
 			},
 		},
@@ -429,7 +427,7 @@ func TestClient_UpdateTask(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.args.t, got, taskCmpOption); diff != "" {
+			if diff := cmp.Diff(tt.args.t, got); diff != "" {
 				t.Errorf("updated task mismatch (-want +got):\n%s", diff)
 			}
 		})
