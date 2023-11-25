@@ -4,7 +4,7 @@ CREATE TABLE users (
     email      VARCHAR(254) NOT NULL UNIQUE,
     password   CHAR(60)     NOT NULL UNIQUE,
     created_at DATETIME     NOT NULL,
-    updated_at DATETIME     NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    updated_at DATETIME     NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE projects (
     color       CHAR(7)     NOT NULL,
     is_archived BOOLEAN     NOT NULL,
     created_at  DATETIME    NOT NULL,
-    updated_at  DATETIME    NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    updated_at  DATETIME    NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT projects_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -30,7 +30,7 @@ CREATE TABLE tasks (
     due_on       DATE,
     completed_at DATETIME,
     created_at   DATETIME            NOT NULL,
-    updated_at   DATETIME            NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    updated_at   DATETIME            NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT tasks_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT tasks_project_id_fk FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -43,7 +43,7 @@ CREATE TABLE steps (
     title        VARCHAR(80) NOT NULL,
     completed_at DATETIME,
     created_at   DATETIME    NOT NULL,
-    updated_at   DATETIME    NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    updated_at   DATETIME    NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT steps_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT steps_task_id_fk FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -54,7 +54,7 @@ CREATE TABLE tags (
     user_id    CHAR(26)    NOT NULL,
     name       VARCHAR(20) NOT NULL,
     created_at DATETIME    NOT NULL,
-    updated_at DATETIME    NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    updated_at DATETIME    NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT tags_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
