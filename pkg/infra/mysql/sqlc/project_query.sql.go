@@ -119,7 +119,8 @@ const updateProject = `-- name: UpdateProject :exec
 UPDATE projects
 SET name        = ?,
     color       = ?,
-    is_archived = ?
+    is_archived = ?,
+    updated_at  = ?
 WHERE id = ?
 `
 
@@ -127,6 +128,7 @@ type UpdateProjectParams struct {
 	Name       string
 	Color      string
 	IsArchived bool
+	UpdatedAt  time.Time
 	ID         string
 }
 
@@ -135,6 +137,7 @@ func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) er
 		arg.Name,
 		arg.Color,
 		arg.IsArchived,
+		arg.UpdatedAt,
 		arg.ID,
 	)
 	return err

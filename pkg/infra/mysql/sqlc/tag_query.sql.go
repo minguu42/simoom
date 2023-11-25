@@ -145,16 +145,18 @@ func (q *Queries) ListTagsByUserID(ctx context.Context, arg ListTagsByUserIDPara
 
 const updateTag = `-- name: UpdateTag :exec
 UPDATE tags
-SET name = ?
+SET name       = ?,
+    updated_at = ?
 WHERE id = ?
 `
 
 type UpdateTagParams struct {
-	Name string
-	ID   string
+	Name      string
+	UpdatedAt time.Time
+	ID        string
 }
 
 func (q *Queries) UpdateTag(ctx context.Context, arg UpdateTagParams) error {
-	_, err := q.db.ExecContext(ctx, updateTag, arg.Name, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateTag, arg.Name, arg.UpdatedAt, arg.ID)
 	return err
 }

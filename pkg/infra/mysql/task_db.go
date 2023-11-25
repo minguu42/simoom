@@ -118,6 +118,7 @@ func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
 		Priority:    uint32(t.Priority),
 		DueOn:       newNullTime(t.DueOn),
 		CompletedAt: newNullTime(t.CompletedAt),
+		UpdatedAt:   t.UpdatedAt,
 		ID:          t.ID,
 	}); err != nil {
 		return errors.WithStack(err)

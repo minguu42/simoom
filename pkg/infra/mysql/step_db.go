@@ -59,6 +59,7 @@ func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
 	if err := sqlc.New(c.db).UpdateStep(ctx, sqlc.UpdateStepParams{
 		Title:       s.Title,
 		CompletedAt: newNullTime(s.CompletedAt),
+		UpdatedAt:   s.UpdatedAt,
 		ID:          s.ID,
 	}); err != nil {
 		return errors.WithStack(err)

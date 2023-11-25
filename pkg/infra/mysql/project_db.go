@@ -73,6 +73,7 @@ func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
+		UpdatedAt:  p.UpdatedAt,
 		ID:         p.ID,
 	}); err != nil {
 		return errors.WithStack(err)

@@ -66,8 +66,9 @@ func (c *Client) GetTagByID(ctx context.Context, id string) (model.Tag, error) {
 
 func (c *Client) UpdateTag(ctx context.Context, t model.Tag) error {
 	if err := sqlc.New(c.db).UpdateTag(ctx, sqlc.UpdateTagParams{
-		Name: t.Name,
-		ID:   t.ID,
+		Name:      t.Name,
+		UpdatedAt: t.UpdatedAt,
+		ID:        t.ID,
 	}); err != nil {
 		return errors.WithStack(err)
 	}
