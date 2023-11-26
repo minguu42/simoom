@@ -3,8 +3,9 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
@@ -36,7 +37,7 @@ func (c *Client) CreateTag(ctx context.Context, t model.Tag) error {
 		CreatedAt: t.CreatedAt,
 		UpdatedAt: t.UpdatedAt,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to create tag: %w", err)
 	}
 	return nil
 }
@@ -48,7 +49,7 @@ func (c *Client) ListTagsByUserID(ctx context.Context, userID string, limit, off
 		Offset: int32(offset),
 	})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to list tags: %w", err)
 	}
 	return newModelTags(ts), nil
 }
@@ -59,7 +60,7 @@ func (c *Client) GetTagByID(ctx context.Context, id string) (model.Tag, error) {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Tag{}, repository.ErrModelNotFound
 		}
-		return model.Tag{}, errors.WithStack(err)
+		return model.Tag{}, fmt.Errorf("failed to get tag: %w", err)
 	}
 	return newModelTag(t), nil
 }
@@ -70,14 +71,14 @@ func (c *Client) UpdateTag(ctx context.Context, t model.Tag) error {
 		UpdatedAt: t.UpdatedAt,
 		ID:        t.ID,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to update tag: %w", err)
 	}
 	return nil
 }
 
 func (c *Client) DeleteTag(ctx context.Context, id string) error {
 	if err := sqlc.New(c.db).DeleteTag(ctx, id); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete tag: %w", err)
 	}
 	return nil
 }

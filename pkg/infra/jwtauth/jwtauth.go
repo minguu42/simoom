@@ -2,10 +2,10 @@
 package jwtauth
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
-	"github.com/cockroachdb/errors"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/minguu42/simoom/pkg/domain/model"
 )
@@ -36,7 +36,7 @@ func (a Authenticator) CreateAccessToken(user model.User, secret string, expiry 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(secret))
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", fmt.Errorf("failed to create signed JWT: %w", err)
 	}
 	return t, nil
 }
@@ -52,7 +52,7 @@ func (a Authenticator) CreateRefreshToken(user model.User, secret string, expiry
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
 	rt, err := token.SignedString([]byte(secret))
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", fmt.Errorf("failed to create signed JWT: %w", err)
 	}
 	return rt, nil
 }
@@ -61,12 +61,12 @@ func (a Authenticator) CreateRefreshToken(user model.User, secret string, expiry
 func (a Authenticator) IsAuthorized(tokenString string, secret string) (bool, error) {
 	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New(fmt.Sprintf("unexpected signing method: %s", token.Header["alg"]))
+			return nil, fmt.Errorf("unexpected signing method: %s", token.Header["alg"])
 		}
 		return []byte(secret), nil
 	})
 	if err != nil {
-		return false, errors.WithStack(err)
+		return false, fmt.Errorf("failed to parse token: %w", err)
 	}
 	return true, nil
 }
@@ -75,12 +75,12 @@ func (a Authenticator) IsAuthorized(tokenString string, secret string) (bool, er
 func (a Authenticator) ExtractIDFromToken(tokenString string, secret string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New(fmt.Sprintf("unexpected signing method: %s", token.Header["alg"]))
+			return nil, fmt.Errorf("unexpected signing method: %s", token.Header["alg"])
 		}
 		return []byte(secret), nil
 	})
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", fmt.Errorf("failed to parse token: %w", err)
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)

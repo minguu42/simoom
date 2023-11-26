@@ -3,8 +3,9 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
@@ -37,7 +38,7 @@ func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
 		CreatedAt: t.CreatedAt,
 		UpdatedAt: t.UpdatedAt,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to create task: %w", err)
 	}
 	return nil
 }
@@ -49,18 +50,18 @@ func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, lim
 		Offset:    int32(offset),
 	})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to list tasks: %w", err)
 	}
 
 	tasks := make([]model.Task, 0, len(ts))
 	for _, t := range ts {
 		ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
 		if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, fmt.Errorf("failed to list steps: %w", err)
 		}
 		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
 		if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, fmt.Errorf("failed to list tags: %w", err)
 		}
 		tasks = append(tasks, newModelTask(t, ss, tags))
 	}
@@ -74,18 +75,18 @@ func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offs
 		Offset: int32(offset),
 	})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to list tasks: %w", err)
 	}
 
 	tasks := make([]model.Task, 0, len(ts))
 	for _, t := range ts {
 		ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
 		if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, fmt.Errorf("failed to list steps: %w", err)
 		}
 		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
 		if err != nil {
-			return nil, errors.WithStack(err)
+			return nil, fmt.Errorf("failed to list tags: %w", err)
 		}
 		tasks = append(tasks, newModelTask(t, ss, tags))
 	}
@@ -98,15 +99,15 @@ func (c *Client) GetTaskByID(ctx context.Context, id string) (model.Task, error)
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Task{}, repository.ErrModelNotFound
 		}
-		return model.Task{}, errors.WithStack(err)
+		return model.Task{}, fmt.Errorf("failed to get task: %w", err)
 	}
 	ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
 	if err != nil {
-		return model.Task{}, errors.WithStack(err)
+		return model.Task{}, fmt.Errorf("failed to list steps: %w", err)
 	}
 	ts, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
 	if err != nil {
-		return model.Task{}, errors.WithStack(err)
+		return model.Task{}, fmt.Errorf("failed to list tags: %w", err)
 	}
 	return newModelTask(t, ss, ts), nil
 }
@@ -121,14 +122,14 @@ func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
 		UpdatedAt:   t.UpdatedAt,
 		ID:          t.ID,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to update task: %w", err)
 	}
 	return nil
 }
 
 func (c *Client) DeleteTask(ctx context.Context, id string) error {
 	if err := sqlc.New(c.db).DeleteTask(ctx, id); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete task: %w", err)
 	}
 	return nil
 }

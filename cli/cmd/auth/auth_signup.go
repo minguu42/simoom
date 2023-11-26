@@ -3,10 +3,10 @@ package auth
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"connectrpc.com/connect"
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/spf13/cobra"

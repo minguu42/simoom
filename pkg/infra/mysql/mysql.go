@@ -7,7 +7,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/cockroachdb/errors"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/minguu42/simoom/pkg/config"
 )
@@ -34,7 +33,7 @@ func NewClient(conf config.MySQL) (*Client, error) {
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to open a database: %w", err)
 	}
 	db.SetConnMaxLifetime(time.Duration(conf.ConnMaxLifetimeMin) * time.Minute)
 	db.SetMaxOpenConns(conf.MaxOpenConns)
@@ -47,7 +46,7 @@ func NewClient(conf config.MySQL) (*Client, error) {
 			time.Sleep(15 * time.Second)
 			continue
 		} else if err != nil && i == maxFailureTimes {
-			return nil, errors.WithStack(err)
+			return nil, fmt.Errorf("failed to verify a connection to the database: %w", err)
 		}
 		break
 	}

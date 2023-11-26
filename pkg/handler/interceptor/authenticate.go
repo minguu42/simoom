@@ -2,11 +2,12 @@ package interceptor
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"slices"
 	"strings"
 
 	"connectrpc.com/connect"
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 )
 
@@ -27,14 +28,14 @@ func NewAuthenticate(authenticator auth.Authenticator, secret string) connect.Un
 			token := t[1]
 			authorized, err := authenticator.IsAuthorized(token, secret)
 			if err != nil {
-				return nil, errors.WithStack(err)
+				return nil, fmt.Errorf("failed to authenticate user: %w", err)
 			}
 			if !authorized {
 				return nil, errors.New("authentication failed")
 			}
 			userID, err := authenticator.ExtractIDFromToken(token, secret)
 			if err != nil {
-				return nil, errors.WithStack(err)
+				return nil, fmt.Errorf("failed to extract id from token: %w", err)
 			}
 			ctx = auth.SetUserID(ctx, userID)
 			return next(ctx, req)

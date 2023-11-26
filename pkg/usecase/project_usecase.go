@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -45,7 +46,7 @@ func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (Pro
 		UpdatedAt:  now,
 	}
 	if err := uc.repo.CreateProject(ctx, p); err != nil {
-		return ProjectOutput{}, errors.WithStack(err)
+		return ProjectOutput{}, fmt.Errorf("failed to create project: %w", err)
 	}
 	return ProjectOutput{Project: p}, nil
 }
@@ -58,7 +59,7 @@ type ListProjectsInput struct {
 func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
 	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
-		return ProjectsOutput{}, errors.WithStack(err)
+		return ProjectsOutput{}, fmt.Errorf("failed to list projects: %w", err)
 	}
 
 	hasNext := false
@@ -85,7 +86,7 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ProjectOutput{}, ErrProjectNotFound
 		}
-		return ProjectOutput{}, errors.WithStack(err)
+		return ProjectOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
 	if auth.GetUserID(ctx) != p.UserID {
 		return ProjectOutput{}, ErrProjectNotFound
@@ -102,7 +103,7 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 	}
 	p.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateProject(ctx, p); err != nil {
-		return ProjectOutput{}, errors.WithStack(err)
+		return ProjectOutput{}, fmt.Errorf("failed to update project: %w", err)
 	}
 	return ProjectOutput{Project: p}, nil
 }
@@ -117,14 +118,14 @@ func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) erro
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrProjectNotFound
 		}
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to get project: %w", err)
 	}
 	if auth.GetUserID(ctx) != p.UserID {
 		return ErrProjectNotFound
 	}
 
 	if err := uc.repo.DeleteProject(ctx, in.ID); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete project: %w", err)
 	}
 	return nil
 }

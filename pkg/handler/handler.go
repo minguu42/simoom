@@ -2,11 +2,11 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
 	"connectrpc.com/connect"
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/repository"

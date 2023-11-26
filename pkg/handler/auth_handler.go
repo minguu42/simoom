@@ -2,9 +2,9 @@ package handler
 
 import (
 	"context"
+	"fmt"
 
 	"connectrpc.com/connect"
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 )
@@ -26,7 +26,7 @@ func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignU
 		Password: req.Msg.Password,
 	})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to execute SignUp usecase: %w", err)
 	}
 	return connect.NewResponse(&simoompb.SignUpResponse{
 		AccessToken:  out.AccessToken,
@@ -47,7 +47,7 @@ func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignI
 		Password: req.Msg.Password,
 	})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to execute SignIn usecase: %w", err)
 	}
 	return connect.NewResponse(&simoompb.SignInResponse{
 		AccessToken:  out.AccessToken,
@@ -62,7 +62,7 @@ func (h handler) RefreshToken(ctx context.Context, req *connect.Request[simoompb
 
 	out, err := h.auth.RefreshToken(ctx, usecase.RefreshAccessTokenInput{RefreshToken: req.Msg.RefreshToken})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to execute RefreshToken usecase: %w", err)
 	}
 	return connect.NewResponse(&simoompb.RefreshTokenResponse{
 		AccessToken:  out.AccessToken,

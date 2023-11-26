@@ -3,8 +3,9 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
@@ -40,7 +41,7 @@ func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 		CreatedAt:  p.CreatedAt,
 		UpdatedAt:  p.UpdatedAt,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to create project: %w", err)
 	}
 	return nil
 }
@@ -52,7 +53,7 @@ func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit,
 		Offset: int32(offset),
 	})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, fmt.Errorf("failed to list projects: %w", err)
 	}
 	return newModelProjects(ps), nil
 }
@@ -63,7 +64,7 @@ func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, 
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Project{}, repository.ErrModelNotFound
 		}
-		return model.Project{}, errors.WithStack(err)
+		return model.Project{}, fmt.Errorf("failed to get project: %w", err)
 	}
 	return newModelProject(p), nil
 }
@@ -76,14 +77,14 @@ func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
 		UpdatedAt:  p.UpdatedAt,
 		ID:         p.ID,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to update project: %w", err)
 	}
 	return nil
 }
 
 func (c *Client) DeleteProject(ctx context.Context, id string) error {
 	if err := sqlc.New(c.db).DeleteProject(ctx, id); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete project: %w", err)
 	}
 	return nil
 }

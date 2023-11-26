@@ -1,7 +1,7 @@
 // Package usecase はユースケースを定義する
 package usecase
 
-import "github.com/cockroachdb/errors"
+import "errors"
 
 var (
 	ErrProjectNotFound = errors.New("the specified project is not found")

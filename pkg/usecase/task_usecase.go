@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -40,7 +41,7 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TaskOutput{}, ErrProjectNotFound
 		}
-		return TaskOutput{}, errors.WithStack(err)
+		return TaskOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
 	if auth.GetUserID(ctx) != p.UserID {
 		return TaskOutput{}, ErrProjectNotFound
@@ -57,7 +58,7 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		UpdatedAt: now,
 	}
 	if err := uc.repo.CreateTask(ctx, t); err != nil {
-		return TaskOutput{}, errors.WithStack(err)
+		return TaskOutput{}, fmt.Errorf("failed to create task: %w", err)
 	}
 	return TaskOutput{Task: t}, nil
 }
@@ -74,7 +75,7 @@ func (uc Task) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectID
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TasksOutput{}, ErrProjectNotFound
 		}
-		return TasksOutput{}, errors.WithStack(err)
+		return TasksOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
 	if auth.GetUserID(ctx) != p.UserID {
 		return TasksOutput{}, ErrProjectNotFound
@@ -82,7 +83,7 @@ func (uc Task) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectID
 
 	ts, err := uc.repo.ListTasksByProjectID(ctx, in.ProjectID, in.Limit+1, in.Offset)
 	if err != nil {
-		return TasksOutput{}, errors.WithStack(err)
+		return TasksOutput{}, fmt.Errorf("failed to list tasks: %w", err)
 	}
 
 	hasNext := false
@@ -108,7 +109,7 @@ func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TasksOutput{}, ErrTagNotFound
 		}
-		return TasksOutput{}, errors.WithStack(err)
+		return TasksOutput{}, fmt.Errorf("failed to get tag: %w", err)
 	}
 	if auth.GetUserID(ctx) != t.UserID {
 		return TasksOutput{}, ErrTagNotFound
@@ -116,7 +117,7 @@ func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (
 
 	ts, err := uc.repo.ListTasksByTagID(ctx, in.TagID, in.Limit+1, in.Offset)
 	if err != nil {
-		return TasksOutput{}, errors.WithStack(err)
+		return TasksOutput{}, fmt.Errorf("failed to list tasks: %w", err)
 	}
 
 	hasNext := false
@@ -145,7 +146,7 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TaskOutput{}, ErrTaskNotFound
 		}
-		return TaskOutput{}, errors.WithStack(err)
+		return TaskOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
 	if auth.GetUserID(ctx) != t.UserID {
 		return TaskOutput{}, ErrTaskNotFound
@@ -168,7 +169,7 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 	}
 	t.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateTask(ctx, t); err != nil {
-		return TaskOutput{}, errors.WithStack(err)
+		return TaskOutput{}, fmt.Errorf("failed to update task: %w", err)
 	}
 	return TaskOutput{Task: t}, nil
 }
@@ -183,14 +184,14 @@ func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrTaskNotFound
 		}
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to get task: %w", err)
 	}
 	if auth.GetUserID(ctx) != t.UserID {
 		return ErrTaskNotFound
 	}
 
 	if err := uc.repo.DeleteTask(ctx, in.ID); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete task: %w", err)
 	}
 	return nil
 }
