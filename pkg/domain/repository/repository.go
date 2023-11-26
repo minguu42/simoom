@@ -3,8 +3,8 @@ package repository
 
 import (
 	"context"
+	"errors"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/model"
 )
 

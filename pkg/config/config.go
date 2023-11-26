@@ -2,7 +2,8 @@
 package config
 
 import (
-	"github.com/cockroachdb/errors"
+	"fmt"
+
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -10,7 +11,7 @@ import (
 func Load() (Config, error) {
 	var conf Config
 	if err := envconfig.Process("", &conf); err != nil {
-		return Config{}, errors.WithStack(err)
+		return Config{}, fmt.Errorf("failed to populate the specified struct based on environment variables: %w", err)
 	}
 	return conf, nil
 }

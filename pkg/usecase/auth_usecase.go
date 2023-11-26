@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
@@ -41,7 +42,7 @@ type SignUpOutput struct {
 func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return SignUpOutput{}, errors.WithStack(err)
+		return SignUpOutput{}, fmt.Errorf("failed to generate encypted password: %w", err)
 	}
 
 	now := time.Now()
@@ -55,14 +56,14 @@ func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error)
 	}
 	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
-		return SignUpOutput{}, errors.WithStack(err)
+		return SignUpOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
 	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
-		return SignUpOutput{}, errors.WithStack(err)
+		return SignUpOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
 	if err := uc.repo.CreateUser(ctx, user); err != nil {
-		return SignUpOutput{}, errors.WithStack(err)
+		return SignUpOutput{}, fmt.Errorf("failed to create user: %w", err)
 	}
 	return SignUpOutput{
 		AccessToken:  accessToken,
@@ -83,7 +84,7 @@ type SignInOutput struct {
 func (uc Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error) {
 	user, err := uc.repo.GetUserByEmail(ctx, in.Email)
 	if err != nil {
-		return SignInOutput{}, errors.WithStack(err)
+		return SignInOutput{}, fmt.Errorf("failed to get user: %w", err)
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(in.Password)) != nil {
@@ -92,11 +93,11 @@ func (uc Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error)
 
 	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
-		return SignInOutput{}, errors.WithStack(err)
+		return SignInOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
 	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
-		return SignInOutput{}, errors.WithStack(err)
+		return SignInOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
 	return SignInOutput{
 		AccessToken:  accessToken,
@@ -116,23 +117,23 @@ type RefreshAccessTokenOutput struct {
 func (uc Auth) RefreshToken(ctx context.Context, in RefreshAccessTokenInput) (RefreshAccessTokenOutput, error) {
 	id, err := uc.authenticator.ExtractIDFromToken(in.RefreshToken, uc.conf.RefreshTokenSecret)
 	if err != nil {
-		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to extract id from token: %w", err)
 	}
 	user, err := uc.repo.GetUserByID(ctx, id)
 	if err != nil {
-		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to get user: %w", err)
 	}
 
 	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
-		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
 	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
-		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
 	if err := uc.repo.CreateUser(ctx, user); err != nil {
-		return RefreshAccessTokenOutput{}, errors.WithStack(err)
+		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to create user: %w", err)
 	}
 	return RefreshAccessTokenOutput{
 		AccessToken:  accessToken,

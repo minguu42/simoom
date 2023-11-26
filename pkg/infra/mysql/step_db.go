@@ -3,8 +3,9 @@ package mysql
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
@@ -39,7 +40,7 @@ func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
 		CreatedAt: s.CreatedAt,
 		UpdatedAt: s.UpdatedAt,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to create step: %w", err)
 	}
 	return nil
 }
@@ -50,7 +51,7 @@ func (c *Client) GetStepByID(ctx context.Context, id string) (model.Step, error)
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Step{}, repository.ErrModelNotFound
 		}
-		return model.Step{}, errors.WithStack(err)
+		return model.Step{}, fmt.Errorf("failed to get step: %w", err)
 	}
 	return newModelStep(s), nil
 }
@@ -62,14 +63,14 @@ func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
 		UpdatedAt:   s.UpdatedAt,
 		ID:          s.ID,
 	}); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to update step: %w", err)
 	}
 	return nil
 }
 
 func (c *Client) DeleteStep(ctx context.Context, id string) error {
 	if err := sqlc.New(c.db).DeleteStep(ctx, id); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete step: %w", err)
 	}
 	return nil
 }

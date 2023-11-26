@@ -2,9 +2,9 @@ package interceptor
 
 import (
 	"context"
+	"errors"
 
 	"connectrpc.com/connect"
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 

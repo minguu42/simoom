@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -39,7 +40,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrTaskNotFound
 		}
-		return StepOutput{}, errors.WithStack(err)
+		return StepOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
 	if auth.GetUserID(ctx) != t.UserID {
 		return StepOutput{}, ErrTaskNotFound
@@ -55,7 +56,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		UpdatedAt: now,
 	}
 	if err := uc.repo.CreateStep(ctx, s); err != nil {
-		return StepOutput{}, errors.WithStack(err)
+		return StepOutput{}, fmt.Errorf("failed to create step: %w", err)
 	}
 	return StepOutput{Step: s}, nil
 }
@@ -72,7 +73,7 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return StepOutput{}, ErrStepNotFound
 		}
-		return StepOutput{}, errors.WithStack(err)
+		return StepOutput{}, fmt.Errorf("failed to get step: %w", err)
 	}
 	if auth.GetUserID(ctx) != s.UserID {
 		return StepOutput{}, ErrStepNotFound
@@ -86,7 +87,7 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 	}
 	s.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateStep(ctx, s); err != nil {
-		return StepOutput{}, errors.WithStack(err)
+		return StepOutput{}, fmt.Errorf("failed to update step: %w", err)
 	}
 	return StepOutput{Step: s}, nil
 }
@@ -101,14 +102,14 @@ func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrStepNotFound
 		}
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to get step: %w", err)
 	}
 	if auth.GetUserID(ctx) != s.UserID {
 		return ErrStepNotFound
 	}
 
 	if err := uc.repo.DeleteStep(ctx, in.ID); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete step: %w", err)
 	}
 	return nil
 }

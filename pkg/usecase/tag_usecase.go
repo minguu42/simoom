@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
-	"github.com/cockroachdb/errors"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -42,7 +43,7 @@ func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, erro
 		UpdatedAt: now,
 	}
 	if err := uc.repo.CreateTag(ctx, t); err != nil {
-		return TagOutput{}, errors.WithStack(err)
+		return TagOutput{}, fmt.Errorf("failed to create tag: %w", err)
 	}
 	return TagOutput{Tag: t}, nil
 }
@@ -55,7 +56,7 @@ type ListTagsInput struct {
 func (uc Tag) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
 	ts, err := uc.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
-		return TagsOutput{}, errors.WithStack(err)
+		return TagsOutput{}, fmt.Errorf("failed to list tags: %w", err)
 	}
 
 	hasNext := false
@@ -80,7 +81,7 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return TagOutput{}, ErrTagNotFound
 		}
-		return TagOutput{}, errors.WithStack(err)
+		return TagOutput{}, fmt.Errorf("failed to get tag: %w", err)
 	}
 	if auth.GetUserID(ctx) != t.UserID {
 		return TagOutput{}, ErrTagNotFound
@@ -91,7 +92,7 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 	}
 	t.UpdatedAt = time.Now()
 	if err := uc.repo.UpdateTag(ctx, t); err != nil {
-		return TagOutput{}, errors.WithStack(err)
+		return TagOutput{}, fmt.Errorf("failed to update tag: %w", err)
 	}
 	return TagOutput{Tag: t}, nil
 }
@@ -106,14 +107,14 @@ func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 		if errors.Is(err, repository.ErrModelNotFound) {
 			return ErrTagNotFound
 		}
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to get tag: %w", err)
 	}
 	if auth.GetUserID(ctx) != t.UserID {
 		return ErrTagNotFound
 	}
 
 	if err := uc.repo.DeleteTag(ctx, in.ID); err != nil {
-		return errors.WithStack(err)
+		return fmt.Errorf("failed to delete tag: %w", err)
 	}
 	return nil
 }
