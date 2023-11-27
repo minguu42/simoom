@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"context"
 	"log"
 	"testing"
 
@@ -27,10 +26,7 @@ func TestMain(m *testing.M) {
 	}
 	defer tc.Close()
 
-	ctx := context.Background()
-	if err := InitAllData(ctx, tc); err != nil {
-		log.Fatalf("%+v", err)
-	}
+	InitAllData(tc)
 
 	m.Run()
 }

@@ -38,9 +38,7 @@ func TestClient_CreateTag(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetTag(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetTag(tc)
 			})
 			if err := tc.CreateTag(tt.args.ctx, tt.args.t); err != nil {
 				t.Fatalf("%+v", err)
@@ -191,9 +189,7 @@ func TestClient_UpdateTag(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetTag(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetTag(tc)
 			})
 			if err := tc.UpdateTag(tt.args.ctx, tt.args.t); err != nil {
 				t.Fatalf("%+v", err)
@@ -231,9 +227,7 @@ func TestClient_DeleteTag(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetTag(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetTag(tc)
 			})
 			if err := tc.DeleteTag(tt.args.ctx, tt.args.id); err != nil {
 				t.Fatalf("%+v", err)

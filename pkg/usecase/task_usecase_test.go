@@ -54,9 +54,7 @@ func TestTaskUsecase_CreateTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				if err := mysql.ResetTask(context.Background(), tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				mysql.ResetTask(tc)
 			})
 
 			got, err := task.CreateTask(tt.args.ctx, tt.args.in)
@@ -145,9 +143,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				if err := mysql.ResetTask(context.Background(), tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				mysql.ResetTask(tc)
 			})
 
 			got, err := task.UpdateTask(tt.args.ctx, tt.args.in)
@@ -181,9 +177,7 @@ func TestTaskUsecase_DeleteTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				if err := mysql.ResetTask(context.Background(), tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				mysql.ResetTask(tc)
 			})
 
 			if err := task.DeleteTask(tt.args.ctx, tt.args.in); err != nil {

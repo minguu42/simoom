@@ -41,9 +41,7 @@ func TestMain(m *testing.M) {
 	tag = usecase.NewTag(tc)
 	task = usecase.NewTask(tc)
 
-	if err := mysql.InitAllData(context.Background(), tc); err != nil {
-		log.Fatalf("%+v", err)
-	}
+	mysql.InitAllData(tc)
 
 	m.Run()
 }
