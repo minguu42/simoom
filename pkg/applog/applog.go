@@ -42,10 +42,10 @@ func Logger(ctx context.Context) *slog.Logger {
 
 // Infof はINFOレベルのログを出力する
 func Infof(msg string, args ...any) {
-	slog.Default().Info(msg, args)
+	slog.Default().Info(msg, args...)
 }
 
 // Errorf はERRORレベルのログを出力する
 func Errorf(msg string, args ...any) {
-	slog.Default().Error(msg, args)
+	slog.Default().Error(msg, args...)
 }
