@@ -35,7 +35,7 @@ func mainRun() error {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
 
-	c, err := mysql.NewClient(conf.MySQL)
+	c, err := mysql.NewClient(conf.DB)
 	if err != nil {
 		return fmt.Errorf("failed to create mysql client: %w", err)
 	}

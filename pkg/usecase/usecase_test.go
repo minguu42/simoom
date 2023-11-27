@@ -22,10 +22,10 @@ var (
 
 func TestMain(m *testing.M) {
 	var err error
-	tc, err = mysql.NewClient(config.MySQL{
+	tc, err = mysql.NewClient(config.DB{
 		Host:               "localhost",
 		Port:               3306,
-		Database:           "simoomdb_test",
+		Database:           "testdb",
 		User:               "root",
 		Password:           "",
 		ConnMaxLifetimeMin: 5,
