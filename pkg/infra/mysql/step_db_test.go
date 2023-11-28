@@ -40,9 +40,7 @@ func TestClient_CreateStep(t *testing.T) {
 		t.Run(t.Name(), func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetStep(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetStep(tc)
 			})
 			if err := tc.CreateStep(tt.args.ctx, tt.args.s); err != nil {
 				t.Fatalf("%+v", err)
@@ -143,9 +141,7 @@ func TestClient_UpdateStep(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetStep(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetStep(tc)
 			})
 			if err := tc.UpdateStep(tt.args.ctx, tt.args.s); err != nil {
 				t.Fatalf("%+v", err)
@@ -183,9 +179,7 @@ func TestClient_DeleteStep(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetStep(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetStep(tc)
 			})
 			if err := tc.DeleteStep(tt.args.ctx, tt.args.id); err != nil {
 				t.Fatalf("%+v", err)

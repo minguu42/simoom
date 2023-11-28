@@ -1,4 +1,4 @@
-// Package mysql は MySQL の操作に関するパッケージ
+// Package mysql はMySQLを扱うパッケージ
 package mysql
 
 import (
@@ -11,18 +11,18 @@ import (
 	"github.com/minguu42/simoom/pkg/config"
 )
 
-// Client は repository.Repository を満たす MySQL クライアント
+// Client は repository.Repository を満たすMySQLクライアント
 type Client struct {
 	db *sql.DB
 }
 
-// Close は新しいクエリの実行を停止し、MySQL サーバとの接続を閉じる
+// Close は新しいクエリの実行を停止し、MySQLサーバとの接続を閉じる
 func (c *Client) Close() error {
 	return c.db.Close()
 }
 
-// NewClient は MySQL サーバとの接続を確立し、クライアントを初期化する
-func NewClient(conf config.MySQL) (*Client, error) {
+// NewClient はMySQLサーバとの接続を確立したクライアントを返す
+func NewClient(conf config.DB) (*Client, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true",
 		conf.User,
 		conf.Password,

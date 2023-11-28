@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"errors"
-	"log"
+	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -19,37 +19,40 @@ import (
 	"github.com/minguu42/simoom/pkg/infra/mysql"
 )
 
-func init() {
-	applog.InitDefault()
-}
-
 func main() {
 	time.Local = time.UTC
+	applog.InitDefault()
 
-	auth := jwtauth.Authenticator{}
+	if err := mainRun(); err != nil {
+		applog.Errorf("failed to run server: %s", err)
+		os.Exit(1)
+	}
+}
 
+func mainRun() error {
 	conf, err := config.Load()
 	if err != nil {
-		log.Fatalf("env.Load() failed: %s", err)
+		return fmt.Errorf("failed to load config: %w", err)
 	}
 
-	c, err := mysql.NewClient(conf.MySQL)
+	c, err := mysql.NewClient(conf.DB)
 	if err != nil {
-		log.Printf("%+v", err)
+		return fmt.Errorf("failed to create mysql client: %w", err)
 	}
 	defer c.Close()
 
 	s := &http.Server{
 		Addr:              net.JoinHostPort(conf.API.Host, strconv.Itoa(conf.API.Port)),
-		Handler:           handler.New(auth, c, conf),
+		Handler:           handler.New(jwtauth.Authenticator{}, c, conf),
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		MaxHeaderBytes:    1 << 20,
 	}
 	go func() {
-		log.Println("Start accepting requests")
+		applog.Infof("Start accepting requests")
 		if err := s.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			log.Printf("%+v", err)
+			applog.Errorf("failed to listen and handle requests: %s", err)
+			return
 		}
 	}()
 
@@ -57,7 +60,9 @@ func main() {
 	signal.Notify(quit, syscall.SIGTERM, os.Interrupt)
 	<-quit
 	if err := s.Shutdown(context.Background()); err != nil {
-		log.Fatalf("s.Shutdown failed: %s", err)
+		return fmt.Errorf("failed to shutdown server: %w", err)
 	}
-	log.Println("Stop accepting requests")
+	applog.Infof("Stop accepting requests")
+
+	return nil
 }

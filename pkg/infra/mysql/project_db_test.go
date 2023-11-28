@@ -40,9 +40,7 @@ func TestClient_CreateProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetProject(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetProject(tc)
 			})
 			if err := tc.CreateProject(tt.args.ctx, tt.args.p); err != nil {
 				t.Fatalf("%+v", err)
@@ -199,9 +197,7 @@ func TestClient_UpdateProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetProject(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetProject(tc)
 			})
 			if err := tc.UpdateProject(tt.args.ctx, tt.args.p); err != nil {
 				t.Fatalf("%+v", err)
@@ -239,9 +235,7 @@ func TestClient_DeleteProject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetProject(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetProject(tc)
 			})
 			if err := tc.DeleteProject(tt.args.ctx, tt.args.id); err != nil {
 				t.Fatalf("%+v", err)

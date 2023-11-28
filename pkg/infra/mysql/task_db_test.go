@@ -45,9 +45,7 @@ func TestClient_CreateTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetTask(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetTask(tc)
 			})
 			if err := tc.CreateTask(tt.args.ctx, tt.args.t); err != nil {
 				t.Fatalf("%+v", err)
@@ -415,9 +413,7 @@ func TestClient_UpdateTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetTask(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetTask(tc)
 			})
 			if err := tc.UpdateTask(tt.args.ctx, tt.args.t); err != nil {
 				t.Fatalf("%+v", err)
@@ -455,9 +451,7 @@ func TestClient_DeleteTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			t.Cleanup(func() {
-				if err := ResetTask(ctx, tc); err != nil {
-					t.Fatalf("%+v", err)
-				}
+				ResetTask(tc)
 			})
 			if err := tc.DeleteTask(tt.args.ctx, tt.args.id); err != nil {
 				t.Fatalf("%+v", err)
