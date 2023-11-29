@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: setup gen build run migrate migrate-apply dev fmt lint-protobuf lint test help
+.PHONY: setup gen build run migrate migrate-apply fmt lint-go lint-protobuf lint test help
 
 # testターゲットを実行する前に.envファイルから環境変数を読み込む
 export
@@ -40,18 +40,20 @@ migrate: ## DBのスキーマの変更を確認する
 
 migrate-apply: ## DBのスキーマの変更を適用する
 	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
-	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb_test < ./infra/mysql/schema.sql
+	@mysqldef -u root -h 127.0.0.1 --enable-drop-table testdb < ./infra/mysql/schema.sql
 
 fmt: ## コードを整形する
 	@buf format --write
 	@goimports -w .
 
+lint-go: # Goファイルの静的解析を実行する
+	@go vet $$(go list ./... | grep -v -e /simoompb -e /sqlc)
+	@staticcheck $$(go list ./... | grep -v -e /simoompb -e /sqlc)
+
 lint-protobuf: # Protocol Buffersファイルの静的解析を実行する
 	@buf lint
 
-lint: lint-protobuf ## 静的解析を実行する
-	@go vet $$(go list ./... | grep -v -e /simoompb -e /sqlc)
-	@staticcheck $$(go list ./... | grep -v -e /simoompb -e /sqlc)
+lint: lint-go lint-protobuf ## 静的解析を実行する
 
 test: ## テストを実行する
 	@go test $(option) $$(go list ./... | grep -v -e /gen -e /pkg/infra/mysql -e /pkg/usecase)
