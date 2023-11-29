@@ -42,13 +42,6 @@ migrate-apply: ## DBのスキーマの変更を適用する
 	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
 	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb_test < ./infra/mysql/schema.sql
 
-dev: ## 開発用APIサーバを実行する
-	@docker compose run \
-            --name simoom-api \
-            -p 8080:8080 \
-            --rm \
-            api
-
 fmt: ## コードを整形する
 	@buf format --write
 	@goimports -w .
