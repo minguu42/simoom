@@ -23,6 +23,7 @@ func TestNow(t *testing.T) {
 			args: args{ctx: clock.NowWithValue(context.Background(),
 				time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 			)},
+			want: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
 	}
 	for _, tt := range tests {
