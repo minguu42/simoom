@@ -39,7 +39,7 @@ func TestClient_CreateStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(t.Name(), func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetStep(tc)
+				ResetStep(t, tc)
 			})
 			err := tc.CreateStep(tt.args.ctx, tt.args.s)
 			require.NoError(t, err)
@@ -124,7 +124,7 @@ func TestClient_UpdateStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetStep(tc)
+				ResetStep(t, tc)
 			})
 			err := tc.UpdateStep(tt.args.ctx, tt.args.s)
 			require.NoError(t, err)
@@ -156,7 +156,7 @@ func TestClient_DeleteStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetStep(tc)
+				ResetStep(t, tc)
 			})
 			err := tc.DeleteStep(tt.args.ctx, tt.args.id)
 			require.NoError(t, err)

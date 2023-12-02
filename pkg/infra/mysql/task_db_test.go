@@ -44,7 +44,7 @@ func TestClient_CreateTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetTask(tc)
+				ResetTask(t, tc)
 			})
 			err := tc.CreateTask(tt.args.ctx, tt.args.t)
 			require.NoError(t, err)
@@ -388,7 +388,7 @@ func TestClient_UpdateTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetTask(tc)
+				ResetTask(t, tc)
 			})
 			err := tc.UpdateTask(tt.args.ctx, tt.args.t)
 			require.NoError(t, err)
@@ -420,7 +420,7 @@ func TestClient_DeleteTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetTask(tc)
+				ResetTask(t, tc)
 			})
 			err := tc.DeleteTask(tt.args.ctx, tt.args.id)
 			require.NoError(t, err)

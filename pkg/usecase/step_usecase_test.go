@@ -52,7 +52,7 @@ func TestStepUsecase_CreateStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetStep(tc)
+				mysql.ResetStep(t, tc)
 			})
 
 			got, err := step.CreateStep(tt.args.ctx, tt.args.in)
@@ -99,7 +99,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetStep(tc)
+				mysql.ResetStep(t, tc)
 			})
 
 			got, err := step.UpdateStep(tt.args.ctx, tt.args.in)
@@ -133,7 +133,7 @@ func TestStepUsecase_DeleteStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetStep(tc)
+				mysql.ResetStep(t, tc)
 			})
 
 			if err := step.DeleteStep(tt.args.ctx, tt.args.in); err != nil {
