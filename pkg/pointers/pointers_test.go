@@ -27,7 +27,7 @@ func TestRef(t *testing.T) {
 		},
 		{
 			name:         "time.Time型の値のポインタを返す",
-			args:         args{v: time.Now()},
+			args:         args{v: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)},
 			wantTypeKind: reflect.Ptr,
 		},
 	}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -46,7 +47,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		return StepOutput{}, ErrTaskNotFound
 	}
 
-	now := time.Now()
+	now := clock.Now(ctx)
 	s := model.Step{
 		ID:        idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
@@ -85,7 +86,7 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 	if in.CompletedAt != nil {
 		s.CompletedAt = in.CompletedAt
 	}
-	s.UpdatedAt = time.Now()
+	s.UpdatedAt = clock.Now(ctx)
 	if err := uc.repo.UpdateStep(ctx, s); err != nil {
 		return StepOutput{}, fmt.Errorf("failed to update step: %w", err)
 	}
