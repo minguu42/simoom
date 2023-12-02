@@ -16,9 +16,8 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 		req *connect.Request[simoompb.CreateTaskRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "project_idは26文字の文字列である",
@@ -28,7 +27,6 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 					ProjectId: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 		{
 
@@ -40,7 +38,6 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 					Title:     "",
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "priorityは0から3の整数で指定する",
@@ -52,17 +49,12 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 					Priority:  4,
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.CreateTask(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -73,9 +65,8 @@ func TestTaskHandler_ListTasksByProjectID(t *testing.T) {
 		req *connect.Request[simoompb.ListTasksByProjectIDRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "project_idは26文字の文字列である",
@@ -85,7 +76,6 @@ func TestTaskHandler_ListTasksByProjectID(t *testing.T) {
 					ProjectId: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "limitは1以上である",
@@ -95,17 +85,12 @@ func TestTaskHandler_ListTasksByProjectID(t *testing.T) {
 					Limit: 0,
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.ListTasksByProjectID(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -116,9 +101,8 @@ func TestTaskHandler_ListTasksByTagID(t *testing.T) {
 		req *connect.Request[simoompb.ListTasksByTagIDRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "tag_idは26文字の文字列である",
@@ -128,7 +112,6 @@ func TestTaskHandler_ListTasksByTagID(t *testing.T) {
 					TagId: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "limitは1以上である",
@@ -138,17 +121,12 @@ func TestTaskHandler_ListTasksByTagID(t *testing.T) {
 					Limit: 0,
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.ListTasksByTagID(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -159,9 +137,8 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 		req *connect.Request[simoompb.UpdateTaskRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "idは26文字の文字列である",
@@ -171,7 +148,6 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 					Id: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "いずれかの引数は必要である",
@@ -186,7 +162,6 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 					CompletedAt: nil,
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "titleに空文字列は指定できない",
@@ -197,7 +172,6 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 					Title: pointers.Ref(""),
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "priorityは0から3の整数で指定する",
@@ -208,17 +182,12 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 					Priority: pointers.Ref(uint32(4)),
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.UpdateTask(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -229,9 +198,8 @@ func TestTaskHandler_DeleteTask(t *testing.T) {
 		req *connect.Request[simoompb.DeleteTaskRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "idは26文字の文字列である",
@@ -241,17 +209,12 @@ func TestTaskHandler_DeleteTask(t *testing.T) {
 					Id: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.DeleteTask(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }

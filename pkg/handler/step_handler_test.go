@@ -16,9 +16,8 @@ func TestStepHandler_CreateStep(t *testing.T) {
 		req *connect.Request[simoompb.CreateStepRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "task_idは26文字の文字列である",
@@ -28,7 +27,6 @@ func TestStepHandler_CreateStep(t *testing.T) {
 					TaskId: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "titleに空文字列は指定できない",
@@ -39,17 +37,12 @@ func TestStepHandler_CreateStep(t *testing.T) {
 					Title:  "",
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.CreateStep(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -60,9 +53,8 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 		req *connect.Request[simoompb.UpdateStepRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "idは26文字の文字列である",
@@ -72,7 +64,6 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 					Id: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "いずれかの引数は必要である",
@@ -84,7 +75,6 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 					CompletedAt: nil,
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "titleに空文字列は指定できない",
@@ -95,17 +85,12 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 					Title: pointers.Ref(""),
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.UpdateStep(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -116,9 +101,8 @@ func TestStepHandler_DeleteStep(t *testing.T) {
 		req *connect.Request[simoompb.DeleteStepRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "idは26文字である",
@@ -128,17 +112,12 @@ func TestStepHandler_DeleteStep(t *testing.T) {
 					Id: "some-id",
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.DeleteStep(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
