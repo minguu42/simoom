@@ -54,11 +54,11 @@ func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error)
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
-	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
@@ -91,11 +91,11 @@ func (uc Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error)
 		return SignInOutput{}, errors.New("password is not valid")
 	}
 
-	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return SignInOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
-	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return SignInOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
@@ -124,11 +124,11 @@ func (uc Auth) RefreshToken(ctx context.Context, in RefreshAccessTokenInput) (Re
 		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to get user: %w", err)
 	}
 
-	accessToken, err := uc.authenticator.CreateAccessToken(user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
-	refreshToken, err := uc.authenticator.CreateRefreshToken(user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
 	if err != nil {
 		return RefreshAccessTokenOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}

@@ -2,11 +2,13 @@
 package jwtauth
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/model"
 )
 
@@ -25,12 +27,12 @@ type refreshTokenClaims struct {
 }
 
 // CreateAccessToken はアクセスシークレットで署名された、ユーザ名とユーザID、有効期限からなるペイロードをエンコードしてアクセストークンを作成する
-func (a Authenticator) CreateAccessToken(user model.User, secret string, expiry int) (string, error) {
+func (a Authenticator) CreateAccessToken(ctx context.Context, user model.User, secret string, expiry int) (string, error) {
 	claims := &accessTokenClaims{
 		Name: user.Name,
 		ID:   user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(expiry))),
+			ExpiresAt: jwt.NewNumericDate(clock.Now(ctx).Add(time.Hour * time.Duration(expiry))),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -42,11 +44,11 @@ func (a Authenticator) CreateAccessToken(user model.User, secret string, expiry 
 }
 
 // CreateRefreshToken は与えられたリフレッシュシークレットで署名された、ユーザIDと有効期限からなるペイロードをエンコードしてリフレッシュトークンを作成する
-func (a Authenticator) CreateRefreshToken(user model.User, secret string, expiry int) (string, error) {
+func (a Authenticator) CreateRefreshToken(ctx context.Context, user model.User, secret string, expiry int) (string, error) {
 	claimsRefresh := &refreshTokenClaims{
 		ID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(expiry))),
+			ExpiresAt: jwt.NewNumericDate(clock.Now(ctx).Add(time.Hour * time.Duration(expiry))),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
