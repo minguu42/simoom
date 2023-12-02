@@ -15,9 +15,8 @@ func TestHandler_SignUp(t *testing.T) {
 		req *connect.Request[simoompb.SignUpRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "nameに空文字列は指定できない",
@@ -29,7 +28,17 @@ func TestHandler_SignUp(t *testing.T) {
 					Password: "password123456",
 				}),
 			},
-			hasError: true,
+		},
+		{
+			name: "nameに16文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.SignUpRequest{
+					Name:     "some-some-some-a",
+					Email:    "dummy@example.com",
+					Password: "password123456",
+				}),
+			},
 		},
 		{
 			name: "emailに空文字列は指定できない",
@@ -41,29 +50,45 @@ func TestHandler_SignUp(t *testing.T) {
 					Password: "password123456",
 				}),
 			},
-			hasError: true,
 		},
 		{
-			name: "passwordは12文字以上、20文字以下である必要がある",
+			name: "emailに255文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.SignUpRequest{
+					Name:     "テストユーザ",
+					Email:    "very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-lon@example.com",
+					Password: "password123456",
+				}),
+			},
+		},
+		{
+			name: "passwordに11文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.SignUpRequest{
 					Name:     "テストユーザ",
 					Email:    "dummy@example.com",
-					Password: "password",
+					Password: "short-pw123",
 				}),
 			},
-			hasError: true,
+		},
+		{
+			name: "passwordに21文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.SignUpRequest{
+					Name:     "テストユーザ",
+					Email:    "dummy@example.com",
+					Password: "long-long-password123",
+				}),
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.SignUp(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -74,9 +99,8 @@ func TestHandler_SignIn(t *testing.T) {
 		req *connect.Request[simoompb.SignInRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "emailに空文字列は指定できない",
@@ -87,28 +111,42 @@ func TestHandler_SignIn(t *testing.T) {
 					Password: "password123456",
 				}),
 			},
-			hasError: true,
 		},
 		{
-			name: "passwordは12文字以上、20文字以下である必要がある",
+			name: "emailに255文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.SignInRequest{
+					Email:    "very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-long-lon@example.com",
+					Password: "password123456",
+				}),
+			},
+		},
+		{
+			name: "passwordに11文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.SignInRequest{
 					Email:    "dummy@example.com",
-					Password: "password",
+					Password: "short-pw123",
 				}),
 			},
-			hasError: true,
+		},
+		{
+			name: "passwordに21文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.SignInRequest{
+					Email:    "dummy@example.com",
+					Password: "long-long-password123",
+				}),
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.SignIn(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -119,9 +157,8 @@ func TestHandler_RefreshAccessToken(t *testing.T) {
 		req *connect.Request[simoompb.RefreshTokenRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
 			name: "refresh_tokenに空文字列は指定できない",
@@ -131,17 +168,12 @@ func TestHandler_RefreshAccessToken(t *testing.T) {
 					RefreshToken: "",
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.RefreshToken(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
