@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
+	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
@@ -45,7 +45,7 @@ func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error)
 		return SignUpOutput{}, fmt.Errorf("failed to generate encypted password: %w", err)
 	}
 
-	now := time.Now()
+	now := clock.Now(ctx)
 	user := model.User{
 		ID:        idgen.Generate(),
 		Name:      in.Name,
