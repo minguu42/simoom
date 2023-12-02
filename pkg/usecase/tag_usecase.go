@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
+	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -34,7 +34,7 @@ type CreateTagInput struct {
 }
 
 func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
-	now := time.Now()
+	now := clock.Now(ctx)
 	t := model.Tag{
 		ID:        idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
@@ -90,7 +90,7 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 	if in.Name != nil {
 		t.Name = *in.Name
 	}
-	t.UpdatedAt = time.Now()
+	t.UpdatedAt = clock.Now(ctx)
 	if err := uc.repo.UpdateTag(ctx, t); err != nil {
 		return TagOutput{}, fmt.Errorf("failed to update tag: %w", err)
 	}
