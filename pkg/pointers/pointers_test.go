@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRef(t *testing.T) {
@@ -33,10 +35,8 @@ func TestRef(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotType := reflect.TypeOf(Ref(tt.args.v))
-			if tt.wantTypeKind != gotType.Kind() {
-				t.Errorf("return type of the ref function want %s, but %s", tt.wantTypeKind, gotType.Kind())
-			}
+			gotTypeKind := reflect.TypeOf(Ref(tt.args.v)).Kind()
+			assert.Equal(t, tt.wantTypeKind, gotTypeKind)
 		})
 	}
 }

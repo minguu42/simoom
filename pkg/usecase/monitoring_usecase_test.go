@@ -3,8 +3,8 @@ package usecase_test
 import (
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/minguu42/simoom/pkg/usecase"
+	"github.com/stretchr/testify/assert"
 )
 
 var monitoring = usecase.Monitoring{}
@@ -24,9 +24,7 @@ func TestMonitoringUsecase_CheckHealth(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := monitoring.CheckHealth()
-			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("monitoring.CheckHealth mismatch (-want +got):\n%s", diff)
-			}
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

@@ -52,7 +52,7 @@ func TestProjectUsecase_CreateProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetProject(tc)
+				mysql.ResetProject(t, tc)
 			})
 
 			got, err := project.CreateProject(tt.args.ctx, tt.args.in)
@@ -151,7 +151,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetProject(tc)
+				mysql.ResetProject(t, tc)
 			})
 
 			got, err := project.UpdateProject(tt.args.ctx, tt.args.in)
@@ -185,7 +185,7 @@ func TestProjectUsecase_DeleteProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetProject(tc)
+				mysql.ResetProject(t, tc)
 			})
 
 			if err := project.DeleteProject(tt.args.ctx, tt.args.in); err != nil {

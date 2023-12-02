@@ -1,11 +1,14 @@
 package idgen
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestGenerate(t *testing.T) {
 	t.Run("IDの長さは26文字である", func(t *testing.T) {
-		if got := Generate(); len(got) != 26 {
-			t.Errorf("ID is a 26-character string, but got %d-character string", len(got))
-		}
+		got := len(Generate())
+		assert.Equal(t, 26, got)
 	})
 }

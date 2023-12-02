@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStepHandler_CreateStep(t *testing.T) {
@@ -43,9 +44,12 @@ func TestStepHandler_CreateStep(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.CreateStep(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.CreateStep should return an error")
+			_, err := th.CreateStep(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -96,9 +100,12 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.UpdateStep(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.UpdateStep should return an error")
+			_, err := th.UpdateStep(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -126,9 +133,12 @@ func TestStepHandler_DeleteStep(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.DeleteStep(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.DeleteStep should return an error")
+			_, err := th.DeleteStep(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
