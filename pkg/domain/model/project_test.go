@@ -1,6 +1,10 @@
 package model
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestProject_ContainsTask(t *testing.T) {
 	type args struct {
@@ -31,9 +35,8 @@ func TestProject_ContainsTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.p.ContainsTask(tt.args.task); tt.want != got {
-				t.Errorf("p.ContainsTask want %t, but got %t", tt.want, got)
-			}
+			got := tt.p.ContainsTask(tt.args.task)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

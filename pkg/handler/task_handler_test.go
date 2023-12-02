@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTaskHandler_CreateTask(t *testing.T) {
@@ -56,9 +57,12 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.CreateTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.CreateTask should return an error")
+			_, err := th.CreateTask(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -96,9 +100,12 @@ func TestTaskHandler_ListTasksByProjectID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.ListTasksByProjectID(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.ListTasksByProjectID should return an error")
+			_, err := th.ListTasksByProjectID(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -136,9 +143,12 @@ func TestTaskHandler_ListTasksByTagID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.ListTasksByTagID(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.ListTasksByTagID should return an error")
+			_, err := th.ListTasksByTagID(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -203,9 +213,12 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.UpdateTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.UpdateTask should return an error")
+			_, err := th.UpdateTask(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -233,9 +246,12 @@ func TestTaskHandler_DeleteTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.DeleteTask(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.DeleteTask should return an error")
+			_, err := th.DeleteTask(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }

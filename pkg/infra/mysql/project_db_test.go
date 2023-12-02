@@ -2,13 +2,13 @@ package mysql
 
 import (
 	"context"
-	"errors"
 	"testing"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestClient_CreateProject(t *testing.T) {
@@ -38,20 +38,14 @@ func TestClient_CreateProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetProject(tc)
 			})
-			if err := tc.CreateProject(tt.args.ctx, tt.args.p); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.CreateProject(tt.args.ctx, tt.args.p)
+			require.NoError(t, err)
 
-			got, err := tc.GetProjectByID(ctx, tt.args.p.ID)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.args.p, got); diff != "" {
-				t.Errorf("created project mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetProjectByID(context.Background(), tt.args.p.ID); assert.NoError(t, err) {
+				assert.Equal(t, tt.args.p, got)
 			}
 		})
 	}
@@ -102,12 +96,8 @@ func TestClient_ListProjectsByUserID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tc.ListProjectsByUserID(tt.args.ctx, tt.args.userID, tt.args.limit, tt.args.offset)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("tc.ListProjectsByUserID mismatch (-want +got):\n%s", diff)
+			if got, err := tc.ListProjectsByUserID(tt.args.ctx, tt.args.userID, tt.args.limit, tt.args.offset); assert.NoError(t, err) {
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}
@@ -151,18 +141,8 @@ func TestClient_GetProjectByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tc.GetProjectByID(tt.args.ctx, tt.args.id)
-			if err != nil {
-				if errors.Is(err, tt.wantErr) {
-					return
-				}
-				if tt.wantErr != nil {
-					t.Fatalf("tc.GetProjectByID error want %s, but got %s", tt.wantErr, err)
-				}
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("tc.GetProjectByID mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetProjectByID(tt.args.ctx, tt.args.id); assert.Equal(t, tt.wantErr, err) {
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}
@@ -195,20 +175,14 @@ func TestClient_UpdateProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetProject(tc)
 			})
-			if err := tc.UpdateProject(tt.args.ctx, tt.args.p); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.UpdateProject(tt.args.ctx, tt.args.p)
+			require.NoError(t, err)
 
-			got, err := tc.GetProjectByID(ctx, tt.args.p.ID)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.args.p, got); diff != "" {
-				t.Errorf("updated project mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetProjectByID(context.Background(), tt.args.p.ID); assert.NoError(t, err) {
+				assert.Equal(t, tt.args.p, got)
 			}
 		})
 	}
@@ -233,17 +207,14 @@ func TestClient_DeleteProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetProject(tc)
 			})
-			if err := tc.DeleteProject(tt.args.ctx, tt.args.id); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.DeleteProject(tt.args.ctx, tt.args.id)
+			require.NoError(t, err)
 
-			if _, err := tc.GetProjectByID(ctx, tt.args.id); !errors.Is(err, repository.ErrModelNotFound) {
-				t.Errorf("deleted project exists")
-			}
+			_, err = tc.GetProjectByID(context.Background(), tt.args.id)
+			assert.ErrorIs(t, err, repository.ErrModelNotFound)
 		})
 	}
 }

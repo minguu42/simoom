@@ -2,13 +2,13 @@ package mysql
 
 import (
 	"context"
-	"errors"
 	"testing"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestClient_CreateStep(t *testing.T) {
@@ -38,20 +38,14 @@ func TestClient_CreateStep(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(t.Name(), func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetStep(tc)
 			})
-			if err := tc.CreateStep(tt.args.ctx, tt.args.s); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.CreateStep(tt.args.ctx, tt.args.s)
+			require.NoError(t, err)
 
-			got, err := tc.GetStepByID(ctx, tt.args.s.ID)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.args.s, got); diff != "" {
-				t.Errorf("created step mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetStepByID(context.Background(), tt.args.s.ID); assert.NoError(t, err) {
+				assert.Equal(t, tt.args.s, got)
 			}
 		})
 	}
@@ -95,18 +89,8 @@ func TestClient_GetStepByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tc.GetStepByID(tt.args.ctx, tt.args.id)
-			if err != nil {
-				if errors.Is(err, tt.wantErr) {
-					return
-				}
-				if tt.wantErr != nil {
-					t.Fatalf("tc.GetStepByID error want %s, but got %s", tt.wantErr, err)
-				}
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("tc.GetStepByID mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetStepByID(tt.args.ctx, tt.args.id); assert.Equal(t, tt.wantErr, err) {
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}
@@ -139,20 +123,14 @@ func TestClient_UpdateStep(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetStep(tc)
 			})
-			if err := tc.UpdateStep(tt.args.ctx, tt.args.s); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.UpdateStep(tt.args.ctx, tt.args.s)
+			require.NoError(t, err)
 
-			got, err := tc.GetStepByID(ctx, tt.args.s.ID)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.args.s, got); diff != "" {
-				t.Errorf("updated step mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetStepByID(context.Background(), tt.args.s.ID); assert.NoError(t, err) {
+				assert.Equal(t, tt.args.s, got)
 			}
 		})
 	}
@@ -177,17 +155,14 @@ func TestClient_DeleteStep(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetStep(tc)
 			})
-			if err := tc.DeleteStep(tt.args.ctx, tt.args.id); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.DeleteStep(tt.args.ctx, tt.args.id)
+			require.NoError(t, err)
 
-			if _, err := tc.GetStepByID(ctx, tt.args.id); !errors.Is(err, repository.ErrModelNotFound) {
-				t.Errorf("deleted project exists")
-			}
+			_, err = tc.GetStepByID(context.Background(), tt.args.id)
+			assert.ErrorIs(t, err, repository.ErrModelNotFound)
 		})
 	}
 }

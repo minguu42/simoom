@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestProjectHandler_CreateProject(t *testing.T) {
@@ -44,9 +45,12 @@ func TestProjectHandler_CreateProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.CreateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.CreateProject should return an error")
+			_, err := th.CreateProject(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -74,9 +78,12 @@ func TestProjectHandler_ListProjects(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.ListProjects(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.ListProjects should return an error")
+			_, err := th.ListProjects(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -139,9 +146,12 @@ func TestProjectHandler_UpdateProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.UpdateProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.UpdateProject should return an error")
+			_, err := th.UpdateProject(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -169,9 +179,12 @@ func TestProjectHandler_DeleteProject(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.DeleteProject(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.DeleteProject should return an error")
+			_, err := th.DeleteProject(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }

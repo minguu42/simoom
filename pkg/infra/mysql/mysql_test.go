@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 		MaxIdleConns:       25,
 	})
 	if err != nil {
-		log.Fatalf("%+v", err)
+		log.Fatalf("failed to create test client: %s", err)
 	}
 	defer tc.Close()
 

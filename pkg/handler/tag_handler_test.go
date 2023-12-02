@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTagHandler_CreateTag(t *testing.T) {
@@ -32,9 +33,12 @@ func TestTagHandler_CreateTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.CreateTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.CreateTag should return an error")
+			_, err := th.CreateTag(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -62,9 +66,12 @@ func TestTagHandler_ListTags(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.ListTags(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.ListTags should return an error")
+			_, err := th.ListTags(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -114,9 +121,12 @@ func TestTagHandler_UpdateTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.UpdateTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.UpdateTag should return an error")
+			_, err := th.UpdateTag(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -144,9 +154,12 @@ func TestTagHandler_DeleteTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.DeleteTag(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.DeleteTag should return an error")
+			_, err := th.DeleteTag(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }

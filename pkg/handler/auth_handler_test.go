@@ -6,6 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHandler_SignUp(t *testing.T) {
@@ -57,9 +58,12 @@ func TestHandler_SignUp(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.SignUp(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.SignUp returned wrong result")
+			_, err := th.SignUp(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -99,9 +103,12 @@ func TestHandler_SignIn(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.SignIn(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.SignIn returned wrong result")
+			_, err := th.SignIn(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -129,9 +136,12 @@ func TestHandler_RefreshAccessToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := th.RefreshToken(tt.args.ctx, tt.args.req); tt.hasError != (err != nil) {
-				t.Errorf("th.RefreshToken returned wrong result")
+			_, err := th.RefreshToken(tt.args.ctx, tt.args.req)
+			if tt.hasError {
+				assert.Error(t, err)
+				return
 			}
+			assert.NoError(t, err)
 		})
 	}
 }

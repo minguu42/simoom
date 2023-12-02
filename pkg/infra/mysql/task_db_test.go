@@ -2,13 +2,13 @@ package mysql
 
 import (
 	"context"
-	"errors"
 	"testing"
 	"time"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestClient_CreateTask(t *testing.T) {
@@ -43,20 +43,14 @@ func TestClient_CreateTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetTask(tc)
 			})
-			if err := tc.CreateTask(tt.args.ctx, tt.args.t); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.CreateTask(tt.args.ctx, tt.args.t)
+			require.NoError(t, err)
 
-			got, err := tc.GetTaskByID(ctx, tt.args.t.ID)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.args.t, got); diff != "" {
-				t.Errorf("created project mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetTaskByID(context.Background(), tt.args.t.ID); assert.NoError(t, err) {
+				assert.Equal(t, tt.args.t, got)
 			}
 		})
 	}
@@ -147,12 +141,8 @@ func TestClient_ListTasksByProjectID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tc.ListTasksByProjectID(tt.args.ctx, tt.args.projectID, tt.args.limit, tt.args.offset)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("tc.ListTasksByProjectID mismatch (-want +got):\n%s", diff)
+			if got, err := tc.ListTasksByProjectID(tt.args.ctx, tt.args.projectID, tt.args.limit, tt.args.offset); assert.NoError(t, err) {
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}
@@ -243,12 +233,8 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tc.ListTasksByTagID(tt.args.ctx, tt.args.tagID, tt.args.limit, tt.args.offset)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("tc.ListTasksByTagID mismatch (-want +got):\n%s", diff)
+			if got, err := tc.ListTasksByTagID(tt.args.ctx, tt.args.tagID, tt.args.limit, tt.args.offset); assert.NoError(t, err) {
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}
@@ -332,18 +318,8 @@ func TestClient_GetTaskByID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tc.GetTaskByID(tt.args.ctx, tt.args.id)
-			if err != nil {
-				if errors.Is(err, tt.wantErr) {
-					return
-				}
-				if tt.wantErr != nil {
-					t.Fatalf("tc.GetTaskByID error want %s, but got %s", tt.wantErr, err)
-				}
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.want, got); diff != "" {
-				t.Errorf("tc.GetTaskByID mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetTaskByID(tt.args.ctx, tt.args.id); assert.Equal(t, tt.wantErr, err) {
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}
@@ -411,20 +387,14 @@ func TestClient_UpdateTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetTask(tc)
 			})
-			if err := tc.UpdateTask(tt.args.ctx, tt.args.t); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.UpdateTask(tt.args.ctx, tt.args.t)
+			require.NoError(t, err)
 
-			got, err := tc.GetTaskByID(ctx, tt.args.t.ID)
-			if err != nil {
-				t.Fatalf("%+v", err)
-			}
-			if diff := cmp.Diff(tt.args.t, got); diff != "" {
-				t.Errorf("updated task mismatch (-want +got):\n%s", diff)
+			if got, err := tc.GetTaskByID(context.Background(), tt.args.t.ID); assert.NoError(t, err) {
+				assert.Equal(t, tt.args.t, got)
 			}
 		})
 	}
@@ -449,17 +419,14 @@ func TestClient_DeleteTask(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
 			t.Cleanup(func() {
 				ResetTask(tc)
 			})
-			if err := tc.DeleteTask(tt.args.ctx, tt.args.id); err != nil {
-				t.Fatalf("%+v", err)
-			}
+			err := tc.DeleteTask(tt.args.ctx, tt.args.id)
+			require.NoError(t, err)
 
-			if _, err := tc.GetTaskByID(ctx, tt.args.id); !errors.Is(err, repository.ErrModelNotFound) {
-				t.Errorf("deleted task exists")
-			}
+			_, err = tc.GetTaskByID(context.Background(), tt.args.id)
+			assert.ErrorIs(t, err, repository.ErrModelNotFound)
 		})
 	}
 }
