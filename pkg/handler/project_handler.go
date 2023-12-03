@@ -32,10 +32,10 @@ func newProjects(ps []model.Project) []*simoompb.Project {
 }
 
 func (h handler) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
-	if req.Msg.Name == "" {
-		return nil, newErrInvalidArgument("name cannot be an empty string")
+	if len(req.Msg.Name) < 1 || 20 < len(req.Msg.Name) {
+		return nil, newErrInvalidArgument("name must be at least 1 and no more than 20 characters")
 	}
-	if !strings.HasPrefix(req.Msg.Color, "#") || len(req.Msg.Color) != 7 {
+	if len(req.Msg.Color) != 7 || !strings.HasPrefix(req.Msg.Color, "#") {
 		return nil, newErrInvalidArgument("color is specified in the format #000000")
 	}
 
@@ -74,10 +74,10 @@ func (h handler) UpdateProject(ctx context.Context, req *connect.Request[simoomp
 	if req.Msg.Name == nil && req.Msg.Color == nil && req.Msg.IsArchived == nil {
 		return nil, newErrInvalidArgument("must contain some argument other than id")
 	}
-	if req.Msg.Name != nil && *req.Msg.Name == "" {
-		return nil, newErrInvalidArgument("name cannot be an empty string")
+	if req.Msg.Name != nil && (len(*req.Msg.Name) < 1 || 20 < len(*req.Msg.Name)) {
+		return nil, newErrInvalidArgument("name must be at least 1 and no more than 20 characters")
 	}
-	if req.Msg.Color != nil && (!strings.HasPrefix(*req.Msg.Color, "#") || len(*req.Msg.Color) != 7) {
+	if req.Msg.Color != nil && (len(*req.Msg.Color) != 7 || !strings.HasPrefix(*req.Msg.Color, "#")) {
 		return nil, newErrInvalidArgument("color is specified in the format #000000")
 	}
 
