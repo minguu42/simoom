@@ -10,14 +10,14 @@ import (
 )
 
 func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
-	if req.Msg.Name == "" {
-		return nil, newErrInvalidArgument("name cannot be an empty string")
+	if len(req.Msg.Name) < 1 || 15 < len(req.Msg.Name) {
+		return nil, newErrInvalidArgument("name must be at least 1 and no more than 15 characters")
 	}
-	if req.Msg.Email == "" {
-		return nil, newErrInvalidArgument("email cannot be an empty string")
+	if len(req.Msg.Email) < 1 || 254 < len(req.Msg.Email) {
+		return nil, newErrInvalidArgument("email must be at least 1 and no more than 254 characters")
 	}
 	if len(req.Msg.Password) < 12 || 20 < len(req.Msg.Password) {
-		return nil, newErrInvalidArgument("password must be at least 12 and no more than 20 characters long")
+		return nil, newErrInvalidArgument("password must be at least 12 and no more than 20 characters")
 	}
 
 	out, err := h.auth.SingUp(ctx, usecase.SignUpInput{
@@ -35,8 +35,8 @@ func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignU
 }
 
 func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignInRequest]) (*connect.Response[simoompb.SignInResponse], error) {
-	if req.Msg.Email == "" {
-		return nil, newErrInvalidArgument("email cannot be an empty string")
+	if len(req.Msg.Email) < 1 || 254 < len(req.Msg.Email) {
+		return nil, newErrInvalidArgument("email must be at least 1 and no more than 254 characters")
 	}
 	if len(req.Msg.Password) < 12 || 20 < len(req.Msg.Password) {
 		return nil, newErrInvalidArgument("password must be at least 12 and no more than 20 characters long")

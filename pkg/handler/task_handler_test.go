@@ -16,22 +16,32 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 		req *connect.Request[simoompb.CreateTaskRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
-			name: "project_idは26文字の文字列である",
+			name: "project_idに25文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateTaskRequest{
-					ProjectId: "some-id",
+					ProjectId: "01DXF6DT00000000000000000",
+					Title:     "some-task",
+					Priority:  0,
 				}),
 			},
-			hasError: true,
 		},
 		{
-
+			name: "project_idに27文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.CreateTaskRequest{
+					ProjectId: "01DXF6DT000000000000000000x",
+					Title:     "some-task",
+					Priority:  0,
+				}),
+			},
+		},
+		{
 			name: "titleに空文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
@@ -40,10 +50,19 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 					Title:     "",
 				}),
 			},
-			hasError: true,
 		},
 		{
-			name: "priorityは0から3の整数で指定する",
+			name: "titleに81文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.CreateTaskRequest{
+					ProjectId: "01DXF6DT000000000000000000",
+					Title:     "very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-title1",
+				}),
+			},
+		},
+		{
+			name: "priorityに4以上の整数は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateTaskRequest{
@@ -52,17 +71,12 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 					Priority:  4,
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.CreateTask(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -73,39 +87,47 @@ func TestTaskHandler_ListTasksByProjectID(t *testing.T) {
 		req *connect.Request[simoompb.ListTasksByProjectIDRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
-			name: "project_idは26文字の文字列である",
+			name: "project_idに25文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
-					ProjectId: "some-id",
+					ProjectId: "01DXF6DT00000000000000000",
+					Limit:     10,
+					Offset:    0,
 				}),
 			},
-			hasError: true,
 		},
 		{
-			name: "limitは1以上である",
+			name: "project_idに27文字以上の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
-					Limit: 0,
+					ProjectId: "01DXF6DT000000000000000000x",
+					Limit:     10,
+					Offset:    0,
 				}),
 			},
-			hasError: true,
+		},
+		{
+			name: "limitに0は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
+					ProjectId: "01DXF6DT000000000000000000",
+					Limit:     0,
+					Offset:    0,
+				}),
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.ListTasksByProjectID(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -116,39 +138,47 @@ func TestTaskHandler_ListTasksByTagID(t *testing.T) {
 		req *connect.Request[simoompb.ListTasksByTagIDRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
-			name: "tag_idは26文字の文字列である",
+			name: "tag_idに25文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.ListTasksByTagIDRequest{
-					TagId: "some-id",
+					TagId:  "01DXF6DT00000000000000000",
+					Limit:  10,
+					Offset: 0,
 				}),
 			},
-			hasError: true,
 		},
 		{
-			name: "limitは1以上である",
+			name: "tag_idに27文字以上の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.ListTasksByTagIDRequest{
-					Limit: 0,
+					TagId:  "01DXF6DT000000000000000000x",
+					Limit:  10,
+					Offset: 0,
 				}),
 			},
-			hasError: true,
+		},
+		{
+			name: "limitに0は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.ListTasksByTagIDRequest{
+					TagId:  "01DXF6DT000000000000000000",
+					Limit:  0,
+					Offset: 0,
+				}),
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.ListTasksByTagID(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -159,19 +189,28 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 		req *connect.Request[simoompb.UpdateTaskRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
-			name: "idは26文字の文字列である",
+			name: "idに25文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
-					Id: "some-id",
+					Id:    "01DXF6DT00000000000000000",
+					Title: pointers.Ref("some-task"),
 				}),
 			},
-			hasError: true,
+		},
+		{
+			name: "idに27文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
+					Id:    "01DXF6DT000000000000000000x",
+					Title: pointers.Ref("some-task"),
+				}),
+			},
 		},
 		{
 			name: "いずれかの引数は必要である",
@@ -186,7 +225,6 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 					CompletedAt: nil,
 				}),
 			},
-			hasError: true,
 		},
 		{
 			name: "titleに空文字列は指定できない",
@@ -197,10 +235,19 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 					Title: pointers.Ref(""),
 				}),
 			},
-			hasError: true,
 		},
 		{
-			name: "priorityは0から3の整数で指定する",
+			name: "titleに81文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
+					Id:    "01DXF6DT000000000000000000",
+					Title: pointers.Ref("very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-title1"),
+				}),
+			},
+		},
+		{
+			name: "priorityに4以上の整数を指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
@@ -208,17 +255,12 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 					Priority: pointers.Ref(uint32(4)),
 				}),
 			},
-			hasError: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.UpdateTask(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }
@@ -229,29 +271,32 @@ func TestTaskHandler_DeleteTask(t *testing.T) {
 		req *connect.Request[simoompb.DeleteTaskRequest]
 	}
 	tests := []struct {
-		name     string
-		args     args
-		hasError bool
+		name string
+		args args
 	}{
 		{
-			name: "idは26文字の文字列である",
+			name: "idに25文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.DeleteTaskRequest{
-					Id: "some-id",
+					Id: "01DXF6DT00000000000000000",
 				}),
 			},
-			hasError: true,
+		},
+		{
+			name: "idに27文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.DeleteTaskRequest{
+					Id: "01DXF6DT000000000000000000x",
+				}),
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := th.DeleteTask(tt.args.ctx, tt.args.req)
-			if tt.hasError {
-				assert.Error(t, err)
-				return
-			}
-			assert.NoError(t, err)
+			assert.Error(t, err)
 		})
 	}
 }

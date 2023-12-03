@@ -39,7 +39,7 @@ func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.C
 	if len(req.Msg.ProjectId) != 26 {
 		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}
-	if req.Msg.Title == "" {
+	if len(req.Msg.Title) < 1 || 80 < len(req.Msg.Title) {
 		return nil, newErrInvalidArgument("title cannot be an empty string")
 	}
 	if req.Msg.Priority > 3 {
@@ -108,7 +108,7 @@ func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.U
 	if req.Msg.Title == nil && req.Msg.Content == nil && req.Msg.Priority == nil && req.Msg.DueOn == nil && req.Msg.CompletedAt == nil {
 		return nil, newErrInvalidArgument("must contain some argument other than id")
 	}
-	if req.Msg.Title != nil && *req.Msg.Title == "" {
+	if req.Msg.Title != nil && (len(*req.Msg.Title) < 1 || 80 < len(*req.Msg.Title)) {
 		return nil, newErrInvalidArgument("title cannot be an empty string")
 	}
 	if req.Msg.Priority != nil && *req.Msg.Priority > 3 {

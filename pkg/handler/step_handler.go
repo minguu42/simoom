@@ -34,8 +34,8 @@ func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.C
 	if len(req.Msg.TaskId) != 26 {
 		return nil, newErrInvalidArgument("task_id is a 26-character string")
 	}
-	if req.Msg.Title == "" {
-		return nil, newErrInvalidArgument("title cannot be an empty string")
+	if len(req.Msg.Title) < 1 || 80 < len(req.Msg.Title) {
+		return nil, newErrInvalidArgument("title must be at least 1 and no more than 80 characters")
 	}
 
 	out, err := h.step.CreateStep(ctx, usecase.CreateStepInput{
@@ -55,7 +55,7 @@ func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.U
 	if req.Msg.Title == nil && req.Msg.CompletedAt == nil {
 		return nil, newErrInvalidArgument("must contain some argument other than id")
 	}
-	if req.Msg.Title != nil && *req.Msg.Title == "" {
+	if req.Msg.Title != nil && (len(*req.Msg.Title) < 1 || 80 < len(*req.Msg.Title)) {
 		return nil, newErrInvalidArgument("title cannot be an empty string")
 	}
 
