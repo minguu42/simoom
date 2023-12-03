@@ -29,7 +29,7 @@ func newTags(ts []model.Tag) []*simoompb.Tag {
 }
 
 func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.Tag], error) {
-	if req.Msg.Name == "" {
+	if len(req.Msg.Name) < 1 || 20 < len(req.Msg.Name) {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 
@@ -67,7 +67,7 @@ func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.Up
 	if req.Msg.Name == nil {
 		return nil, newErrInvalidArgument("must contain some argument other than id")
 	}
-	if req.Msg.Name != nil && *req.Msg.Name == "" {
+	if req.Msg.Name != nil && (len(*req.Msg.Name) < 1 || 20 < len(*req.Msg.Name)) {
 		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 

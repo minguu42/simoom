@@ -28,6 +28,15 @@ func TestTagHandler_CreateTag(t *testing.T) {
 				}),
 			},
 		},
+		{
+			name: "nameに21文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.CreateTagRequest{
+					Name: "very-long-long-name01",
+				}),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -47,11 +56,12 @@ func TestTagHandler_ListTags(t *testing.T) {
 		args args
 	}{
 		{
-			name: "limitは1以上である",
+			name: "limitに0は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.ListTagsRequest{
-					Limit: 0,
+					Limit:  0,
+					Offset: 0,
 				}),
 			},
 		},
@@ -74,11 +84,22 @@ func TestTagHandler_UpdateTag(t *testing.T) {
 		args args
 	}{
 		{
-			name: "idは26文字の文字列である",
+			name: "idに25文字以下の文字列を指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTagRequest{
-					Id: "some-id",
+					Id:   "xxxx-xxxx-xxxx-xxxx-id345",
+					Name: pointers.Ref("some-tag"),
+				}),
+			},
+		},
+		{
+			name: "idに27文字以上の文字列を指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.UpdateTagRequest{
+					Id:   "xxxx-xxxx-xxxx-xxxx-xxxx-id",
+					Name: pointers.Ref("some-tag"),
 				}),
 			},
 		},
@@ -102,6 +123,16 @@ func TestTagHandler_UpdateTag(t *testing.T) {
 				}),
 			},
 		},
+		{
+			name: "nameに21文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.UpdateTagRequest{
+					Id:   "01DXF6DT000000000000000000",
+					Name: pointers.Ref("very-long-long-name01"),
+				}),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -121,11 +152,20 @@ func TestTagHandler_DeleteTag(t *testing.T) {
 		args args
 	}{
 		{
-			name: "idは26文字の文字列である",
+			name: "idに25文字以下の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.DeleteTagRequest{
-					Id: "some-id",
+					Id: "xxxx-xxxx-xxxx-xxxx-id345",
+				}),
+			},
+		},
+		{
+			name: "idに27文字以上の文字列は指定できない",
+			args: args{
+				ctx: context.Background(),
+				req: connect.NewRequest(&simoompb.DeleteTagRequest{
+					Id: "xxxx-xxxx-xxxx-xxxx-xxxx-id",
 				}),
 			},
 		},
