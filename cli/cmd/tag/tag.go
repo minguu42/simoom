@@ -9,11 +9,12 @@ import (
 func NewCmdTag(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "tag",
-		Short: "Work with steps",
+		Short: "Work with tags",
 	}
 	cmd.AddCommand(newCmdTagCreate(core))
 	cmd.AddCommand(newCmdTagDelete(core))
 	cmd.AddCommand(newCmdTagEdit(core))
 	cmd.AddCommand(newCmdTagList(core))
+	cmd.AddCommand(newCmdTagView(core))
 	return cmd
 }
