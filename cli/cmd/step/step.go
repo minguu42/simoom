@@ -8,8 +8,8 @@ import (
 
 func NewCmdStep(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "step",
-		Short: "Work with steps",
+		Use:   "step <command>",
+		Short: "Manage steps",
 	}
 	cmd.AddCommand(newCmdStepCreate(core))
 	cmd.AddCommand(newCmdStepDelete(core))

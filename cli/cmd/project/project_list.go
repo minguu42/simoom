@@ -19,8 +19,8 @@ func newCmdProjectList(core cmdutil.Core) *cobra.Command {
 	var opts projectListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List the projects",
 		Aliases: []string{"ls"},
+		Short:   "List the projects",
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runProjectList(cmd.Context(), core, opts)

@@ -1,7 +1,8 @@
-package task
+package project
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"connectrpc.com/connect"
@@ -10,36 +11,36 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type taskListOpts struct {
-	projectID string
-	limit     uint64
-	offset    uint64
+type projectViewOpts struct {
+	id     string
+	limit  uint64
+	offset uint64
 }
 
-func newCmdTaskList(core cmdutil.Core) *cobra.Command {
-	var opts taskListOpts
+func newCmdProjectView(core cmdutil.Core) *cobra.Command {
+	var opts projectViewOpts
 	cmd := &cobra.Command{
-		Use:   "list",
-		Short: "List the tasks",
-		Args:  cobra.ExactArgs(0),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			if opts.projectID == "" {
-				return fmt.Errorf("project-id is required")
+		Use:   "view <id> [flags]",
+		Short: "List the tasks included in that project",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
+			if len(opts.id) != 26 {
+				return errors.New("id is a 26-character string")
 			}
-			return runTaskList(cmd.Context(), core, opts)
+			return runProjectView(cmd.Context(), core, opts)
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.projectID, "project-id", "", "project id")
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
 	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
 
 	return cmd
 }
 
-func runTaskList(ctx context.Context, core cmdutil.Core, opts taskListOpts) error {
+func runProjectView(ctx context.Context, core cmdutil.Core, opts projectViewOpts) error {
 	req := connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
-		ProjectId: opts.projectID,
+		ProjectId: opts.id,
 		Limit:     opts.limit,
 		Offset:    opts.offset,
 	})

@@ -13,7 +13,7 @@ import (
 
 func NewCmdRoot(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "simoom",
+		Use:   "simoom <command> <subcommand> [flags]",
 		Short: "Simoom CLI",
 		Long:  `Work seamlessly with Simoom from the command line.`,
 	}

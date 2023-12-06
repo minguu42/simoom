@@ -8,8 +8,8 @@ import (
 
 func NewCmdAuth(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "auth",
-		Short: "Authenticate Simoom",
+		Use:   "auth <command>",
+		Short: "Authenticate simoom",
 	}
 	cmd.AddCommand(newCmdAuthRefresh(core))
 	cmd.AddCommand(newCmdAuthSignin(core))

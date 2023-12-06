@@ -19,8 +19,8 @@ func newCmdTagList(core cmdutil.Core) *cobra.Command {
 	var opts tagListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
-		Short:   "List the tags",
 		Aliases: []string{"ls"},
+		Short:   "List the tags",
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runTagList(cmd.Context(), core, opts)

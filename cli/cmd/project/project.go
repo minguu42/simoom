@@ -8,12 +8,13 @@ import (
 
 func NewCmdProject(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "project",
-		Short: "Work with projects",
+		Use:   "project <command>",
+		Short: "Manage projects",
 	}
 	cmd.AddCommand(newCmdProjectCreate(core))
 	cmd.AddCommand(newCmdProjectDelete(core))
 	cmd.AddCommand(newCmdProjectEdit(core))
 	cmd.AddCommand(newCmdProjectList(core))
+	cmd.AddCommand(newCmdProjectView(core))
 	return cmd
 }
