@@ -20,18 +20,18 @@ type tagViewOpts struct {
 func newCmdTagView(core cmdutil.Core) *cobra.Command {
 	var opts tagViewOpts
 	cmd := &cobra.Command{
-		Use:   "view",
+		Use:   "view <id> [flags]",
 		Short: "List the tasks with the tag",
-		Args:  cobra.ExactArgs(0),
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			if opts.id == "" {
-				return errors.New("id is required")
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			opts.id = args[0]
+			if len(opts.id) != 26 {
+				return errors.New("id is a 26-character string")
 			}
 			return runTagView(cmd.Context(), core, opts)
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.id, "id", "", "tag id")
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
 	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
 
