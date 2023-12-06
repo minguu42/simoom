@@ -8,8 +8,8 @@ import (
 
 func NewCmdTask(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "task",
-		Short: "Work with tasks",
+		Use:   "task <command>",
+		Short: "Manage tasks",
 	}
 	cmd.AddCommand(newCmdTaskCreate(core))
 	cmd.AddCommand(newCmdTaskDelete(core))

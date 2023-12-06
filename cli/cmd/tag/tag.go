@@ -8,8 +8,8 @@ import (
 
 func NewCmdTag(core cmdutil.Core) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "tag",
-		Short: "Work with tags",
+		Use:   "tag <command>",
+		Short: "Manage tags",
 	}
 	cmd.AddCommand(newCmdTagCreate(core))
 	cmd.AddCommand(newCmdTagDelete(core))
