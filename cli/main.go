@@ -27,8 +27,8 @@ func mainRun() exitCode {
 	c := cmdutil.Core{
 		Client: client,
 		Credentials: cmdutil.Credentials{
-			AccessToken:  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDA0ODAwMjIsIm5hbWUiOiJtaW5ndXU0MiIsImlkIjoiMDFIRjQ3QVg2UjE3NUUzMzdONDlDVFpENzcifQ.5rnjv-HA3tGLZxn7zD9KIv1f6mcNp1iQ4d-FuivJrdg",
-			RefreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDA0ODAwMjIsImlkIjoiMDFIRjQ3QVg2UjE3NUUzMzdONDlDVFpENzcifQ.gNk8Vh4Xon1ponEYOO2N2o4Yv1RUTMU5TBKvloHAt3A",
+			AccessToken:  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI0Njg5NjIsIm5hbWUiOiJtaW5ndXU0MiIsImlkIjoiMDFIR1pHNEdQTjQxRDFGTU5CMlNWR0RDQkUifQ.yshdci246JdXrKkJ_gtvLD48WGuE8aHjLXcFRh5FYf0",
+			RefreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI0Njg5NjIsImlkIjoiMDFIR1pHNEdQTjQxRDFGTU5CMlNWR0RDQkUifQ.7A6g3F57Tji-aycdrmWli9_cbXkNF3Q-fAMgAu7g0Yw",
 		},
 	}
 
