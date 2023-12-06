@@ -14,6 +14,5 @@ func NewCmdTask(core cmdutil.Core) *cobra.Command {
 	cmd.AddCommand(newCmdTaskCreate(core))
 	cmd.AddCommand(newCmdTaskDelete(core))
 	cmd.AddCommand(newCmdTaskEdit(core))
-	cmd.AddCommand(newCmdTaskList(core))
 	return cmd
 }
