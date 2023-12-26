@@ -14,7 +14,9 @@ message Date {
 }
 
 service SimoomService {
-  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse);
+  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
 
   rpc SignUp(SignUpRequest) returns (SignUpResponse);
   rpc SignIn(SignInRequest) returns (SignInResponse);
