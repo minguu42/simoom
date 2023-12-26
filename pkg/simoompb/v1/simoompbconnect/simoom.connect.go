@@ -20,7 +20,7 @@ import (
 // generated with a version of connect newer than the one compiled into your binary. You can fix the
 // problem by either regenerating this code with an older version of connect or updating the connect
 // version compiled into your binary.
-const _ = connect.IsAtLeastVersion0_1_0
+const _ = connect.IsAtLeastVersion1_7_0
 
 const (
 	// SimoomServiceName is the fully-qualified name of the SimoomService service.
@@ -128,7 +128,8 @@ func NewSimoomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 		checkHealth: connect.NewClient[v1.CheckHealthRequest, v1.CheckHealthResponse](
 			httpClient,
 			baseURL+SimoomServiceCheckHealthProcedure,
-			opts...,
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
 		),
 		signUp: connect.NewClient[v1.SignUpRequest, v1.SignUpResponse](
 			httpClient,
@@ -385,7 +386,8 @@ func NewSimoomServiceHandler(svc SimoomServiceHandler, opts ...connect.HandlerOp
 	simoomServiceCheckHealthHandler := connect.NewUnaryHandler(
 		SimoomServiceCheckHealthProcedure,
 		svc.CheckHealth,
-		opts...,
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
 	)
 	simoomServiceSignUpHandler := connect.NewUnaryHandler(
 		SimoomServiceSignUpProcedure,
