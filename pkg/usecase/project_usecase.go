@@ -7,17 +7,20 @@ import (
 
 	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
-	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
 type Project struct {
-	repo repository.Repository
+	repo  repository.Repository
+	idgen model.IDGenerator
 }
 
-func NewProject(repo repository.Repository) Project {
-	return Project{repo: repo}
+func NewProject(repo repository.Repository, idgen model.IDGenerator) Project {
+	return Project{
+		repo:  repo,
+		idgen: idgen,
+	}
 }
 
 type ProjectOutput struct {
@@ -37,7 +40,7 @@ type CreateProjectInput struct {
 func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
 	now := clock.Now(ctx)
 	p := model.Project{
-		ID:         idgen.Generate(),
+		ID:         uc.idgen.Generate(),
 		UserID:     auth.GetUserID(ctx),
 		Name:       in.Name,
 		Color:      in.Color,
