@@ -8,6 +8,7 @@ import (
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/infra/mysql"
+	"github.com/minguu42/simoom/pkg/infra/ulidgen"
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
@@ -36,10 +37,10 @@ func TestMain(m *testing.M) {
 		log.Fatalf("%+v", err)
 	}
 	defer tc.Close()
-	project = usecase.NewProject(tc)
-	step = usecase.NewStep(tc)
-	tag = usecase.NewTag(tc)
-	task = usecase.NewTask(tc)
+	project = usecase.NewProject(tc, ulidgen.Generator{})
+	step = usecase.NewStep(tc, ulidgen.Generator{})
+	tag = usecase.NewTag(tc, ulidgen.Generator{})
+	task = usecase.NewTask(tc, ulidgen.Generator{})
 
 	mysql.InitAllData(tc)
 

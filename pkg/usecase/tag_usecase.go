@@ -7,17 +7,20 @@ import (
 
 	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
-	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
 type Tag struct {
-	repo repository.Repository
+	repo  repository.Repository
+	idgen model.IDGenerator
 }
 
-func NewTag(repo repository.Repository) Tag {
-	return Tag{repo: repo}
+func NewTag(repo repository.Repository, idgen model.IDGenerator) Tag {
+	return Tag{
+		repo:  repo,
+		idgen: idgen,
+	}
 }
 
 type TagOutput struct {
@@ -36,7 +39,7 @@ type CreateTagInput struct {
 func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
 	now := clock.Now(ctx)
 	t := model.Tag{
-		ID:        idgen.Generate(),
+		ID:        uc.idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
 		Name:      in.Name,
 		CreatedAt: now,

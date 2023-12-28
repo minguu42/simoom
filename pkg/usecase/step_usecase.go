@@ -8,17 +8,20 @@ import (
 
 	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
-	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
 type Step struct {
-	repo repository.Repository
+	repo  repository.Repository
+	idgen model.IDGenerator
 }
 
-func NewStep(repo repository.Repository) Step {
-	return Step{repo: repo}
+func NewStep(repo repository.Repository, idgen model.IDGenerator) Step {
+	return Step{
+		repo:  repo,
+		idgen: idgen,
+	}
 }
 
 type StepOutput struct {
@@ -49,7 +52,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 
 	now := clock.Now(ctx)
 	s := model.Step{
-		ID:        idgen.Generate(),
+		ID:        uc.idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
 		TaskID:    in.TaskID,
 		Title:     in.Title,

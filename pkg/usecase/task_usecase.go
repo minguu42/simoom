@@ -8,17 +8,20 @@ import (
 
 	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
-	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 )
 
 type Task struct {
-	repo repository.Repository
+	repo  repository.Repository
+	idgen model.IDGenerator
 }
 
-func NewTask(repo repository.Repository) Task {
-	return Task{repo: repo}
+func NewTask(repo repository.Repository, idgen model.IDGenerator) Task {
+	return Task{
+		repo:  repo,
+		idgen: idgen,
+	}
 }
 
 type TaskOutput struct {
@@ -50,7 +53,7 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 
 	now := clock.Now(ctx)
 	t := model.Task{
-		ID:        idgen.Generate(),
+		ID:        uc.idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
 		ProjectID: in.ProjectID,
 		Title:     in.Title,

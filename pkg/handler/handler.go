@@ -9,6 +9,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
+	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 	"github.com/minguu42/simoom/pkg/handler/interceptor"
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
@@ -29,7 +30,7 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config) http.Handler {
+func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewJudgeError(),
@@ -39,12 +40,12 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
-		auth:       usecase.NewAuth(authenticator, repo, conf.Auth),
+		auth:       usecase.NewAuth(authenticator, repo, conf.Auth, idgen),
 		monitoring: usecase.Monitoring{},
-		project:    usecase.NewProject(repo),
-		step:       usecase.NewStep(repo),
-		tag:        usecase.NewTag(repo),
-		task:       usecase.NewTask(repo),
+		project:    usecase.NewProject(repo, idgen),
+		step:       usecase.NewStep(repo, idgen),
+		tag:        usecase.NewTag(repo, idgen),
+		task:       usecase.NewTask(repo, idgen),
 	}, opt))
 
 	return h2c.NewHandler(mux, &http2.Server{})

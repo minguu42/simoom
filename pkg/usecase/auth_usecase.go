@@ -8,7 +8,6 @@ import (
 	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
-	"github.com/minguu42/simoom/pkg/domain/idgen"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
 	"golang.org/x/crypto/bcrypt"
@@ -18,13 +17,15 @@ type Auth struct {
 	authenticator auth.Authenticator
 	repo          repository.Repository
 	conf          config.Auth
+	idgen         model.IDGenerator
 }
 
-func NewAuth(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth) Auth {
+func NewAuth(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth, idgen model.IDGenerator) Auth {
 	return Auth{
 		authenticator: authenticator,
 		repo:          repo,
 		conf:          conf,
+		idgen:         idgen,
 	}
 }
 
@@ -47,7 +48,7 @@ func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error)
 
 	now := clock.Now(ctx)
 	user := model.User{
-		ID:        idgen.Generate(),
+		ID:        uc.idgen.Generate(),
 		Name:      in.Name,
 		Email:     in.Email,
 		Password:  string(encryptedPassword),

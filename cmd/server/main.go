@@ -17,6 +17,7 @@ import (
 	"github.com/minguu42/simoom/pkg/handler"
 	"github.com/minguu42/simoom/pkg/infra/jwtauth"
 	"github.com/minguu42/simoom/pkg/infra/mysql"
+	"github.com/minguu42/simoom/pkg/infra/ulidgen"
 )
 
 func main() {
@@ -43,7 +44,7 @@ func mainRun() error {
 
 	s := &http.Server{
 		Addr:              net.JoinHostPort(conf.API.Host, strconv.Itoa(conf.API.Port)),
-		Handler:           handler.New(jwtauth.Authenticator{}, c, conf),
+		Handler:           handler.New(jwtauth.Authenticator{}, c, conf, ulidgen.Generator{}),
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		MaxHeaderBytes:    1 << 20,
