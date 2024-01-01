@@ -1,0 +1,56 @@
+name: Update schema document
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches-ignore:
+      - main
+    paths:
+      - infra/mysql/schema.sql
+      - tbls.yml
+jobs:
+  update-schema-document:
+    runs-on: ubuntu-22.04
+    services:
+      db:
+        image: mysql:8.0.32
+        env:
+          MYSQL_DATABASE: simoomdb
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: ./go.mod
+      - run: |
+          go install github.com/k0kubun/sqldef/cmd/mysqldef@latest
+          mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
+      - uses: k1low/setup-tbls@v1
+      - run: tbls doc --rm-dist
+      - id: check_diff
+        run: |
+          git status --porcelain | wc -l
+          file_count=$(git status --porcelain | wc -l)
+          echo "file_count=$file_count" >> $GITHUB_OUTPUT
+      - if: ${{ steps.check_diff.outputs.file_count != '0' }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "スキーマドキュメントを生成する"
+          git push
+      - if: ${{ steps.check_diff.outputs.file_count != '0' }}
+        uses: actions/github-script@v4
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Actions committed new ER files🤖'
+            })
