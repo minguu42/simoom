@@ -1,12 +1,6 @@
 name: Update schema document
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-    branches-ignore:
-      - main
     paths:
       - infra/mysql/schema.sql
       - tbls.yml
@@ -24,6 +18,8 @@ jobs:
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
