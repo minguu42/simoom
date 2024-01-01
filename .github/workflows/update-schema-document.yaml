@@ -20,11 +20,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: ./go.mod
       - run: |
-          go install github.com/k0kubun/sqldef/cmd/mysqldef@latest
+          curl -fsSL https://github.com/sqldef/sqldef/releases/latest/download/mysqldef_linux_amd64.tar.gz | tar -zxvf -
           mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
       - uses: k1low/setup-tbls@v1
       - run: tbls doc --rm-dist
