@@ -7,6 +7,9 @@ on:
 jobs:
   update-schema-document:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
     services:
       db:
         image: mysql:8.0.32
