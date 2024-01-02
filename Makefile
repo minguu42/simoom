@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: setup gen build run migrate migrate-apply fmt lint-go lint-protobuf lint test help
+.PHONY: setup gen build run migrate migrate-apply fmt check-style-go lint-go lint-protobuf lint test help
 
 # testターゲットを実行する前に.envファイルから環境変数を読み込む
 export
@@ -45,6 +45,9 @@ migrate-apply: ## DBのスキーマの変更を適用する
 fmt: ## コードを整形する
 	@buf format --write
 	@goimports -w .
+
+check-style-go:
+	@if [ $(shell goimports -l . | wc -l) -gt 0 ]; then exit 1; fi
 
 lint-go: # Goファイルの静的解析を実行する
 	@go vet $$(go list ./... | grep -v -e /simoompb -e /sqlc)
