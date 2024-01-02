@@ -1,5 +1,4 @@
 name: Integrate Protocol Buffers files
-
 on:
   push:
     paths:
@@ -8,7 +7,6 @@ on:
       - buf.gen.yaml
       - buf.yaml
       - Makefile
-
 jobs:
   check-style:
     runs-on: ubuntu-22.04
