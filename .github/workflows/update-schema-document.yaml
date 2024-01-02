@@ -25,7 +25,8 @@ jobs:
           ref: ${{ github.head_ref }}
       - run: |
           curl -fsSL https://github.com/sqldef/sqldef/releases/latest/download/mysqldef_linux_amd64.tar.gz | tar -zxvf -
-          ./mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
+          mv mysqldef /usr/local/bin/
+          mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
       - uses: k1low/setup-tbls@v1
       - run: tbls doc --rm-dist
       - id: check_diff
