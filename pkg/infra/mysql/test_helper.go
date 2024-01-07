@@ -2,10 +2,36 @@ package mysql
 
 import (
 	"context"
+	"log"
+	"os"
+	"path"
+	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
 )
+
+// Migrate は infra/mysql/schema.sql を読み込んで、データベースのマイグレーションを行う
+func Migrate(client *Client) {
+	// os.Getwd ではテスト時にパッケージ毎に得られるファイルパスが動的に変化するため、runtime.Caller を使用する。
+	_, file, _, _ := runtime.Caller(0)
+	bs, err := os.ReadFile(filepath.Join(path.Dir(file), "..", "..", "..", "infra", "mysql", "schema.sql"))
+	if err != nil {
+		log.Fatalf("failed to read file: %s", err)
+	}
+	for _, q := range strings.Split(string(bs), ";") {
+		q = strings.TrimSpace(q)
+		if q == "" {
+			continue
+		}
+
+		if _, err := client.db.Exec(q); err != nil {
+			log.Fatalf("failed to execute query: %s", err)
+		}
+	}
+}
 
 // InitAllData は全てのテーブルのデータを削除し、テストデータを投入し直す
 // エラー時はパニックを投げる
