@@ -35,7 +35,7 @@ func TestStepUsecase_CreateStep(t *testing.T) {
 		{
 			name: "新ステップを作成する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.CreateStepInput{
 					TaskID: "task_01",
 					Title:  "新ステップ",
@@ -79,7 +79,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 		{
 			name: "改ステップ1に更新する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.UpdateStepInput{
 					ID:          "step_01",
 					Title:       pointers.Ref("改ステップ1"),
@@ -125,7 +125,7 @@ func TestStepUsecase_DeleteStep(t *testing.T) {
 		{
 			name: "ステップ1を削除する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in:  usecase.DeleteStepInput{ID: "step_01"},
 			},
 		},

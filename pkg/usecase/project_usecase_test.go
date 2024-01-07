@@ -35,7 +35,7 @@ func TestProjectUsecase_CreateProject(t *testing.T) {
 		{
 			name: "新プロジェクトを作成する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.CreateProjectInput{
 					Name:  "新プロジェクト",
 					Color: "#f8b500",
@@ -80,7 +80,7 @@ func TestProjectUsecase_ListProjects(t *testing.T) {
 		{
 			name: "タスク一覧を表示する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.ListProjectsInput{
 					Limit:  1,
 					Offset: 0,
@@ -130,7 +130,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 		{
 			name: "改プロジェクト1に更新する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.UpdateProjectInput{
 					ID:         "project_01",
 					Name:       pointers.Ref("改プロジェクト1"),
@@ -177,7 +177,7 @@ func TestProjectUsecase_DeleteProject(t *testing.T) {
 		{
 			name: "プロジェクト1を削除する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in:  usecase.DeleteProjectInput{ID: "project_01"},
 			},
 		},

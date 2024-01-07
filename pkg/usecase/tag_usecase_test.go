@@ -35,7 +35,7 @@ func TestTagUsecase_CreateTag(t *testing.T) {
 		{
 			name: "新タグを作成する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in:  usecase.CreateTagInput{Name: "新タグ"},
 			},
 			want: usecase.TagOutput{Tag: model.Tag{
@@ -75,7 +75,7 @@ func TestTagUsecase_ListTags(t *testing.T) {
 		{
 			name: "タスク一覧を表示する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.ListTagsInput{
 					Limit:  1,
 					Offset: 0,
@@ -123,7 +123,7 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 		{
 			name: "改タグ1に更新する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.UpdateTagInput{
 					ID:   "tag_01",
 					Name: pointers.Ref("改タグ1"),
@@ -166,7 +166,7 @@ func TestTagUsecase_DeleteTag(t *testing.T) {
 		{
 			name: "タグ1を削除する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in:  usecase.DeleteTagInput{ID: "tag_01"},
 			},
 		},

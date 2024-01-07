@@ -35,7 +35,7 @@ func TestTaskUsecase_CreateTask(t *testing.T) {
 		{
 			name: "新タスクを作成する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.CreateTaskInput{
 					ProjectID: "project_01",
 					Title:     "新タスク",
@@ -81,7 +81,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 		{
 			name: "改タスク1に更新する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in: usecase.UpdateTaskInput{
 					ID:          "task_01",
 					Title:       pointers.Ref("改タスク1"),
@@ -169,7 +169,7 @@ func TestTaskUsecase_DeleteTask(t *testing.T) {
 		{
 			name: "タスク1を削除する",
 			args: args{
-				ctx: ctx,
+				ctx: tctx,
 				in:  usecase.DeleteTaskInput{ID: "task_01"},
 			},
 		},
