@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 		ContainerRequest: testcontainers.ContainerRequest{
 			Image: "mysql:8.0.32",
 			Env: map[string]string{
-				"MYSQL_DATABASE":             "testdb",
+				"MYSQL_DATABASE":             "simoomdb",
 				"MYSQL_ALLOW_EMPTY_PASSWORD": "yes",
 			},
 			ExposedPorts: []string{"3306/tcp"},
@@ -42,7 +42,7 @@ func TestMain(m *testing.M) {
 	tc, err = NewClient(config.DB{
 		Host:               "localhost",
 		Port:               port.Int(),
-		Database:           "testdb",
+		Database:           "simoomdb",
 		User:               "root",
 		Password:           "",
 		ConnMaxLifetimeMin: 5,
@@ -50,7 +50,7 @@ func TestMain(m *testing.M) {
 		MaxIdleConns:       25,
 	})
 	if err != nil {
-		log.Fatalf("failed to create test client: %s", err)
+		log.Fatalf("failed to create test mysql client: %s", err)
 	}
 	defer tc.Close()
 
