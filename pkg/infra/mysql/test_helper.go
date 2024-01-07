@@ -13,7 +13,8 @@ import (
 	"github.com/minguu42/simoom/pkg/infra/mysql/sqlc"
 )
 
-// Migrate は infra/mysql/schema.sql を読み込んで、データベースのマイグレーションを行う
+// Migrate はinfra/mysql/schema.sqlを読み込んで、データベースのマイグレーションを行う
+// エラー時はログを出力し、os.Exit(1)で終了する
 func Migrate(client *Client) {
 	// os.Getwd ではテスト時にパッケージ毎に得られるファイルパスが動的に変化するため、runtime.Caller を使用する。
 	_, file, _, _ := runtime.Caller(0)
