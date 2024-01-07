@@ -36,8 +36,6 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
-      - run: cp .env.example .env
-      - run: docker compose up -d db
       - run: make test
   build:
     runs-on: ubuntu-22.04

@@ -1,12 +1,6 @@
 .DEFAULT_GOAL := help
 .PHONY: setup gen build run migrate migrate-apply fmt check-style-go lint-go lint-protobuf lint test help
 
-# testターゲットを実行する前に.envファイルから環境変数を読み込む
-export
-ifeq ($(MAKECMDGOALS), test)
-	include $(PWD)/.env
-endif
-
 setup: ## 開発に必要なツールをインストールする
 	brew install sqldef/sqldef/mysqldef
 	go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
@@ -59,9 +53,7 @@ lint-protobuf: # Protocol Buffersファイルの静的解析を実行する
 lint: lint-go lint-protobuf ## 静的解析を実行する
 
 test: ## テストを実行する
-	@go test $(option) $$(go list ./... | grep -v -e /gen -e /pkg/infra/mysql -e /pkg/usecase)
-	@go test ./pkg/infra/mysql
-	@go test ./pkg/usecase
+	@go test $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 
 help: ## ヘルプを表示する
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) \
