@@ -13,24 +13,21 @@ resource "aws_s3_bucket_versioning" "tfstate" {
   }
 }
 
-#resource "aws_s3_bucket" "lb_api_logs" {
-#  bucket = "${local.product}-${var.env}-lb-api-logs"
-#  lifecycle {
-#    prevent_destroy = true
-#  }
-#}
-#
-#resource "aws_s3_bucket_policy" "lb_api_logs" {
-#  bucket = aws_s3_bucket.lb_api_logs.id
-#  policy = jsonencode({
-#    Version   = "2012-10-17"
-#    Statement = [
-#      {
-#        Effect    = "Allow"
-#        Principal = { AWS = "arn:aws:iam::582318560864:root" }
-#        Action    = "s3:PutObject"
-#        Resource  = "${aws_s3_bucket.lb_api_logs.arn}/*"
-#      }
-#    ]
-#  })
-#}
+resource "aws_s3_bucket" "lb_api_logs" {
+  bucket = "${local.product}-${var.env}-lb-api-logs"
+}
+
+resource "aws_s3_bucket_policy" "lb_api_logs" {
+  bucket = aws_s3_bucket.lb_api_logs.id
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = { AWS = "arn:aws:iam::582318560864:root" }
+        Action    = "s3:PutObject"
+        Resource  = "${aws_s3_bucket.lb_api_logs.arn}/*"
+      }
+    ]
+  })
+}
