@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions    = jsonencode([
     {
       name         = "${local.product}-api"
-      image        = "${aws_ecr_repository.api.repository_url}:d207d40"
+      image        = "${data.terraform_remote_state.mutable.outputs.ecr_repository_api_repository_url}:d207d40"
       portMappings = [
         {
           containerPort = 8080

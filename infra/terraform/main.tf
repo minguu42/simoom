@@ -21,6 +21,15 @@ provider "aws" {
   }
 }
 
+data "terraform_remote_state" "mutable" {
+  backend = "s3"
+  config  = {
+    bucket = "${local.product}-${var.env}-tfstate"
+    key    = "mutable/terraform.tfstate"
+    region = "ap-northeast-1"
+  }
+}
+
 variable "env" {
   type = string
   validation {
