@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "lb_api_logs" {
 resource "aws_s3_bucket_policy" "lb_api_logs" {
   bucket = aws_s3_bucket.lb_api_logs.id
   policy = jsonencode({
-    Version   = "2012-10-17"
+    Version = "2012-10-17"
     Statement = [
       {
         Effect    = "Allow"

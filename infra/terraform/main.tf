@@ -23,7 +23,7 @@ provider "aws" {
 
 data "terraform_remote_state" "mutable" {
   backend = "s3"
-  config  = {
+  config = {
     bucket = "${local.product}-${var.env}-tfstate"
     key    = "mutable/terraform.tfstate"
     region = "ap-northeast-1"
