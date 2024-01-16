@@ -1,5 +1,8 @@
 .DEFAULT_GOAL := help
-.PHONY: plan-stg apply-stg plan-prod apply-prod help
+.PHONY: fmt plan-stg apply-stg plan-prod apply-prod help
+
+fmt: ## Terraformコードを整形する
+	@terraform fmt -recursive
 
 plan-stg: ## 検証環境でterraform planコマンドを実行する
 	terraform init -backend-config=stg.tfbackend -reconfigure
