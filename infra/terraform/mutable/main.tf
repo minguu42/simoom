@@ -3,7 +3,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "5.32.1"
     }
   }
   backend "s3" {}
@@ -21,15 +21,6 @@ provider "aws" {
   }
 }
 
-data "terraform_remote_state" "mutable" {
-  backend = "s3"
-  config = {
-    bucket = "${local.product}-${var.env}-tfstate"
-    key    = "mutable/terraform.tfstate"
-    region = "ap-northeast-1"
-  }
-}
-
 variable "env" {
   type = string
   validation {
@@ -41,4 +32,12 @@ variable "env" {
 locals {
   product      = "simoom"
   isProduction = var.env == "prod"
+}
+
+output "ecr_repository_api_repository_url" {
+  value = aws_ecr_repository.api.repository_url
+}
+
+output "s3_bucket_lb_api_logs_id" {
+  value = aws_s3_bucket.lb_api_logs.id
 }

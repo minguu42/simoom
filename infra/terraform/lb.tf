@@ -6,7 +6,7 @@ resource "aws_lb" "api" {
   subnets                    = [aws_subnet.public_a.id, aws_subnet.public_c.id]
   enable_deletion_protection = false # 検証のため
   access_logs {
-    bucket  = aws_s3_bucket.lb_api_logs.id
+    bucket  = data.terraform_remote_state.mutable.outputs.s3_bucket_lb_api_logs_id
     enabled = true
   }
 }
