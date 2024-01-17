@@ -1,7 +1,7 @@
 resource "aws_iam_role" "ecs_api_task_execution" {
-  name = "${local.product}-${var.env}-ecs-api-task-execution"
+  name               = "${local.product}-${var.env}-ecs-api-task-execution"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
         Effect    = "Allow"
