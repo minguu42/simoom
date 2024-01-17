@@ -23,11 +23,11 @@ type Auth struct {
 
 // DB はデータベースに関する設定
 type DB struct {
-	Host               string `envconfig:"DB_HOST" default:"db"`
-	Port               int    `envconfig:"DB_PORT" default:"3306"`
-	Database           string `envconfig:"DB_DATABASE" default:"simoomdb"`
-	User               string `envconfig:"DB_USER" default:"root"`
-	Password           string `envconfig:"DB_PASSWORD" default:""`
+	Host               string `envconfig:"DB_HOST" required:"true"`
+	Port               int    `envconfig:"DB_PORT" required:"true"`
+	Database           string `envconfig:"DB_DATABASE" required:"true"`
+	User               string `envconfig:"DB_USER" required:"true"`
+	Password           string `envconfig:"DB_PASSWORD" required:"true"`
 	ConnMaxLifetimeMin int    `envconfig:"DB_CONN_MAX_LIFETIME_MIN" default:"5"`
 	MaxOpenConns       int    `envconfig:"DB_MAX_OPEN_CONNS" default:"25"`
 	MaxIdleConns       int    `envconfig:"DB_MAX_IDLE_CONNS" default:"25"`
