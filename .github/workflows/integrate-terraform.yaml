@@ -2,6 +2,7 @@ name: Integrate terraform code
 on:
   pull_request:
     paths:
+      - .github/workflows/integrate-terraform.yaml
       - "infra/terraform/**"
 jobs:
   check-style:
