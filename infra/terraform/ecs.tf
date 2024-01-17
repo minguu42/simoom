@@ -30,10 +30,10 @@ resource "aws_ecs_task_definition" "api" {
   cpu                      = 256 # .25vCPU
   memory                   = 512 # .5GB
   execution_role_arn       = aws_iam_role.ecs_api_task_execution.arn
-  container_definitions = jsonencode([
+  container_definitions    = jsonencode([
     {
-      name  = "${local.product}-api"
-      image = "${data.terraform_remote_state.mutable.outputs.ecr_repository_api_repository_url}:d207d40"
+      name         = "${local.product}-api"
+      image        = "${data.terraform_remote_state.mutable.outputs.ecr_repository_api_repository_url}:d207d40"
       portMappings = [
         {
           containerPort = 8080
