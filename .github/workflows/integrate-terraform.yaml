@@ -4,6 +4,9 @@ on:
     paths:
       - .github/workflows/integrate-terraform.yaml
       - "infra/terraform/**"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   check-style:
     runs-on: ubuntu-22.04
