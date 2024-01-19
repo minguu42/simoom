@@ -7,6 +7,9 @@ on:
       - buf.gen.yaml
       - buf.yaml
       - Makefile
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   check-style:
     runs-on: ubuntu-22.04
