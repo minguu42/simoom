@@ -1,4 +1,4 @@
-name: Integrate terraform code
+name: Integrate infrastructure
 on:
   pull_request:
     paths:
