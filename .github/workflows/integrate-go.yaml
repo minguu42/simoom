@@ -1,6 +1,6 @@
-name: Integrate Go application
+name: Integrate go application
 on:
-  push:
+  pull_request:
     paths:
       - .github/workflows/integrate-go.yaml
       - "cli/**"
@@ -10,6 +10,9 @@ on:
       - go.sum
       - Makefile
       - staticcheck.conf
+  push:
+    branches:
+      - main
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -18,6 +21,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
@@ -27,6 +32,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
@@ -36,6 +43,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
@@ -44,6 +53,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
