@@ -4,6 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/minguu42/simoom/pkg/applog"
+	"github.com/minguu42/simoom/pkg/config"
+	"github.com/minguu42/simoom/pkg/handler"
+	"github.com/minguu42/simoom/pkg/infra/jwtauth"
+	"github.com/minguu42/simoom/pkg/infra/mysql"
+	"github.com/minguu42/simoom/pkg/infra/ulidgen"
 	"net"
 	"net/http"
 	"os"
@@ -11,13 +17,6 @@ import (
 	"strconv"
 	"syscall"
 	"time"
-
-	"github.com/minguu42/simoom/pkg/applog"
-	"github.com/minguu42/simoom/pkg/config"
-	"github.com/minguu42/simoom/pkg/handler"
-	"github.com/minguu42/simoom/pkg/infra/jwtauth"
-	"github.com/minguu42/simoom/pkg/infra/mysql"
-	"github.com/minguu42/simoom/pkg/infra/ulidgen"
 )
 
 func main() {
