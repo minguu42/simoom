@@ -1,12 +1,15 @@
-name: Integrate Protocol Buffers files
+name: Integrate api schema
 on:
-  push:
+  pull_request:
     paths:
       - .github/workflows/integrate-protobuf.yaml
       - "simoompb/**"
       - buf.gen.yaml
       - buf.yaml
       - Makefile
+  push:
+    branches:
+      - main
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -15,11 +18,15 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
       - uses: bufbuild/buf-setup-action@v1.28.1
       - run: buf format --exit-code
   lint:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
       - uses: bufbuild/buf-setup-action@v1.28.1
       - run: make lint-protobuf
