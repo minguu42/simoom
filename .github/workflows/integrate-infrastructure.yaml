@@ -1,6 +1,7 @@
 name: Integrate infrastructure
 on:
   pull_request:
+    types: [opened, reopened, synchronize]
     paths:
       - .github/workflows/integrate-terraform.yaml
       - "infra/terraform/**"
@@ -11,12 +12,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  check-style:
+  check-format:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-      - uses: hashicorp/setup-terraform@v3
-      - run: terraform fmt -check -recursive
+      - name: Set up terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Check code format
+        run: make check-format-tf
         working-directory: ./infra/terraform

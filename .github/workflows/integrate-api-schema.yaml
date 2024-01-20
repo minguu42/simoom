@@ -1,6 +1,7 @@
 name: Integrate api schema
 on:
   pull_request:
+    types: [opened, reopened, synchronize]
     paths:
       - .github/workflows/integrate-protobuf.yaml
       - "simoompb/**"
@@ -14,19 +15,25 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  check-style:
+  check-format:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-      - uses: bufbuild/buf-setup-action@v1.28.1
-      - run: buf format --exit-code
+      - name: Set up buf
+        uses: bufbuild/buf-setup-action@v1.28.1
+      - name: Check code format
+        run: check-format-proto
   lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-      - uses: bufbuild/buf-setup-action@v1.28.1
-      - run: make lint-protobuf
+      - name: Set up buf
+        uses: bufbuild/buf-setup-action@v1.28.1
+      - name: Run linting
+        run: make lint-proto

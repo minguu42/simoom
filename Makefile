@@ -1,5 +1,6 @@
 .DEFAULT_GOAL := help
-.PHONY: setup gen build run migrate migrate-apply fmt check-style-go lint-go lint-protobuf lint test help
+.PHONY: setup gen build run migrate migrate-apply fmt check-format-go check-format-proto
+.PHONY: check-format-tf lint-go lint-proto lint test help
 
 setup: ## 開発に必要なツールをインストールする
 	brew install sqldef/sqldef/mysqldef
@@ -40,17 +41,23 @@ fmt: ## コードを整形する
 	@buf format --write
 	@goimports -w .
 
-check-style-go:
+check-format-go:
 	@if [ $(shell goimports -l . | wc -l) -gt 0 ]; then exit 1; fi
+
+check-format-proto:
+	@buf format --exit-code
+
+check-format-tf:
+	@terraform fmt -check -recursive
 
 lint-go: # Goファイルの静的解析を実行する
 	@go vet $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 	@staticcheck $$(go list ./... | grep -v -e /simoompb -e /sqlc)
 
-lint-protobuf: # Protocol Buffersファイルの静的解析を実行する
+lint-proto: # Protocol Buffersファイルの静的解析を実行する
 	@buf lint
 
-lint: lint-go lint-protobuf ## 静的解析を実行する
+lint: lint-go lint-proto ## 静的解析を実行する
 
 test: ## テストを実行する
 	@go test $$(go list ./... | grep -v -e /simoompb -e /sqlc)
