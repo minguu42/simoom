@@ -25,7 +25,7 @@ jobs:
       - name: Set up buf
         uses: bufbuild/buf-setup-action@v1.28.1
       - name: Check code format
-        run: check-format-proto
+        run: make check-format-proto
   lint:
     runs-on: ubuntu-22.04
     steps:

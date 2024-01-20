@@ -23,4 +23,3 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Check code format
         run: make check-format-tf
-        working-directory: ./infra/terraform
