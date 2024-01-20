@@ -1,6 +1,7 @@
-name: Integrate Go application
+name: Integrate go application
 on:
-  push:
+  pull_request:
+    types: [opened, reopened, synchronize]
     paths:
       - .github/workflows/integrate-go.yaml
       - "cli/**"
@@ -10,41 +11,66 @@ on:
       - go.sum
       - Makefile
       - staticcheck.conf
+  push:
+    branches:
+      - main
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  check-style:
+  check-format:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+      - name: Set up go
+        uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
-      - run: go install golang.org/x/tools/cmd/goimports@latest
-      - run: make check-style-go
+      - name: Install goimports
+        run: go install golang.org/x/tools/cmd/goimports@latest
+      - name: Check code format
+        run: make check-format-go
   lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+      - name: Set up go
+        uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
-      - run: go install honnef.co/go/tools/cmd/staticcheck@latest
-      - run: make lint-go
+      - name: Install staticcheck
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+      - name: Run linting
+        run: make lint-go
   test:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+      - name: Set up go
+        uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
-      - run: make test
+      - name: Run tests
+        run: make test
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+      - name: Set up go
+        uses: actions/setup-go@v5
         with:
           go-version-file: ./go.mod
-      - run: go build ./...
+      - name: Build
+        run: go build ./...

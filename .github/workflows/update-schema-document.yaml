@@ -1,6 +1,7 @@
 name: Update schema document
 on:
   pull_request:
+    types: [ opened, reopened, synchronize ]
     paths:
       - infra/mysql/schema.sql
       - tbls.yml
@@ -23,28 +24,35 @@ jobs:
           - 3306:3306
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
-      - run: |
+      - name: Set up db
+        run: |
           curl -fsSL https://github.com/sqldef/sqldef/releases/latest/download/mysqldef_linux_amd64.tar.gz | tar -zxvf -
           mv mysqldef /usr/local/bin/
           mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
-      - uses: k1low/setup-tbls@v1
-      - run: tbls doc --rm-dist
+      - name: Set up tbls
+        uses: k1low/setup-tbls@v1
+      - name: Generate schema document
+        run: tbls doc --rm-dist
       - id: check_diff
+        name: Check code diff
         run: |
           git status --porcelain | wc -l
           file_count=$(git status --porcelain | wc -l)
           echo "file_count=$file_count" >> $GITHUB_OUTPUT
       - if: ${{ steps.check_diff.outputs.file_count != '0' }}
+        name: Commit Changes
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add .
-          git commit -m "スキーマドキュメントを生成する"
+          git commit -m "データベースのスキーマドキュメントを生成する"
           git push
       - if: ${{ steps.check_diff.outputs.file_count != '0' }}
+        name: Create comment
         uses: actions/github-script@v4
         with:
           script: |
@@ -52,5 +60,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'スキーマドキュメントを更新しました🤖'
+              body: 'データベースのスキーマドキュメントを更新しました🤖'
             })
