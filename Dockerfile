@@ -1,10 +1,8 @@
 FROM golang:1.21 AS base
-WORKDIR /go/src/app
+WORKDIR /go/src/myapp
 
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/go/pkg/mod/ \
-    --mount=type=bind,source=go.mod,target=go.mod \
-    --mount=type=bind,source=go.sum,target=go.sum \
     go mod download
 
 FROM base AS dev
@@ -12,14 +10,14 @@ RUN go install github.com/cosmtrek/air@latest
 CMD ["air", "-c", ".air.toml"]
 
 FROM base AS build
+COPY . .
 RUN --mount=type=cache,target=/go/pkg/mod/ \
-    --mount=type=bind,target=. \
     CGO_ENABLED=0 go build \
       -ldflags "-s -w" \
       -trimpath \
-      -o /go/bin/server \
+      -o /go/bin/myapp \
       ./cmd/server
 
-FROM gcr.io/distroless/static-debian11 AS prod
-COPY --from=build /go/bin/server /
-ENTRYPOINT ["/server"]
+FROM gcr.io/distroless/static-debian12:nonroot AS prod
+COPY --chown=nonroot:nonroot --from=build /go/bin/myapp /
+ENTRYPOINT ["/myapp"]
