@@ -16,7 +16,7 @@ gen: ## コードを生成する
 	@$(MAKE) fmt
 
 build: ## 本番用APIサーバのコンテナイメージをビルドする
-	@docker build \
+	@docker image build \
             --tag=simoom-api:latest \
             --target=prod .
 
