@@ -3,23 +3,21 @@ services:
     image: simoom-api-dev
     build:
       context: .
-      dockerfile: Dockerfile
       target: dev
     container_name: simoom-api
-    env_file:
-      - .env
+    env_file: .env
     tty: true
     ports:
       - 8080:8080
     volumes:
-      - .:/go/src/app
+      - .:/go/src/myapp
     depends_on:
       - db
   db:
     image: mysql:8.0.32
+    container_name: simoom-db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
-    container_name: simoom-db
     restart: always
     ports:
       - 3306:3306
