@@ -10,7 +10,8 @@ CREATE TABLE users (
     UNIQUE INDEX (email)
 ) ENGINE = InnoDB
   CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin;
+  COLLATE = utf8mb4_bin
+    COMMENT = 'ユーザ';
 
 CREATE TABLE projects (
     id          CHAR(26)    NOT NULL COMMENT 'プロジェクトID',
@@ -24,7 +25,8 @@ CREATE TABLE projects (
     CONSTRAINT projects_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin;
+  COLLATE = utf8mb4_bin
+    COMMENT = 'プロジェクト';
 
 CREATE TABLE tasks (
     id           CHAR(26)            NOT NULL COMMENT 'タスクID',
@@ -42,7 +44,8 @@ CREATE TABLE tasks (
     CONSTRAINT tasks_project_id_fk FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin;
+  COLLATE = utf8mb4_bin
+    COMMENT = 'タスク';
 
 CREATE TABLE steps (
     id           CHAR(26)    NOT NULL COMMENT 'ステップID',
@@ -57,7 +60,8 @@ CREATE TABLE steps (
     CONSTRAINT steps_task_id_fk FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin;
+  COLLATE = utf8mb4_bin
+    COMMENT = 'ステップ';
 
 CREATE TABLE tags (
     id         CHAR(26)    NOT NULL COMMENT 'タグID',
@@ -69,7 +73,8 @@ CREATE TABLE tags (
     CONSTRAINT tags_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin;
+  COLLATE = utf8mb4_bin
+    COMMENT = 'タグ';
 
 CREATE TABLE tasks_tags (
     task_id CHAR(26) NOT NULL COMMENT '紐づくタスクID',
@@ -79,4 +84,5 @@ CREATE TABLE tasks_tags (
     CONSTRAINT tasks_tags_tag_id_fk FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   CHARSET = utf8mb4
-  COLLATE = utf8mb4_bin;
+  COLLATE = utf8mb4_bin
+    COMMENT = 'タスクとタグの紐づき';
