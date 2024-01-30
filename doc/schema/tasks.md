@@ -2,28 +2,30 @@
 
 ## Description
 
+タスク
+
 <details>
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
 CREATE TABLE `tasks` (
-  `id` char(26) NOT NULL,
-  `user_id` char(26) NOT NULL,
-  `project_id` char(26) NOT NULL,
-  `title` varchar(80) NOT NULL,
-  `content` varchar(300) NOT NULL,
-  `priority` tinyint unsigned NOT NULL,
-  `due_on` date DEFAULT NULL,
-  `completed_at` datetime DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'タスクID',
+  `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
+  `project_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくプロジェクトのID',
+  `title` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'タイトル',
+  `content` varchar(300) COLLATE utf8mb4_bin NOT NULL COMMENT 'メモ',
+  `priority` tinyint unsigned NOT NULL COMMENT '優先度（0~3の数字で指定し、3が最も優先度が高い）',
+  `due_on` date DEFAULT NULL COMMENT '期日',
+  `completed_at` datetime DEFAULT NULL COMMENT '完了日',
+  `created_at` datetime NOT NULL COMMENT '作成日',
+  `updated_at` datetime NOT NULL COMMENT '更新日',
   PRIMARY KEY (`id`),
   KEY `tasks_user_id_fk` (`user_id`),
   KEY `tasks_project_id_fk` (`project_id`),
   CONSTRAINT `tasks_project_id_fk` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tasks_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tasks_chk_1` CHECK ((`priority` between 0 and 3))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='タスク'
 ```
 
 </details>
@@ -32,16 +34,16 @@ CREATE TABLE `tasks` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false | [steps](steps.md) [tasks_tags](tasks_tags.md) |  |  |
-| user_id | char(26) |  | false |  | [users](users.md) |  |
-| project_id | char(26) |  | false |  | [projects](projects.md) |  |
-| title | varchar(80) |  | false |  |  |  |
-| content | varchar(300) |  | false |  |  |  |
-| priority | tinyint unsigned |  | false |  |  |  |
-| due_on | date |  | true |  |  |  |
-| completed_at | datetime |  | true |  |  |  |
-| created_at | datetime |  | false |  |  |  |
-| updated_at | datetime |  | false |  |  |  |
+| id | char(26) |  | false | [steps](steps.md) [tasks_tags](tasks_tags.md) |  | タスクID |
+| user_id | char(26) |  | false |  | [users](users.md) | 所有するユーザのID |
+| project_id | char(26) |  | false |  | [projects](projects.md) | 紐づくプロジェクトのID |
+| title | varchar(80) |  | false |  |  | タイトル |
+| content | varchar(300) |  | false |  |  | メモ |
+| priority | tinyint unsigned |  | false |  |  | 優先度（0~3の数字で指定し、3が最も優先度が高い） |
+| due_on | date |  | true |  |  | 期日 |
+| completed_at | datetime |  | true |  |  | 完了日 |
+| created_at | datetime |  | false |  |  | 作成日 |
+| updated_at | datetime |  | false |  |  | 更新日 |
 
 ## Constraints
 

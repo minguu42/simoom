@@ -2,22 +2,23 @@
 
 ## Description
 
+ユーザ
+
 <details>
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
 CREATE TABLE `users` (
-  `id` char(26) NOT NULL COMMENT 'ユーザID',
-  `name` varchar(15) NOT NULL,
-  `email` varchar(254) NOT NULL,
-  `password` char(60) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'ユーザID',
+  `name` varchar(15) COLLATE utf8mb4_bin NOT NULL COMMENT 'ユーザ名',
+  `email` varchar(254) COLLATE utf8mb4_bin NOT NULL COMMENT 'メールアドレス',
+  `password` char(60) COLLATE utf8mb4_bin NOT NULL COMMENT 'パスワード',
+  `created_at` datetime NOT NULL COMMENT '作成日',
+  `updated_at` datetime NOT NULL COMMENT '更新日',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `password` (`password`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='ユーザ'
 ```
 
 </details>
@@ -27,11 +28,11 @@ CREATE TABLE `users` (
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
 | id | char(26) |  | false | [projects](projects.md) [steps](steps.md) [tags](tags.md) [tasks](tasks.md) |  | ユーザID |
-| name | varchar(15) |  | false |  |  |  |
-| email | varchar(254) |  | false |  |  |  |
-| password | char(60) |  | false |  |  |  |
-| created_at | datetime |  | false |  |  |  |
-| updated_at | datetime |  | false |  |  |  |
+| name | varchar(15) |  | false |  |  | ユーザ名 |
+| email | varchar(254) |  | false |  |  | メールアドレス |
+| password | char(60) |  | false |  |  | パスワード |
+| created_at | datetime |  | false |  |  | 作成日 |
+| updated_at | datetime |  | false |  |  | 更新日 |
 
 ## Constraints
 
@@ -39,7 +40,6 @@ CREATE TABLE `users` (
 | ---- | ---- | ---------- |
 | email | UNIQUE | UNIQUE KEY email (email) |
 | name | UNIQUE | UNIQUE KEY name (name) |
-| password | UNIQUE | UNIQUE KEY password (password) |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
 
 ## Indexes
@@ -49,7 +49,6 @@ CREATE TABLE `users` (
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
 | email | UNIQUE KEY email (email) USING BTREE |
 | name | UNIQUE KEY name (name) USING BTREE |
-| password | UNIQUE KEY password (password) USING BTREE |
 
 ## Relations
 
