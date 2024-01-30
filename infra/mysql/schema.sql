@@ -1,11 +1,13 @@
 CREATE TABLE users (
     id         CHAR(26)     NOT NULL COMMENT 'ユーザID',
-    name       VARCHAR(15)  NOT NULL UNIQUE,
-    email      VARCHAR(254) NOT NULL UNIQUE,
-    password   CHAR(60)     NOT NULL UNIQUE,
+    name       VARCHAR(15)  NOT NULL,
+    email      VARCHAR(254) NOT NULL,
+    password   CHAR(60)     NOT NULL,
     created_at DATETIME     NOT NULL,
     updated_at DATETIME     NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE INDEX (name),
+    UNIQUE INDEX (email)
 ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 CREATE TABLE projects (
