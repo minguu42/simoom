@@ -2,20 +2,22 @@
 
 ## Description
 
+タグ
+
 <details>
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
 CREATE TABLE `tags` (
-  `id` char(26) NOT NULL,
-  `user_id` char(26) NOT NULL,
-  `name` varchar(20) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'タグID',
+  `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
+  `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'タグ名',
+  `created_at` datetime NOT NULL COMMENT '作成日',
+  `updated_at` datetime NOT NULL COMMENT '更新日',
   PRIMARY KEY (`id`),
   KEY `tags_user_id_fk` (`user_id`),
   CONSTRAINT `tags_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='タグ'
 ```
 
 </details>
@@ -24,11 +26,11 @@ CREATE TABLE `tags` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false | [tasks_tags](tasks_tags.md) |  |  |
-| user_id | char(26) |  | false |  | [users](users.md) |  |
-| name | varchar(20) |  | false |  |  |  |
-| created_at | datetime |  | false |  |  |  |
-| updated_at | datetime |  | false |  |  |  |
+| id | char(26) |  | false | [tasks_tags](tasks_tags.md) |  | タグID |
+| user_id | char(26) |  | false |  | [users](users.md) | 所有するユーザのID |
+| name | varchar(20) |  | false |  |  | タグ名 |
+| created_at | datetime |  | false |  |  | 作成日 |
+| updated_at | datetime |  | false |  |  | 更新日 |
 
 ## Constraints
 

@@ -2,18 +2,20 @@
 
 ## Description
 
+タスクとタグの紐づき
+
 <details>
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
 CREATE TABLE `tasks_tags` (
-  `task_id` char(26) NOT NULL,
-  `tag_id` char(26) NOT NULL,
+  `task_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくタスクID',
+  `tag_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくタグID',
   PRIMARY KEY (`task_id`,`tag_id`),
   KEY `tasks_tags_tag_id_fk` (`tag_id`),
   CONSTRAINT `tasks_tags_tag_id_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tasks_tags_task_id_fk` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='タスクとタグの紐づき'
 ```
 
 </details>
@@ -22,8 +24,8 @@ CREATE TABLE `tasks_tags` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| task_id | char(26) |  | false |  | [tasks](tasks.md) |  |
-| tag_id | char(26) |  | false |  | [tags](tags.md) |  |
+| task_id | char(26) |  | false |  | [tasks](tasks.md) | 紐づくタスクID |
+| tag_id | char(26) |  | false |  | [tags](tags.md) | 紐づくタグID |
 
 ## Constraints
 

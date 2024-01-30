@@ -2,22 +2,24 @@
 
 ## Description
 
+プロジェクト
+
 <details>
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
 CREATE TABLE `projects` (
-  `id` char(26) NOT NULL,
-  `user_id` char(26) NOT NULL,
-  `name` varchar(20) NOT NULL,
-  `color` char(7) NOT NULL,
-  `is_archived` tinyint(1) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'プロジェクトID',
+  `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
+  `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'プロジェクト名',
+  `color` char(7) COLLATE utf8mb4_bin NOT NULL COMMENT 'カラー',
+  `is_archived` tinyint(1) NOT NULL COMMENT 'アーカイブされたか',
+  `created_at` datetime NOT NULL COMMENT '作成日',
+  `updated_at` datetime NOT NULL COMMENT '更新日',
   PRIMARY KEY (`id`),
   KEY `projects_user_id_fk` (`user_id`),
   CONSTRAINT `projects_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='プロジェクト'
 ```
 
 </details>
@@ -26,13 +28,13 @@ CREATE TABLE `projects` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false | [tasks](tasks.md) |  |  |
-| user_id | char(26) |  | false |  | [users](users.md) |  |
-| name | varchar(20) |  | false |  |  |  |
-| color | char(7) |  | false |  |  |  |
-| is_archived | tinyint(1) |  | false |  |  |  |
-| created_at | datetime |  | false |  |  |  |
-| updated_at | datetime |  | false |  |  |  |
+| id | char(26) |  | false | [tasks](tasks.md) |  | プロジェクトID |
+| user_id | char(26) |  | false |  | [users](users.md) | 所有するユーザのID |
+| name | varchar(20) |  | false |  |  | プロジェクト名 |
+| color | char(7) |  | false |  |  | カラー |
+| is_archived | tinyint(1) |  | false |  |  | アーカイブされたか |
+| created_at | datetime |  | false |  |  | 作成日 |
+| updated_at | datetime |  | false |  |  | 更新日 |
 
 ## Constraints
 
