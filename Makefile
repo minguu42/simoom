@@ -35,7 +35,6 @@ migrate: ## DBのスキーマの変更を確認する
 
 migrate-apply: ## DBのスキーマの変更を適用する
 	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
-	@mysqldef -u root -h 127.0.0.1 --enable-drop-table testdb < ./infra/mysql/schema.sql
 
 fmt: ## コードを整形する
 	@buf format --write
