@@ -35,8 +35,6 @@ func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
 		ProjectID: t.ProjectID,
 		Title:     t.Title,
 		Priority:  uint32(t.Priority),
-		CreatedAt: t.CreatedAt,
-		UpdatedAt: t.UpdatedAt,
 	}); err != nil {
 		return fmt.Errorf("failed to create task: %w", err)
 	}

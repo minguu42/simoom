@@ -1,6 +1,6 @@
 -- name: CreateStep :exec
-INSERT INTO steps (id, user_id, task_id, title, completed_at, created_at, updated_at)
-VALUES (?, ?, ?, ?, NULL, ?, ?);
+INSERT INTO steps (id, user_id, task_id, title, completed_at)
+VALUES (?, ?, ?, ?, NULL);
 
 -- name: ListStepsByTaskID :many
 SELECT *

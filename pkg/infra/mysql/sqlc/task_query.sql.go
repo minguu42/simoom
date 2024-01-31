@@ -12,9 +12,8 @@ import (
 )
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at,
-                   created_at, updated_at)
-VALUES (?, ?, ?, ?, '', ?, NULL, NULL, ?, ?)
+INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at)
+VALUES (?, ?, ?, ?, '', ?, NULL, NULL)
 `
 
 type CreateTaskParams struct {
@@ -23,8 +22,6 @@ type CreateTaskParams struct {
 	ProjectID string
 	Title     string
 	Priority  uint32
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
@@ -34,8 +31,6 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 		arg.ProjectID,
 		arg.Title,
 		arg.Priority,
-		arg.CreatedAt,
-		arg.UpdatedAt,
 	)
 	return err
 }

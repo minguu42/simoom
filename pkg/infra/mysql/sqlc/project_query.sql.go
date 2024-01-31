@@ -11,8 +11,8 @@ import (
 )
 
 const createProject = `-- name: CreateProject :exec
-INSERT INTO projects (id, user_id, name, color, is_archived, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?, ?)
+INSERT INTO projects (id, user_id, name, color, is_archived)
+VALUES (?, ?, ?, ?, ?)
 `
 
 type CreateProjectParams struct {
@@ -21,8 +21,6 @@ type CreateProjectParams struct {
 	Name       string
 	Color      string
 	IsArchived bool
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
 }
 
 func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) error {
@@ -32,8 +30,6 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) er
 		arg.Name,
 		arg.Color,
 		arg.IsArchived,
-		arg.CreatedAt,
-		arg.UpdatedAt,
 	)
 	return err
 }

@@ -12,17 +12,15 @@ import (
 )
 
 const createStep = `-- name: CreateStep :exec
-INSERT INTO steps (id, user_id, task_id, title, completed_at, created_at, updated_at)
-VALUES (?, ?, ?, ?, NULL, ?, ?)
+INSERT INTO steps (id, user_id, task_id, title, completed_at)
+VALUES (?, ?, ?, ?, NULL)
 `
 
 type CreateStepParams struct {
-	ID        string
-	UserID    string
-	TaskID    string
-	Title     string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID     string
+	UserID string
+	TaskID string
+	Title  string
 }
 
 func (q *Queries) CreateStep(ctx context.Context, arg CreateStepParams) error {
@@ -31,8 +29,6 @@ func (q *Queries) CreateStep(ctx context.Context, arg CreateStepParams) error {
 		arg.UserID,
 		arg.TaskID,
 		arg.Title,
-		arg.CreatedAt,
-		arg.UpdatedAt,
 	)
 	return err
 }

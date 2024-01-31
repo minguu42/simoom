@@ -1,7 +1,6 @@
 -- name: CreateTask :exec
-INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at,
-                   created_at, updated_at)
-VALUES (?, ?, ?, ?, '', ?, NULL, NULL, ?, ?);
+INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at)
+VALUES (?, ?, ?, ?, '', ?, NULL, NULL);
 
 -- name: ListTasksByProjectID :many
 SELECT *

@@ -11,26 +11,18 @@ import (
 )
 
 const createTag = `-- name: CreateTag :exec
-INSERT INTO tags (id, user_id, name, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?)
+INSERT INTO tags (id, user_id, name)
+VALUES (?, ?, ?)
 `
 
 type CreateTagParams struct {
-	ID        string
-	UserID    string
-	Name      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID     string
+	UserID string
+	Name   string
 }
 
 func (q *Queries) CreateTag(ctx context.Context, arg CreateTagParams) error {
-	_, err := q.db.ExecContext(ctx, createTag,
-		arg.ID,
-		arg.UserID,
-		arg.Name,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
+	_, err := q.db.ExecContext(ctx, createTag, arg.ID, arg.UserID, arg.Name)
 	return err
 }
 

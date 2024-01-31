@@ -1,6 +1,6 @@
 -- name: CreateProject :exec
-INSERT INTO projects (id, user_id, name, color, is_archived, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT INTO projects (id, user_id, name, color, is_archived)
+VALUES (?, ?, ?, ?, ?);
 
 -- name: ListProjectsByUserID :many
 SELECT *

@@ -31,11 +31,9 @@ func newModelTags(ts []sqlc.Tag) []model.Tag {
 
 func (c *Client) CreateTag(ctx context.Context, t model.Tag) error {
 	if err := sqlc.New(c.db).CreateTag(ctx, sqlc.CreateTagParams{
-		ID:        t.ID,
-		UserID:    t.UserID,
-		Name:      t.Name,
-		CreatedAt: t.CreatedAt,
-		UpdatedAt: t.UpdatedAt,
+		ID:     t.ID,
+		UserID: t.UserID,
+		Name:   t.Name,
 	}); err != nil {
 		return fmt.Errorf("failed to create tag: %w", err)
 	}

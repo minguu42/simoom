@@ -7,21 +7,18 @@ package sqlc
 
 import (
 	"context"
-	"time"
 )
 
 const createUser = `-- name: CreateUser :exec
-INSERT INTO users (id, name, email, password, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?)
+INSERT INTO users (id, name, email, password)
+VALUES (?, ?, ?, ?)
 `
 
 type CreateUserParams struct {
-	ID        string
-	Name      string
-	Email     string
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID       string
+	Name     string
+	Email    string
+	Password string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
@@ -30,8 +27,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
 		arg.Name,
 		arg.Email,
 		arg.Password,
-		arg.CreatedAt,
-		arg.UpdatedAt,
 	)
 	return err
 }

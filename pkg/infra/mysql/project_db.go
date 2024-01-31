@@ -38,8 +38,6 @@ func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
-		CreatedAt:  p.CreatedAt,
-		UpdatedAt:  p.UpdatedAt,
 	}); err != nil {
 		return fmt.Errorf("failed to create project: %w", err)
 	}

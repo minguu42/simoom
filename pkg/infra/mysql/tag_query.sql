@@ -1,6 +1,6 @@
 -- name: CreateTag :exec
-INSERT INTO tags (id, user_id, name, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO tags (id, user_id, name)
+VALUES (?, ?, ?);
 
 -- name: ListTagsByUserID :many
 SELECT *
