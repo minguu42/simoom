@@ -8,7 +8,6 @@ import (
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func newTask(t model.Task) *simoompb.Task {
@@ -22,8 +21,6 @@ func newTask(t model.Task) *simoompb.Task {
 		Priority:    uint32(t.Priority),
 		DueOn:       newDate(t.DueOn),
 		CompletedAt: newTimestamp(t.CompletedAt),
-		CreatedAt:   timestamppb.New(t.CreatedAt),
-		UpdatedAt:   timestamppb.New(t.UpdatedAt),
 	}
 }
 

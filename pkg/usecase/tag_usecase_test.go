@@ -3,7 +3,6 @@ package usecase_test
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -84,11 +83,9 @@ func TestTagUsecase_ListTags(t *testing.T) {
 			want: usecase.TagsOutput{
 				Tags: []model.Tag{
 					{
-						ID:        "tag_01",
-						UserID:    "user_01",
-						Name:      "タグ1",
-						CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-						UpdatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+						ID:     "tag_01",
+						UserID: "user_01",
+						Name:   "タグ1",
 					},
 				},
 				HasNext: true,
@@ -130,10 +127,9 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 				},
 			},
 			want: usecase.TagOutput{Tag: model.Tag{
-				ID:        "tag_01",
-				UserID:    "user_01",
-				Name:      "改タグ1",
-				CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+				ID:     "tag_01",
+				UserID: "user_01",
+				Name:   "改タグ1",
 			}},
 		},
 	}

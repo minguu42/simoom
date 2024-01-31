@@ -18,8 +18,6 @@ func newModelStep(s sqlc.Step) model.Step {
 		TaskID:      s.TaskID,
 		Title:       s.Title,
 		CompletedAt: newPtrTime(s.CompletedAt),
-		CreatedAt:   s.CreatedAt,
-		UpdatedAt:   s.UpdatedAt,
 	}
 }
 
@@ -58,7 +56,6 @@ func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
 	if err := sqlc.New(c.db).UpdateStep(ctx, sqlc.UpdateStepParams{
 		Title:       s.Title,
 		CompletedAt: newNullTime(s.CompletedAt),
-		UpdatedAt:   s.UpdatedAt,
 		ID:          s.ID,
 	}); err != nil {
 		return fmt.Errorf("failed to update step: %w", err)

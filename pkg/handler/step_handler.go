@@ -8,7 +8,6 @@ import (
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func newStep(s model.Step) *simoompb.Step {
@@ -17,8 +16,6 @@ func newStep(s model.Step) *simoompb.Step {
 		TaskId:      s.TaskID,
 		Title:       s.Title,
 		CompletedAt: newTimestamp(s.CompletedAt),
-		CreatedAt:   timestamppb.New(s.CreatedAt),
-		UpdatedAt:   timestamppb.New(s.UpdatedAt),
 	}
 }
 

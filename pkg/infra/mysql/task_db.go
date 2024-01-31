@@ -23,8 +23,6 @@ func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
 		Priority:    uint(t.Priority),
 		DueOn:       newPtrTime(t.DueOn),
 		CompletedAt: newPtrTime(t.CompletedAt),
-		CreatedAt:   t.CreatedAt,
-		UpdatedAt:   t.UpdatedAt,
 	}
 }
 
@@ -117,7 +115,6 @@ func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
 		Priority:    uint32(t.Priority),
 		DueOn:       newNullTime(t.DueOn),
 		CompletedAt: newNullTime(t.CompletedAt),
-		UpdatedAt:   t.UpdatedAt,
 		ID:          t.ID,
 	}); err != nil {
 		return fmt.Errorf("failed to update task: %w", err)

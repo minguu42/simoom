@@ -13,11 +13,9 @@ import (
 
 func newModelTag(t sqlc.Tag) model.Tag {
 	return model.Tag{
-		ID:        t.ID,
-		UserID:    t.UserID,
-		Name:      t.Name,
-		CreatedAt: t.CreatedAt,
-		UpdatedAt: t.UpdatedAt,
+		ID:     t.ID,
+		UserID: t.UserID,
+		Name:   t.Name,
 	}
 }
 
@@ -65,9 +63,8 @@ func (c *Client) GetTagByID(ctx context.Context, id string) (model.Tag, error) {
 
 func (c *Client) UpdateTag(ctx context.Context, t model.Tag) error {
 	if err := sqlc.New(c.db).UpdateTag(ctx, sqlc.UpdateTagParams{
-		Name:      t.Name,
-		UpdatedAt: t.UpdatedAt,
-		ID:        t.ID,
+		Name: t.Name,
+		ID:   t.ID,
 	}); err != nil {
 		return fmt.Errorf("failed to update tag: %w", err)
 	}

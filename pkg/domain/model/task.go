@@ -13,6 +13,4 @@ type Task struct {
 	Priority    uint
 	DueOn       *time.Time
 	CompletedAt *time.Time
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
 }

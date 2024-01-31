@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -51,15 +50,12 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		return TaskOutput{}, ErrProjectNotFound
 	}
 
-	now := clock.Now(ctx)
 	t := model.Task{
 		ID:        uc.idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
 		ProjectID: in.ProjectID,
 		Title:     in.Title,
 		Priority:  in.Priority,
-		CreatedAt: now,
-		UpdatedAt: now,
 	}
 	if err := uc.repo.CreateTask(ctx, t); err != nil {
 		return TaskOutput{}, fmt.Errorf("failed to create task: %w", err)
@@ -171,7 +167,6 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 	if in.CompletedAt != nil {
 		t.CompletedAt = in.CompletedAt
 	}
-	t.UpdatedAt = clock.Now(ctx)
 	if err := uc.repo.UpdateTask(ctx, t); err != nil {
 		return TaskOutput{}, fmt.Errorf("failed to update task: %w", err)
 	}

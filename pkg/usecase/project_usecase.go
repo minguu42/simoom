@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -38,15 +37,12 @@ type CreateProjectInput struct {
 }
 
 func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
-	now := clock.Now(ctx)
 	p := model.Project{
 		ID:         uc.idgen.Generate(),
 		UserID:     auth.GetUserID(ctx),
 		Name:       in.Name,
 		Color:      in.Color,
 		IsArchived: false,
-		CreatedAt:  now,
-		UpdatedAt:  now,
 	}
 	if err := uc.repo.CreateProject(ctx, p); err != nil {
 		return ProjectOutput{}, fmt.Errorf("failed to create project: %w", err)
@@ -104,7 +100,6 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 	if in.IsArchived != nil {
 		p.IsArchived = *in.IsArchived
 	}
-	p.UpdatedAt = clock.Now(ctx)
 	if err := uc.repo.UpdateProject(ctx, p); err != nil {
 		return ProjectOutput{}, fmt.Errorf("failed to update project: %w", err)
 	}

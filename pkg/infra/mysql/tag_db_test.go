@@ -3,7 +3,6 @@ package mysql
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -25,11 +24,9 @@ func TestClient_CreateTag(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				t: model.Tag{
-					ID:        "tag_99",
-					UserID:    "user_01",
-					Name:      "新タグ",
-					CreatedAt: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
-					UpdatedAt: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
+					ID:     "tag_99",
+					UserID: "user_01",
+					Name:   "新タグ",
 				},
 			},
 		},
@@ -71,11 +68,9 @@ func TestClient_ListTagsByUserID(t *testing.T) {
 			},
 			want: []model.Tag{
 				{
-					ID:        "tag_01",
-					UserID:    "user_01",
-					Name:      "タグ1",
-					CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-					UpdatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+					ID:     "tag_01",
+					UserID: "user_01",
+					Name:   "タグ1",
 				},
 			},
 		},
@@ -117,11 +112,9 @@ func TestClient_GetTagByID(t *testing.T) {
 				id:  "tag_01",
 			},
 			want: model.Tag{
-				ID:        "tag_01",
-				UserID:    "user_01",
-				Name:      "タグ1",
-				CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-				UpdatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+				ID:     "tag_01",
+				UserID: "user_01",
+				Name:   "タグ1",
 			},
 		},
 		{
@@ -156,11 +149,9 @@ func TestClient_UpdateTag(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				t: model.Tag{
-					ID:        "tag_01",
-					UserID:    "user_01",
-					Name:      "改タグ1",
-					CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-					UpdatedAt: time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC),
+					ID:     "tag_01",
+					UserID: "user_01",
+					Name:   "改タグ1",
 				},
 			},
 		},
