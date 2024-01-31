@@ -16,7 +16,7 @@ func newModelStep(s sqlc.Step) model.Step {
 		ID:          s.ID,
 		UserID:      s.UserID,
 		TaskID:      s.TaskID,
-		Title:       s.Title,
+		Title:       s.Name,
 		CompletedAt: newPtrTime(s.CompletedAt),
 	}
 }
@@ -34,7 +34,7 @@ func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
 		ID:     s.ID,
 		UserID: s.UserID,
 		TaskID: s.TaskID,
-		Title:  s.Title,
+		Name:   s.Title,
 	}); err != nil {
 		return fmt.Errorf("failed to create step: %w", err)
 	}
@@ -54,7 +54,7 @@ func (c *Client) GetStepByID(ctx context.Context, id string) (model.Step, error)
 
 func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
 	if err := sqlc.New(c.db).UpdateStep(ctx, sqlc.UpdateStepParams{
-		Title:       s.Title,
+		Name:        s.Title,
 		CompletedAt: newNullTime(s.CompletedAt),
 		ID:          s.ID,
 	}); err != nil {

@@ -35,8 +35,8 @@ type Step struct {
 	UserID string
 	// 紐づくタスクのID
 	TaskID string
-	// タイトル
-	Title string
+	// ステップ名
+	Name string
 	// 完了日
 	CompletedAt sql.NullTime
 	// 作成日
@@ -67,8 +67,8 @@ type Task struct {
 	UserID string
 	// 紐づくプロジェクトのID
 	ProjectID string
-	// タイトル
-	Title string
+	// タスク名
+	Name string
 	// メモ
 	Content string
 	// 優先度（0~3の数字で指定し、3が最も優先度が高い）

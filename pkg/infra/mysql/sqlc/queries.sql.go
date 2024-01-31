@@ -35,7 +35,7 @@ func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) er
 }
 
 const createStep = `-- name: CreateStep :exec
-INSERT INTO steps (id, user_id, task_id, title, completed_at)
+INSERT INTO steps (id, user_id, task_id, name, completed_at)
 VALUES (?, ?, ?, ?, NULL)
 `
 
@@ -43,7 +43,7 @@ type CreateStepParams struct {
 	ID     string
 	UserID string
 	TaskID string
-	Title  string
+	Name   string
 }
 
 func (q *Queries) CreateStep(ctx context.Context, arg CreateStepParams) error {
@@ -51,7 +51,7 @@ func (q *Queries) CreateStep(ctx context.Context, arg CreateStepParams) error {
 		arg.ID,
 		arg.UserID,
 		arg.TaskID,
-		arg.Title,
+		arg.Name,
 	)
 	return err
 }
@@ -73,7 +73,7 @@ func (q *Queries) CreateTag(ctx context.Context, arg CreateTagParams) error {
 }
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at)
+INSERT INTO tasks (id, user_id, project_id, name, content, priority, due_on, completed_at)
 VALUES (?, ?, ?, ?, '', ?, NULL, NULL)
 `
 
@@ -81,7 +81,7 @@ type CreateTaskParams struct {
 	ID        string
 	UserID    string
 	ProjectID string
-	Title     string
+	Name      string
 	Priority  uint32
 }
 
@@ -90,7 +90,7 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 		arg.ID,
 		arg.UserID,
 		arg.ProjectID,
-		arg.Title,
+		arg.Name,
 		arg.Priority,
 	)
 	return err
@@ -184,7 +184,7 @@ func (q *Queries) GetProjectByID(ctx context.Context, id string) (Project, error
 }
 
 const getStepByID = `-- name: GetStepByID :one
-SELECT id, user_id, task_id, title, completed_at, created_at, updated_at
+SELECT id, user_id, task_id, name, completed_at, created_at, updated_at
 FROM steps
 WHERE id = ?
 `
@@ -196,7 +196,7 @@ func (q *Queries) GetStepByID(ctx context.Context, id string) (Step, error) {
 		&i.ID,
 		&i.UserID,
 		&i.TaskID,
-		&i.Title,
+		&i.Name,
 		&i.CompletedAt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -224,7 +224,7 @@ func (q *Queries) GetTagByID(ctx context.Context, id string) (Tag, error) {
 }
 
 const getTaskByID = `-- name: GetTaskByID :one
-SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
+SELECT id, user_id, project_id, name, content, priority, due_on, completed_at, created_at, updated_at
 FROM tasks
 WHERE id = ?
 `
@@ -236,7 +236,7 @@ func (q *Queries) GetTaskByID(ctx context.Context, id string) (Task, error) {
 		&i.ID,
 		&i.UserID,
 		&i.ProjectID,
-		&i.Title,
+		&i.Name,
 		&i.Content,
 		&i.Priority,
 		&i.DueOn,
@@ -333,7 +333,7 @@ func (q *Queries) ListProjectsByUserID(ctx context.Context, arg ListProjectsByUs
 }
 
 const listStepsByTaskID = `-- name: ListStepsByTaskID :many
-SELECT id, user_id, task_id, title, completed_at, created_at, updated_at
+SELECT id, user_id, task_id, name, completed_at, created_at, updated_at
 FROM steps
 WHERE task_id = ?
 ORDER BY created_at
@@ -352,7 +352,7 @@ func (q *Queries) ListStepsByTaskID(ctx context.Context, taskID string) ([]Step,
 			&i.ID,
 			&i.UserID,
 			&i.TaskID,
-			&i.Title,
+			&i.Name,
 			&i.CompletedAt,
 			&i.CreatedAt,
 			&i.UpdatedAt,
@@ -450,7 +450,7 @@ func (q *Queries) ListTagsByUserID(ctx context.Context, arg ListTagsByUserIDPara
 }
 
 const listTasksByProjectID = `-- name: ListTasksByProjectID :many
-SELECT id, user_id, project_id, title, content, priority, due_on, completed_at, created_at, updated_at
+SELECT id, user_id, project_id, name, content, priority, due_on, completed_at, created_at, updated_at
 FROM tasks
 WHERE project_id = ?
 ORDER BY created_at
@@ -476,7 +476,7 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 			&i.ID,
 			&i.UserID,
 			&i.ProjectID,
-			&i.Title,
+			&i.Name,
 			&i.Content,
 			&i.Priority,
 			&i.DueOn,
@@ -498,7 +498,7 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 }
 
 const listTasksByTagID = `-- name: ListTasksByTagID :many
-SELECT t1.id, t1.user_id, t1.project_id, t1.title, t1.content, t1.priority, t1.due_on, t1.completed_at, t1.created_at, t1.updated_at
+SELECT t1.id, t1.user_id, t1.project_id, t1.name, t1.content, t1.priority, t1.due_on, t1.completed_at, t1.created_at, t1.updated_at
 FROM tasks AS t1
     INNER JOIN tasks_tags AS tt ON t1.id = tt.task_id
 WHERE tt.tag_id = ?
@@ -525,7 +525,7 @@ func (q *Queries) ListTasksByTagID(ctx context.Context, arg ListTasksByTagIDPara
 			&i.ID,
 			&i.UserID,
 			&i.ProjectID,
-			&i.Title,
+			&i.Name,
 			&i.Content,
 			&i.Priority,
 			&i.DueOn,
@@ -573,19 +573,19 @@ func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) er
 
 const updateStep = `-- name: UpdateStep :exec
 UPDATE steps
-SET title        = ?,
+SET name         = ?,
     completed_at = ?
 WHERE id = ?
 `
 
 type UpdateStepParams struct {
-	Title       string
+	Name        string
 	CompletedAt sql.NullTime
 	ID          string
 }
 
 func (q *Queries) UpdateStep(ctx context.Context, arg UpdateStepParams) error {
-	_, err := q.db.ExecContext(ctx, updateStep, arg.Title, arg.CompletedAt, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateStep, arg.Name, arg.CompletedAt, arg.ID)
 	return err
 }
 
@@ -607,7 +607,7 @@ func (q *Queries) UpdateTag(ctx context.Context, arg UpdateTagParams) error {
 
 const updateTask = `-- name: UpdateTask :exec
 UPDATE tasks
-SET title        = ?,
+SET name         = ?,
     content      = ?,
     priority     = ?,
     due_on       = ?,
@@ -616,7 +616,7 @@ WHERE id = ?
 `
 
 type UpdateTaskParams struct {
-	Title       string
+	Name        string
 	Content     string
 	Priority    uint32
 	DueOn       sql.NullTime
@@ -626,7 +626,7 @@ type UpdateTaskParams struct {
 
 func (q *Queries) UpdateTask(ctx context.Context, arg UpdateTaskParams) error {
 	_, err := q.db.ExecContext(ctx, updateTask,
-		arg.Title,
+		arg.Name,
 		arg.Content,
 		arg.Priority,
 		arg.DueOn,

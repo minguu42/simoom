@@ -27,7 +27,7 @@ FROM projects
 WHERE id = ?;
 
 -- name: CreateStep :exec
-INSERT INTO steps (id, user_id, task_id, title, completed_at)
+INSERT INTO steps (id, user_id, task_id, name, completed_at)
 VALUES (?, ?, ?, ?, NULL);
 
 -- name: ListStepsByTaskID :many
@@ -43,7 +43,7 @@ WHERE id = ?;
 
 -- name: UpdateStep :exec
 UPDATE steps
-SET title        = ?,
+SET name         = ?,
     completed_at = ?
 WHERE id = ?;
 
@@ -85,7 +85,7 @@ FROM tags
 WHERE id = ?;
 
 -- name: CreateTask :exec
-INSERT INTO tasks (id, user_id, project_id, title, content, priority, due_on, completed_at)
+INSERT INTO tasks (id, user_id, project_id, name, content, priority, due_on, completed_at)
 VALUES (?, ?, ?, ?, '', ?, NULL, NULL);
 
 -- name: ListTasksByProjectID :many
@@ -110,7 +110,7 @@ WHERE id = ?;
 
 -- name: UpdateTask :exec
 UPDATE tasks
-SET title        = ?,
+SET name         = ?,
     content      = ?,
     priority     = ?,
     due_on       = ?,
