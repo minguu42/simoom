@@ -18,8 +18,7 @@ WHERE id = ?;
 UPDATE projects
 SET name        = ?,
     color       = ?,
-    is_archived = ?,
-    updated_at  = ?
+    is_archived = ?
 WHERE id = ?;
 
 -- name: DeleteProject :exec

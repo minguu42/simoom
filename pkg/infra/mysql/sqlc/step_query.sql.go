@@ -8,7 +8,6 @@ package sqlc
 import (
 	"context"
 	"database/sql"
-	"time"
 )
 
 const createStep = `-- name: CreateStep :exec
@@ -106,24 +105,17 @@ func (q *Queries) ListStepsByTaskID(ctx context.Context, taskID string) ([]Step,
 const updateStep = `-- name: UpdateStep :exec
 UPDATE steps
 SET title        = ?,
-    completed_at = ?,
-    updated_at   = ?
+    completed_at = ?
 WHERE id = ?
 `
 
 type UpdateStepParams struct {
 	Title       string
 	CompletedAt sql.NullTime
-	UpdatedAt   time.Time
 	ID          string
 }
 
 func (q *Queries) UpdateStep(ctx context.Context, arg UpdateStepParams) error {
-	_, err := q.db.ExecContext(ctx, updateStep,
-		arg.Title,
-		arg.CompletedAt,
-		arg.UpdatedAt,
-		arg.ID,
-	)
+	_, err := q.db.ExecContext(ctx, updateStep, arg.Title, arg.CompletedAt, arg.ID)
 	return err
 }

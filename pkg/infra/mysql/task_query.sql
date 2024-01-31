@@ -28,8 +28,7 @@ SET title        = ?,
     content      = ?,
     priority     = ?,
     due_on       = ?,
-    completed_at = ?,
-    updated_at   = ?
+    completed_at = ?
 WHERE id = ?;
 
 -- name: DeleteTask :exec

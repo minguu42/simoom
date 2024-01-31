@@ -8,7 +8,6 @@ package sqlc
 import (
 	"context"
 	"database/sql"
-	"time"
 )
 
 const createTask = `-- name: CreateTask :exec
@@ -173,8 +172,7 @@ SET title        = ?,
     content      = ?,
     priority     = ?,
     due_on       = ?,
-    completed_at = ?,
-    updated_at   = ?
+    completed_at = ?
 WHERE id = ?
 `
 
@@ -184,7 +182,6 @@ type UpdateTaskParams struct {
 	Priority    uint32
 	DueOn       sql.NullTime
 	CompletedAt sql.NullTime
-	UpdatedAt   time.Time
 	ID          string
 }
 
@@ -195,7 +192,6 @@ func (q *Queries) UpdateTask(ctx context.Context, arg UpdateTaskParams) error {
 		arg.Priority,
 		arg.DueOn,
 		arg.CompletedAt,
-		arg.UpdatedAt,
 		arg.ID,
 	)
 	return err

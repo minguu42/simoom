@@ -7,7 +7,6 @@ package sqlc
 
 import (
 	"context"
-	"time"
 )
 
 const createTag = `-- name: CreateTag :exec
@@ -137,18 +136,16 @@ func (q *Queries) ListTagsByUserID(ctx context.Context, arg ListTagsByUserIDPara
 
 const updateTag = `-- name: UpdateTag :exec
 UPDATE tags
-SET name       = ?,
-    updated_at = ?
+SET name = ?
 WHERE id = ?
 `
 
 type UpdateTagParams struct {
-	Name      string
-	UpdatedAt time.Time
-	ID        string
+	Name string
+	ID   string
 }
 
 func (q *Queries) UpdateTag(ctx context.Context, arg UpdateTagParams) error {
-	_, err := q.db.ExecContext(ctx, updateTag, arg.Name, arg.UpdatedAt, arg.ID)
+	_, err := q.db.ExecContext(ctx, updateTag, arg.Name, arg.ID)
 	return err
 }

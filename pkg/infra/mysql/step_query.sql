@@ -16,8 +16,7 @@ WHERE id = ?;
 -- name: UpdateStep :exec
 UPDATE steps
 SET title        = ?,
-    completed_at = ?,
-    updated_at   = ?
+    completed_at = ?
 WHERE id = ?;
 
 -- name: DeleteStep :exec
