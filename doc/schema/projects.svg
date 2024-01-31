@@ -92,8 +92,8 @@
 <text text-anchor="start" x="251" y="-973.9" font-family="Arial" font-size="14.00" fill="#000000">project_id    </text>
 <text text-anchor="start" x="345.8822" y="-973.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="244,-932.5 244,-962.5 439,-962.5 439,-932.5 244,-932.5"/>
-<text text-anchor="start" x="251" y="-943.9" font-family="Arial" font-size="14.00" fill="#000000">title    </text>
-<text text-anchor="start" x="306.9818" y="-943.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
+<text text-anchor="start" x="251" y="-943.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
+<text text-anchor="start" x="320.2132" y="-943.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
 <polygon fill="none" stroke="#000000" points="244,-902.5 244,-932.5 439,-932.5 439,-902.5 244,-902.5"/>
 <text text-anchor="start" x="251" y="-913.9" font-family="Arial" font-size="14.00" fill="#000000">content    </text>
 <text text-anchor="start" x="331.1164" y="-913.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(300)]</text>

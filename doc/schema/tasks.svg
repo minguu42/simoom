@@ -27,8 +27,8 @@
 <text text-anchor="start" x="247" y="-633.9" font-family="Arial" font-size="14.00" fill="#000000">project_id </text>
 <text text-anchor="start" x="311.568" y="-633.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="240,-592.5 240,-622.5 423,-622.5 423,-592.5 240,-592.5"/>
-<text text-anchor="start" x="247" y="-603.9" font-family="Arial" font-size="14.00" fill="#000000">title </text>
-<text text-anchor="start" x="272.6676" y="-603.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
+<text text-anchor="start" x="247" y="-603.9" font-family="Arial" font-size="14.00" fill="#000000">name </text>
+<text text-anchor="start" x="285.899" y="-603.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
 <polygon fill="none" stroke="#000000" points="240,-562.5 240,-592.5 423,-592.5 423,-562.5 240,-562.5"/>
 <text text-anchor="start" x="247" y="-573.9" font-family="Arial" font-size="14.00" fill="#000000">content </text>
 <text text-anchor="start" x="296.8022" y="-573.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(300)]</text>
@@ -138,8 +138,8 @@
 <text text-anchor="start" x="85" y="-1003.9" font-family="Arial" font-size="14.00" fill="#000000">task_id    </text>
 <text text-anchor="start" x="163.5498" y="-1003.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="78,-962.5 78,-992.5 271,-992.5 271,-962.5 78,-962.5"/>
-<text text-anchor="start" x="85" y="-973.9" font-family="Arial" font-size="14.00" fill="#000000">title    </text>
-<text text-anchor="start" x="140.9818" y="-973.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
+<text text-anchor="start" x="85" y="-973.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
+<text text-anchor="start" x="154.2132" y="-973.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
 <polygon fill="none" stroke="#000000" points="78,-932.5 78,-962.5 271,-962.5 271,-932.5 78,-932.5"/>
 <text text-anchor="start" x="84.6543" y="-943.9" font-family="Arial" font-size="14.00" fill="#000000">completed_at    </text>
 <text text-anchor="start" x="202.8857" y="-943.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>

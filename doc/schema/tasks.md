@@ -12,7 +12,7 @@ CREATE TABLE `tasks` (
   `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'タスクID',
   `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
   `project_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくプロジェクトのID',
-  `title` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'タイトル',
+  `name` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'タスク名',
   `content` varchar(300) COLLATE utf8mb4_bin NOT NULL COMMENT 'メモ',
   `priority` tinyint unsigned NOT NULL COMMENT '優先度（0~3の数字で指定し、3が最も優先度が高い）',
   `due_on` date DEFAULT NULL COMMENT '期日',
@@ -37,7 +37,7 @@ CREATE TABLE `tasks` (
 | id | char(26) |  | false |  | [steps](steps.md) [tasks_tags](tasks_tags.md) |  | タスクID |
 | user_id | char(26) |  | false |  |  | [users](users.md) | 所有するユーザのID |
 | project_id | char(26) |  | false |  |  | [projects](projects.md) | 紐づくプロジェクトのID |
-| title | varchar(80) |  | false |  |  |  | タイトル |
+| name | varchar(80) |  | false |  |  |  | タスク名 |
 | content | varchar(300) |  | false |  |  |  | メモ |
 | priority | tinyint unsigned |  | false |  |  |  | 優先度（0~3の数字で指定し、3が最も優先度が高い） |
 | due_on | date |  | true |  |  |  | 期日 |

@@ -12,7 +12,7 @@ CREATE TABLE `steps` (
   `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'ステップID',
   `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
   `task_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくタスクのID',
-  `title` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'タイトル',
+  `name` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'ステップ名',
   `completed_at` datetime DEFAULT NULL COMMENT '完了日',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
@@ -33,7 +33,7 @@ CREATE TABLE `steps` (
 | id | char(26) |  | false |  |  |  | ステップID |
 | user_id | char(26) |  | false |  |  | [users](users.md) | 所有するユーザのID |
 | task_id | char(26) |  | false |  |  | [tasks](tasks.md) | 紐づくタスクのID |
-| title | varchar(80) |  | false |  |  |  | タイトル |
+| name | varchar(80) |  | false |  |  |  | ステップ名 |
 | completed_at | datetime |  | true |  |  |  | 完了日 |
 | created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
 | updated_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |  |  | 更新日 |
