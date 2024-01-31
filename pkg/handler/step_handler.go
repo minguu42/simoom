@@ -14,7 +14,7 @@ func newStep(s model.Step) *simoompb.Step {
 	return &simoompb.Step{
 		Id:          s.ID,
 		TaskId:      s.TaskID,
-		Title:       s.Title,
+		Title:       s.Name,
 		CompletedAt: newTimestamp(s.CompletedAt),
 	}
 }

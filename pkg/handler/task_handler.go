@@ -16,7 +16,7 @@ func newTask(t model.Task) *simoompb.Task {
 		ProjectId:   t.ProjectID,
 		Steps:       newSteps(t.Steps),
 		Tags:        newTags(t.Tags),
-		Title:       t.Title,
+		Title:       t.Name,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),
 		DueOn:       newDate(t.DueOn),

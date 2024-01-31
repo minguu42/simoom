@@ -53,7 +53,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		ID:     uc.idgen.Generate(),
 		UserID: auth.GetUserID(ctx),
 		TaskID: in.TaskID,
-		Title:  in.Title,
+		Name:   in.Title,
 	}
 	if err := uc.repo.CreateStep(ctx, s); err != nil {
 		return StepOutput{}, fmt.Errorf("failed to create step: %w", err)
@@ -80,7 +80,7 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 	}
 
 	if in.Title != nil {
-		s.Title = *in.Title
+		s.Name = *in.Title
 	}
 	if in.CompletedAt != nil {
 		s.CompletedAt = in.CompletedAt

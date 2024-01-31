@@ -54,7 +54,7 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		ID:        uc.idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
 		ProjectID: in.ProjectID,
-		Title:     in.Title,
+		Name:      in.Title,
 		Priority:  in.Priority,
 	}
 	if err := uc.repo.CreateTask(ctx, t); err != nil {
@@ -153,7 +153,7 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 	}
 
 	if in.Title != nil {
-		t.Title = *in.Title
+		t.Name = *in.Title
 	}
 	if in.Content != nil {
 		t.Content = *in.Content

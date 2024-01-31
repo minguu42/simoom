@@ -37,7 +37,7 @@ func TestStepUsecase_CreateStep(t *testing.T) {
 			want: usecase.StepOutput{Step: model.Step{
 				UserID:      "user_01",
 				TaskID:      "task_01",
-				Title:       "新ステップ",
+				Name:        "新ステップ",
 				CompletedAt: nil,
 			}},
 		},
@@ -83,7 +83,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 				ID:          "step_01",
 				UserID:      "user_01",
 				TaskID:      "task_01",
-				Title:       "改ステップ1",
+				Name:        "改ステップ1",
 				CompletedAt: pointers.Ref(time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)),
 			}},
 		},
