@@ -61,7 +61,7 @@ func runTaskEdit(ctx context.Context, core cmdutil.Core, opts taskEditOpts) erro
 	}
 	req := connect.NewRequest(&simoompb.UpdateTaskRequest{
 		Id:          opts.id,
-		Title:       title,
+		Name:        title,
 		Content:     content,
 		Priority:    priority,
 		CompletedAt: completedAt,

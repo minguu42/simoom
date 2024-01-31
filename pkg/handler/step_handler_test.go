@@ -25,7 +25,7 @@ func TestStepHandler_CreateStep(t *testing.T) {
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateStepRequest{
 					TaskId: "xxxx-xxxx-xxxx-xxxx-id345",
-					Title:  "some-step",
+					Name:   "some-step",
 				}),
 			},
 		},
@@ -35,27 +35,27 @@ func TestStepHandler_CreateStep(t *testing.T) {
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateStepRequest{
 					TaskId: "xxxx-xxxx-xxxx-xxxx-xxxx-id",
-					Title:  "some-step",
+					Name:   "some-step",
 				}),
 			},
 		},
 		{
-			name: "titleに空文字列は指定できない",
+			name: "nameに空文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateStepRequest{
 					TaskId: "01DXF6DT000000000000000000",
-					Title:  "",
+					Name:   "",
 				}),
 			},
 		},
 		{
-			name: "titleに81文字以上の文字列は指定できない",
+			name: "nameに81文字以上の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateStepRequest{
 					TaskId: "01DXF6DT000000000000000000",
-					Title:  "very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-step01",
+					Name:   "very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-step01",
 				}),
 			},
 		},
@@ -82,8 +82,8 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateStepRequest{
-					Id:    "xxxx-xxxx-xxxx-xxxx-id345",
-					Title: pointers.Ref("some-step"),
+					Id:   "xxxx-xxxx-xxxx-xxxx-id345",
+					Name: pointers.Ref("some-step"),
 				}),
 			},
 		},
@@ -92,8 +92,8 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateStepRequest{
-					Id:    "xxxx-xxxx-xxxx-xxxx-xxxx-id",
-					Title: pointers.Ref("some-step"),
+					Id:   "xxxx-xxxx-xxxx-xxxx-xxxx-id",
+					Name: pointers.Ref("some-step"),
 				}),
 			},
 		},
@@ -103,28 +103,28 @@ func TestStepHandler_UpdateStep(t *testing.T) {
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateStepRequest{
 					Id:          "01DXF6DT000000000000000000",
-					Title:       nil,
+					Name:        nil,
 					CompletedAt: nil,
 				}),
 			},
 		},
 		{
-			name: "titleに空文字列は指定できない",
+			name: "nameに空文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateStepRequest{
-					Id:    "01DXF6DT000000000000000000",
-					Title: pointers.Ref(""),
+					Id:   "01DXF6DT000000000000000000",
+					Name: pointers.Ref(""),
 				}),
 			},
 		},
 		{
-			name: "titleに81文字以上の文字列は指定できない",
+			name: "nameに81文字以上の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateStepRequest{
-					Id:    "01DXF6DT000000000000000000",
-					Title: pointers.Ref("very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-step01"),
+					Id:   "01DXF6DT000000000000000000",
+					Name: pointers.Ref("very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-step01"),
 				}),
 			},
 		},

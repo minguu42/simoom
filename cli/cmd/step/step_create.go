@@ -42,7 +42,7 @@ func newCmdStepCreate(core cmdutil.Core) *cobra.Command {
 func runStepCreate(ctx context.Context, core cmdutil.Core, opts stepCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateStepRequest{
 		TaskId: opts.taskID,
-		Title:  opts.title,
+		Name:   opts.title,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 

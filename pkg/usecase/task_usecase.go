@@ -34,7 +34,7 @@ type TasksOutput struct {
 
 type CreateTaskInput struct {
 	ProjectID string
-	Title     string
+	Name      string
 	Priority  uint
 }
 
@@ -54,7 +54,7 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		ID:        uc.idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
 		ProjectID: in.ProjectID,
-		Name:      in.Title,
+		Name:      in.Name,
 		Priority:  in.Priority,
 	}
 	if err := uc.repo.CreateTask(ctx, t); err != nil {
@@ -133,7 +133,7 @@ func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (
 
 type UpdateTaskInput struct {
 	ID          string
-	Title       *string
+	Name        *string
 	Content     *string
 	Priority    *uint
 	DueOn       *time.Time
@@ -152,8 +152,8 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 		return TaskOutput{}, ErrTaskNotFound
 	}
 
-	if in.Title != nil {
-		t.Name = *in.Title
+	if in.Name != nil {
+		t.Name = *in.Name
 	}
 	if in.Content != nil {
 		t.Content = *in.Content

@@ -114,7 +114,7 @@ message Projects {
 
 message CreateTaskRequest {
   string project_id = 1;
-  string title = 2;
+  string name = 2;
   uint32 priority = 3;
 }
 
@@ -132,7 +132,7 @@ message ListTasksByTagIDRequest {
 
 message UpdateTaskRequest {
   string id = 1;
-  optional string title = 2;
+  optional string name = 2;
   optional string content = 3;
   optional uint32 priority = 4;
   optional Date due_on = 5;
@@ -146,7 +146,7 @@ message DeleteTaskRequest {
 message Task {
   string id = 1;
   string project_id = 2;
-  string title = 3;
+  string name = 3;
   string content = 4;
   uint32 priority = 5;
   Date due_on = 6;
@@ -162,12 +162,12 @@ message Tasks {
 
 message CreateStepRequest {
   string task_id = 1;
-  string title = 2;
+  string name = 2;
 }
 
 message UpdateStepRequest {
   string id = 1;
-  optional string title = 2;
+  optional string name = 2;
   optional google.protobuf.Timestamp completed_at = 3;
 }
 
@@ -178,7 +178,7 @@ message DeleteStepRequest {
 message Step {
   string id = 1;
   string task_id = 2;
-  string title = 3;
+  string name = 3;
   google.protobuf.Timestamp completed_at = 4;
 }
 

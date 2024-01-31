@@ -31,7 +31,7 @@ func TestTaskUsecase_CreateTask(t *testing.T) {
 				ctx: tctx,
 				in: usecase.CreateTaskInput{
 					ProjectID: "project_01",
-					Title:     "新タスク",
+					Name:      "新タスク",
 					Priority:  3,
 				},
 			},
@@ -77,7 +77,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 				ctx: tctx,
 				in: usecase.UpdateTaskInput{
 					ID:          "task_01",
-					Title:       pointers.Ref("改タスク1"),
+					Name:        pointers.Ref("改タスク1"),
 					Content:     pointers.Ref("テストコンテンツ1"),
 					Priority:    pointers.Ref(uint(3)),
 					DueOn:       pointers.Ref(time.Date(2020, 1, 10, 0, 0, 1, 0, time.UTC)),

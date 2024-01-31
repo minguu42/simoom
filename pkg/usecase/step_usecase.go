@@ -34,7 +34,7 @@ type StepsOutput struct {
 
 type CreateStepInput struct {
 	TaskID string
-	Title  string
+	Name   string
 }
 
 func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
@@ -53,7 +53,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		ID:     uc.idgen.Generate(),
 		UserID: auth.GetUserID(ctx),
 		TaskID: in.TaskID,
-		Name:   in.Title,
+		Name:   in.Name,
 	}
 	if err := uc.repo.CreateStep(ctx, s); err != nil {
 		return StepOutput{}, fmt.Errorf("failed to create step: %w", err)
@@ -63,7 +63,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 
 type UpdateStepInput struct {
 	ID          string
-	Title       *string
+	Name        *string
 	CompletedAt *time.Time
 }
 
@@ -79,8 +79,8 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 		return StepOutput{}, ErrStepNotFound
 	}
 
-	if in.Title != nil {
-		s.Name = *in.Title
+	if in.Name != nil {
+		s.Name = *in.Name
 	}
 	if in.CompletedAt != nil {
 		s.CompletedAt = in.CompletedAt

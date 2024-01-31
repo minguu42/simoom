@@ -46,7 +46,7 @@ func newCmdTaskCreate(core cmdutil.Core) *cobra.Command {
 func runTaskCreate(ctx context.Context, core cmdutil.Core, opts taskCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateTaskRequest{
 		ProjectId: opts.projectID,
-		Title:     opts.title,
+		Name:      opts.title,
 		Priority:  opts.priority,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))

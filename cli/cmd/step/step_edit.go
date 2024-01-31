@@ -46,7 +46,7 @@ func runStepEdit(ctx context.Context, core cmdutil.Core, opts stepEditOpts) erro
 	}
 	req := connect.NewRequest(&simoompb.UpdateStepRequest{
 		Id:          opts.id,
-		Title:       title,
+		Name:        title,
 		CompletedAt: completedAt,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
