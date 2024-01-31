@@ -11,6 +11,7 @@
 CREATE TABLE `tasks_tags` (
   `task_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくタスクID',
   `tag_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくタグID',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
   PRIMARY KEY (`task_id`,`tag_id`),
   KEY `tasks_tags_tag_id_fk` (`tag_id`),
   CONSTRAINT `tasks_tags_tag_id_fk` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -22,10 +23,11 @@ CREATE TABLE `tasks_tags` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| task_id | char(26) |  | false |  | [tasks](tasks.md) | 紐づくタスクID |
-| tag_id | char(26) |  | false |  | [tags](tags.md) | 紐づくタグID |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| task_id | char(26) |  | false |  |  | [tasks](tasks.md) | 紐づくタスクID |
+| tag_id | char(26) |  | false |  |  | [tags](tags.md) | 紐づくタグID |
+| created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
 
 ## Constraints
 

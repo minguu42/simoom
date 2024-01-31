@@ -14,8 +14,8 @@ CREATE TABLE `projects` (
   `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'プロジェクト名',
   `color` char(7) COLLATE utf8mb4_bin NOT NULL COMMENT 'カラー',
   `is_archived` tinyint(1) NOT NULL COMMENT 'アーカイブされたか',
-  `created_at` datetime NOT NULL COMMENT '作成日',
-  `updated_at` datetime NOT NULL COMMENT '更新日',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
   PRIMARY KEY (`id`),
   KEY `projects_user_id_fk` (`user_id`),
   CONSTRAINT `projects_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -26,15 +26,15 @@ CREATE TABLE `projects` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false | [tasks](tasks.md) |  | プロジェクトID |
-| user_id | char(26) |  | false |  | [users](users.md) | 所有するユーザのID |
-| name | varchar(20) |  | false |  |  | プロジェクト名 |
-| color | char(7) |  | false |  |  | カラー |
-| is_archived | tinyint(1) |  | false |  |  | アーカイブされたか |
-| created_at | datetime |  | false |  |  | 作成日 |
-| updated_at | datetime |  | false |  |  | 更新日 |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | char(26) |  | false |  | [tasks](tasks.md) |  | プロジェクトID |
+| user_id | char(26) |  | false |  |  | [users](users.md) | 所有するユーザのID |
+| name | varchar(20) |  | false |  |  |  | プロジェクト名 |
+| color | char(7) |  | false |  |  |  | カラー |
+| is_archived | tinyint(1) |  | false |  |  |  | アーカイブされたか |
+| created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
+| updated_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |  |  | 更新日 |
 
 ## Constraints
 

@@ -14,8 +14,8 @@ CREATE TABLE `steps` (
   `task_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくタスクのID',
   `title` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'タイトル',
   `completed_at` datetime DEFAULT NULL COMMENT '完了日',
-  `created_at` datetime NOT NULL COMMENT '作成日',
-  `updated_at` datetime NOT NULL COMMENT '更新日',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
   PRIMARY KEY (`id`),
   KEY `steps_user_id_fk` (`user_id`),
   KEY `steps_task_id_fk` (`task_id`),
@@ -28,15 +28,15 @@ CREATE TABLE `steps` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false |  |  | ステップID |
-| user_id | char(26) |  | false |  | [users](users.md) | 所有するユーザのID |
-| task_id | char(26) |  | false |  | [tasks](tasks.md) | 紐づくタスクのID |
-| title | varchar(80) |  | false |  |  | タイトル |
-| completed_at | datetime |  | true |  |  | 完了日 |
-| created_at | datetime |  | false |  |  | 作成日 |
-| updated_at | datetime |  | false |  |  | 更新日 |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | char(26) |  | false |  |  |  | ステップID |
+| user_id | char(26) |  | false |  |  | [users](users.md) | 所有するユーザのID |
+| task_id | char(26) |  | false |  |  | [tasks](tasks.md) | 紐づくタスクのID |
+| title | varchar(80) |  | false |  |  |  | タイトル |
+| completed_at | datetime |  | true |  |  |  | 完了日 |
+| created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
+| updated_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |  |  | 更新日 |
 
 ## Constraints
 

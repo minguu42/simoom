@@ -204,31 +204,34 @@
 <!-- tasks_tags -->
 <g id="node5" class="node">
 <title>tasks_tags</title>
-<polygon fill="#efefef" stroke="transparent" points="544,-1338.5 544,-1373.5 771,-1373.5 771,-1338.5 544,-1338.5"/>
-<polygon fill="none" stroke="#000000" points="544,-1338.5 544,-1373.5 771,-1373.5 771,-1338.5 544,-1338.5"/>
-<text text-anchor="start" x="550.7014" y="-1351.3" font-family="Arial Bold" font-size="18.00" fill="#000000">tasks_tags</text>
-<text text-anchor="start" x="636.7306" y="-1351.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
-<text text-anchor="start" x="670.9354" y="-1351.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
-<polygon fill="none" stroke="#000000" points="544,-1308.5 544,-1338.5 771,-1338.5 771,-1308.5 544,-1308.5"/>
-<text text-anchor="start" x="551" y="-1319.9" font-family="Arial" font-size="14.00" fill="#000000">task_id    </text>
-<text text-anchor="start" x="629.5498" y="-1319.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
-<polygon fill="none" stroke="#000000" points="544,-1278.5 544,-1308.5 771,-1308.5 771,-1278.5 544,-1278.5"/>
-<text text-anchor="start" x="551" y="-1289.9" font-family="Arial" font-size="14.00" fill="#000000">tag_id    </text>
-<text text-anchor="start" x="623.3324" y="-1289.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
+<polygon fill="#efefef" stroke="transparent" points="544,-1353.5 544,-1388.5 771,-1388.5 771,-1353.5 544,-1353.5"/>
+<polygon fill="none" stroke="#000000" points="544,-1353.5 544,-1388.5 771,-1388.5 771,-1353.5 544,-1353.5"/>
+<text text-anchor="start" x="550.7014" y="-1366.3" font-family="Arial Bold" font-size="18.00" fill="#000000">tasks_tags</text>
+<text text-anchor="start" x="636.7306" y="-1366.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
+<text text-anchor="start" x="670.9354" y="-1366.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
+<polygon fill="none" stroke="#000000" points="544,-1323.5 544,-1353.5 771,-1353.5 771,-1323.5 544,-1323.5"/>
+<text text-anchor="start" x="551" y="-1334.9" font-family="Arial" font-size="14.00" fill="#000000">task_id    </text>
+<text text-anchor="start" x="629.5498" y="-1334.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
+<polygon fill="none" stroke="#000000" points="544,-1293.5 544,-1323.5 771,-1323.5 771,-1293.5 544,-1293.5"/>
+<text text-anchor="start" x="551" y="-1304.9" font-family="Arial" font-size="14.00" fill="#000000">tag_id    </text>
+<text text-anchor="start" x="623.3324" y="-1304.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
+<polygon fill="none" stroke="#000000" points="544,-1263.5 544,-1293.5 771,-1293.5 771,-1263.5 544,-1263.5"/>
+<text text-anchor="start" x="551" y="-1274.9" font-family="Arial" font-size="14.00" fill="#000000">created_at    </text>
+<text text-anchor="start" x="651.3422" y="-1274.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>
 </g>
 <!-- tasks_tags&#45;&gt;tags -->
 <g id="edge7" class="edge">
 <title>tasks_tags:tag_id&#45;&gt;tags:id</title>
-<path fill="none" stroke="#000000" d="M781.0143,-1292.4777C922.2526,-1261.6621 579.0095,-544.5 742,-544.5"/>
-<polygon fill="#000000" stroke="#000000" points="780.9483,-1292.4843 770.543,-1289.0233 775.9741,-1292.9922 771,-1293.5 771,-1293.5 771,-1293.5 775.9741,-1292.9922 771.457,-1297.9767 780.9483,-1292.4843 780.9483,-1292.4843"/>
-<text text-anchor="start" x="778.495" y="-1303.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (tag_id) REFERENCES tags (id)</text>
+<path fill="none" stroke="#000000" d="M781.2153,-1307.4572C925.3018,-1276.0245 575.7502,-544.5 742,-544.5"/>
+<polygon fill="#000000" stroke="#000000" points="780.9483,-1307.4844 770.543,-1304.0233 775.9742,-1307.9922 771,-1308.5 771,-1308.5 771,-1308.5 775.9742,-1307.9922 771.457,-1312.9767 780.9483,-1307.4844 780.9483,-1307.4844"/>
+<text text-anchor="start" x="778.495" y="-1318.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (tag_id) REFERENCES tags (id)</text>
 </g>
 <!-- tasks_tags&#45;&gt;tasks -->
 <g id="edge8" class="edge">
 <title>tasks_tags:task_id&#45;&gt;tasks:id</title>
-<path fill="none" stroke="#000000" d="M534.0689,-1321.9928C510.2022,-1313.3055 532.1496,-1268.8682 544,-1236 565.7327,-1175.7226 614.2673,-1185.2774 636,-1125 650.0945,-1085.9077 677.5556,-1031.5 636,-1031.5"/>
-<polygon fill="#000000" stroke="#000000" points="534.1132,-1321.9994 543.3247,-1327.9491 539.0566,-1322.7497 544,-1323.5 544,-1323.5 544,-1323.5 539.0566,-1322.7497 544.6753,-1319.0509 534.1132,-1321.9994 534.1132,-1321.9994"/>
-<text text-anchor="start" x="373.304" y="-1307.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (task_id) REFERENCES tasks (id)</text>
+<path fill="none" stroke="#000000" d="M533.7364,-1337.3957C496.5662,-1328.3648 525.9748,-1265.8605 544,-1221 566.0331,-1166.1649 613.9669,-1179.8351 636,-1125 651.4934,-1086.4407 677.5556,-1031.5 636,-1031.5"/>
+<polygon fill="#000000" stroke="#000000" points="534.0574,-1337.4301 543.5186,-1342.9742 539.0287,-1337.9651 544,-1338.5 544,-1338.5 544,-1338.5 539.0287,-1337.9651 544.4814,-1334.0258 534.0574,-1337.4301 534.0574,-1337.4301"/>
+<text text-anchor="start" x="314.054" y="-1348.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (task_id) REFERENCES tasks (id)</text>
 </g>
 </g>
 </svg>
