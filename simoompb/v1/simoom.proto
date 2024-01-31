@@ -105,8 +105,6 @@ message Project {
   string name = 2;
   string color = 3;
   bool is_archived = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
 }
 
 message Projects {
@@ -153,8 +151,6 @@ message Task {
   uint32 priority = 5;
   Date due_on = 6;
   google.protobuf.Timestamp completed_at = 7;
-  google.protobuf.Timestamp created_at = 8;
-  google.protobuf.Timestamp updated_at = 9;
   repeated Step steps = 10;
   repeated Tag tags = 11;
 }
@@ -184,8 +180,6 @@ message Step {
   string task_id = 2;
   string title = 3;
   google.protobuf.Timestamp completed_at = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
 }
 
 message CreateTagRequest {
@@ -209,8 +203,6 @@ message DeleteTagRequest {
 message Tag {
   string id = 1;
   string name = 2;
-  google.protobuf.Timestamp created_at = 3;
-  google.protobuf.Timestamp updated_at = 4;
 }
 
 message Tags {
