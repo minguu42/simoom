@@ -119,8 +119,6 @@ func (q *Queries) ImportTaskTag(ctx context.Context) error {
 }
 
 const importUser = `-- name: ImportUser :exec
-# noinspection SqlWithoutWhereForFile
-
 INSERT INTO users (id, name, email, password, created_at, updated_at)
 VALUES ('user_01', 'ユーザ1', 'user01@example.com', 'some-password','2020-01-01 00:00:01', '2020-01-01 00:00:01')
 `
