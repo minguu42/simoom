@@ -13,14 +13,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var (
-	createStepOption = cmpopts.IgnoreFields(usecase.StepOutput{},
-		"Step.ID",
-		"Step.CreatedAt",
-		"Step.UpdatedAt",
-	)
-	updateStepOption = cmpopts.IgnoreFields(usecase.StepOutput{}, "Step.UpdatedAt")
-)
+var createStepOption = cmpopts.IgnoreFields(usecase.StepOutput{}, "Step.ID")
 
 func TestStepUsecase_CreateStep(t *testing.T) {
 	type args struct {
@@ -105,7 +98,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, updateStepOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("step.UpdateStep mismatch (-want +got):\n%s", diff)
 			}
 		})

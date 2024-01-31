@@ -12,14 +12,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var (
-	createProjectOption = cmpopts.IgnoreFields(usecase.ProjectOutput{},
-		"Project.ID",
-		"Project.CreatedAt",
-		"Project.UpdatedAt",
-	)
-	updateProjectOption = cmpopts.IgnoreFields(usecase.ProjectOutput{}, "Project.UpdatedAt")
-)
+var createProjectOption = cmpopts.IgnoreFields(usecase.ProjectOutput{}, "Project.ID")
 
 func TestProjectUsecase_CreateProject(t *testing.T) {
 	type args struct {
@@ -154,7 +147,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, updateProjectOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("project.UpdateProject mismatch (-want +got):\n%s", diff)
 			}
 		})

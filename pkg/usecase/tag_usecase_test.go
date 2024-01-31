@@ -12,14 +12,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var (
-	createTagOption = cmpopts.IgnoreFields(usecase.TagOutput{},
-		"Tag.ID",
-		"Tag.CreatedAt",
-		"Tag.UpdatedAt",
-	)
-	updateTagOption = cmpopts.IgnoreFields(usecase.TagOutput{}, "Tag.UpdatedAt")
-)
+var createTagOption = cmpopts.IgnoreFields(usecase.TagOutput{}, "Tag.ID")
 
 func TestTagUsecase_CreateTag(t *testing.T) {
 	type args struct {
@@ -143,7 +136,7 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, updateTagOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("tag.UpdateTag mismatch (-want +got):\n%s", diff)
 			}
 		})

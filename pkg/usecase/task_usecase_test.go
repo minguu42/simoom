@@ -13,14 +13,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var (
-	createTaskOption = cmpopts.IgnoreFields(usecase.TaskOutput{},
-		"Task.ID",
-		"Task.CreatedAt",
-		"Task.UpdatedAt",
-	)
-	updateTaskOption = cmpopts.IgnoreFields(usecase.TaskOutput{}, "Task.UpdatedAt")
-)
+var createTaskOption = cmpopts.IgnoreFields(usecase.TaskOutput{}, "Task.ID")
 
 func TestTaskUsecase_CreateTask(t *testing.T) {
 	type args struct {
@@ -141,7 +134,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, updateTaskOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("task.UpdateTask mismatch (-want +got):\n%s", diff)
 			}
 		})
