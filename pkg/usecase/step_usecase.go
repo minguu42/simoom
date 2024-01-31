@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -35,7 +34,7 @@ type StepsOutput struct {
 
 type CreateStepInput struct {
 	TaskID string
-	Title  string
+	Name   string
 }
 
 func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
@@ -50,14 +49,11 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		return StepOutput{}, ErrTaskNotFound
 	}
 
-	now := clock.Now(ctx)
 	s := model.Step{
-		ID:        uc.idgen.Generate(),
-		UserID:    auth.GetUserID(ctx),
-		TaskID:    in.TaskID,
-		Title:     in.Title,
-		CreatedAt: now,
-		UpdatedAt: now,
+		ID:     uc.idgen.Generate(),
+		UserID: auth.GetUserID(ctx),
+		TaskID: in.TaskID,
+		Name:   in.Name,
 	}
 	if err := uc.repo.CreateStep(ctx, s); err != nil {
 		return StepOutput{}, fmt.Errorf("failed to create step: %w", err)
@@ -67,7 +63,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 
 type UpdateStepInput struct {
 	ID          string
-	Title       *string
+	Name        *string
 	CompletedAt *time.Time
 }
 
@@ -83,13 +79,12 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 		return StepOutput{}, ErrStepNotFound
 	}
 
-	if in.Title != nil {
-		s.Title = *in.Title
+	if in.Name != nil {
+		s.Name = *in.Name
 	}
 	if in.CompletedAt != nil {
 		s.CompletedAt = in.CompletedAt
 	}
-	s.UpdatedAt = clock.Now(ctx)
 	if err := uc.repo.UpdateStep(ctx, s); err != nil {
 		return StepOutput{}, fmt.Errorf("failed to update step: %w", err)
 	}

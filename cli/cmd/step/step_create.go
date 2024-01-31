@@ -13,7 +13,7 @@ import (
 
 type stepCreateOpts struct {
 	taskID string
-	title  string
+	name   string
 }
 
 func newCmdStepCreate(core cmdutil.Core) *cobra.Command {
@@ -26,15 +26,15 @@ func newCmdStepCreate(core cmdutil.Core) *cobra.Command {
 			if opts.taskID == "" {
 				return errors.New("task-id is required")
 			}
-			if opts.title == "" {
-				return errors.New("title is required")
+			if opts.name == "" {
+				return errors.New("name is required")
 			}
 			return runStepCreate(cmd.Context(), core, opts)
 		},
 	}
 
 	cmd.Flags().StringVar(&opts.taskID, "task-id", "", "task id")
-	cmd.Flags().StringVar(&opts.title, "title", "", "step title")
+	cmd.Flags().StringVar(&opts.name, "name", "", "step name")
 
 	return cmd
 }
@@ -42,7 +42,7 @@ func newCmdStepCreate(core cmdutil.Core) *cobra.Command {
 func runStepCreate(ctx context.Context, core cmdutil.Core, opts stepCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateStepRequest{
 		TaskId: opts.taskID,
-		Title:  opts.title,
+		Name:   opts.name,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 

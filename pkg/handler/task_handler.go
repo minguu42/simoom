@@ -8,7 +8,6 @@ import (
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func newTask(t model.Task) *simoompb.Task {
@@ -17,13 +16,11 @@ func newTask(t model.Task) *simoompb.Task {
 		ProjectId:   t.ProjectID,
 		Steps:       newSteps(t.Steps),
 		Tags:        newTags(t.Tags),
-		Title:       t.Title,
+		Name:        t.Name,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),
 		DueOn:       newDate(t.DueOn),
 		CompletedAt: newTimestamp(t.CompletedAt),
-		CreatedAt:   timestamppb.New(t.CreatedAt),
-		UpdatedAt:   timestamppb.New(t.UpdatedAt),
 	}
 }
 
@@ -39,8 +36,8 @@ func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.C
 	if len(req.Msg.ProjectId) != 26 {
 		return nil, newErrInvalidArgument("project_id is a 26-character string")
 	}
-	if len(req.Msg.Title) < 1 || 80 < len(req.Msg.Title) {
-		return nil, newErrInvalidArgument("title cannot be an empty string")
+	if len(req.Msg.Name) < 1 || 80 < len(req.Msg.Name) {
+		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 	if req.Msg.Priority > 3 {
 		return nil, newErrInvalidArgument("priority is specified by 0 to 3")
@@ -48,7 +45,7 @@ func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.C
 
 	out, err := h.task.CreateTask(ctx, usecase.CreateTaskInput{
 		ProjectID: req.Msg.ProjectId,
-		Title:     req.Msg.Title,
+		Name:      req.Msg.Name,
 		Priority:  uint(req.Msg.Priority),
 	})
 	if err != nil {
@@ -105,11 +102,11 @@ func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.U
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
-	if req.Msg.Title == nil && req.Msg.Content == nil && req.Msg.Priority == nil && req.Msg.DueOn == nil && req.Msg.CompletedAt == nil {
+	if req.Msg.Name == nil && req.Msg.Content == nil && req.Msg.Priority == nil && req.Msg.DueOn == nil && req.Msg.CompletedAt == nil {
 		return nil, newErrInvalidArgument("must contain some argument other than id")
 	}
-	if req.Msg.Title != nil && (len(*req.Msg.Title) < 1 || 80 < len(*req.Msg.Title)) {
-		return nil, newErrInvalidArgument("title cannot be an empty string")
+	if req.Msg.Name != nil && (len(*req.Msg.Name) < 1 || 80 < len(*req.Msg.Name)) {
+		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 	if req.Msg.Priority != nil && *req.Msg.Priority > 3 {
 		return nil, newErrInvalidArgument("priority is specified by 0 to 3")
@@ -117,7 +114,7 @@ func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.U
 
 	out, err := h.task.UpdateTask(ctx, usecase.UpdateTaskInput{
 		ID:          req.Msg.Id,
-		Title:       req.Msg.Title,
+		Name:        req.Msg.Name,
 		Content:     req.Msg.Content,
 		Priority:    nil,
 		DueOn:       nil,

@@ -3,7 +3,6 @@ package mysql
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -30,8 +29,6 @@ func TestClient_CreateProject(t *testing.T) {
 					Name:       "新プロジェクト",
 					Color:      "#000000",
 					IsArchived: false,
-					CreatedAt:  time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
-					UpdatedAt:  time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
 				},
 			},
 		},
@@ -78,8 +75,6 @@ func TestClient_ListProjectsByUserID(t *testing.T) {
 					Name:       "プロジェクト2",
 					Color:      "#ffffff",
 					IsArchived: false,
-					CreatedAt:  time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
-					UpdatedAt:  time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
 				},
 			},
 		},
@@ -126,8 +121,6 @@ func TestClient_GetProjectByID(t *testing.T) {
 				Name:       "プロジェクト1",
 				Color:      "#1a2b3c",
 				IsArchived: false,
-				CreatedAt:  time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-				UpdatedAt:  time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 			},
 		},
 		{
@@ -167,8 +160,6 @@ func TestClient_UpdateProject(t *testing.T) {
 					Name:       "改プロジェクト1",
 					Color:      "#0f1e2d",
 					IsArchived: false,
-					CreatedAt:  time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-					UpdatedAt:  time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC),
 				},
 			},
 		},

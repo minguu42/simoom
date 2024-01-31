@@ -18,8 +18,6 @@ func newModelProject(p sqlc.Project) model.Project {
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
-		CreatedAt:  p.CreatedAt,
-		UpdatedAt:  p.UpdatedAt,
 	}
 }
 
@@ -38,8 +36,6 @@ func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
-		CreatedAt:  p.CreatedAt,
-		UpdatedAt:  p.UpdatedAt,
 	}); err != nil {
 		return fmt.Errorf("failed to create project: %w", err)
 	}
@@ -74,7 +70,6 @@ func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
-		UpdatedAt:  p.UpdatedAt,
 		ID:         p.ID,
 	}); err != nil {
 		return fmt.Errorf("failed to update project: %w", err)

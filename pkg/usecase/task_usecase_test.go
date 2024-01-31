@@ -13,14 +13,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var (
-	createTaskOption = cmpopts.IgnoreFields(usecase.TaskOutput{},
-		"Task.ID",
-		"Task.CreatedAt",
-		"Task.UpdatedAt",
-	)
-	updateTaskOption = cmpopts.IgnoreFields(usecase.TaskOutput{}, "Task.UpdatedAt")
-)
+var createTaskOption = cmpopts.IgnoreFields(usecase.TaskOutput{}, "Task.ID")
 
 func TestTaskUsecase_CreateTask(t *testing.T) {
 	type args struct {
@@ -38,14 +31,14 @@ func TestTaskUsecase_CreateTask(t *testing.T) {
 				ctx: tctx,
 				in: usecase.CreateTaskInput{
 					ProjectID: "project_01",
-					Title:     "新タスク",
+					Name:      "新タスク",
 					Priority:  3,
 				},
 			},
 			want: usecase.TaskOutput{Task: model.Task{
 				UserID:    "user_01",
 				ProjectID: "project_01",
-				Title:     "新タスク",
+				Name:      "新タスク",
 				Content:   "",
 				Priority:  3,
 			}},
@@ -84,7 +77,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 				ctx: tctx,
 				in: usecase.UpdateTaskInput{
 					ID:          "task_01",
-					Title:       pointers.Ref("改タスク1"),
+					Name:        pointers.Ref("改タスク1"),
 					Content:     pointers.Ref("テストコンテンツ1"),
 					Priority:    pointers.Ref(uint(3)),
 					DueOn:       pointers.Ref(time.Date(2020, 1, 10, 0, 0, 1, 0, time.UTC)),
@@ -98,45 +91,36 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 						ID:          "step_01",
 						UserID:      "user_01",
 						TaskID:      "task_01",
-						Title:       "ステップ1",
+						Name:        "ステップ1",
 						CompletedAt: nil,
-						CreatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-						UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 					},
 					{
 						ID:          "step_02",
 						UserID:      "user_01",
 						TaskID:      "task_01",
-						Title:       "ステップ2",
+						Name:        "ステップ2",
 						CompletedAt: nil,
-						CreatedAt:   time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
-						UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
 					},
 				},
 				Tags: []model.Tag{
 					{
-						ID:        "tag_01",
-						UserID:    "user_01",
-						Name:      "タグ1",
-						CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-						UpdatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+						ID:     "tag_01",
+						UserID: "user_01",
+						Name:   "タグ1",
 					},
 					{
-						ID:        "tag_02",
-						UserID:    "user_01",
-						Name:      "タグ2",
-						CreatedAt: time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
-						UpdatedAt: time.Date(2020, 1, 1, 0, 0, 2, 0, time.UTC),
+						ID:     "tag_02",
+						UserID: "user_01",
+						Name:   "タグ2",
 					},
 				},
 				UserID:      "user_01",
 				ProjectID:   "project_01",
-				Title:       "改タスク1",
+				Name:        "改タスク1",
 				Content:     "テストコンテンツ1",
 				Priority:    3,
 				DueOn:       pointers.Ref(time.Date(2020, 1, 10, 0, 0, 1, 0, time.UTC)),
 				CompletedAt: pointers.Ref(time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC)),
-				CreatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 			}},
 		},
 	}
@@ -150,7 +134,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, updateTaskOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("task.UpdateTask mismatch (-want +got):\n%s", diff)
 			}
 		})

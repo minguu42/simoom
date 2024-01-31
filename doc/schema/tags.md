@@ -12,8 +12,8 @@ CREATE TABLE `tags` (
   `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'タグID',
   `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
   `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'タグ名',
-  `created_at` datetime NOT NULL COMMENT '作成日',
-  `updated_at` datetime NOT NULL COMMENT '更新日',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
   PRIMARY KEY (`id`),
   KEY `tags_user_id_fk` (`user_id`),
   CONSTRAINT `tags_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -24,13 +24,13 @@ CREATE TABLE `tags` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false | [tasks_tags](tasks_tags.md) |  | タグID |
-| user_id | char(26) |  | false |  | [users](users.md) | 所有するユーザのID |
-| name | varchar(20) |  | false |  |  | タグ名 |
-| created_at | datetime |  | false |  |  | 作成日 |
-| updated_at | datetime |  | false |  |  | 更新日 |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | char(26) |  | false |  | [tasks_tags](tasks_tags.md) |  | タグID |
+| user_id | char(26) |  | false |  |  | [users](users.md) | 所有するユーザのID |
+| name | varchar(20) |  | false |  |  |  | タグ名 |
+| created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
+| updated_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |  |  | 更新日 |
 
 ## Constraints
 

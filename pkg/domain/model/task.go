@@ -8,11 +8,9 @@ type Task struct {
 	Tags        []Tag
 	UserID      string
 	ProjectID   string
-	Title       string
+	Name        string
 	Content     string
 	Priority    uint
 	DueOn       *time.Time
 	CompletedAt *time.Time
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
 }

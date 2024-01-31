@@ -6,8 +6,6 @@ type Step struct {
 	ID          string
 	UserID      string
 	TaskID      string
-	Title       string
+	Name        string
 	CompletedAt *time.Time
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
 }

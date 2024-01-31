@@ -13,14 +13,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var (
-	createStepOption = cmpopts.IgnoreFields(usecase.StepOutput{},
-		"Step.ID",
-		"Step.CreatedAt",
-		"Step.UpdatedAt",
-	)
-	updateStepOption = cmpopts.IgnoreFields(usecase.StepOutput{}, "Step.UpdatedAt")
-)
+var createStepOption = cmpopts.IgnoreFields(usecase.StepOutput{}, "Step.ID")
 
 func TestStepUsecase_CreateStep(t *testing.T) {
 	type args struct {
@@ -38,13 +31,13 @@ func TestStepUsecase_CreateStep(t *testing.T) {
 				ctx: tctx,
 				in: usecase.CreateStepInput{
 					TaskID: "task_01",
-					Title:  "新ステップ",
+					Name:   "新ステップ",
 				},
 			},
 			want: usecase.StepOutput{Step: model.Step{
 				UserID:      "user_01",
 				TaskID:      "task_01",
-				Title:       "新ステップ",
+				Name:        "新ステップ",
 				CompletedAt: nil,
 			}},
 		},
@@ -82,7 +75,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 				ctx: tctx,
 				in: usecase.UpdateStepInput{
 					ID:          "step_01",
-					Title:       pointers.Ref("改ステップ1"),
+					Name:        pointers.Ref("改ステップ1"),
 					CompletedAt: pointers.Ref(time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)),
 				},
 			},
@@ -90,9 +83,8 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 				ID:          "step_01",
 				UserID:      "user_01",
 				TaskID:      "task_01",
-				Title:       "改ステップ1",
+				Name:        "改ステップ1",
 				CompletedAt: pointers.Ref(time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)),
-				CreatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 			}},
 		},
 	}
@@ -106,7 +98,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, updateStepOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("step.UpdateStep mismatch (-want +got):\n%s", diff)
 			}
 		})

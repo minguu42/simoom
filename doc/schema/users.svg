@@ -92,8 +92,8 @@
 <text text-anchor="start" x="359" y="-561.9" font-family="Arial" font-size="14.00" fill="#000000">task_id    </text>
 <text text-anchor="start" x="437.5498" y="-561.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="352,-520.5 352,-550.5 545,-550.5 545,-520.5 352,-520.5"/>
-<text text-anchor="start" x="359" y="-531.9" font-family="Arial" font-size="14.00" fill="#000000">title    </text>
-<text text-anchor="start" x="414.9818" y="-531.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
+<text text-anchor="start" x="359" y="-531.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
+<text text-anchor="start" x="428.2132" y="-531.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
 <polygon fill="none" stroke="#000000" points="352,-490.5 352,-520.5 545,-520.5 545,-490.5 352,-490.5"/>
 <text text-anchor="start" x="358.6543" y="-501.9" font-family="Arial" font-size="14.00" fill="#000000">completed_at    </text>
 <text text-anchor="start" x="476.8857" y="-501.9" font-family="Arial" font-size="14.00" fill="#666666">[datetime]</text>
@@ -160,8 +160,8 @@
 <text text-anchor="start" x="939" y="-606.9" font-family="Arial" font-size="14.00" fill="#000000">project_id    </text>
 <text text-anchor="start" x="1033.8822" y="-606.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="932,-565.5 932,-595.5 1127,-595.5 1127,-565.5 932,-565.5"/>
-<text text-anchor="start" x="939" y="-576.9" font-family="Arial" font-size="14.00" fill="#000000">title    </text>
-<text text-anchor="start" x="994.9818" y="-576.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
+<text text-anchor="start" x="939" y="-576.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
+<text text-anchor="start" x="1008.2132" y="-576.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(80)]</text>
 <polygon fill="none" stroke="#000000" points="932,-535.5 932,-565.5 1127,-565.5 1127,-535.5 932,-535.5"/>
 <text text-anchor="start" x="939" y="-546.9" font-family="Arial" font-size="14.00" fill="#000000">content    </text>
 <text text-anchor="start" x="1019.1164" y="-546.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(300)]</text>

@@ -9,57 +9,102 @@ import (
 	"time"
 )
 
+// プロジェクト
 type Project struct {
-	ID         string
-	UserID     string
-	Name       string
-	Color      string
+	// プロジェクトID
+	ID string
+	// 所有するユーザのID
+	UserID string
+	// プロジェクト名
+	Name string
+	// カラー
+	Color string
+	// アーカイブされたか
 	IsArchived bool
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-}
-
-type Step struct {
-	ID          string
-	UserID      string
-	TaskID      string
-	Title       string
-	CompletedAt sql.NullTime
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-}
-
-type Tag struct {
-	ID        string
-	UserID    string
-	Name      string
+	// 作成日
 	CreatedAt time.Time
+	// 更新日
 	UpdatedAt time.Time
 }
 
-type Task struct {
-	ID          string
-	UserID      string
-	ProjectID   string
-	Title       string
-	Content     string
-	Priority    uint32
-	DueOn       sql.NullTime
-	CompletedAt sql.NullTime
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-}
-
-type TasksTag struct {
+// ステップ
+type Step struct {
+	// ステップID
+	ID string
+	// 所有するユーザのID
+	UserID string
+	// 紐づくタスクのID
 	TaskID string
-	TagID  string
+	// ステップ名
+	Name string
+	// 完了日
+	CompletedAt sql.NullTime
+	// 作成日
+	CreatedAt time.Time
+	// 更新日
+	UpdatedAt time.Time
 }
 
-type User struct {
-	ID        string
-	Name      string
-	Email     string
-	Password  string
+// タグ
+type Tag struct {
+	// タグID
+	ID string
+	// 所有するユーザのID
+	UserID string
+	// タグ名
+	Name string
+	// 作成日
 	CreatedAt time.Time
+	// 更新日
+	UpdatedAt time.Time
+}
+
+// タスク
+type Task struct {
+	// タスクID
+	ID string
+	// 所有するユーザのID
+	UserID string
+	// 紐づくプロジェクトのID
+	ProjectID string
+	// タスク名
+	Name string
+	// メモ
+	Content string
+	// 優先度（0~3の数字で指定し、3が最も優先度が高い）
+	Priority uint32
+	// 期日
+	DueOn sql.NullTime
+	// 完了日
+	CompletedAt sql.NullTime
+	// 作成日
+	CreatedAt time.Time
+	// 更新日
+	UpdatedAt time.Time
+}
+
+// タスクとタグの紐づき
+type TasksTag struct {
+	// 紐づくタスクID
+	TaskID string
+	// 紐づくタグID
+	TagID string
+	// 作成日
+	CreatedAt time.Time
+}
+
+// ユーザ
+type User struct {
+	// ユーザID
+	ID string
+	// ユーザ名
+	Name string
+	// メールアドレス
+	Email string
+	// パスワード
+	Password string
+	// 作成日
+	CreatedAt time.Time
+	// 更新日
 	UpdatedAt time.Time
 }

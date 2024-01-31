@@ -18,13 +18,11 @@ func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
 		Tags:        newModelTags(ts),
 		UserID:      t.UserID,
 		ProjectID:   t.ProjectID,
-		Title:       t.Title,
+		Name:        t.Name,
 		Content:     t.Content,
 		Priority:    uint(t.Priority),
 		DueOn:       newPtrTime(t.DueOn),
 		CompletedAt: newPtrTime(t.CompletedAt),
-		CreatedAt:   t.CreatedAt,
-		UpdatedAt:   t.UpdatedAt,
 	}
 }
 
@@ -33,10 +31,8 @@ func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
 		ID:        t.ID,
 		UserID:    t.UserID,
 		ProjectID: t.ProjectID,
-		Title:     t.Title,
+		Name:      t.Name,
 		Priority:  uint32(t.Priority),
-		CreatedAt: t.CreatedAt,
-		UpdatedAt: t.UpdatedAt,
 	}); err != nil {
 		return fmt.Errorf("failed to create task: %w", err)
 	}
@@ -114,12 +110,11 @@ func (c *Client) GetTaskByID(ctx context.Context, id string) (model.Task, error)
 
 func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
 	if err := sqlc.New(c.db).UpdateTask(ctx, sqlc.UpdateTaskParams{
-		Title:       t.Title,
+		Name:        t.Name,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),
 		DueOn:       newNullTime(t.DueOn),
 		CompletedAt: newNullTime(t.CompletedAt),
-		UpdatedAt:   t.UpdatedAt,
 		ID:          t.ID,
 	}); err != nil {
 		return fmt.Errorf("failed to update task: %w", err)

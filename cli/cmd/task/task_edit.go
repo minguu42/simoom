@@ -13,7 +13,7 @@ import (
 
 type taskEditOpts struct {
 	id        string
-	title     string
+	name      string
 	content   string
 	priority  uint32
 	completed bool
@@ -34,7 +34,7 @@ func newCmdTaskEdit(core cmdutil.Core) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.title, "title", "", "task title")
+	cmd.Flags().StringVar(&opts.name, "name", "", "task name")
 	cmd.Flags().StringVar(&opts.content, "content", "", "task content")
 	cmd.Flags().Uint32Var(&opts.priority, "priority", 99, "task priority")
 	cmd.Flags().BoolVar(&opts.completed, "completed", false, "whether to complete the task")
@@ -43,9 +43,9 @@ func newCmdTaskEdit(core cmdutil.Core) *cobra.Command {
 }
 
 func runTaskEdit(ctx context.Context, core cmdutil.Core, opts taskEditOpts) error {
-	var title *string
-	if opts.title != "" {
-		title = &opts.title
+	var name *string
+	if opts.name != "" {
+		name = &opts.name
 	}
 	var content *string
 	if opts.content != "" {
@@ -61,7 +61,7 @@ func runTaskEdit(ctx context.Context, core cmdutil.Core, opts taskEditOpts) erro
 	}
 	req := connect.NewRequest(&simoompb.UpdateTaskRequest{
 		Id:          opts.id,
-		Title:       title,
+		Name:        name,
 		Content:     content,
 		Priority:    priority,
 		CompletedAt: completedAt,

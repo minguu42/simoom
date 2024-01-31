@@ -13,8 +13,8 @@ CREATE TABLE `users` (
   `name` varchar(15) COLLATE utf8mb4_bin NOT NULL COMMENT 'ユーザ名',
   `email` varchar(254) COLLATE utf8mb4_bin NOT NULL COMMENT 'メールアドレス',
   `password` char(60) COLLATE utf8mb4_bin NOT NULL COMMENT 'パスワード',
-  `created_at` datetime NOT NULL COMMENT '作成日',
-  `updated_at` datetime NOT NULL COMMENT '更新日',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `email` (`email`)
@@ -25,14 +25,14 @@ CREATE TABLE `users` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false | [projects](projects.md) [steps](steps.md) [tags](tags.md) [tasks](tasks.md) |  | ユーザID |
-| name | varchar(15) |  | false |  |  | ユーザ名 |
-| email | varchar(254) |  | false |  |  | メールアドレス |
-| password | char(60) |  | false |  |  | パスワード |
-| created_at | datetime |  | false |  |  | 作成日 |
-| updated_at | datetime |  | false |  |  | 更新日 |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | char(26) |  | false |  | [projects](projects.md) [steps](steps.md) [tags](tags.md) [tasks](tasks.md) |  | ユーザID |
+| name | varchar(15) |  | false |  |  |  | ユーザ名 |
+| email | varchar(254) |  | false |  |  |  | メールアドレス |
+| password | char(60) |  | false |  |  |  | パスワード |
+| created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
+| updated_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |  |  | 更新日 |
 
 ## Constraints
 

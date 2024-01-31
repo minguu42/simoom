@@ -8,15 +8,12 @@ import (
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func newTag(t model.Tag) *simoompb.Tag {
 	return &simoompb.Tag{
-		Id:        t.ID,
-		Name:      t.Name,
-		CreatedAt: timestamppb.New(t.CreatedAt),
-		UpdatedAt: timestamppb.New(t.UpdatedAt),
+		Id:   t.ID,
+		Name: t.Name,
 	}
 }
 

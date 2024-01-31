@@ -3,7 +3,6 @@ package mysql
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -28,10 +27,8 @@ func TestClient_CreateStep(t *testing.T) {
 					ID:          "step_99",
 					UserID:      "user_01",
 					TaskID:      "task_01",
-					Title:       "新ステップ",
+					Name:        "新ステップ",
 					CompletedAt: nil,
-					CreatedAt:   time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
-					UpdatedAt:   time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
 				},
 			},
 		},
@@ -72,10 +69,8 @@ func TestClient_GetStepByID(t *testing.T) {
 				ID:          "step_01",
 				UserID:      "user_01",
 				TaskID:      "task_01",
-				Title:       "ステップ1",
+				Name:        "ステップ1",
 				CompletedAt: nil,
-				CreatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-				UpdatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
 			},
 		},
 		{
@@ -113,10 +108,8 @@ func TestClient_UpdateStep(t *testing.T) {
 					ID:          "step_01",
 					UserID:      "user_01",
 					TaskID:      "task_01",
-					Title:       "改ステップ1",
+					Name:        "改ステップ1",
 					CompletedAt: nil,
-					CreatedAt:   time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-					UpdatedAt:   time.Date(2020, 1, 2, 0, 0, 1, 0, time.UTC),
 				},
 			},
 		},

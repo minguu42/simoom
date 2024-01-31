@@ -12,13 +12,13 @@ CREATE TABLE `tasks` (
   `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'タスクID',
   `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
   `project_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '紐づくプロジェクトのID',
-  `title` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'タイトル',
+  `name` varchar(80) COLLATE utf8mb4_bin NOT NULL COMMENT 'タスク名',
   `content` varchar(300) COLLATE utf8mb4_bin NOT NULL COMMENT 'メモ',
   `priority` tinyint unsigned NOT NULL COMMENT '優先度（0~3の数字で指定し、3が最も優先度が高い）',
   `due_on` date DEFAULT NULL COMMENT '期日',
   `completed_at` datetime DEFAULT NULL COMMENT '完了日',
-  `created_at` datetime NOT NULL COMMENT '作成日',
-  `updated_at` datetime NOT NULL COMMENT '更新日',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日',
   PRIMARY KEY (`id`),
   KEY `tasks_user_id_fk` (`user_id`),
   KEY `tasks_project_id_fk` (`project_id`),
@@ -32,18 +32,18 @@ CREATE TABLE `tasks` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | char(26) |  | false | [steps](steps.md) [tasks_tags](tasks_tags.md) |  | タスクID |
-| user_id | char(26) |  | false |  | [users](users.md) | 所有するユーザのID |
-| project_id | char(26) |  | false |  | [projects](projects.md) | 紐づくプロジェクトのID |
-| title | varchar(80) |  | false |  |  | タイトル |
-| content | varchar(300) |  | false |  |  | メモ |
-| priority | tinyint unsigned |  | false |  |  | 優先度（0~3の数字で指定し、3が最も優先度が高い） |
-| due_on | date |  | true |  |  | 期日 |
-| completed_at | datetime |  | true |  |  | 完了日 |
-| created_at | datetime |  | false |  |  | 作成日 |
-| updated_at | datetime |  | false |  |  | 更新日 |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | char(26) |  | false |  | [steps](steps.md) [tasks_tags](tasks_tags.md) |  | タスクID |
+| user_id | char(26) |  | false |  |  | [users](users.md) | 所有するユーザのID |
+| project_id | char(26) |  | false |  |  | [projects](projects.md) | 紐づくプロジェクトのID |
+| name | varchar(80) |  | false |  |  |  | タスク名 |
+| content | varchar(300) |  | false |  |  |  | メモ |
+| priority | tinyint unsigned |  | false |  |  |  | 優先度（0~3の数字で指定し、3が最も優先度が高い） |
+| due_on | date |  | true |  |  |  | 期日 |
+| completed_at | datetime |  | true |  |  |  | 完了日 |
+| created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
+| updated_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |  |  | 更新日 |
 
 ## Constraints
 

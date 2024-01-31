@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/model"
 	"github.com/minguu42/simoom/pkg/domain/repository"
@@ -35,7 +34,7 @@ type TasksOutput struct {
 
 type CreateTaskInput struct {
 	ProjectID string
-	Title     string
+	Name      string
 	Priority  uint
 }
 
@@ -51,15 +50,12 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		return TaskOutput{}, ErrProjectNotFound
 	}
 
-	now := clock.Now(ctx)
 	t := model.Task{
 		ID:        uc.idgen.Generate(),
 		UserID:    auth.GetUserID(ctx),
 		ProjectID: in.ProjectID,
-		Title:     in.Title,
+		Name:      in.Name,
 		Priority:  in.Priority,
-		CreatedAt: now,
-		UpdatedAt: now,
 	}
 	if err := uc.repo.CreateTask(ctx, t); err != nil {
 		return TaskOutput{}, fmt.Errorf("failed to create task: %w", err)
@@ -137,7 +133,7 @@ func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (
 
 type UpdateTaskInput struct {
 	ID          string
-	Title       *string
+	Name        *string
 	Content     *string
 	Priority    *uint
 	DueOn       *time.Time
@@ -156,8 +152,8 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 		return TaskOutput{}, ErrTaskNotFound
 	}
 
-	if in.Title != nil {
-		t.Title = *in.Title
+	if in.Name != nil {
+		t.Name = *in.Name
 	}
 	if in.Content != nil {
 		t.Content = *in.Content
@@ -171,7 +167,6 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 	if in.CompletedAt != nil {
 		t.CompletedAt = in.CompletedAt
 	}
-	t.UpdatedAt = clock.Now(ctx)
 	if err := uc.repo.UpdateTask(ctx, t); err != nil {
 		return TaskOutput{}, fmt.Errorf("failed to update task: %w", err)
 	}

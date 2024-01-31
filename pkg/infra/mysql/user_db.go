@@ -13,23 +13,19 @@ import (
 
 func newModelUser(u sqlc.User) model.User {
 	return model.User{
-		ID:        u.ID,
-		Name:      u.Name,
-		Email:     u.Email,
-		Password:  u.Password,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:       u.ID,
+		Name:     u.Name,
+		Email:    u.Email,
+		Password: u.Password,
 	}
 }
 
 func (c *Client) CreateUser(ctx context.Context, u model.User) error {
 	if err := sqlc.New(c.db).CreateUser(ctx, sqlc.CreateUserParams{
-		ID:        u.ID,
-		Name:      u.Name,
-		Email:     u.Email,
-		Password:  u.Password,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:       u.ID,
+		Name:     u.Name,
+		Email:    u.Email,
+		Password: u.Password,
 	}); err != nil {
 		return fmt.Errorf("failed to create user: %w", err)
 	}

@@ -12,7 +12,7 @@ setup: ## 開発に必要なツールをインストールする
 
 gen: ## コードを生成する
 	@buf generate
-	@sqlc generate
+	@rm -rf ./pkg/infra/mysql/sqlc && sqlc generate
 	@$(MAKE) fmt
 
 build: ## 本番用APIサーバのコンテナイメージをビルドする

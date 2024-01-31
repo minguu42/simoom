@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/minguu42/simoom/pkg/clock"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -46,14 +45,11 @@ func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error)
 		return SignUpOutput{}, fmt.Errorf("failed to generate encypted password: %w", err)
 	}
 
-	now := clock.Now(ctx)
 	user := model.User{
-		ID:        uc.idgen.Generate(),
-		Name:      in.Name,
-		Email:     in.Email,
-		Password:  string(encryptedPassword),
-		CreatedAt: now,
-		UpdatedAt: now,
+		ID:       uc.idgen.Generate(),
+		Name:     in.Name,
+		Email:    in.Email,
+		Password: string(encryptedPassword),
 	}
 	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {

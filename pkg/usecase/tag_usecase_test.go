@@ -3,7 +3,6 @@ package usecase_test
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
@@ -13,14 +12,7 @@ import (
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 
-var (
-	createTagOption = cmpopts.IgnoreFields(usecase.TagOutput{},
-		"Tag.ID",
-		"Tag.CreatedAt",
-		"Tag.UpdatedAt",
-	)
-	updateTagOption = cmpopts.IgnoreFields(usecase.TagOutput{}, "Tag.UpdatedAt")
-)
+var createTagOption = cmpopts.IgnoreFields(usecase.TagOutput{}, "Tag.ID")
 
 func TestTagUsecase_CreateTag(t *testing.T) {
 	type args struct {
@@ -84,11 +76,9 @@ func TestTagUsecase_ListTags(t *testing.T) {
 			want: usecase.TagsOutput{
 				Tags: []model.Tag{
 					{
-						ID:        "tag_01",
-						UserID:    "user_01",
-						Name:      "タグ1",
-						CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
-						UpdatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+						ID:     "tag_01",
+						UserID: "user_01",
+						Name:   "タグ1",
 					},
 				},
 				HasNext: true,
@@ -130,10 +120,9 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 				},
 			},
 			want: usecase.TagOutput{Tag: model.Tag{
-				ID:        "tag_01",
-				UserID:    "user_01",
-				Name:      "改タグ1",
-				CreatedAt: time.Date(2020, 1, 1, 0, 0, 1, 0, time.UTC),
+				ID:     "tag_01",
+				UserID: "user_01",
+				Name:   "改タグ1",
 			}},
 		},
 	}
@@ -147,7 +136,7 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%+v", err)
 			}
-			if diff := cmp.Diff(tt.want, got, updateTagOption); diff != "" {
+			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("tag.UpdateTag mismatch (-want +got):\n%s", diff)
 			}
 		})

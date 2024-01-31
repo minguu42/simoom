@@ -25,7 +25,7 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateTaskRequest{
 					ProjectId: "01DXF6DT00000000000000000",
-					Title:     "some-task",
+					Name:      "some-task",
 					Priority:  0,
 				}),
 			},
@@ -36,28 +36,28 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateTaskRequest{
 					ProjectId: "01DXF6DT000000000000000000x",
-					Title:     "some-task",
+					Name:      "some-task",
 					Priority:  0,
 				}),
 			},
 		},
 		{
-			name: "titleに空文字列は指定できない",
+			name: "nameに空文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateTaskRequest{
 					ProjectId: "01DXF6DT000000000000000000",
-					Title:     "",
+					Name:      "",
 				}),
 			},
 		},
 		{
-			name: "titleに81文字以上の文字列は指定できない",
+			name: "nameに81文字以上の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateTaskRequest{
 					ProjectId: "01DXF6DT000000000000000000",
-					Title:     "very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-title1",
+					Name:      "very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-name01",
 				}),
 			},
 		},
@@ -67,7 +67,7 @@ func TestTaskHandler_CreateTask(t *testing.T) {
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.CreateTaskRequest{
 					ProjectId: "01DXF6DT000000000000000000",
-					Title:     "some-task",
+					Name:      "some-task",
 					Priority:  4,
 				}),
 			},
@@ -197,8 +197,8 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
-					Id:    "01DXF6DT00000000000000000",
-					Title: pointers.Ref("some-task"),
+					Id:   "01DXF6DT00000000000000000",
+					Name: pointers.Ref("some-task"),
 				}),
 			},
 		},
@@ -207,8 +207,8 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
-					Id:    "01DXF6DT000000000000000000x",
-					Title: pointers.Ref("some-task"),
+					Id:   "01DXF6DT000000000000000000x",
+					Name: pointers.Ref("some-task"),
 				}),
 			},
 		},
@@ -218,7 +218,7 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
 					Id:          "01DXF6DT000000000000000000",
-					Title:       nil,
+					Name:        nil,
 					Content:     nil,
 					Priority:    nil,
 					DueOn:       nil,
@@ -227,22 +227,22 @@ func TestTaskHandler_UpdateTask(t *testing.T) {
 			},
 		},
 		{
-			name: "titleに空文字列は指定できない",
+			name: "nameに空文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
-					Id:    "01DXF6DT000000000000000000",
-					Title: pointers.Ref(""),
+					Id:   "01DXF6DT000000000000000000",
+					Name: pointers.Ref(""),
 				}),
 			},
 		},
 		{
-			name: "titleに81文字以上の文字列は指定できない",
+			name: "nameに81文字以上の文字列は指定できない",
 			args: args{
 				ctx: context.Background(),
 				req: connect.NewRequest(&simoompb.UpdateTaskRequest{
-					Id:    "01DXF6DT000000000000000000",
-					Title: pointers.Ref("very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-title1"),
+					Id:   "01DXF6DT000000000000000000",
+					Name: pointers.Ref("very-long-long-long-long-long-long-long-long-long-long-long-long-long-long-name01"),
 				}),
 			},
 		},

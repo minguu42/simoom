@@ -8,7 +8,7 @@
 | [steps](steps.md) | 7 | ステップ | BASE TABLE |
 | [tags](tags.md) | 5 | タグ | BASE TABLE |
 | [tasks](tasks.md) | 10 | タスク | BASE TABLE |
-| [tasks_tags](tasks_tags.md) | 2 | タスクとタグの紐づき | BASE TABLE |
+| [tasks_tags](tasks_tags.md) | 3 | タスクとタグの紐づき | BASE TABLE |
 | [users](users.md) | 6 | ユーザ | BASE TABLE |
 
 ## Relations

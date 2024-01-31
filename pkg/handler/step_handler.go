@@ -8,17 +8,14 @@ import (
 	"github.com/minguu42/simoom/pkg/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func newStep(s model.Step) *simoompb.Step {
 	return &simoompb.Step{
 		Id:          s.ID,
 		TaskId:      s.TaskID,
-		Title:       s.Title,
+		Name:        s.Name,
 		CompletedAt: newTimestamp(s.CompletedAt),
-		CreatedAt:   timestamppb.New(s.CreatedAt),
-		UpdatedAt:   timestamppb.New(s.UpdatedAt),
 	}
 }
 
@@ -34,13 +31,13 @@ func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.C
 	if len(req.Msg.TaskId) != 26 {
 		return nil, newErrInvalidArgument("task_id is a 26-character string")
 	}
-	if len(req.Msg.Title) < 1 || 80 < len(req.Msg.Title) {
-		return nil, newErrInvalidArgument("title must be at least 1 and no more than 80 characters")
+	if len(req.Msg.Name) < 1 || 80 < len(req.Msg.Name) {
+		return nil, newErrInvalidArgument("name must be at least 1 and no more than 80 characters")
 	}
 
 	out, err := h.step.CreateStep(ctx, usecase.CreateStepInput{
 		TaskID: req.Msg.TaskId,
-		Title:  req.Msg.Title,
+		Name:   req.Msg.Name,
 	})
 	if err != nil {
 		return nil, err
@@ -52,17 +49,17 @@ func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.U
 	if len(req.Msg.Id) != 26 {
 		return nil, newErrInvalidArgument("id is a 26-character string")
 	}
-	if req.Msg.Title == nil && req.Msg.CompletedAt == nil {
+	if req.Msg.Name == nil && req.Msg.CompletedAt == nil {
 		return nil, newErrInvalidArgument("must contain some argument other than id")
 	}
-	if req.Msg.Title != nil && (len(*req.Msg.Title) < 1 || 80 < len(*req.Msg.Title)) {
-		return nil, newErrInvalidArgument("title cannot be an empty string")
+	if req.Msg.Name != nil && (len(*req.Msg.Name) < 1 || 80 < len(*req.Msg.Name)) {
+		return nil, newErrInvalidArgument("name cannot be an empty string")
 	}
 
 	c := req.Msg.CompletedAt.AsTime()
 	out, err := h.step.UpdateStep(ctx, usecase.UpdateStepInput{
 		ID:          req.Msg.Id,
-		Title:       req.Msg.Title,
+		Name:        req.Msg.Name,
 		CompletedAt: &c,
 	})
 	if err != nil {
