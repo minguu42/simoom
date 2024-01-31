@@ -2,12 +2,8 @@ version: 2
 sql:
   - engine: mysql
     queries:
-      - pkg/infra/mysql/project_query.sql
-      - pkg/infra/mysql/step_query.sql
-      - pkg/infra/mysql/tag_query.sql
-      - pkg/infra/mysql/task_query.sql
-      - pkg/infra/mysql/test_util.sql
-      - pkg/infra/mysql/user_query.sql
+      - pkg/infra/mysql/queries.sql
+      - pkg/infra/mysql/queries_test.sql
     schema: infra/mysql/schema.sql
     gen:
       go:
