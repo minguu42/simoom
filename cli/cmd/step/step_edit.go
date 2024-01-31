@@ -13,7 +13,7 @@ import (
 
 type stepEditOpts struct {
 	id        string
-	title     string
+	name      string
 	completed bool
 }
 
@@ -29,16 +29,16 @@ func newCmdStepEdit(core cmdutil.Core) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.title, "title", "", "step title")
+	cmd.Flags().StringVar(&opts.name, "name", "", "step name")
 	cmd.Flags().BoolVar(&opts.completed, "completed", false, "completed")
 
 	return cmd
 }
 
 func runStepEdit(ctx context.Context, core cmdutil.Core, opts stepEditOpts) error {
-	var title *string
-	if opts.title != "" {
-		title = &opts.title
+	var name *string
+	if opts.name != "" {
+		name = &opts.name
 	}
 	var completedAt *timestamppb.Timestamp
 	if opts.completed {
@@ -46,7 +46,7 @@ func runStepEdit(ctx context.Context, core cmdutil.Core, opts stepEditOpts) erro
 	}
 	req := connect.NewRequest(&simoompb.UpdateStepRequest{
 		Id:          opts.id,
-		Name:        title,
+		Name:        name,
 		CompletedAt: completedAt,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))

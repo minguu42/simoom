@@ -12,7 +12,7 @@ import (
 
 type taskCreateOpts struct {
 	projectID string
-	title     string
+	name      string
 	priority  uint32
 }
 
@@ -26,8 +26,8 @@ func newCmdTaskCreate(core cmdutil.Core) *cobra.Command {
 			if opts.projectID == "" {
 				return fmt.Errorf("project-id is required")
 			}
-			if opts.title == "" {
-				return fmt.Errorf("title is required")
+			if opts.name == "" {
+				return fmt.Errorf("name is required")
 			}
 			if opts.priority == 99 {
 				return fmt.Errorf("priority is required")
@@ -37,7 +37,7 @@ func newCmdTaskCreate(core cmdutil.Core) *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.projectID, "project-id", "", "project id")
-	cmd.Flags().StringVar(&opts.title, "title", "", "task title")
+	cmd.Flags().StringVar(&opts.name, "name", "", "task name")
 	cmd.Flags().Uint32Var(&opts.priority, "priority", 99, "task priority")
 
 	return cmd
@@ -46,7 +46,7 @@ func newCmdTaskCreate(core cmdutil.Core) *cobra.Command {
 func runTaskCreate(ctx context.Context, core cmdutil.Core, opts taskCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateTaskRequest{
 		ProjectId: opts.projectID,
-		Name:      opts.title,
+		Name:      opts.name,
 		Priority:  opts.priority,
 	})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
