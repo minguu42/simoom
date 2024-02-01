@@ -28,13 +28,6 @@ func newSteps(ss []model.Step) []*simoompb.Step {
 }
 
 func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.CreateStepRequest]) (*connect.Response[simoompb.Step], error) {
-	if len(req.Msg.TaskId) != 26 {
-		return nil, newErrInvalidArgument("task_id is a 26-character string")
-	}
-	if len(req.Msg.Name) < 1 || 80 < len(req.Msg.Name) {
-		return nil, newErrInvalidArgument("name must be at least 1 and no more than 80 characters")
-	}
-
 	out, err := h.step.CreateStep(ctx, usecase.CreateStepInput{
 		TaskID: req.Msg.TaskId,
 		Name:   req.Msg.Name,
@@ -46,16 +39,6 @@ func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.C
 }
 
 func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.UpdateStepRequest]) (*connect.Response[simoompb.Step], error) {
-	if len(req.Msg.Id) != 26 {
-		return nil, newErrInvalidArgument("id is a 26-character string")
-	}
-	if req.Msg.Name == nil && req.Msg.CompletedAt == nil {
-		return nil, newErrInvalidArgument("must contain some argument other than id")
-	}
-	if req.Msg.Name != nil && (len(*req.Msg.Name) < 1 || 80 < len(*req.Msg.Name)) {
-		return nil, newErrInvalidArgument("name cannot be an empty string")
-	}
-
 	c := req.Msg.CompletedAt.AsTime()
 	out, err := h.step.UpdateStep(ctx, usecase.UpdateStepInput{
 		ID:          req.Msg.Id,
@@ -69,10 +52,6 @@ func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.U
 }
 
 func (h handler) DeleteStep(ctx context.Context, req *connect.Request[simoompb.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
-	if len(req.Msg.Id) != 26 {
-		return nil, newErrInvalidArgument("id is a 26-character string")
-	}
-
 	if err := h.step.DeleteStep(ctx, usecase.DeleteStepInput{ID: req.Msg.Id}); err != nil {
 		return nil, err
 	}
