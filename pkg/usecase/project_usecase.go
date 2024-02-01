@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/domain/model"
@@ -36,7 +38,20 @@ type CreateProjectInput struct {
 	Color string
 }
 
+func (in CreateProjectInput) Validate() error {
+	if utf8.RuneCountInString(in.Name) < 1 || 20 < utf8.RuneCountInString(in.Name) {
+		return newErrInvalidArgument("name must be at least 1 and no more than 20 characters")
+	}
+	if len(in.Color) != 7 || !strings.HasPrefix(in.Color, "#") {
+		return newErrInvalidArgument("color is specified in the format #000000")
+	}
+	return nil
+}
+
 func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
+	if err := in.Validate(); err != nil {
+		return ProjectOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	}
 	p := model.Project{
 		ID:         uc.idgen.Generate(),
 		UserID:     auth.GetUserID(ctx),
@@ -55,7 +70,17 @@ type ListProjectsInput struct {
 	Offset uint
 }
 
+func (in ListProjectsInput) Validate() error {
+	if in.Limit < 1 {
+		return newErrInvalidArgument("limit is greater than or equal to 1")
+	}
+	return nil
+}
+
 func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
+	if err := in.Validate(); err != nil {
+		return ProjectsOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	}
 	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, fmt.Errorf("failed to list projects: %w", err)
@@ -79,7 +104,26 @@ type UpdateProjectInput struct {
 	IsArchived *bool
 }
 
+func (in UpdateProjectInput) Validate() error {
+	if len(in.ID) != 26 {
+		return newErrInvalidArgument("id is a 26-character string")
+	}
+	if in.Name == nil && in.Color == nil && in.IsArchived == nil {
+		return newErrInvalidArgument("must contain some argument other than id")
+	}
+	if in.Name != nil && (utf8.RuneCountInString(*in.Name) < 1 || 20 < utf8.RuneCountInString(*in.Name)) {
+		return newErrInvalidArgument("name must be at least 1 and no more than 20 characters")
+	}
+	if in.Color != nil && (len(*in.Color) != 7 || !strings.HasPrefix(*in.Color, "#")) {
+		return newErrInvalidArgument("color is specified in the format #000000")
+	}
+	return nil
+}
+
 func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
+	if err := in.Validate(); err != nil {
+		return ProjectOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	}
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -110,7 +154,17 @@ type DeleteProjectInput struct {
 	ID string
 }
 
+func (in DeleteProjectInput) Validate() error {
+	if len(in.ID) != 26 {
+		return newErrInvalidArgument("id is a 26-character string")
+	}
+	return nil
+}
+
 func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
+	if err := in.Validate(); err != nil {
+		return fmt.Errorf("failed to validate input: %w", err)
+	}
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
