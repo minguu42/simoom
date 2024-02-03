@@ -49,9 +49,10 @@ func (in CreateStepInput) Validate() error {
 }
 
 func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
-	if err := in.Validate(); err != nil {
-		return StepOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return StepOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -95,9 +96,10 @@ func (in UpdateStepInput) Validate() error {
 }
 
 func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
-	if err := in.Validate(); err != nil {
-		return StepOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return StepOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -133,9 +135,10 @@ func (in DeleteStepInput) Validate() error {
 }
 
 func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
-	if err := in.Validate(); err != nil {
-		return fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {

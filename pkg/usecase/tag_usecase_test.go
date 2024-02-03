@@ -36,16 +36,16 @@ func TestCreateTagInput_Validate(t *testing.T) {
 			hasError: false,
 		},
 		{
-			name: "nameに19文字の文字列は指定できる",
+			name: "nameに20文字の文字列は指定できる",
 			in: usecase.CreateTagInput{
-				Name: "やったね。この文字列の長さは19です。",
+				Name: "この文字列の長さは20です。ギリギリOK",
 			},
 			hasError: false,
 		},
 		{
-			name: "nameに20文字以上の文字列は指定できない",
+			name: "nameに21文字以上の文字列は指定できない",
 			in: usecase.CreateTagInput{
-				Name: "やったね。この文字列の長さは20です！。",
+				Name: "この文字列の長さは21です。弾かれますよ。",
 			},
 			hasError: true,
 		},
@@ -229,18 +229,18 @@ func TestUpdateTagInput_Validate(t *testing.T) {
 			hasError: false,
 		},
 		{
-			name: "nameに19文字の文字列は指定できる",
+			name: "nameに20文字の文字列は指定できる",
 			in: usecase.UpdateTagInput{
 				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("やったね。この文字列の長さは19です。"),
+				Name: pointers.Ref("この文字列の長さは20です。ギリギリOK"),
 			},
 			hasError: false,
 		},
 		{
-			name: "nameに20文字以上の文字列は指定できない",
+			name: "nameに21文字以上の文字列は指定できない",
 			in: usecase.UpdateTagInput{
 				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("やったね。この文字列の長さは20です！。"),
+				Name: pointers.Ref("この文字列の長さは21です。弾かれますよ。"),
 			},
 			hasError: true,
 		},

@@ -57,6 +57,7 @@ func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error)
 	if err := in.Validate(); err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to validate input: %w", err)
 	}
+
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to generate encypted password: %w", err)
@@ -109,6 +110,7 @@ func (uc Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error)
 	if err := in.Validate(); err != nil {
 		return SignInOutput{}, fmt.Errorf("failed to validate input: %w", err)
 	}
+
 	user, err := uc.repo.GetUserByEmail(ctx, in.Email)
 	if err != nil {
 		return SignInOutput{}, fmt.Errorf("failed to get user: %w", err)
@@ -152,6 +154,7 @@ func (uc Auth) RefreshToken(ctx context.Context, in RefreshTokenInput) (RefreshT
 	if err := in.Validate(); err != nil {
 		return RefreshTokenOutput{}, fmt.Errorf("failed to validate input: %w", err)
 	}
+
 	id, err := uc.authenticator.ExtractIDFromToken(in.RefreshToken, uc.conf.RefreshTokenSecret)
 	if err != nil {
 		return RefreshTokenOutput{}, fmt.Errorf("failed to extract id from token: %w", err)

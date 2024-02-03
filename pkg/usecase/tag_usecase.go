@@ -44,9 +44,10 @@ func (in CreateTagInput) Validate() error {
 }
 
 func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
-	if err := in.Validate(); err != nil {
-		return TagOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return TagOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	t := model.Tag{
 		ID:     uc.idgen.Generate(),
 		UserID: auth.GetUserID(ctx),
@@ -71,9 +72,10 @@ func (in ListTagsInput) Validate() error {
 }
 
 func (uc Tag) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
-	if err := in.Validate(); err != nil {
-		return TagsOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return TagsOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	ts, err := uc.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return TagsOutput{}, fmt.Errorf("failed to list tags: %w", err)
@@ -109,9 +111,10 @@ func (in UpdateTagInput) Validate() error {
 }
 
 func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, error) {
-	if err := in.Validate(); err != nil {
-		return TagOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return TagOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	t, err := uc.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -144,9 +147,10 @@ func (in DeleteTagInput) Validate() error {
 }
 
 func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
-	if err := in.Validate(); err != nil {
-		return fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	t, err := uc.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {

@@ -101,7 +101,7 @@ func TestSignUpInput_Validate(t *testing.T) {
 				Email:    "dummy@example.com",
 				Password: "short-pw1234",
 			},
-			hasError: true,
+			hasError: false,
 		},
 		{
 			name: "passwordに20文字の文字列は指定できる",
@@ -110,7 +110,7 @@ func TestSignUpInput_Validate(t *testing.T) {
 				Email:    "dummy@example.com",
 				Password: "long-long-password12",
 			},
-			hasError: true,
+			hasError: false,
 		},
 		{
 			name: "passwordに21文字以上の文字列は指定できない",
@@ -182,7 +182,7 @@ func TestSignInInput_Validate(t *testing.T) {
 				Email:    "dummy@example.com",
 				Password: "short-pw1234",
 			},
-			hasError: true,
+			hasError: false,
 		},
 		{
 			name: "passwordに20文字の文字列は指定できる",
@@ -190,7 +190,7 @@ func TestSignInInput_Validate(t *testing.T) {
 				Email:    "dummy@example.com",
 				Password: "long-long-password12",
 			},
-			hasError: true,
+			hasError: false,
 		},
 		{
 			name: "passwordに21文字以上の文字列は指定できない",

@@ -2,7 +2,6 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
 	"time"
 
@@ -49,10 +48,6 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 	}, opt))
 
 	return h2c.NewHandler(mux, &http2.Server{})
-}
-
-func newErrInvalidArgument(message string) *connect.Error {
-	return connect.NewError(connect.CodeInvalidArgument, errors.New(message))
 }
 
 func newDate(t *time.Time) *simoompb.Date {

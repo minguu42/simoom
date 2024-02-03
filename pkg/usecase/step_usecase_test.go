@@ -36,7 +36,7 @@ func TestCreateStepInput_Validate(t *testing.T) {
 				TaskID: "xxxx-xxxx-xxxx-xxxx-xxxx-x",
 				Name:   "テストステップ",
 			},
-			hasError: true,
+			hasError: false,
 		},
 		{
 			name: "task_idに27文字以上の文字列は指定できない",
@@ -63,18 +63,18 @@ func TestCreateStepInput_Validate(t *testing.T) {
 			hasError: false,
 		},
 		{
-			name: "nameに79文字の文字列は指定できる",
+			name: "nameに80文字の文字列は指定できる",
 			in: usecase.CreateStepInput{
 				TaskID: "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name:   "これはとても長い文字列です。なんとその長さ79文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少し",
+				Name:   "これはとても長い文字列です。なんとその長さ80文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少しだ",
 			},
 			hasError: false,
 		},
 		{
-			name: "nameに80文字以上の文字列は指定できない",
+			name: "nameに81文字以上の文字列は指定できない",
 			in: usecase.CreateStepInput{
 				TaskID: "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name:   "これはとても長い文字列です。なんとその長さ80文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少しだ",
+				Name:   "これはとても長い文字列です。なんとその長さ81文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少しだよ",
 			},
 			hasError: true,
 		},
@@ -185,18 +185,18 @@ func TestUpdateStepInput_Validate(t *testing.T) {
 			hasError: false,
 		},
 		{
-			name: "nameに79文字の文字列は指定できる",
+			name: "nameに80文字の文字列は指定できる",
 			in: usecase.UpdateStepInput{
 				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("これはとても長い文字列です。なんとその長さ79文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少し"),
+				Name: pointers.Ref("これはとても長い文字列です。なんとその長さ80文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少しだ"),
 			},
 			hasError: false,
 		},
 		{
-			name: "nameに80文字以上の文字列は指定できない",
+			name: "nameに81文字以上の文字列は指定できない",
 			in: usecase.UpdateStepInput{
 				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("これはとても長い文字列です。なんとその長さ80文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少しだ"),
+				Name: pointers.Ref("これはとても長い文字列です。なんとその長さ81文字、さぁここからどんどん伸ばして行きますよ。あいうえおーかきくけこーさしすせそ。さぁあとちょっとです。もう少しだよ"),
 			},
 			hasError: true,
 		},

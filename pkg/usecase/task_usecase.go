@@ -52,9 +52,9 @@ func (in CreateTaskInput) Validate() error {
 }
 
 func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, error) {
-	if err := in.Validate(); err != nil {
-		return TaskOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return TaskOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
 
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
@@ -97,9 +97,9 @@ func (in ListTasksByProjectIDInput) Validate() error {
 }
 
 func (uc Task) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectIDInput) (TasksOutput, error) {
-	if err := in.Validate(); err != nil {
-		return TasksOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return TasksOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
 
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
@@ -145,9 +145,9 @@ func (in ListTasksByTagIDInput) Validate() error {
 }
 
 func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (TasksOutput, error) {
-	if err := in.Validate(); err != nil {
-		return TasksOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return TasksOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
 
 	t, err := uc.repo.GetTagByID(ctx, in.TagID)
 	if err != nil {
@@ -202,9 +202,9 @@ func (in UpdateTaskInput) Validate() error {
 }
 
 func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, error) {
-	if err := in.Validate(); err != nil {
-		return TaskOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return TaskOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
 
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
@@ -250,9 +250,9 @@ func (in DeleteTaskInput) Validate() error {
 }
 
 func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
-	if err := in.Validate(); err != nil {
-		return fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return fmt.Errorf("failed to validate input: %w", err)
+	// }
 
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {

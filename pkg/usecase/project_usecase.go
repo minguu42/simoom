@@ -49,9 +49,10 @@ func (in CreateProjectInput) Validate() error {
 }
 
 func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
-	if err := in.Validate(); err != nil {
-		return ProjectOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return ProjectOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	p := model.Project{
 		ID:         uc.idgen.Generate(),
 		UserID:     auth.GetUserID(ctx),
@@ -78,9 +79,10 @@ func (in ListProjectsInput) Validate() error {
 }
 
 func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	if err := in.Validate(); err != nil {
-		return ProjectsOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return ProjectsOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, fmt.Errorf("failed to list projects: %w", err)
@@ -121,9 +123,10 @@ func (in UpdateProjectInput) Validate() error {
 }
 
 func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
-	if err := in.Validate(); err != nil {
-		return ProjectOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return ProjectOutput{}, fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -162,9 +165,10 @@ func (in DeleteProjectInput) Validate() error {
 }
 
 func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
-	if err := in.Validate(); err != nil {
-		return fmt.Errorf("failed to validate input: %w", err)
-	}
+	// if err := in.Validate(); err != nil {
+	// 	return fmt.Errorf("failed to validate input: %w", err)
+	// }
+
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
