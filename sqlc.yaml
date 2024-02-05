@@ -1,9 +1,7 @@
 version: 2
 sql:
   - engine: mysql
-    queries:
-      - pkg/infra/mysql/queries.sql
-      - pkg/infra/mysql/queries_test.sql
+    queries: pkg/infra/mysql/queries.sql
     schema: infra/mysql/schema.sql
     gen:
       go:

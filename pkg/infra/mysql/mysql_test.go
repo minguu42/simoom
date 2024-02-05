@@ -1,4 +1,4 @@
-package mysql
+package mysql_test
 
 import (
 	"context"
@@ -7,12 +7,13 @@ import (
 
 	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/minguu42/simoom/pkg/config"
+	"github.com/minguu42/simoom/pkg/infra/mysql"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 var (
-	tc       *Client
+	tc       *mysql.Client
 	fixtures *testfixtures.Loader
 )
 
@@ -43,7 +44,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("failed to get externally mapped port: %s", err)
 	}
-	tc, err = NewClient(config.DB{
+	tc, err = mysql.NewClient(config.DB{
 		Host:               "localhost",
 		Port:               port.Int(),
 		Database:           "simoomdb_test",
@@ -58,8 +59,8 @@ func TestMain(m *testing.M) {
 	}
 	defer tc.Close()
 
-	Migrate(tc)
-	fixtures = NewFixtureLoader(tc)
+	mysql.Migrate(tc)
+	fixtures = mysql.NewFixtureLoader(tc)
 	if err := fixtures.Load(); err != nil {
 		log.Fatalf("failed to load test data: %s", err)
 	}
