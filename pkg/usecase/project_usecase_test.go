@@ -7,7 +7,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/minguu42/simoom/pkg/domain/model"
-	"github.com/minguu42/simoom/pkg/infra/mysql"
 	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"github.com/stretchr/testify/assert"
@@ -108,7 +107,7 @@ func TestProjectUsecase_CreateProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetProject(t, tc)
+				_ = fixtures.Load()
 			})
 
 			got, err := project.CreateProject(tt.args.ctx, tt.args.in)
@@ -329,7 +328,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetProject(t, tc)
+				_ = fixtures.Load()
 			})
 
 			got, err := project.UpdateProject(tt.args.ctx, tt.args.in)
@@ -399,7 +398,7 @@ func TestProjectUsecase_DeleteProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetProject(t, tc)
+				_ = fixtures.Load()
 			})
 
 			if err := project.DeleteProject(tt.args.ctx, tt.args.in); err != nil {

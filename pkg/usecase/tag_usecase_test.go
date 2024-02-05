@@ -7,7 +7,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/minguu42/simoom/pkg/domain/model"
-	"github.com/minguu42/simoom/pkg/infra/mysql"
 	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"github.com/stretchr/testify/assert"
@@ -83,7 +82,7 @@ func TestTagUsecase_CreateTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetTag(t, tc)
+				_ = fixtures.Load()
 			})
 
 			got, err := tag.CreateTag(tt.args.ctx, tt.args.in)
@@ -282,7 +281,7 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetTag(t, tc)
+				_ = fixtures.Load()
 			})
 
 			got, err := tag.UpdateTag(tt.args.ctx, tt.args.in)
@@ -352,7 +351,7 @@ func TestTagUsecase_DeleteTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetTag(t, tc)
+				_ = fixtures.Load()
 			})
 
 			if err := tag.DeleteTag(tt.args.ctx, tt.args.in); err != nil {

@@ -8,7 +8,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/minguu42/simoom/pkg/domain/model"
-	"github.com/minguu42/simoom/pkg/infra/mysql"
 	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"github.com/stretchr/testify/assert"
@@ -117,7 +116,7 @@ func TestStepUsecase_CreateStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetStep(t, tc)
+				_ = fixtures.Load()
 			})
 
 			got, err := step.CreateStep(tt.args.ctx, tt.args.in)
@@ -241,7 +240,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetStep(t, tc)
+				_ = fixtures.Load()
 			})
 
 			got, err := step.UpdateStep(tt.args.ctx, tt.args.in)
@@ -311,7 +310,7 @@ func TestStepUsecase_DeleteStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				mysql.ResetStep(t, tc)
+				_ = fixtures.Load()
 			})
 
 			if err := step.DeleteStep(tt.args.ctx, tt.args.in); err != nil {
