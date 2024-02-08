@@ -1,4 +1,4 @@
-package mysql
+package mysql_test
 
 import (
 	"context"
@@ -34,7 +34,7 @@ func TestClient_CreateTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetTag(t, tc)
+				_ = fixtures.Load()
 			})
 			err := tc.CreateTag(tt.args.ctx, tt.args.t)
 			require.NoError(t, err)
@@ -159,7 +159,7 @@ func TestClient_UpdateTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetTag(t, tc)
+				_ = fixtures.Load()
 			})
 			err := tc.UpdateTag(tt.args.ctx, tt.args.t)
 			require.NoError(t, err)
@@ -191,7 +191,7 @@ func TestClient_DeleteTag(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetTag(t, tc)
+				_ = fixtures.Load()
 			})
 			err := tc.DeleteTag(tt.args.ctx, tt.args.id)
 			require.NoError(t, err)

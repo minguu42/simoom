@@ -1,4 +1,4 @@
-package mysql
+package mysql_test
 
 import (
 	"context"
@@ -36,7 +36,7 @@ func TestClient_CreateProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetProject(t, tc)
+				_ = fixtures.Load()
 			})
 			err := tc.CreateProject(tt.args.ctx, tt.args.p)
 			require.NoError(t, err)
@@ -167,7 +167,7 @@ func TestClient_UpdateProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetProject(t, tc)
+				_ = fixtures.Load()
 			})
 			err := tc.UpdateProject(tt.args.ctx, tt.args.p)
 			require.NoError(t, err)
@@ -199,7 +199,7 @@ func TestClient_DeleteProject(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				ResetProject(t, tc)
+				_ = fixtures.Load()
 			})
 			err := tc.DeleteProject(tt.args.ctx, tt.args.id)
 			require.NoError(t, err)

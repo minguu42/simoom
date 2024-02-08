@@ -1,0 +1,14 @@
+- id: step_01
+  user_id: user_01
+  task_id: task_01
+  name: ステップ1
+  completed_at: null
+  created_at: 2020-01-01 00:00:01
+  updated_at: 2020-01-01 00:00:01
+- id: step_02
+  user_id: user_01
+  task_id: task_01
+  name: ステップ2
+  completed_at: null
+  created_at: 2020-01-01 00:00:02
+  updated_at: 2020-01-01 00:00:02

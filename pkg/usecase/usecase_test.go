@@ -5,6 +5,7 @@ import (
 	"log"
 	"testing"
 
+	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/minguu42/simoom/pkg/config"
 	"github.com/minguu42/simoom/pkg/domain/auth"
 	"github.com/minguu42/simoom/pkg/infra/mysql"
@@ -15,12 +16,13 @@ import (
 )
 
 var (
-	tc      *mysql.Client
-	tctx    = auth.SetUserID(context.Background(), "user_01")
-	project usecase.Project
-	step    usecase.Step
-	tag     usecase.Tag
-	task    usecase.Task
+	tc       *mysql.Client
+	tctx     = auth.SetUserID(context.Background(), "user_01")
+	project  usecase.Project
+	step     usecase.Step
+	tag      usecase.Tag
+	task     usecase.Task
+	fixtures *testfixtures.Loader
 )
 
 func TestMain(m *testing.M) {
@@ -29,7 +31,7 @@ func TestMain(m *testing.M) {
 		ContainerRequest: testcontainers.ContainerRequest{
 			Image: "mysql:8.0.32",
 			Env: map[string]string{
-				"MYSQL_DATABASE":             "simoomdb",
+				"MYSQL_DATABASE":             "simoomdb_test",
 				"MYSQL_ALLOW_EMPTY_PASSWORD": "yes",
 			},
 			ExposedPorts: []string{"3306/tcp"},
@@ -53,7 +55,7 @@ func TestMain(m *testing.M) {
 	tc, err = mysql.NewClient(config.DB{
 		Host:               "localhost",
 		Port:               port.Int(),
-		Database:           "simoomdb",
+		Database:           "simoomdb_test",
 		User:               "root",
 		Password:           "",
 		ConnMaxLifetimeMin: 5,
@@ -70,7 +72,10 @@ func TestMain(m *testing.M) {
 	task = usecase.NewTask(tc, ulidgen.Generator{})
 
 	mysql.Migrate(tc)
-	mysql.InitAllData(tc)
+	fixtures = mysql.NewFixtureLoader(tc)
+	if err := fixtures.Load(); err != nil {
+		log.Fatalf("failed to load test data: %s", err)
+	}
 
 	m.Run()
 }
