@@ -32,8 +32,7 @@ type handler struct {
 func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) http.Handler {
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
-		interceptor.NewJudgeError(),
-		interceptor.NewRecordAccess(),
+		interceptor.NewArrangeErrorAndRecordAccess(),
 		interceptor.NewAuthenticate(authenticator, conf.Auth.AccessTokenSecret),
 	)
 
