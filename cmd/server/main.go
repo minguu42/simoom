@@ -22,15 +22,16 @@ import (
 
 func main() {
 	time.Local = time.UTC
-	applog.InitDefault()
+	applog.Init()
 
-	if err := mainRun(); err != nil {
-		applog.Errorf("failed to run server: %s", err)
+	ctx := context.Background()
+	if err := mainRun(ctx); err != nil {
+		applog.LogApplicationError(ctx, fmt.Sprintf("failed to run server: %s", err))
 		os.Exit(1)
 	}
 }
 
-func mainRun() error {
+func mainRun(ctx context.Context) error {
 	conf, err := config.Load()
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)
@@ -50,9 +51,9 @@ func mainRun() error {
 		MaxHeaderBytes:    1 << 20,
 	}
 	go func() {
-		applog.Infof("Start accepting requests")
+		applog.LogApplicationEvent(ctx, "Start accepting requests")
 		if err := s.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			applog.Errorf("failed to listen and handle requests: %s", err)
+			applog.LogApplicationError(ctx, fmt.Sprintf("failed to listen and handle requests: %s", err))
 			return
 		}
 	}()
@@ -60,10 +61,10 @@ func mainRun() error {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, os.Interrupt)
 	<-quit
-	if err := s.Shutdown(context.Background()); err != nil {
+	if err := s.Shutdown(ctx); err != nil {
 		return fmt.Errorf("failed to shutdown server: %w", err)
 	}
-	applog.Infof("Stop accepting requests")
+	applog.LogApplicationEvent(ctx, "Stop accepting requests")
 
 	return nil
 }

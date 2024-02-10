@@ -3,49 +3,69 @@ package applog
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"os"
+
+	"connectrpc.com/connect"
 )
 
-type loggerKey struct{}
+// applicationLogger はリクエストスコープ外でアプリケーションの状況を出力するためのロガー
+// リクエストスコープ内ではこのロガーは使用せず、コンテキスト中のリクエストロガーを使用する
+var applicationLogger *slog.Logger
 
-// InitDefault はデフォルトのロガーをセットする
-// しかし、アプリケーションのリクエストスコープではデフォルトのロガーは使用せず、コンテキスト中のロガーを使用する。
-// この関数はコンテキスト中のロガーのベースとなるロガーを定義している。
-func InitDefault() {
-	h := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: false,
-		Level:     nil,
+// Init はアプリケーションロガーを初期化する
+func Init() {
+	applicationLogger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.MessageKey {
 				a.Key = "message"
 			}
 			return a
 		},
-	})
-	slog.SetDefault(slog.New(h))
+	}))
 }
 
-// SetLogger は ctx にリクエストスコープのロガーをセットする
-func SetLogger(ctx context.Context, logger *slog.Logger) context.Context {
-	return context.WithValue(ctx, loggerKey{}, logger)
+// LogApplicationEvent はINFOレベルでアプリケーションの状況のログを出力する
+func LogApplicationEvent(ctx context.Context, msg string) {
+	applicationLogger.Log(ctx, slog.LevelInfo, msg)
 }
 
-// Logger は ctx からリクエストスコープのロガーを取り出す
-func Logger(ctx context.Context) *slog.Logger {
+// LogApplicationError はERRORレベルでアプリケーションエラーのログを出力する
+func LogApplicationError(ctx context.Context, msg string) {
+	applicationLogger.Log(ctx, slog.LevelError, msg)
+}
+
+type loggerKey struct{}
+
+// SetLogger はアプリケーションロガーからリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
+func SetLogger(ctx context.Context, method string) context.Context {
+	l := applicationLogger.With(slog.String("method", method))
+	return context.WithValue(ctx, loggerKey{}, l)
+}
+
+// logger はコンテキストからリクエストロガーを取り出す
+// コンテキストにリクエストロガーが存在しなければアプリケーションロガーを使用する
+func logger(ctx context.Context) *slog.Logger {
 	v, ok := ctx.Value(loggerKey{}).(*slog.Logger)
-	if !ok {
-		return slog.Default()
+	if ok {
+		return v
 	}
-	return v
+	return applicationLogger
 }
 
-// Infof はINFOレベルのログを出力する
-func Infof(msg string, args ...any) {
-	slog.Default().Info(msg, args...)
+// LogAccess はリクエストが正常に受け付けられた場合のアクセスログを表示する
+func LogAccess(ctx context.Context, method string) {
+	msg := fmt.Sprintf("ok (0) %s", method)
+	logger(ctx).LogAttrs(ctx, slog.LevelInfo, msg)
 }
 
-// Errorf はERRORレベルのログを出力する
-func Errorf(msg string, args ...any) {
-	slog.Default().Error(msg, args...)
+// LogAccessError はリクエストが正常に受け付けられなかった場合のアクセスログを表示する
+func LogAccessError(ctx context.Context, code connect.Code, method string, err error) {
+	level := slog.LevelInfo
+	if code == connect.CodeUnknown {
+		level = slog.LevelError
+	}
+	msg := fmt.Sprintf("%s (%[1]d) %s", code, method)
+	logger(ctx).LogAttrs(ctx, level, msg, slog.String("detail", err.Error()))
 }
