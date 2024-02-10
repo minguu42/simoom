@@ -23,7 +23,7 @@ func NewArrangeErrorAndRecordAccess() connect.UnaryInterceptorFunc {
 				connectErr := connectError(err)
 				applog.Logger(ctx).LogAttrs(ctx, slog.LevelInfo,
 					fmt.Sprintf("%s(%[1]d) '%s %s'", connectErr.Code(), req.HTTPMethod(), req.Spec().Procedure),
-					slog.String("detail", fmt.Sprintf("%+v", err)),
+					slog.String("detail", err.Error()),
 				)
 				return resp, connectErr
 			}

@@ -7,24 +7,33 @@ import (
 	"os"
 )
 
-type loggerKey struct{}
+// applicationLogger はリクエストスコープ外でアプリケーションの状況を出力するためのロガー
+// リクエストスコープ内ではこのロガーは使用せず、コンテキスト中のリクエストロガーを使用する。
+var applicationLogger *slog.Logger
 
-// InitDefault はデフォルトのロガーをセットする
-// しかし、アプリケーションのリクエストスコープではデフォルトのロガーは使用せず、コンテキスト中のロガーを使用する。
-// この関数はコンテキスト中のロガーのベースとなるロガーを定義している。
-func InitDefault() {
-	h := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: false,
-		Level:     nil,
+// Init はアプリケーションロガーを初期化する
+func Init() {
+	applicationLogger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.MessageKey {
 				a.Key = "message"
 			}
 			return a
 		},
-	})
-	slog.SetDefault(slog.New(h))
+	}))
 }
+
+// LogApplicationEvent はINFOレベルでアプリケーションの状況のログを出力する
+func LogApplicationEvent(ctx context.Context, msg string) {
+	applicationLogger.Log(ctx, slog.LevelInfo, msg)
+}
+
+// LogApplicationError はERRORレベルでアプリケーションエラーのログを出力する
+func LogApplicationError(ctx context.Context, msg string) {
+	applicationLogger.Log(ctx, slog.LevelError, msg)
+}
+
+type loggerKey struct{}
 
 // SetLogger は ctx にリクエストスコープのロガーをセットする
 func SetLogger(ctx context.Context, logger *slog.Logger) context.Context {
@@ -38,14 +47,4 @@ func Logger(ctx context.Context) *slog.Logger {
 		return slog.Default()
 	}
 	return v
-}
-
-// Infof はINFOレベルのログを出力する
-func Infof(msg string, args ...any) {
-	slog.Default().Info(msg, args...)
-}
-
-// Errorf はERRORレベルのログを出力する
-func Errorf(msg string, args ...any) {
-	slog.Default().Error(msg, args...)
 }
