@@ -3,8 +3,6 @@ package interceptor
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log/slog"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/pkg/applog"
@@ -21,13 +19,10 @@ func NewArrangeErrorAndRecordAccess() connect.UnaryInterceptorFunc {
 			resp, err := next(ctx, req)
 			if err != nil {
 				connectErr := connectError(err)
-				applog.Logger(ctx).LogAttrs(ctx, slog.LevelInfo,
-					fmt.Sprintf("%s(%[1]d) '%s %s'", connectErr.Code(), req.HTTPMethod(), req.Spec().Procedure),
-					slog.String("detail", err.Error()),
-				)
+				applog.LogAccessError(ctx, connectErr.Code(), req.Spec().Procedure, err)
 				return resp, connectErr
 			}
-			applog.Logger(ctx).LogAttrs(ctx, slog.LevelInfo, fmt.Sprintf("200 - %s %s", req.HTTPMethod(), req.Spec().Procedure))
+			applog.LogAccess(ctx, req.Spec().Procedure)
 			return resp, nil
 		}
 	}
