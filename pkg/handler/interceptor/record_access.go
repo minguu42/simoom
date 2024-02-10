@@ -38,26 +38,26 @@ func connectError(err error) *connect.Error {
 	case errors.Is(err, usecase.ErrProjectNotFound):
 		code = connect.CodeNotFound
 		message = usecase.ErrProjectNotFound.Error()
-		messageJapanese = "指定したプロジェクトは見つかりません"
+		messageJapanese = "指定したプロジェクトは見つかりません。"
 	case errors.Is(err, usecase.ErrStepNotFound):
 		code = connect.CodeNotFound
 		message = usecase.ErrStepNotFound.Error()
-		messageJapanese = "指定したステップは見つかりません"
+		messageJapanese = "指定したステップは見つかりません。"
 	case errors.Is(err, usecase.ErrTagNotFound):
 		code = connect.CodeNotFound
 		message = usecase.ErrTagNotFound.Error()
-		messageJapanese = "指定したタグは見つかりません"
+		messageJapanese = "指定したタグは見つかりません。"
 	case errors.Is(err, usecase.ErrTaskNotFound):
 		code = connect.CodeNotFound
 		message = usecase.ErrTaskNotFound.Error()
-		messageJapanese = "指定したタスクは見つかりません"
+		messageJapanese = "指定したタスクは見つかりません。"
 	default:
 		code = connect.CodeUnknown
 		message = "some error has occurred on the server side. please wait a few minutes and try again"
 		messageJapanese = "サーバ側で何らかのエラーが発生しました。時間を置いてから再度お試しください。"
 	}
 	connectErr := connect.NewError(code, errors.New(message))
-	d, err := connect.NewErrorDetail(&errdetails.LocalizedMessage{
+	d, _ := connect.NewErrorDetail(&errdetails.LocalizedMessage{
 		Locale:  languageJapanese,
 		Message: messageJapanese,
 	})
