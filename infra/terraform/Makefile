@@ -4,6 +4,22 @@
 fmt: ## Terraformコードを整形する
 	@terraform fmt -recursive
 
+plan-computing-stg: ## 検証環境でコンピューティング関連のリソースに対していterraform planコマンドを実行する
+	terraform -chdir=./computing init -backend-config=stg.tfbackend -reconfigure
+	terraform -chdir=./computing plan -var-file=../stg.tfvars
+
+apply-computing-stg: ## 検証環境でコンピューティング関連のリソースに対してterraform applyコマンドを実行する
+	terraform -chdir=./computing init -backend-config=stg.tfbackend -reconfigure
+	terraform -chdir=./computing apply -var-file=../stg.tfvars
+
+plan-computing-prod: ## 本番環境でコンピューティング関連のリソースに対していterraform planコマンドを実行する
+	terraform -chdir=./computing init -backend-config=prod.tfbackend -reconfigure
+	terraform -chdir=./computing plan -var-file=../prod.tfvars
+
+apply-computing-prod: ## 本番環境でコンピューティング関連のリソースに対してterraform applyコマンドを実行する
+	terraform -chdir=./computing init -backend-config=prod.tfbackend -reconfigure
+	terraform -chdir=./computing apply -var-file=../prod.tfvars
+
 plan-datastore-stg: ## 検証環境でデータストア関連のリソースに対していterraform planコマンドを実行する
 	terraform -chdir=./datastore init -backend-config=stg.tfbackend -reconfigure
 	terraform -chdir=./datastore plan -var-file=../stg.tfvars
