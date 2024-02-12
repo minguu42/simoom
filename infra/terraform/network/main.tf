@@ -3,7 +3,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "5.36.0"
     }
   }
   backend "s3" {}
@@ -18,15 +18,6 @@ provider "aws" {
       Owner     = "minguu42"
       ManagedBy = "terraform"
     }
-  }
-}
-
-data "terraform_remote_state" "mutable" {
-  backend = "s3"
-  config = {
-    bucket = "${local.product}-${var.env}-tfstate"
-    key    = "mutable/terraform.tfstate"
-    region = "ap-northeast-1"
   }
 }
 
