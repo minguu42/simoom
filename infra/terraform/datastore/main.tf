@@ -21,6 +21,19 @@ provider "aws" {
   }
 }
 
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = "${local.product}-${var.env}-tfstate"
+    key    = "network/terraform.tfstate"
+    region = "ap-northeast-1"
+  }
+}
+
+data "aws_secretsmanager_secret_version" "credential" {
+  secret_id = aws_secretsmanager_secret.credential.id
+}
+
 variable "env" {
   type = string
   validation {
@@ -32,6 +45,7 @@ variable "env" {
 locals {
   product      = "simoom"
   isProduction = var.env == "prod"
+  credential = jsondecode(data.aws_secretsmanager_secret_version.credential.secret_string)
 }
 
 #output "ecr_repository_api_repository_url" {
