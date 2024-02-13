@@ -31,10 +31,10 @@ run: ## 本番用APIサーバを実行する
             simoom-api
 
 migrate: ## DBのスキーマの変更を確認する
-	@mysqldef -u root -h 127.0.0.1 --dry-run --enable-drop-table simoomdb < ./infra/mysql/schema.sql
+	@mysqldef -u root -h 127.0.0.1 --dry-run --enable-drop-table --file=./infra/mysql/schema.sql simoomdb
 
 migrate-apply: ## DBのスキーマの変更を適用する
-	@mysqldef -u root -h 127.0.0.1 --enable-drop-table simoomdb < ./infra/mysql/schema.sql
+	@mysqldef -u root -h 127.0.0.1 --enable-drop-table --file=./infra/mysql/schema.sql simoomdb
 
 fmt: ## コードを整形する
 	@buf format --write
