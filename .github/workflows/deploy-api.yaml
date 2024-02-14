@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - update-infra-structure
-env:
-  DOCKER_BUILDKIT: 1
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -25,7 +23,7 @@ jobs:
       - id: login-ecr
         name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
-      - name: Build and push docker image to Amazon ECR
+      - name: Build and push image to Amazon ECR
         uses: docker/build-push-action@v5
         with:
           context: .
