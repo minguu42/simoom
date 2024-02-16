@@ -21,6 +21,15 @@ provider "aws" {
   }
 }
 
+data "terraform_remote_state" "datastore" {
+  backend = "s3"
+  config = {
+    bucket = "${local.product}-${var.env}-tfstate"
+    key    = "datastore/terraform.tfstate"
+    region = "ap-northeast-1"
+  }
+}
+
 data "terraform_remote_state" "network" {
   backend = "s3"
   config = {
