@@ -55,3 +55,7 @@ output "ecr_repository_api_repository_url" {
 output "s3_bucket_lb_api_logs_id" {
   value = aws_s3_bucket.lb_api_logs.id
 }
+
+output "secretsmanager_credentials_arn" {
+  value = aws_secretsmanager_secret.credential.arn
+}
