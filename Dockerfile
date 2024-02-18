@@ -1,16 +1,22 @@
-FROM golang:1.22 AS base
+FROM golang:1.22 AS dev
 WORKDIR /go/src/myapp
 
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,source=go.mod,target=go.mod \
     --mount=type=bind,source=go.sum,target=go.sum \
-    go mod download
+    go mod download \
 
-FROM base AS dev
 RUN go install github.com/cosmtrek/air@latest
 CMD ["air", "-c", ".air.toml"]
 
-FROM base AS build
+FROM golang:1.22 AS build
+WORKDIR /go/src/myapp
+
+RUN --mount=type=cache,target=/go/pkg/mod/ \
+    --mount=type=bind,source=go.mod,target=go.mod \
+    --mount=type=bind,source=go.sum,target=go.sum \
+    go mod download \
+
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,source=.,target=. \
     GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build \
