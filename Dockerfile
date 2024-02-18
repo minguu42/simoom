@@ -4,7 +4,7 @@ WORKDIR /go/src/myapp
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,source=go.mod,target=go.mod \
     --mount=type=bind,source=go.sum,target=go.sum \
-    go mod download \
+    go mod download
 
 RUN go install github.com/cosmtrek/air@latest
 CMD ["air", "-c", ".air.toml"]
@@ -15,7 +15,7 @@ WORKDIR /go/src/myapp
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,source=go.mod,target=go.mod \
     --mount=type=bind,source=go.sum,target=go.sum \
-    go mod download \
+    go mod download
 
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,source=.,target=. \
