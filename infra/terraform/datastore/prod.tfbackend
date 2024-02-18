@@ -1,5 +1,0 @@
-bucket         = "simoom-prod-tfstate"
-key            = "datastore/terraform.tfstate"
-region         = "ap-northeast-1"
-dynamodb_table = "simoom-prod-tfstate-lock"
-encrypt        = true
