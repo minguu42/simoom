@@ -1,7 +1,7 @@
 resource "aws_vpc" "main" {
   cidr_block       = "10.0.0.0/16"
   instance_tenancy = "default"
-  tags = {
+  tags             = {
     Name = "${local.product}-${var.env}"
   }
 }
@@ -10,7 +10,7 @@ resource "aws_subnet" "public_a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.0.0/20"
   availability_zone = "ap-northeast-1a"
-  tags = {
+  tags              = {
     Name = "${local.product}-${var.env}-public-a"
   }
 }
@@ -19,7 +19,7 @@ resource "aws_subnet" "private_a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.16.0/20"
   availability_zone = "ap-northeast-1a"
-  tags = {
+  tags              = {
     Name = "${local.product}-${var.env}-private-a"
   }
 }
@@ -28,7 +28,7 @@ resource "aws_subnet" "public_c" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.80.0/20"
   availability_zone = "ap-northeast-1c"
-  tags = {
+  tags              = {
     Name = "${local.product}-${var.env}-public-c"
   }
 }
@@ -37,52 +37,51 @@ resource "aws_subnet" "private_c" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.96.0/20"
   availability_zone = "ap-northeast-1c"
-  tags = {
+  tags              = {
     Name = "${local.product}-${var.env}-private-c"
   }
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
-  tags = {
+  tags   = {
     Name = "${local.product}-${var.env}"
   }
 }
 
-# NATゲートウェイは時間単位で料金がかかるので、このリポジトリでは使用しない
-#resource "aws_eip" "nat_a" {
-#  domain = "vpc"
-#  tags = {
-#    Name = "${local.product}-${var.env}-nat-a"
-#  }
-#}
-#
-#resource "aws_eip" "nat_c" {
-#  count  = local.isProduction ? 1 : 0
-#  domain = "vpc"
-#  tags = {
-#    Name = "${local.product}-${var.env}-nat-c"
-#  }
-#}
-#
-#resource "aws_nat_gateway" "a" {
-#  allocation_id = aws_eip.nat_a.id
-#  subnet_id     = aws_subnet.public_a.id
-#  tags = {
-#    Name = "${local.product}-${var.env}-a"
-#  }
-#  depends_on = [aws_internet_gateway.main]
-#}
-#
-#resource "aws_nat_gateway" "c" {
-#  count         = local.isProduction ? 1 : 0
-#  allocation_id = aws_eip.nat_c[0].id
-#  subnet_id     = aws_subnet.public_c.id
-#  tags = {
-#    Name = "${local.product}-${var.env}-c"
-#  }
-#  depends_on = [aws_internet_gateway.main]
-#}
+resource "aws_eip" "nat_a" {
+  domain = "vpc"
+  tags   = {
+    Name = "${local.product}-${var.env}-nat-a"
+  }
+}
+
+resource "aws_eip" "nat_c" {
+  count  = local.isProduction ? 1 : 0
+  domain = "vpc"
+  tags   = {
+    Name = "${local.product}-${var.env}-nat-c"
+  }
+}
+
+resource "aws_nat_gateway" "a" {
+  allocation_id = aws_eip.nat_a.id
+  subnet_id     = aws_subnet.public_a.id
+  tags          = {
+    Name = "${local.product}-${var.env}-a"
+  }
+  depends_on = [aws_internet_gateway.main]
+}
+
+resource "aws_nat_gateway" "c" {
+  count         = local.isProduction ? 1 : 0
+  allocation_id = aws_eip.nat_c[0].id
+  subnet_id     = aws_subnet.public_c.id
+  tags          = {
+    Name = "${local.product}-${var.env}-c"
+  }
+  depends_on = [aws_internet_gateway.main]
+}
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
@@ -115,11 +114,10 @@ resource "aws_route_table" "private_a" {
     cidr_block = "10.0.0.0/16"
     gateway_id = "local"
   }
-  # NATゲートウェイを使う場合はコメントアウトする
-  #  route {
-  #    cidr_block     = "0.0.0.0/0"
-  #    nat_gateway_id = aws_nat_gateway.a.id
-  #  }
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.a.id
+  }
   tags = {
     Name = "${local.product}-${var.env}-private-a"
   }
@@ -137,11 +135,10 @@ resource "aws_route_table" "private_c" {
     cidr_block = "10.0.0.0/16"
     gateway_id = "local"
   }
-  # NATゲートウェイを使う場合はコメントアウトする
-  #  route {
-  #    cidr_block     = "0.0.0.0/0"
-  #    nat_gateway_id = aws_nat_gateway.c[0].id
-  #  }
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.c[0].id
+  }
   tags = {
     Name = "${local.product}-${var.env}-private-c"
   }
