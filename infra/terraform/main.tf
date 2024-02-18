@@ -21,6 +21,10 @@ provider "aws" {
   }
 }
 
+data "aws_secretsmanager_secret_version" "api_secrets" {
+  secret_id = aws_secretsmanager_secret.api_secrets.id
+}
+
 variable "env" {
   type = string
   validation {
@@ -32,4 +36,5 @@ variable "env" {
 locals {
   product      = "simoom"
   isProduction = var.env == "prod"
+  api_secrets = jsondecode(data.aws_secretsmanager_secret_version.api_secrets.secret_string)
 }
