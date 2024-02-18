@@ -19,7 +19,8 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,source=.,target=. \
-    GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build \
+#    GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build \
+    CGO_ENABLED=0 go build \
       -ldflags "-s -w" \
       -trimpath \
       -o /go/bin/myapp \
