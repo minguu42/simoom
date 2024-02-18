@@ -2,7 +2,7 @@ name: Deploy api
 on:
   push:
     branches:
-      - update-infra-structure
+      - update-terraform
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
