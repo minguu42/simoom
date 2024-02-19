@@ -31,8 +31,8 @@ resource "aws_vpc_security_group_egress_rule" "alb_api_egress" {
 
 resource "aws_lb_listener" "api_http" {
   load_balancer_arn = aws_lb.api.arn
-  port = 80
-  protocol = "HTTP"
+  port              = 80
+  protocol          = "HTTP"
   default_action {
     type = "fixed-response"
     fixed_response {

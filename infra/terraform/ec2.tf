@@ -1,7 +1,7 @@
 resource "aws_eip" "bastion" {
   instance = aws_instance.bastion.id
   domain   = "vpc"
-  tags     = {
+  tags = {
     Name = "${local.product}-${var.env}-bastion"
   }
 }
@@ -22,7 +22,7 @@ resource "aws_instance" "bastion" {
 }
 
 resource "aws_key_pair" "bastion" {
-  key_name = "${local.product}-${var.env}-bastion"
+  key_name   = "${local.product}-${var.env}-bastion"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAVHKIFgKq+Gzyx/u1yczsSEzM7bl9TnpuZUF2+Tjr6D"
 }
 

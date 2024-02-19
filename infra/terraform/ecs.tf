@@ -53,10 +53,10 @@ resource "aws_ecs_task_definition" "api" {
   cpu                      = 256 # .25vCPU
   memory                   = 512 # .5GB
   execution_role_arn       = aws_iam_role.ecs_api_execution.arn
-  container_definitions    = jsonencode([
+  container_definitions = jsonencode([
     {
-      name         = "${local.product}-api"
-      image        = "${aws_ecr_repository.api.repository_url}:9b5c9fbddf158dc906944a4ad2080e2ac764726b"
+      name  = "${local.product}-api"
+      image = "${aws_ecr_repository.api.repository_url}:9b5c9fbddf158dc906944a4ad2080e2ac764726b"
       portMappings = [
         {
           containerPort = 8080
@@ -112,7 +112,7 @@ resource "aws_ecs_task_definition" "api" {
 }
 
 resource "aws_iam_role" "ecs_api_execution" {
-  name               = "${local.product}-${var.env}-ecs-api-task-execution"
+  name = "${local.product}-${var.env}-ecs-api-task-execution"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -129,8 +129,8 @@ resource "aws_iam_role" "ecs_api_execution" {
 }
 
 resource "aws_iam_role_policy" "ecs_api_execution" {
-  name   = "${local.product}-${var.env}-ecs-api-execution"
-  role   = aws_iam_role.ecs_api_execution.id
+  name = "${local.product}-${var.env}-ecs-api-execution"
+  role = aws_iam_role.ecs_api_execution.id
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
