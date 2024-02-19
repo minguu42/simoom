@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions    = jsonencode([
     {
       name         = "${local.product}-api"
-      image        = "${aws_ecr_repository.api.repository_url}:780012c83a3aa57213a831810531ae4b7a59bf4a"
+      image        = "${aws_ecr_repository.api.repository_url}:395fa7c781adcd7e5785091289ccd279052bad6c"
       portMappings = [
         {
           containerPort = 8080
