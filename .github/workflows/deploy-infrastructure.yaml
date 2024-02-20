@@ -1,15 +1,17 @@
-#name: Deploy infrastructure
-#on:
-#  push:
-#    branches:
-#      - main
-#concurrency:
-#  group: ${{ github.workflow }}-${{ github.ref }}
-#  cancel-in-progress: true
-#jobs:
-#  deploy:
-#    runs-on: ubuntu-22.04
-#    steps:
+name: Deploy infrastructure
+on:
+  push:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Comment
+        run: echo "This workflow is currently under maintenance"
 #      - name: Checkout
 #        uses: actions/checkout@v4
 #      - name: Set up Docker Buildx
