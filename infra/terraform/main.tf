@@ -21,6 +21,10 @@ provider "aws" {
   }
 }
 
+data "aws_secretsmanager_secret_version" "api_secrets" {
+  secret_id = aws_secretsmanager_secret.api_secrets.id
+}
+
 variable "env" {
   type = string
   validation {
@@ -29,23 +33,16 @@ variable "env" {
   }
 }
 
+variable "api_image_tag" {
+  type = string
+  validation {
+    condition     = length(var.api_image_tag) == 40
+    error_message = "The api image tag is a 40-character string"
+  }
+}
+
 locals {
   product      = "simoom"
   isProduction = var.env == "prod"
-}
-
-output "vpc_id" {
-  value = aws_vpc.main.id
-}
-
-output "public_subnet_ids" {
-  value = [aws_subnet.public_a.id, aws_subnet.public_c.id]
-}
-
-output "public_a_subnet_id" {
-  value = aws_subnet.public_a.id
-}
-
-output "private_subnet_ids" {
-  value = [aws_subnet.private_a.id, aws_subnet.private_c.id]
+  api_secrets  = jsondecode(data.aws_secretsmanager_secret_version.api_secrets.secret_string)
 }

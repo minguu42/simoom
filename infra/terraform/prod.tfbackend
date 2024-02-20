@@ -1,5 +1,5 @@
-bucket         = "simoom-prod-tfstate"
-key            = "computing/terraform.tfstate"
+bucket         = "simoom-prod-tf-remote-state"
+key            = "terraform.tfstate"
 region         = "ap-northeast-1"
 dynamodb_table = "simoom-prod-tfstate-lock"
 encrypt        = true
