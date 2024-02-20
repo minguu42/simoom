@@ -24,6 +24,7 @@ jobs:
       - name: Check code format
         run: make check-format-tf
   plan:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-22.04
     permissions:
       contents: write
