@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/pkg/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/minguu42/simoom/pkg/usecase"
 )
 

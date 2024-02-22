@@ -11,7 +11,7 @@ import (
 	strings "strings"
 
 	connect "connectrpc.com/connect"
-	v1 "github.com/minguu42/simoom/pkg/simoompb/v1"
+	v1 "github.com/minguu42/simoom/lib/go/simoompb/v1"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
