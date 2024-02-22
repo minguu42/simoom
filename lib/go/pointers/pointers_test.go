@@ -1,10 +1,11 @@
-package pointers
+package pointers_test
 
 import (
 	"reflect"
 	"testing"
 	"time"
 
+	"github.com/minguu42/simoom/lib/go/pointers"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +36,7 @@ func TestRef(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotTypeKind := reflect.TypeOf(Ref(tt.args.v)).Kind()
+			gotTypeKind := reflect.TypeOf(pointers.Ref(tt.args.v)).Kind()
 			assert.Equal(t, tt.wantTypeKind, gotTypeKind)
 		})
 	}
