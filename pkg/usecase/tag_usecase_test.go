@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/minguu42/simoom/lib/go/pointers"
 	"github.com/minguu42/simoom/pkg/domain/model"
-	"github.com/minguu42/simoom/pkg/pointers"
 	"github.com/minguu42/simoom/pkg/usecase"
 	"github.com/stretchr/testify/assert"
 )
