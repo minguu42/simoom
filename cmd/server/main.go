@@ -12,12 +12,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/minguu42/simoom/pkg/applog"
-	"github.com/minguu42/simoom/pkg/config"
-	"github.com/minguu42/simoom/pkg/handler"
-	"github.com/minguu42/simoom/pkg/infra/jwtauth"
-	"github.com/minguu42/simoom/pkg/infra/mysql"
-	"github.com/minguu42/simoom/pkg/infra/ulidgen"
+	"github.com/minguu42/simoom/api/applog"
+	"github.com/minguu42/simoom/api/config"
+	"github.com/minguu42/simoom/api/handler"
+	"github.com/minguu42/simoom/api/infra/jwtauth"
+	"github.com/minguu42/simoom/api/infra/mysql"
+	"github.com/minguu42/simoom/api/infra/ulidgen"
 )
 
 func main() {
