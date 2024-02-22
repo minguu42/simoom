@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/minguu42/simoom/lib/go/clock"
 	"github.com/minguu42/simoom/api/domain/model"
+	"github.com/minguu42/simoom/lib/go/clock"
 )
 
 // Authenticator は auth.Authenticator を満たすJWT認証器

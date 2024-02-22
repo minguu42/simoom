@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

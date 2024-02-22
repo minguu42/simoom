@@ -7,9 +7,9 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/minguu42/simoom/lib/go/pointers"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
+	"github.com/minguu42/simoom/lib/go/pointers"
 	"github.com/stretchr/testify/assert"
 )
 

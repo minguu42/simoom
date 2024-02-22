@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/minguu42/simoom/api/usecase"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 )
 
 func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
