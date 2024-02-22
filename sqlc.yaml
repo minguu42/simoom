@@ -1,9 +1,9 @@
 version: 2
 sql:
   - engine: mysql
-    queries: pkg/infra/mysql/queries.sql
+    queries: api/infra/mysql/queries.sql
     schema: infra/mysql/schema.sql
     gen:
       go:
         package: sqlc
-        out: pkg/infra/mysql/sqlc
+        out: api/infra/mysql/sqlc
