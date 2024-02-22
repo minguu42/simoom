@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/minguu42/simoom/pkg/clock"
+	"github.com/minguu42/simoom/lib/go/clock"
 	"github.com/stretchr/testify/assert"
 )
 

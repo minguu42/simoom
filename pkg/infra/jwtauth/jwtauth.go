@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/minguu42/simoom/pkg/clock"
+	"github.com/minguu42/simoom/lib/go/clock"
 	"github.com/minguu42/simoom/pkg/domain/model"
 )
 
