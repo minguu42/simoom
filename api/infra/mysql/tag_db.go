@@ -28,7 +28,7 @@ func newModelTags(ts []sqlc.Tag) []model.Tag {
 }
 
 func (c *Client) CreateTag(ctx context.Context, t model.Tag) error {
-	if err := sqlc.New(c.db).CreateTag(ctx, sqlc.CreateTagParams{
+	if err := c.queries(ctx).CreateTag(ctx, sqlc.CreateTagParams{
 		ID:     t.ID,
 		UserID: t.UserID,
 		Name:   t.Name,
@@ -39,7 +39,7 @@ func (c *Client) CreateTag(ctx context.Context, t model.Tag) error {
 }
 
 func (c *Client) ListTagsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Tag, error) {
-	ts, err := sqlc.New(c.db).ListTagsByUserID(ctx, sqlc.ListTagsByUserIDParams{
+	ts, err := c.queries(ctx).ListTagsByUserID(ctx, sqlc.ListTagsByUserIDParams{
 		UserID: userID,
 		Limit:  int32(limit),
 		Offset: int32(offset),
@@ -51,7 +51,7 @@ func (c *Client) ListTagsByUserID(ctx context.Context, userID string, limit, off
 }
 
 func (c *Client) GetTagByID(ctx context.Context, id string) (model.Tag, error) {
-	t, err := sqlc.New(c.db).GetTagByID(ctx, id)
+	t, err := c.queries(ctx).GetTagByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Tag{}, repository.ErrModelNotFound
@@ -62,7 +62,7 @@ func (c *Client) GetTagByID(ctx context.Context, id string) (model.Tag, error) {
 }
 
 func (c *Client) UpdateTag(ctx context.Context, t model.Tag) error {
-	if err := sqlc.New(c.db).UpdateTag(ctx, sqlc.UpdateTagParams{
+	if err := c.queries(ctx).UpdateTag(ctx, sqlc.UpdateTagParams{
 		Name: t.Name,
 		ID:   t.ID,
 	}); err != nil {
@@ -72,7 +72,7 @@ func (c *Client) UpdateTag(ctx context.Context, t model.Tag) error {
 }
 
 func (c *Client) DeleteTag(ctx context.Context, id string) error {
-	if err := sqlc.New(c.db).DeleteTag(ctx, id); err != nil {
+	if err := c.queries(ctx).DeleteTag(ctx, id); err != nil {
 		return fmt.Errorf("failed to delete tag: %w", err)
 	}
 	return nil

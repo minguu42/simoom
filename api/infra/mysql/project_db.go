@@ -30,7 +30,7 @@ func newModelProjects(ps []sqlc.Project) []model.Project {
 }
 
 func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
-	if err := sqlc.New(c.db).CreateProject(ctx, sqlc.CreateProjectParams{
+	if err := c.queries(ctx).CreateProject(ctx, sqlc.CreateProjectParams{
 		ID:         p.ID,
 		UserID:     p.UserID,
 		Name:       p.Name,
@@ -43,7 +43,7 @@ func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 }
 
 func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
-	ps, err := sqlc.New(c.db).ListProjectsByUserID(ctx, sqlc.ListProjectsByUserIDParams{
+	ps, err := c.queries(ctx).ListProjectsByUserID(ctx, sqlc.ListProjectsByUserIDParams{
 		UserID: userID,
 		Limit:  int32(limit),
 		Offset: int32(offset),
@@ -55,7 +55,7 @@ func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit,
 }
 
 func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, error) {
-	p, err := sqlc.New(c.db).GetProjectByID(ctx, id)
+	p, err := c.queries(ctx).GetProjectByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Project{}, repository.ErrModelNotFound
@@ -66,7 +66,7 @@ func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, 
 }
 
 func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
-	if err := sqlc.New(c.db).UpdateProject(ctx, sqlc.UpdateProjectParams{
+	if err := c.queries(ctx).UpdateProject(ctx, sqlc.UpdateProjectParams{
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
@@ -78,7 +78,7 @@ func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
 }
 
 func (c *Client) DeleteProject(ctx context.Context, id string) error {
-	if err := sqlc.New(c.db).DeleteProject(ctx, id); err != nil {
+	if err := c.queries(ctx).DeleteProject(ctx, id); err != nil {
 		return fmt.Errorf("failed to delete project: %w", err)
 	}
 	return nil

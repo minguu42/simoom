@@ -182,19 +182,24 @@ type DeleteTaskInput struct {
 }
 
 func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
-	t, err := uc.repo.GetTaskByID(ctx, in.ID)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
+		t, err := uc.repo.GetTaskByID(ctxWithTx, in.ID)
+		if err != nil {
+			if errors.Is(err, repository.ErrModelNotFound) {
+				return ErrTaskNotFound
+			}
+			return fmt.Errorf("failed to get task: %w", err)
+		}
+		if auth.GetUserID(ctxWithTx) != t.UserID {
 			return ErrTaskNotFound
 		}
-		return fmt.Errorf("failed to get task: %w", err)
-	}
-	if auth.GetUserID(ctx) != t.UserID {
-		return ErrTaskNotFound
-	}
 
-	if err := uc.repo.DeleteTask(ctx, in.ID); err != nil {
-		return fmt.Errorf("failed to delete task: %w", err)
+		if err := uc.repo.DeleteTask(ctxWithTx, in.ID); err != nil {
+			return fmt.Errorf("failed to delete task: %w", err)
+		}
+		return nil
+	}); err != nil {
+		return fmt.Errorf("failed to run transaction: %w", err)
 	}
 	return nil
 }
