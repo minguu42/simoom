@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
-.PHONY: setup migrate migrate-apply gen fmt fmt-go fmt-proto fmt-tf check check-format-go
-.PHONY: check-format-proto check-format-tf lint lint-go lint-proto test build help
+.PHONY: setup migrate migrate-apply gen fmt fmt-go fmt-proto fmt-tf
+.PHONY: lint lint-go lint-proto test build help
 
 setup: ## 開発に必要なツールをインストールする
 	brew install sqldef/sqldef/mysqldef
@@ -18,7 +18,7 @@ migrate-apply: ## DBのスキーマの変更を適用する
 
 gen: ## コードを生成する
 	@buf generate
-	@rm -rf ./pkg/infra/mysql/sqlc && sqlc generate
+	@rm -rf ./api/infra/mysql/sqlc && sqlc generate
 	@$(MAKE) fmt
 
 fmt: fmt-go fmt-proto fmt-tf ## コードを整形する
@@ -31,17 +31,6 @@ fmt-proto: # protoコードを整形する
 
 fmt-tf: # Terraformコードを整形する
 	@terraform fmt -recursive
-
-check: check-format-go check-format-proto check-format-tf
-
-check-format-go:
-	@if [ $(shell goimports -l . | wc -l) -gt 0 ]; then exit 1; fi
-
-check-format-proto:
-	@buf format --exit-code
-
-check-format-tf:
-	@terraform fmt -check -recursive
 
 lint: lint-go lint-proto ## 静的解析を実行する
 

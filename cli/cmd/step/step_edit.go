@@ -6,7 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/pkg/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
