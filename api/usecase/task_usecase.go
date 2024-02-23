@@ -38,24 +38,7 @@ type CreateTaskInput struct {
 	Priority  uint
 }
 
-func (in CreateTaskInput) Validate() error {
-	if len(in.ProjectID) != 26 {
-		return newErrInvalidArgument("project_id is a 26-character string")
-	}
-	if len(in.Name) < 1 || 80 < len(in.Name) {
-		return newErrInvalidArgument("name cannot be an empty string")
-	}
-	if in.Priority > 3 {
-		return newErrInvalidArgument("priority is specified by 0 to 3")
-	}
-	return nil
-}
-
 func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, error) {
-	// if err := in.Validate(); err != nil {
-	// 	return TaskOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -86,21 +69,7 @@ type ListTasksByProjectIDInput struct {
 	Offset    uint
 }
 
-func (in ListTasksByProjectIDInput) Validate() error {
-	if len(in.ProjectID) != 26 {
-		return newErrInvalidArgument("project_id is a 26-character string")
-	}
-	if in.Limit < 1 {
-		return newErrInvalidArgument("limit is greater than or equal to 1")
-	}
-	return nil
-}
-
 func (uc Task) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectIDInput) (TasksOutput, error) {
-	// if err := in.Validate(); err != nil {
-	// 	return TasksOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -134,21 +103,7 @@ type ListTasksByTagIDInput struct {
 	Offset uint
 }
 
-func (in ListTasksByTagIDInput) Validate() error {
-	if len(in.TagID) != 26 {
-		return newErrInvalidArgument("tag_id is a 26-character string")
-	}
-	if in.Limit < 1 {
-		return newErrInvalidArgument("limit is greater than or equal to 1")
-	}
-	return nil
-}
-
 func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (TasksOutput, error) {
-	// if err := in.Validate(); err != nil {
-	// 	return TasksOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	t, err := uc.repo.GetTagByID(ctx, in.TagID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -185,27 +140,7 @@ type UpdateTaskInput struct {
 	CompletedAt *time.Time
 }
 
-func (in UpdateTaskInput) Validate() error {
-	if len(in.ID) != 26 {
-		return newErrInvalidArgument("id is a 26-character string")
-	}
-	if in.Name == nil && in.Content == nil && in.Priority == nil && in.DueOn == nil && in.CompletedAt == nil {
-		return newErrInvalidArgument("must contain some argument other than id")
-	}
-	if in.Name != nil && (len(*in.Name) < 1 || 80 < len(*in.Name)) {
-		return newErrInvalidArgument("name cannot be an empty string")
-	}
-	if in.Priority != nil && *in.Priority > 3 {
-		return newErrInvalidArgument("priority is specified by 0 to 3")
-	}
-	return nil
-}
-
 func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, error) {
-	// if err := in.Validate(); err != nil {
-	// 	return TaskOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -250,10 +185,6 @@ func (in DeleteTaskInput) Validate() error {
 }
 
 func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
-	// if err := in.Validate(); err != nil {
-	// 	return fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {

@@ -4,12 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
-	"unicode/utf8"
-
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
+	"time"
 )
 
 type Step struct {
@@ -38,21 +36,7 @@ type CreateStepInput struct {
 	Name   string
 }
 
-func (in CreateStepInput) Validate() error {
-	if len(in.TaskID) != 26 {
-		return newErrInvalidArgument("task_id is a 26-character string")
-	}
-	if utf8.RuneCountInString(in.Name) < 1 || 80 < utf8.RuneCountInString(in.Name) {
-		return newErrInvalidArgument("name must be at least 1 and no more than 80 characters")
-	}
-	return nil
-}
-
 func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
-	// if err := in.Validate(); err != nil {
-	// 	return StepOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -82,24 +66,7 @@ type UpdateStepInput struct {
 	CompletedAt *time.Time
 }
 
-func (in UpdateStepInput) Validate() error {
-	if len(in.ID) != 26 {
-		return newErrInvalidArgument("id is a 26-character string")
-	}
-	if in.Name == nil && in.CompletedAt == nil {
-		return newErrInvalidArgument("must contain some argument other than id")
-	}
-	if in.Name != nil && (utf8.RuneCountInString(*in.Name) < 1 || 80 < utf8.RuneCountInString(*in.Name)) {
-		return newErrInvalidArgument("name cannot be an empty string")
-	}
-	return nil
-}
-
 func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
-	// if err := in.Validate(); err != nil {
-	// 	return StepOutput{}, fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
@@ -127,18 +94,7 @@ type DeleteStepInput struct {
 	ID string
 }
 
-func (in DeleteStepInput) Validate() error {
-	if len(in.ID) != 26 {
-		return newErrInvalidArgument("id is a 26-character string")
-	}
-	return nil
-}
-
 func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
-	// if err := in.Validate(); err != nil {
-	// 	return fmt.Errorf("failed to validate input: %w", err)
-	// }
-
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
