@@ -36,14 +36,18 @@ type CreateProjectInput struct {
 	Color string
 }
 
-func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
-	p := model.Project{
-		ID:         uc.idgen.Generate(),
-		UserID:     auth.GetUserID(ctx),
+func (in CreateProjectInput) Create(g model.IDGenerator, userID string) model.Project {
+	return model.Project{
+		ID:         g.Generate(),
+		UserID:     userID,
 		Name:       in.Name,
 		Color:      in.Color,
 		IsArchived: false,
 	}
+}
+
+func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
+	p := in.Create(uc.idgen, auth.GetUserID(ctx))
 	if err := uc.repo.CreateProject(ctx, p); err != nil {
 		return ProjectOutput{}, fmt.Errorf("failed to create project: %w", err)
 	}
