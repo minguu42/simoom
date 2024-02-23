@@ -115,19 +115,24 @@ type DeleteProjectInput struct {
 }
 
 func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
-	p, err := uc.repo.GetProjectByID(ctx, in.ID)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
+		p, err := uc.repo.GetProjectByID(ctxWithTx, in.ID)
+		if err != nil {
+			if errors.Is(err, repository.ErrModelNotFound) {
+				return ErrProjectNotFound
+			}
+			return fmt.Errorf("failed to get project: %w", err)
+		}
+		if auth.GetUserID(ctxWithTx) != p.UserID {
 			return ErrProjectNotFound
 		}
-		return fmt.Errorf("failed to get project: %w", err)
-	}
-	if auth.GetUserID(ctx) != p.UserID {
-		return ErrProjectNotFound
-	}
 
-	if err := uc.repo.DeleteProject(ctx, in.ID); err != nil {
-		return fmt.Errorf("failed to delete project: %w", err)
+		if err := uc.repo.DeleteProject(ctxWithTx, in.ID); err != nil {
+			return fmt.Errorf("failed to delete project: %w", err)
+		}
+		return nil
+	}); err != nil {
+		return fmt.Errorf("failed to run transaction: %w", err)
 	}
 	return nil
 }

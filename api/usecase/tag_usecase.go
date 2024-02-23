@@ -104,19 +104,24 @@ type DeleteTagInput struct {
 }
 
 func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
-	t, err := uc.repo.GetTagByID(ctx, in.ID)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
+		t, err := uc.repo.GetTagByID(ctxWithTx, in.ID)
+		if err != nil {
+			if errors.Is(err, repository.ErrModelNotFound) {
+				return ErrTagNotFound
+			}
+			return fmt.Errorf("failed to get tag: %w", err)
+		}
+		if auth.GetUserID(ctxWithTx) != t.UserID {
 			return ErrTagNotFound
 		}
-		return fmt.Errorf("failed to get tag: %w", err)
-	}
-	if auth.GetUserID(ctx) != t.UserID {
-		return ErrTagNotFound
-	}
 
-	if err := uc.repo.DeleteTag(ctx, in.ID); err != nil {
-		return fmt.Errorf("failed to delete tag: %w", err)
+		if err := uc.repo.DeleteTag(ctxWithTx, in.ID); err != nil {
+			return fmt.Errorf("failed to delete tag: %w", err)
+		}
+		return nil
+	}); err != nil {
+		return fmt.Errorf("failed to run transaction: %w", err)
 	}
 	return nil
 }

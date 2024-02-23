@@ -100,19 +100,24 @@ type DeleteStepInput struct {
 }
 
 func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
-	s, err := uc.repo.GetStepByID(ctx, in.ID)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
+		s, err := uc.repo.GetStepByID(ctxWithTx, in.ID)
+		if err != nil {
+			if errors.Is(err, repository.ErrModelNotFound) {
+				return ErrStepNotFound
+			}
+			return fmt.Errorf("failed to get step: %w", err)
+		}
+		if auth.GetUserID(ctxWithTx) != s.UserID {
 			return ErrStepNotFound
 		}
-		return fmt.Errorf("failed to get step: %w", err)
-	}
-	if auth.GetUserID(ctx) != s.UserID {
-		return ErrStepNotFound
-	}
 
-	if err := uc.repo.DeleteStep(ctx, in.ID); err != nil {
-		return fmt.Errorf("failed to delete step: %w", err)
+		if err := uc.repo.DeleteStep(ctxWithTx, in.ID); err != nil {
+			return fmt.Errorf("failed to delete step: %w", err)
+		}
+		return nil
+	}); err != nil {
+		return fmt.Errorf("failed to run transaction: %w", err)
 	}
 	return nil
 }
