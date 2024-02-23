@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-      - name: Set up buf
+      - name: Set up Buf
         uses: bufbuild/buf-setup-action@v1.28.1
         with:
           github_token: ${{ github.token }}
@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-      - name: Set up buf
+      - name: Set up Buf
         uses: bufbuild/buf-setup-action@v1.28.1
         with:
           github_token: ${{ github.token }}

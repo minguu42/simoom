@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [ opened, reopened, synchronize ]
     paths:
-      - .github/workflows/integrate-terraform.yaml
+      - .github/workflows/integrate-infrastructure.yaml
       - "infra/terraform/**"
   push:
     branches:
@@ -19,10 +19,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-      - name: Set up terraform
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
       - name: Check code format
-        run: make check-format-tf
+        run: terraform fmt -check -recursive
 #  plan:
 #    if: github.event_name == 'pull_request'
 #    runs-on: ubuntu-22.04
@@ -37,7 +37,7 @@ jobs:
 #        uses: actions/checkout@v4
 #        with:
 #          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-#      - name: Set up terraform
+#      - name: Set up Terraform
 #        uses: hashicorp/setup-terraform@v3
 #      - name: Initialize terraform working directory
 #        run: terraform -chdir=./infra/terraform init -backend-config=stg.tfbackend -reconfigure
