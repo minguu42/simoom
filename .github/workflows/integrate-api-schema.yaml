@@ -3,11 +3,10 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
     paths:
-      - .github/workflows/integrate-protobuf.yaml
+      - .github/workflows/integrate-api-schema.yaml
       - "simoompb/**"
       - buf.gen.yaml
       - buf.yaml
-      - Makefile
   push:
     branches:
       - main
@@ -27,7 +26,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - name: Check code format
-        run: make check-format-proto
+        run: buf format --exit-code
   lint:
     runs-on: ubuntu-22.04
     steps:
@@ -40,4 +39,4 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - name: Run linting
-        run: make lint-proto
+        run: buf lint
