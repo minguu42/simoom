@@ -12,6 +12,8 @@ var ErrModelNotFound = errors.New("model not found in database")
 
 // Repository は DB による永続化を抽象化する
 type Repository interface {
+	Transaction(ctx context.Context, fn func(ctxWithTx context.Context) error) error
+
 	CreateProject(ctx context.Context, p model.Project) error
 	ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error)
 	GetProjectByID(ctx context.Context, id string) (model.Project, error)
