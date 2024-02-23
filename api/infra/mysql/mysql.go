@@ -2,6 +2,7 @@
 package mysql
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -9,7 +10,10 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/minguu42/simoom/api/config"
+	"github.com/minguu42/simoom/api/infra/mysql/sqlc"
 )
+
+type transactionKey struct{}
 
 // Client は repository.Repository を満たすMySQLクライアント
 type Client struct {
@@ -52,4 +56,34 @@ func NewClient(conf config.DB) (*Client, error) {
 	}
 
 	return &Client{db: db}, nil
+}
+
+// queries は ctx から *sqlc.Queries を取得する
+// ctx に *sqlc.Queries が存在しない場合は新しく生成し、返す
+func (c *Client) queries(ctx context.Context) *sqlc.Queries {
+	q, ok := ctx.Value(transactionKey{}).(*sqlc.Queries)
+	if ok {
+		return q
+	}
+	return sqlc.New(c.db)
+}
+
+// Transaction は fn を1つのトランザクション内で実行する
+func (c *Client) Transaction(ctx context.Context, fn func(context.Context) error) error {
+	tx, err := c.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+	ctxWithTxQueries := context.WithValue(ctx, transactionKey{}, sqlc.New(tx))
+
+	if err := fn(ctxWithTxQueries); err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			return fmt.Errorf("error occurred during the transaction: %w, and rollback failed: %w", err, rollbackErr)
+		}
+		return fmt.Errorf("error occurred during the transaction and it was rolled back: %w", err)
+	}
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+	return nil
 }
