@@ -2,10 +2,12 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/bufbuild/protovalidate-go"
 	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
@@ -19,7 +21,10 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+var ErrInvalidRequest = errors.New("the entered value is incorrect")
+
 type handler struct {
+	validator  *protovalidate.Validator
 	auth       usecase.Auth
 	monitoring usecase.Monitoring
 	project    usecase.Project
@@ -30,6 +35,8 @@ type handler struct {
 
 // New はハンドラを生成する
 func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) http.Handler {
+	v, _ := protovalidate.New()
+
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewArrangeErrorAndRecordAccess(),
@@ -38,6 +45,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
+		validator:  v,
 		auth:       usecase.NewAuth(authenticator, repo, conf.Auth, idgen),
 		monitoring: usecase.Monitoring{},
 		project:    usecase.NewProject(repo, idgen),
