@@ -1,9 +1,8 @@
 package handler
 
 import (
-	"context"
-
 	"connectrpc.com/connect"
+	"context"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"

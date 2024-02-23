@@ -2,11 +2,10 @@ package clock_test
 
 import (
 	"context"
-	"testing"
-	"time"
-
 	"github.com/minguu42/simoom/lib/go/clock"
 	"github.com/stretchr/testify/assert"
+	"testing"
+	"time"
 )
 
 func TestNow(t *testing.T) {
