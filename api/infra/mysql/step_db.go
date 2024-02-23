@@ -30,7 +30,7 @@ func newModelSteps(ss []sqlc.Step) []model.Step {
 }
 
 func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
-	if err := sqlc.New(c.db).CreateStep(ctx, sqlc.CreateStepParams{
+	if err := c.queries(ctx).CreateStep(ctx, sqlc.CreateStepParams{
 		ID:     s.ID,
 		UserID: s.UserID,
 		TaskID: s.TaskID,
@@ -42,7 +42,7 @@ func (c *Client) CreateStep(ctx context.Context, s model.Step) error {
 }
 
 func (c *Client) GetStepByID(ctx context.Context, id string) (model.Step, error) {
-	s, err := sqlc.New(c.db).GetStepByID(ctx, id)
+	s, err := c.queries(ctx).GetStepByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Step{}, repository.ErrModelNotFound
@@ -53,7 +53,7 @@ func (c *Client) GetStepByID(ctx context.Context, id string) (model.Step, error)
 }
 
 func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
-	if err := sqlc.New(c.db).UpdateStep(ctx, sqlc.UpdateStepParams{
+	if err := c.queries(ctx).UpdateStep(ctx, sqlc.UpdateStepParams{
 		Name:        s.Name,
 		CompletedAt: newNullTime(s.CompletedAt),
 		ID:          s.ID,
@@ -64,7 +64,7 @@ func (c *Client) UpdateStep(ctx context.Context, s model.Step) error {
 }
 
 func (c *Client) DeleteStep(ctx context.Context, id string) error {
-	if err := sqlc.New(c.db).DeleteStep(ctx, id); err != nil {
+	if err := c.queries(ctx).DeleteStep(ctx, id); err != nil {
 		return fmt.Errorf("failed to delete step: %w", err)
 	}
 	return nil

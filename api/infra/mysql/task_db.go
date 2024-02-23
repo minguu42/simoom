@@ -27,7 +27,7 @@ func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
 }
 
 func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
-	if err := sqlc.New(c.db).CreateTask(ctx, sqlc.CreateTaskParams{
+	if err := c.queries(ctx).CreateTask(ctx, sqlc.CreateTaskParams{
 		ID:        t.ID,
 		UserID:    t.UserID,
 		ProjectID: t.ProjectID,
@@ -40,7 +40,7 @@ func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
 }
 
 func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, limit, offset uint) ([]model.Task, error) {
-	ts, err := sqlc.New(c.db).ListTasksByProjectID(ctx, sqlc.ListTasksByProjectIDParams{
+	ts, err := c.queries(ctx).ListTasksByProjectID(ctx, sqlc.ListTasksByProjectIDParams{
 		ProjectID: projectID,
 		Limit:     int32(limit),
 		Offset:    int32(offset),
@@ -51,11 +51,11 @@ func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, lim
 
 	tasks := make([]model.Task, 0, len(ts))
 	for _, t := range ts {
-		ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
+		ss, err := c.queries(ctx).ListStepsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list steps: %w", err)
 		}
-		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
+		tags, err := c.queries(ctx).ListTagsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list tags: %w", err)
 		}
@@ -65,7 +65,7 @@ func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, lim
 }
 
 func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offset uint) ([]model.Task, error) {
-	ts, err := sqlc.New(c.db).ListTasksByTagID(ctx, sqlc.ListTasksByTagIDParams{
+	ts, err := c.queries(ctx).ListTasksByTagID(ctx, sqlc.ListTasksByTagIDParams{
 		TagID:  tagID,
 		Limit:  int32(limit),
 		Offset: int32(offset),
@@ -76,11 +76,11 @@ func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offs
 
 	tasks := make([]model.Task, 0, len(ts))
 	for _, t := range ts {
-		ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
+		ss, err := c.queries(ctx).ListStepsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list steps: %w", err)
 		}
-		tags, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
+		tags, err := c.queries(ctx).ListTagsByTaskID(ctx, t.ID)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list tags: %w", err)
 		}
@@ -90,18 +90,18 @@ func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offs
 }
 
 func (c *Client) GetTaskByID(ctx context.Context, id string) (model.Task, error) {
-	t, err := sqlc.New(c.db).GetTaskByID(ctx, id)
+	t, err := c.queries(ctx).GetTaskByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Task{}, repository.ErrModelNotFound
 		}
 		return model.Task{}, fmt.Errorf("failed to get task: %w", err)
 	}
-	ss, err := sqlc.New(c.db).ListStepsByTaskID(ctx, t.ID)
+	ss, err := c.queries(ctx).ListStepsByTaskID(ctx, t.ID)
 	if err != nil {
 		return model.Task{}, fmt.Errorf("failed to list steps: %w", err)
 	}
-	ts, err := sqlc.New(c.db).ListTagsByTaskID(ctx, t.ID)
+	ts, err := c.queries(ctx).ListTagsByTaskID(ctx, t.ID)
 	if err != nil {
 		return model.Task{}, fmt.Errorf("failed to list tags: %w", err)
 	}
@@ -109,7 +109,7 @@ func (c *Client) GetTaskByID(ctx context.Context, id string) (model.Task, error)
 }
 
 func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
-	if err := sqlc.New(c.db).UpdateTask(ctx, sqlc.UpdateTaskParams{
+	if err := c.queries(ctx).UpdateTask(ctx, sqlc.UpdateTaskParams{
 		Name:        t.Name,
 		Content:     t.Content,
 		Priority:    uint32(t.Priority),
@@ -123,7 +123,7 @@ func (c *Client) UpdateTask(ctx context.Context, t model.Task) error {
 }
 
 func (c *Client) DeleteTask(ctx context.Context, id string) error {
-	if err := sqlc.New(c.db).DeleteTask(ctx, id); err != nil {
+	if err := c.queries(ctx).DeleteTask(ctx, id); err != nil {
 		return fmt.Errorf("failed to delete task: %w", err)
 	}
 	return nil

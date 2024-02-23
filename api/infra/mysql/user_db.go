@@ -21,7 +21,7 @@ func newModelUser(u sqlc.User) model.User {
 }
 
 func (c *Client) CreateUser(ctx context.Context, u model.User) error {
-	if err := sqlc.New(c.db).CreateUser(ctx, sqlc.CreateUserParams{
+	if err := c.queries(ctx).CreateUser(ctx, sqlc.CreateUserParams{
 		ID:       u.ID,
 		Name:     u.Name,
 		Email:    u.Email,
@@ -33,7 +33,7 @@ func (c *Client) CreateUser(ctx context.Context, u model.User) error {
 }
 
 func (c *Client) GetUserByID(ctx context.Context, id string) (model.User, error) {
-	u, err := sqlc.New(c.db).GetUserByID(ctx, id)
+	u, err := c.queries(ctx).GetUserByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.User{}, repository.ErrModelNotFound
@@ -44,7 +44,7 @@ func (c *Client) GetUserByID(ctx context.Context, id string) (model.User, error)
 }
 
 func (c *Client) GetUserByEmail(ctx context.Context, email string) (model.User, error) {
-	u, err := sqlc.New(c.db).GetUserByEmail(ctx, email)
+	u, err := c.queries(ctx).GetUserByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.User{}, repository.ErrModelNotFound
