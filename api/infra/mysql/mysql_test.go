@@ -2,12 +2,16 @@ package mysql_test
 
 import (
 	"context"
+	"errors"
 	"log"
 	"testing"
 
 	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/minguu42/simoom/api/config"
+	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/infra/mysql"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -66,4 +70,29 @@ func TestMain(m *testing.M) {
 	}
 
 	m.Run()
+}
+
+func TestClient_Transaction(t *testing.T) {
+	t.Run("トランザクション中にエラーが発生した場合はロールバックされる", func(t *testing.T) {
+		ctx := context.Background()
+		t.Cleanup(func() {
+			_ = fixtures.Load()
+		})
+		err := tc.Transaction(ctx, func(transactionCtx context.Context) error {
+			err := tc.DeleteProject(transactionCtx, "project_01")
+			require.NoError(t, err)
+			return errors.New("some error occurred")
+		})
+		require.Error(t, err)
+
+		if got, err := tc.GetProjectByID(ctx, "project_01"); assert.NoError(t, err) {
+			assert.Equal(t, model.Project{
+				ID:         "project_01",
+				UserID:     "user_01",
+				Name:       "プロジェクト1",
+				Color:      "#1a2b3c",
+				IsArchived: false,
+			}, got)
+		}
+	})
 }

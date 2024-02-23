@@ -69,7 +69,7 @@ func (c *Client) queries(ctx context.Context) *sqlc.Queries {
 }
 
 // Transaction は fn を1つのトランザクション内で実行する
-func (c *Client) Transaction(ctx context.Context, fn func(context.Context) error) error {
+func (c *Client) Transaction(ctx context.Context, fn func(ctx context.Context) error) error {
 	tx, err := c.db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
