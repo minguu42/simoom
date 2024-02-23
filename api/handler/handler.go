@@ -3,6 +3,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -34,8 +35,11 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) http.Handler {
-	v, _ := protovalidate.New()
+func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) (http.Handler, error) {
+	validator, err := protovalidate.New()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create validator: %w", err)
+	}
 
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
@@ -45,7 +49,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
-		validator:  v,
+		validator:  validator,
 		auth:       usecase.NewAuth(authenticator, repo, conf.Auth, idgen),
 		monitoring: usecase.Monitoring{},
 		project:    usecase.NewProject(repo, idgen),
@@ -54,7 +58,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 		task:       usecase.NewTask(repo, idgen),
 	}, opt))
 
-	return h2c.NewHandler(mux, &http2.Server{})
+	return h2c.NewHandler(mux, &http2.Server{}), nil
 }
 
 func newDate(t *time.Time) *simoompb.Date {
