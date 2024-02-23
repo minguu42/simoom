@@ -2,10 +2,13 @@
 package handler
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/bufbuild/protovalidate-go"
 	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
@@ -19,7 +22,10 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+var ErrInvalidRequest = errors.New("the entered value is incorrect")
+
 type handler struct {
+	validator  *protovalidate.Validator
 	auth       usecase.Auth
 	monitoring usecase.Monitoring
 	project    usecase.Project
@@ -29,7 +35,12 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) http.Handler {
+func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) (http.Handler, error) {
+	validator, err := protovalidate.New()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create validator: %w", err)
+	}
+
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewArrangeErrorAndRecordAccess(),
@@ -38,6 +49,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
+		validator:  validator,
 		auth:       usecase.NewAuth(authenticator, repo, conf.Auth, idgen),
 		monitoring: usecase.Monitoring{},
 		project:    usecase.NewProject(repo, idgen),
@@ -46,7 +58,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 		task:       usecase.NewTask(repo, idgen),
 	}, opt))
 
-	return h2c.NewHandler(mux, &http2.Server{})
+	return h2c.NewHandler(mux, &http2.Server{}), nil
 }
 
 func newDate(t *time.Time) *simoompb.Date {

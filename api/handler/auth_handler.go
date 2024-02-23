@@ -10,6 +10,10 @@ import (
 )
 
 func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.auth.SingUp(ctx, usecase.SignUpInput{
 		Name:     req.Msg.Name,
 		Email:    req.Msg.Email,
@@ -25,6 +29,10 @@ func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignU
 }
 
 func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignInRequest]) (*connect.Response[simoompb.SignInResponse], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.auth.SignIn(ctx, usecase.SignInInput{
 		Email:    req.Msg.Email,
 		Password: req.Msg.Password,
@@ -39,6 +47,10 @@ func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignI
 }
 
 func (h handler) RefreshToken(ctx context.Context, req *connect.Request[simoompb.RefreshTokenRequest]) (*connect.Response[simoompb.RefreshTokenResponse], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.auth.RefreshToken(ctx, usecase.RefreshTokenInput{RefreshToken: req.Msg.RefreshToken})
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute RefreshToken usecase: %w", err)

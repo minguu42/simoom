@@ -9,53 +9,9 @@ import (
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/pointers"
-	"github.com/stretchr/testify/assert"
 )
 
 var createTagOption = cmpopts.IgnoreFields(usecase.TagOutput{}, "Tag.ID")
-
-func TestCreateTagInput_Validate(t *testing.T) {
-	tests := []struct {
-		name     string
-		in       usecase.CreateTagInput
-		hasError bool
-	}{
-		{
-			name: "nameに空の文字列は指定できない",
-			in: usecase.CreateTagInput{
-				Name: "",
-			},
-			hasError: true,
-		},
-		{
-			name: "nameに1文字の文字列は指定できる",
-			in: usecase.CreateTagInput{
-				Name: "A",
-			},
-			hasError: false,
-		},
-		{
-			name: "nameに20文字の文字列は指定できる",
-			in: usecase.CreateTagInput{
-				Name: "この文字列の長さは20です。ギリギリOK",
-			},
-			hasError: false,
-		},
-		{
-			name: "nameに21文字以上の文字列は指定できない",
-			in: usecase.CreateTagInput{
-				Name: "この文字列の長さは21です。弾かれますよ。",
-			},
-			hasError: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.in.Validate()
-			assert.Equal(t, tt.hasError, err != nil)
-		})
-	}
-}
 
 func TestTagUsecase_CreateTag(t *testing.T) {
 	type args struct {
@@ -92,37 +48,6 @@ func TestTagUsecase_CreateTag(t *testing.T) {
 			if diff := cmp.Diff(tt.want, got, createTagOption); diff != "" {
 				t.Errorf("tag.CreateTag mismatch (-want +got):\n%s", diff)
 			}
-		})
-	}
-}
-
-func TestListTagsInput_Validate(t *testing.T) {
-	tests := []struct {
-		name     string
-		in       usecase.ListTagsInput
-		hasError bool
-	}{
-		{
-			name: "limitに0は指定できない",
-			in: usecase.ListTagsInput{
-				Limit:  0,
-				Offset: 0,
-			},
-			hasError: true,
-		},
-		{
-			name: "limitに1は指定できる",
-			in: usecase.ListTagsInput{
-				Limit:  1,
-				Offset: 0,
-			},
-			hasError: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.in.Validate()
-			assert.Equal(t, tt.hasError, err != nil)
 		})
 	}
 }
@@ -174,84 +99,6 @@ func TestTagUsecase_ListTags(t *testing.T) {
 	}
 }
 
-func TestUpdateTagInput_Validate(t *testing.T) {
-	tests := []struct {
-		name     string
-		in       usecase.UpdateTagInput
-		hasError bool
-	}{
-		{
-			name: "idに25文字以下の文字列は指定できない",
-			in: usecase.UpdateTagInput{
-				ID:   "xxxx-xxxx-xxxx-xxxx-xxxxx",
-				Name: pointers.Ref("テストタグ"),
-			},
-			hasError: true,
-		},
-		{
-			name: "idは26文字の文字列である",
-			in: usecase.UpdateTagInput{
-				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("テストタグ"),
-			},
-			hasError: false,
-		},
-		{
-			name: "idに27文字以上の文字列は指定できない",
-			in: usecase.UpdateTagInput{
-				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-xx",
-				Name: pointers.Ref("テストタグ"),
-			},
-			hasError: true,
-		},
-		{
-			name: "いずれかの引数は必要である",
-			in: usecase.UpdateTagInput{
-				ID: "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-			},
-			hasError: true,
-		},
-		{
-			name: "nameに空の文字列は指定できない",
-			in: usecase.UpdateTagInput{
-				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref(""),
-			},
-			hasError: true,
-		},
-		{
-			name: "nameに1文字の文字列は指定できる",
-			in: usecase.UpdateTagInput{
-				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("A"),
-			},
-			hasError: false,
-		},
-		{
-			name: "nameに20文字の文字列は指定できる",
-			in: usecase.UpdateTagInput{
-				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("この文字列の長さは20です。ギリギリOK"),
-			},
-			hasError: false,
-		},
-		{
-			name: "nameに21文字以上の文字列は指定できない",
-			in: usecase.UpdateTagInput{
-				ID:   "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-				Name: pointers.Ref("この文字列の長さは21です。弾かれますよ。"),
-			},
-			hasError: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.in.Validate()
-			assert.Equal(t, tt.hasError, err != nil)
-		})
-	}
-}
-
 func TestTagUsecase_UpdateTag(t *testing.T) {
 	type args struct {
 		ctx context.Context
@@ -291,42 +138,6 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("tag.UpdateTag mismatch (-want +got):\n%s", diff)
 			}
-		})
-	}
-}
-
-func TestDeleteTagInput_Validate(t *testing.T) {
-	tests := []struct {
-		name     string
-		in       usecase.DeleteTagInput
-		hasError bool
-	}{
-		{
-			name: "idに25文字以下の文字列は指定できない",
-			in: usecase.DeleteTagInput{
-				ID: "xxxx-xxxx-xxxx-xxxx-xxxxx",
-			},
-			hasError: true,
-		},
-		{
-			name: "idは26文字の文字列である",
-			in: usecase.DeleteTagInput{
-				ID: "xxxx-xxxx-xxxx-xxxx-xxxx-x",
-			},
-			hasError: false,
-		},
-		{
-			name: "idに27文字以上の文字列は指定できない",
-			in: usecase.DeleteTagInput{
-				ID: "xxxx-xxxx-xxxx-xxxx-xxxx-xx",
-			},
-			hasError: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.in.Validate()
-			assert.Equal(t, tt.hasError, err != nil)
 		})
 	}
 }

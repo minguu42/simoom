@@ -26,6 +26,10 @@ func newTags(ts []model.Tag) []*simoompb.Tag {
 }
 
 func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.Tag], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.tag.CreateTag(ctx, usecase.CreateTagInput{
 		Name: req.Msg.Name,
 	})
@@ -36,6 +40,10 @@ func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.Cr
 }
 
 func (h handler) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.Tags], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.tag.ListTags(ctx, usecase.ListTagsInput{
 		Limit:  uint(req.Msg.Limit),
 		Offset: uint(req.Msg.Offset),
@@ -50,6 +58,10 @@ func (h handler) ListTags(ctx context.Context, req *connect.Request[simoompb.Lis
 }
 
 func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.UpdateTagRequest]) (*connect.Response[simoompb.Tag], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.tag.UpdateTag(ctx, usecase.UpdateTagInput{
 		ID:   req.Msg.Id,
 		Name: req.Msg.Name,
@@ -61,6 +73,10 @@ func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.Up
 }
 
 func (h handler) DeleteTag(ctx context.Context, req *connect.Request[simoompb.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	if err := h.tag.DeleteTag(ctx, usecase.DeleteTagInput{ID: req.Msg.Id}); err != nil {
 		return nil, err
 	}

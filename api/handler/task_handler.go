@@ -33,6 +33,10 @@ func newTasksResponse(ts []model.Task) []*simoompb.Task {
 }
 
 func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.CreateTaskRequest]) (*connect.Response[simoompb.Task], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.task.CreateTask(ctx, usecase.CreateTaskInput{
 		ProjectID: req.Msg.ProjectId,
 		Name:      req.Msg.Name,
@@ -45,6 +49,10 @@ func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.C
 }
 
 func (h handler) ListTasksByProjectID(ctx context.Context, req *connect.Request[simoompb.ListTasksByProjectIDRequest]) (*connect.Response[simoompb.Tasks], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.task.ListTasksByProjectID(ctx, usecase.ListTasksByProjectIDInput{
 		ProjectID: req.Msg.ProjectId,
 		Limit:     uint(req.Msg.Limit),
@@ -60,6 +68,10 @@ func (h handler) ListTasksByProjectID(ctx context.Context, req *connect.Request[
 }
 
 func (h handler) ListTasksByTagID(ctx context.Context, req *connect.Request[simoompb.ListTasksByTagIDRequest]) (*connect.Response[simoompb.Tasks], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.task.ListTasksByTagID(ctx, usecase.ListTasksByTagIDInput{
 		TagID:  req.Msg.TagId,
 		Limit:  uint(req.Msg.Limit),
@@ -75,6 +87,10 @@ func (h handler) ListTasksByTagID(ctx context.Context, req *connect.Request[simo
 }
 
 func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.Task], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.task.UpdateTask(ctx, usecase.UpdateTaskInput{
 		ID:          req.Msg.Id,
 		Name:        req.Msg.Name,
@@ -90,6 +106,10 @@ func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.U
 }
 
 func (h handler) DeleteTask(ctx context.Context, req *connect.Request[simoompb.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	if err := h.task.DeleteTask(ctx, usecase.DeleteTaskInput{
 		ID: req.Msg.Id,
 	}); err != nil {

@@ -43,9 +43,13 @@ func mainRun(ctx context.Context) error {
 	}
 	defer c.Close()
 
+	h, err := handler.New(jwtauth.Authenticator{}, c, conf, ulidgen.Generator{})
+	if err != nil {
+		return fmt.Errorf("failed to create handler: %w", err)
+	}
 	s := &http.Server{
 		Addr:              net.JoinHostPort(conf.API.Host, strconv.Itoa(conf.API.Port)),
-		Handler:           handler.New(jwtauth.Authenticator{}, c, conf, ulidgen.Generator{}),
+		Handler:           h,
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		MaxHeaderBytes:    1 << 20,

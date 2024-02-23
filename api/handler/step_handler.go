@@ -6,6 +6,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
+	"github.com/minguu42/simoom/lib/go/pointers"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -28,6 +29,10 @@ func newSteps(ss []model.Step) []*simoompb.Step {
 }
 
 func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.CreateStepRequest]) (*connect.Response[simoompb.Step], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.step.CreateStep(ctx, usecase.CreateStepInput{
 		TaskID: req.Msg.TaskId,
 		Name:   req.Msg.Name,
@@ -39,11 +44,14 @@ func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.C
 }
 
 func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.UpdateStepRequest]) (*connect.Response[simoompb.Step], error) {
-	c := req.Msg.CompletedAt.AsTime()
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.step.UpdateStep(ctx, usecase.UpdateStepInput{
 		ID:          req.Msg.Id,
 		Name:        req.Msg.Name,
-		CompletedAt: &c,
+		CompletedAt: pointers.Ref(req.Msg.CompletedAt.AsTime()),
 	})
 	if err != nil {
 		return nil, err
@@ -52,6 +60,10 @@ func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.U
 }
 
 func (h handler) DeleteStep(ctx context.Context, req *connect.Request[simoompb.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	if err := h.step.DeleteStep(ctx, usecase.DeleteStepInput{ID: req.Msg.Id}); err != nil {
 		return nil, err
 	}

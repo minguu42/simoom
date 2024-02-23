@@ -28,6 +28,10 @@ func newProjects(ps []model.Project) []*simoompb.Project {
 }
 
 func (h handler) CreateProject(ctx context.Context, req *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.project.CreateProject(ctx, usecase.CreateProjectInput{
 		Name:  req.Msg.Name,
 		Color: req.Msg.Color,
@@ -39,6 +43,10 @@ func (h handler) CreateProject(ctx context.Context, req *connect.Request[simoomp
 }
 
 func (h handler) ListProjects(ctx context.Context, req *connect.Request[simoompb.ListProjectsRequest]) (*connect.Response[simoompb.Projects], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.project.ListProjects(ctx, usecase.ListProjectsInput{
 		Limit:  uint(req.Msg.Limit),
 		Offset: uint(req.Msg.Offset),
@@ -53,6 +61,10 @@ func (h handler) ListProjects(ctx context.Context, req *connect.Request[simoompb
 }
 
 func (h handler) UpdateProject(ctx context.Context, req *connect.Request[simoompb.UpdateProjectRequest]) (*connect.Response[simoompb.Project], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	out, err := h.project.UpdateProject(ctx, usecase.UpdateProjectInput{
 		ID:         req.Msg.Id,
 		Name:       req.Msg.Name,
@@ -66,6 +78,10 @@ func (h handler) UpdateProject(ctx context.Context, req *connect.Request[simoomp
 }
 
 func (h handler) DeleteProject(ctx context.Context, req *connect.Request[simoompb.DeleteProjectRequest]) (*connect.Response[emptypb.Empty], error) {
+	if err := h.validator.Validate(req.Msg); err != nil {
+		return nil, ErrInvalidRequest
+	}
+
 	if err := h.project.DeleteProject(ctx, usecase.DeleteProjectInput{
 		ID: req.Msg.Id,
 	}); err != nil {
