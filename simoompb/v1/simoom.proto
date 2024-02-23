@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package simoompb.v1;
 
+import "buf/validate/validate.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -50,9 +51,15 @@ message CheckHealthResponse {
 }
 
 message SignUpRequest {
-  string name = 1;
-  string email = 2;
-  string password = 3;
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 3,
+    max_len: 15
+  }];
+  string email = 2 [(buf.validate.field).string.email = true];
+  string password = 3 [(buf.validate.field).string = {
+    min_bytes: 12,
+    max_bytes: 20
+  }];
 }
 
 message SignUpResponse {
@@ -61,8 +68,11 @@ message SignUpResponse {
 }
 
 message SignInRequest {
-  string email = 1;
-  string password = 2;
+  string email = 1 [(buf.validate.field).string.email = true];
+  string password = 2 [(buf.validate.field).string = {
+    min_bytes: 12,
+    max_bytes: 20
+  }];
 }
 
 message SignInResponse {
@@ -71,7 +81,7 @@ message SignInResponse {
 }
 
 message RefreshTokenRequest {
-  string refresh_token = 1;
+  string refresh_token = 1 [(buf.validate.field).string.min_bytes = 1];
 }
 
 message RefreshTokenResponse {
@@ -80,24 +90,36 @@ message RefreshTokenResponse {
 }
 
 message CreateProjectRequest {
-  string name = 1;
-  string color = 2;
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 20
+  }];
+  string color = 2 [(buf.validate.field).string = {
+    len: 7,
+    prefix: "#"
+  }];
 }
 
 message ListProjectsRequest {
-  uint64 limit = 1;
+  uint64 limit = 1 [(buf.validate.field).uint64.gt = 0];
   uint64 offset = 2;
 }
 
 message UpdateProjectRequest {
-  string id = 1;
-  optional string name = 2;
-  optional string color = 3;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 20
+  }];
+  optional string color = 3 [(buf.validate.field).string = {
+    len: 7,
+    prefix: "#"
+  }];
   optional bool is_archived = 4;
 }
 
 message DeleteProjectRequest {
-  string id = 1;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
 }
 
 message Project {
@@ -113,34 +135,40 @@ message Projects {
 }
 
 message CreateTaskRequest {
-  string project_id = 1;
-  string name = 2;
-  uint32 priority = 3;
+  string project_id = 1 [(buf.validate.field).string.len_bytes = 26];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 80
+  }];
+  uint32 priority = 3 [(buf.validate.field).uint32.lt = 3];
 }
 
 message ListTasksByProjectIDRequest {
-  string project_id = 1;
-  uint64 limit = 2;
+  string project_id = 1 [(buf.validate.field).string.len_bytes = 26];
+  uint64 limit = 2 [(buf.validate.field).uint64.gt = 0];
   uint64 offset = 3;
 }
 
 message ListTasksByTagIDRequest {
-  string tag_id = 1;
-  uint64 limit = 2;
+  string tag_id = 1 [(buf.validate.field).string.len_bytes = 26];
+  uint64 limit = 2 [(buf.validate.field).uint64.gt = 0];
   uint64 offset = 3;
 }
 
 message UpdateTaskRequest {
-  string id = 1;
-  optional string name = 2;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 80
+  }];
   optional string content = 3;
-  optional uint32 priority = 4;
+  optional uint32 priority = 4 [(buf.validate.field).uint32.lt = 3];
   optional Date due_on = 5;
   optional google.protobuf.Timestamp completed_at = 6;
 }
 
 message DeleteTaskRequest {
-  string id = 1;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
 }
 
 message Task {
@@ -161,18 +189,24 @@ message Tasks {
 }
 
 message CreateStepRequest {
-  string task_id = 1;
-  string name = 2;
+  string task_id = 1 [(buf.validate.field).string.len_bytes = 26];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 80
+  }];
 }
 
 message UpdateStepRequest {
-  string id = 1;
-  optional string name = 2;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 80
+  }];
   optional google.protobuf.Timestamp completed_at = 3;
 }
 
 message DeleteStepRequest {
-  string id = 1;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
 }
 
 message Step {
@@ -183,21 +217,27 @@ message Step {
 }
 
 message CreateTagRequest {
-  string name = 1;
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 20
+  }];
 }
 
 message ListTagsRequest {
-  uint64 limit = 1;
+  uint64 limit = 1 [(buf.validate.field).uint64.gt = 0];
   uint64 offset = 2;
 }
 
 message UpdateTagRequest {
-  string id = 1;
-  optional string name = 2;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
+  optional string name = 2 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 20
+  }];
 }
 
 message DeleteTagRequest {
-  string id = 1;
+  string id = 1 [(buf.validate.field).string.len_bytes = 26];
 }
 
 message Tag {
