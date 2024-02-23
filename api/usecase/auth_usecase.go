@@ -34,22 +34,28 @@ type SignUpInput struct {
 	Password string
 }
 
+func (in SignUpInput) Create(g model.IDGenerator) (model.User, error) {
+	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return model.User{}, fmt.Errorf("failed to generate encypted password: %w", err)
+	}
+	return model.User{
+		ID:       g.Generate(),
+		Name:     in.Name,
+		Email:    in.Email,
+		Password: string(encryptedPassword),
+	}, nil
+}
+
 type SignUpOutput struct {
 	AccessToken  string
 	RefreshToken string
 }
 
 func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
-	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
+	user, err := in.Create(uc.idgen)
 	if err != nil {
-		return SignUpOutput{}, fmt.Errorf("failed to generate encypted password: %w", err)
-	}
-
-	user := model.User{
-		ID:       uc.idgen.Generate(),
-		Name:     in.Name,
-		Email:    in.Email,
-		Password: string(encryptedPassword),
+		return SignUpOutput{}, fmt.Errorf("failed to create user: %w", err)
 	}
 	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
 	if err != nil {

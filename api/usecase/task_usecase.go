@@ -38,6 +38,16 @@ type CreateTaskInput struct {
 	Priority  uint
 }
 
+func (in CreateTaskInput) Create(g model.IDGenerator, userID string) model.Task {
+	return model.Task{
+		ID:        g.Generate(),
+		UserID:    userID,
+		ProjectID: in.ProjectID,
+		Name:      in.Name,
+		Priority:  in.Priority,
+	}
+}
+
 func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, error) {
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
@@ -50,13 +60,7 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		return TaskOutput{}, ErrProjectNotFound
 	}
 
-	t := model.Task{
-		ID:        uc.idgen.Generate(),
-		UserID:    auth.GetUserID(ctx),
-		ProjectID: in.ProjectID,
-		Name:      in.Name,
-		Priority:  in.Priority,
-	}
+	t := in.Create(uc.idgen, auth.GetUserID(ctx))
 	if err := uc.repo.CreateTask(ctx, t); err != nil {
 		return TaskOutput{}, fmt.Errorf("failed to create task: %w", err)
 	}
@@ -175,13 +179,6 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 
 type DeleteTaskInput struct {
 	ID string
-}
-
-func (in DeleteTaskInput) Validate() error {
-	if len(in.ID) != 26 {
-		return newErrInvalidArgument("id is a 26-character string")
-	}
-	return nil
 }
 
 func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {

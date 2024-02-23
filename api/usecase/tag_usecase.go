@@ -35,12 +35,16 @@ type CreateTagInput struct {
 	Name string
 }
 
-func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
-	t := model.Tag{
-		ID:     uc.idgen.Generate(),
-		UserID: auth.GetUserID(ctx),
+func (in CreateTagInput) Create(g model.IDGenerator, userID string) model.Tag {
+	return model.Tag{
+		ID:     g.Generate(),
+		UserID: userID,
 		Name:   in.Name,
 	}
+}
+
+func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
+	t := in.Create(uc.idgen, auth.GetUserID(ctx))
 	if err := uc.repo.CreateTag(ctx, t); err != nil {
 		return TagOutput{}, fmt.Errorf("failed to create tag: %w", err)
 	}

@@ -37,6 +37,15 @@ type CreateStepInput struct {
 	Name   string
 }
 
+func (in CreateStepInput) Create(g model.IDGenerator, userID string) model.Step {
+	return model.Step{
+		ID:     g.Generate(),
+		UserID: userID,
+		TaskID: in.TaskID,
+		Name:   in.Name,
+	}
+}
+
 func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
 	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
@@ -49,12 +58,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		return StepOutput{}, ErrTaskNotFound
 	}
 
-	s := model.Step{
-		ID:     uc.idgen.Generate(),
-		UserID: auth.GetUserID(ctx),
-		TaskID: in.TaskID,
-		Name:   in.Name,
-	}
+	s := in.Create(uc.idgen, auth.GetUserID(ctx))
 	if err := uc.repo.CreateStep(ctx, s); err != nil {
 		return StepOutput{}, fmt.Errorf("failed to create step: %w", err)
 	}
