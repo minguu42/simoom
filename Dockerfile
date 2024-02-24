@@ -1,12 +1,12 @@
 FROM golang:1.22 AS dev
 WORKDIR /go/src/myapp
 
-RUN --mount=type=cache,target=/go/pkg/mod/ \
-    --mount=type=bind,source=go.mod,target=go.mod \
+RUN go install github.com/cosmtrek/air@latest
+
+RUN --mount=type=bind,source=go.mod,target=go.mod \
     --mount=type=bind,source=go.sum,target=go.sum \
     go mod download
 
-RUN go install github.com/cosmtrek/air@latest
 CMD ["air", "-c", ".air.toml"]
 
 FROM golang:1.22 AS build
@@ -24,7 +24,7 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
       -ldflags "-s -w" \
       -trimpath \
       -o /go/bin/myapp \
-      ./cmd/server
+      ./api
 
 FROM gcr.io/distroless/static-debian12:nonroot AS prod
 COPY --chown=nonroot:nonroot --from=build /go/bin/myapp /
