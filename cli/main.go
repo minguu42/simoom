@@ -23,13 +23,14 @@ func main() {
 }
 
 func mainRun() exitCode {
+	credentials, err := cmdutil.ReadCredentials()
+	if err != nil {
+		return exitError
+	}
 	client := simoompbconnect.NewSimoomServiceClient(http.DefaultClient, "http://localhost:8080")
 	c := cmdutil.Core{
-		Client: client,
-		Credentials: cmdutil.Credentials{
-			AccessToken:  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI0Njg5NjIsIm5hbWUiOiJtaW5ndXU0MiIsImlkIjoiMDFIR1pHNEdQTjQxRDFGTU5CMlNWR0RDQkUifQ.yshdci246JdXrKkJ_gtvLD48WGuE8aHjLXcFRh5FYf0",
-			RefreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDI0Njg5NjIsImlkIjoiMDFIR1pHNEdQTjQxRDFGTU5CMlNWR0RDQkUifQ.7A6g3F57Tji-aycdrmWli9_cbXkNF3Q-fAMgAu7g0Yw",
-		},
+		Client:      client,
+		Credentials: credentials,
 	}
 
 	rootCmd := root.NewCmdRoot(c)
