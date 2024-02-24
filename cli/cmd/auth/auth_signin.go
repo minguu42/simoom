@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -48,11 +47,10 @@ func runAuthSignin(ctx context.Context, core cmdutil.Core, opts authSigninOpts) 
 	if err != nil {
 		return fmt.Errorf("failed to call SignIn method. %w", err)
 	}
+	fmt.Println("Successfully authenticated.")
 
-	data, err := json.MarshalIndent(resp.Msg, "", "  ")
-	if err != nil {
-		return fmt.Errorf("failed to marshal: %w", err)
+	if err := cmdutil.WriteCredentials(resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+		return fmt.Errorf("failed to write credentials: %w", err)
 	}
-	fmt.Println(string(data))
 	return nil
 }

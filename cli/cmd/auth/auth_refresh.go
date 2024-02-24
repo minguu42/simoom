@@ -40,9 +40,10 @@ func runAuthRefresh(ctx context.Context, core cmdutil.Core, opts authRefreshOpts
 	if err != nil {
 		return fmt.Errorf("failed to call RefreshToken method: %w", err)
 	}
+	fmt.Println("Successfully authenticated.")
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
+	if err := cmdutil.WriteCredentials(resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+		return fmt.Errorf("failed to write credentials: %w", err)
 	}
 	return nil
 }
