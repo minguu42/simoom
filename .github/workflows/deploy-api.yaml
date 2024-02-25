@@ -1,0 +1,45 @@
+name: Deploy api
+on:
+  push:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - id: login-ecr
+        name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push image to Amazon ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          provenance: false
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+          target: prod
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: simoom-stg-api
+          IMAGE_TAG: ${{ github.sha }}
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Initialize Terraform
+        run: terraform -chdir=./infra/terraform/api init -backend-config=stg.tfbackend -reconfigure
+      - name: Apply
+        run: terraform -chdir=./infra/terraform/api apply -no-color -auto-approve
+        env:
+          TF_VAR_env: stg
+          TF_VAR_api_image_tag: ${{ github.sha }}
