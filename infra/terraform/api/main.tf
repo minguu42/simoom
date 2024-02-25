@@ -21,8 +21,21 @@ provider "aws" {
   }
 }
 
-data "aws_secretsmanager_secret_version" "api_secrets" {
-  secret_id = aws_secretsmanager_secret.api_secrets.id
+data "terraform_remote_state" "main" {
+  backend = "s3"
+  config = {
+    bucket = "${local.product}-${var.env}-tf-remote-state"
+    key    = "terraform.tfstate"
+    region = "ap-northeast-1"
+  }
+}
+
+variable "api_image_tag" {
+  type = string
+  validation {
+    condition     = length(var.api_image_tag) == 40
+    error_message = "The api image tag is a 40-character string"
+  }
 }
 
 variable "env" {
@@ -36,5 +49,4 @@ variable "env" {
 locals {
   product      = "simoom"
   isProduction = var.env == "prod"
-  api_secrets  = jsondecode(data.aws_secretsmanager_secret_version.api_secrets.secret_string)
 }

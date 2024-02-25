@@ -13,7 +13,7 @@ resource "aws_ecs_service" "api" {
   launch_type     = "FARGATE"
   desired_count   = 2
   network_configuration {
-    subnets         = [aws_subnet.private_a.id, aws_subnet.private_c.id]
+    subnets         = data.terraform_remote_state.main.outputs.private_subnet_ids
     security_groups = [aws_security_group.ecs_api.id]
   }
   load_balancer {
@@ -29,7 +29,7 @@ resource "aws_ecs_service" "api" {
 
 resource "aws_security_group" "ecs_api" {
   name   = "${local.product}-${var.env}-ecs-api"
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.terraform_remote_state.main.outputs.vpc_id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ecs_api_ingress" {
@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions = jsonencode([
     {
       name  = "${local.product}-api"
-      image = "${aws_ecr_repository.api.repository_url}:${var.api_image_tag}"
+      image = "${data.terraform_remote_state.main.outputs.api_repository_url}:${var.api_image_tag}"
       portMappings = [
         {
           containerPort = 8080
@@ -66,31 +66,31 @@ resource "aws_ecs_task_definition" "api" {
       secrets = [
         {
           name      = "ACCESS_TOKEN_SECRET"
-          valueFrom = "${aws_secretsmanager_secret.api_secrets.arn}:access_token_secret::"
+          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:access_token_secret::"
         },
         {
           name      = "REFRESH_TOKEN_SECRET"
-          valueFrom = "${aws_secretsmanager_secret.api_secrets.arn}:refresh_token_secret::"
+          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:refresh_token_secret::"
         },
         {
           name      = "DB_HOST"
-          valueFrom = "${aws_secretsmanager_secret.api_secrets.arn}:db_host::"
+          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_host::"
         },
         {
           name      = "DB_PORT"
-          valueFrom = "${aws_secretsmanager_secret.api_secrets.arn}:db_port::"
+          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_port::"
         },
         {
           name      = "DB_DATABASE"
-          valueFrom = "${aws_secretsmanager_secret.api_secrets.arn}:db_database::"
+          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_database::"
         },
         {
           name      = "DB_USER"
-          valueFrom = "${aws_secretsmanager_secret.api_secrets.arn}:db_user::"
+          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_user::"
         },
         {
           name      = "DB_PASSWORD"
-          valueFrom = "${aws_secretsmanager_secret.api_secrets.arn}:db_password::"
+          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_password::"
         },
       ]
       logConfiguration = {
@@ -152,7 +152,7 @@ resource "aws_iam_role_policy" "ecs_api_execution" {
           "secretsmanager:GetSecretValue"
         ],
         "Resource" : [
-          aws_secretsmanager_secret.api_secrets.arn
+          data.terraform_remote_state.main.outputs.api_secrets_arn
         ]
       }
     ]

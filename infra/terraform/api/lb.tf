@@ -3,16 +3,16 @@ resource "aws_lb" "api" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_api.id]
-  subnets            = [aws_subnet.public_a.id, aws_subnet.public_c.id]
+  subnets            = data.terraform_remote_state.main.outputs.public_subnet_ids
   access_logs {
-    bucket  = aws_s3_bucket.alb_api_logs.id
+    bucket  = data.terraform_remote_state.main.outputs.alb_api_logs_bucket_id
     enabled = true
   }
 }
 
 resource "aws_security_group" "alb_api" {
   name   = "${local.product}-${var.env}-alb-api"
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.terraform_remote_state.main.outputs.vpc_id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "alb_api_ingress" {
@@ -61,7 +61,7 @@ resource "aws_lb_target_group" "api" {
   port        = 8080
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = data.terraform_remote_state.main.outputs.vpc_id
   health_check {
     path = "/simoompb.v1.SimoomService/CheckHealth?encoding=json&message=%7b%7d"
   }
