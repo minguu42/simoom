@@ -33,14 +33,6 @@ variable "env" {
   }
 }
 
-variable "api_image_tag" {
-  type = string
-  validation {
-    condition     = length(var.api_image_tag) == 40
-    error_message = "The api image tag is a 40-character string"
-  }
-}
-
 locals {
   product      = "simoom"
   isProduction = var.env == "prod"
