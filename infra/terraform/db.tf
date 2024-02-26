@@ -6,8 +6,8 @@ resource "aws_db_instance" "main" {
   # vCPU: 2, Memory: 1GiB, EBS Burst Bandwidth: Up to 2085Mbps, Network Performance: Up to 5Gbps
   storage_type           = "gp2"
   allocated_storage      = 20
-  username               = local.api_secrets["db_master_username"]
-  password               = local.api_secrets["db_master_password"]
+  username               = data.aws_ssm_parameter.db_master_username.value
+  password               = data.aws_ssm_parameter.db_master_password.value
   db_subnet_group_name   = aws_db_subnet_group.main.name
   vpc_security_group_ids = [aws_security_group.rds.id]
   parameter_group_name   = aws_db_parameter_group.main.name
