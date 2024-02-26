@@ -66,31 +66,31 @@ resource "aws_ecs_task_definition" "api" {
       secrets = [
         {
           name      = "ACCESS_TOKEN_SECRET"
-          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:access_token_secret::"
+          valueFrom = data.aws_ssm_parameter.api_access_token_secret.arn
         },
         {
           name      = "REFRESH_TOKEN_SECRET"
-          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:refresh_token_secret::"
+          valueFrom = data.aws_ssm_parameter.api_refresh_token_secret.arn
         },
         {
           name      = "DB_HOST"
-          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_host::"
+          valueFrom = data.aws_ssm_parameter.db_host.arn
         },
         {
           name      = "DB_PORT"
-          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_port::"
+          valueFrom = data.aws_ssm_parameter.db_port.arn
         },
         {
           name      = "DB_DATABASE"
-          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_database::"
+          valueFrom = data.aws_ssm_parameter.db_database.arn
         },
         {
           name      = "DB_USER"
-          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_user::"
+          valueFrom = data.aws_ssm_parameter.db_user.arn
         },
         {
           name      = "DB_PASSWORD"
-          valueFrom = "${data.terraform_remote_state.main.outputs.api_secrets_arn}:db_password::"
+          valueFrom = data.aws_ssm_parameter.db_password.arn
         },
       ]
       logConfiguration = {
@@ -149,10 +149,16 @@ resource "aws_iam_role_policy" "ecs_api_execution" {
       {
         "Effect" : "Allow",
         "Action" : [
-          "secretsmanager:GetSecretValue"
+          "ssm:GetParameters"
         ],
         "Resource" : [
-          data.terraform_remote_state.main.outputs.api_secrets_arn
+          data.aws_ssm_parameter.api_access_token_secret.arn,
+          data.aws_ssm_parameter.api_refresh_token_secret.arn,
+          data.aws_ssm_parameter.db_database.arn,
+          data.aws_ssm_parameter.db_host.arn,
+          data.aws_ssm_parameter.db_password.arn,
+          data.aws_ssm_parameter.db_port.arn,
+          data.aws_ssm_parameter.db_user.arn,
         ]
       }
     ]
