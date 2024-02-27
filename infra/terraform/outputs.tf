@@ -6,10 +6,6 @@ output "api_repository_url" {
   value = aws_ecr_repository.api.repository_url
 }
 
-output "api_secrets_arn" {
-  value = aws_secretsmanager_secret.api_secrets.arn
-}
-
 output "private_subnet_ids" {
   value = [aws_subnet.private_a.id, aws_subnet.private_c.id]
 }
