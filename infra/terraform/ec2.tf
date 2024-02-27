@@ -1,16 +1,8 @@
-resource "aws_eip" "bastion" {
-  instance = aws_instance.bastion.id
-  domain   = "vpc"
-  tags = {
-    Name = "${local.product}-${var.env}-bastion"
-  }
-}
-
 resource "aws_instance" "bastion" {
   ami                    = "ami-0b5c74e235ed808b9" # Amazon Linux 2023 AMI
   instance_type          = "t2.micro"              # vCPU: 1, Memory: 1.0GiB
   key_name               = aws_key_pair.bastion.key_name
-  subnet_id              = aws_subnet.public_a.id
+  subnet_id              = aws_subnet.private_a.id
   vpc_security_group_ids = [aws_security_group.bastion.id]
   root_block_device {
     volume_type = "gp3"
@@ -43,4 +35,25 @@ resource "aws_vpc_security_group_egress_rule" "bastion_egress" {
   security_group_id = aws_security_group.bastion.id
   ip_protocol       = "-1"
   cidr_ipv4         = "0.0.0.0/0"
+}
+
+resource "aws_ec2_instance_connect_endpoint" "eic" {
+  subnet_id          = aws_subnet.private_a.id
+  security_group_ids = [aws_security_group.eic.id]
+  tags = {
+    Name = "${local.product}-${var.env}-eic"
+  }
+}
+
+resource "aws_security_group" "eic" {
+  name   = "${local.product}-${var.env}-eic"
+  vpc_id = aws_vpc.main.id
+}
+
+resource "aws_vpc_security_group_egress_rule" "eic_egress" {
+  security_group_id = aws_security_group.eic.id
+  from_port         = 22
+  to_port           = 22
+  ip_protocol       = "tcp"
+  cidr_ipv4         = aws_subnet.private_a.cidr_block
 }
