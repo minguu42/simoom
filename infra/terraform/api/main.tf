@@ -21,15 +21,6 @@ provider "aws" {
   }
 }
 
-data "terraform_remote_state" "main" {
-  backend = "s3"
-  config = {
-    bucket = "${local.product}-${var.env}-tf-remote-state"
-    key    = "terraform.tfstate"
-    region = "ap-northeast-1"
-  }
-}
-
 variable "api_image_tag" {
   type = string
   validation {

@@ -21,8 +21,12 @@ provider "aws" {
   }
 }
 
-data "aws_secretsmanager_secret_version" "api_secrets" {
-  secret_id = aws_secretsmanager_secret.api_secrets.id
+data "aws_ssm_parameter" "db_master_username" {
+  name = "/${local.product}/${var.env}/db/master_username"
+}
+
+data "aws_ssm_parameter" "db_master_password" {
+  name = "/${local.product}/${var.env}/db/master_password"
 }
 
 variable "env" {
@@ -36,5 +40,4 @@ variable "env" {
 locals {
   product      = "simoom"
   isProduction = var.env == "prod"
-  api_secrets  = jsondecode(data.aws_secretsmanager_secret_version.api_secrets.secret_string)
 }
