@@ -135,9 +135,6 @@ func (uc Auth) RefreshToken(ctx context.Context, in RefreshTokenInput) (RefreshT
 	if err != nil {
 		return RefreshTokenOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
-	if err := uc.repo.CreateUser(ctx, user); err != nil {
-		return RefreshTokenOutput{}, fmt.Errorf("failed to create user: %w", err)
-	}
 	return RefreshTokenOutput{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
