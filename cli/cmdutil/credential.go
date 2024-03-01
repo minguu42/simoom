@@ -21,6 +21,7 @@ func credentialsFilepath() (string, error) {
 }
 
 // ReadCredentials は認証ファイルから認証情報を読み込む
+// 認証ファイルが存在しない場合は空の Credentials を返す
 func ReadCredentials() (Credentials, error) {
 	p, err := credentialsFilepath()
 	if err != nil {
