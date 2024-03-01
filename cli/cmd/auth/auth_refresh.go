@@ -2,29 +2,35 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type authRefreshOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	refreshToken string
 }
 
-func newCmdAuthRefresh(core cmdutil.Factory) *cobra.Command {
-	opts := authRefreshOpts{}
+func newCmdAuthRefresh(f cmdutil.Factory) *cobra.Command {
+	opts := authRefreshOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "refresh",
 		Short: "Refresh the access token",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if opts.refreshToken == "" {
-				return errors.New("refresh-token is required")
+			if opts.refreshToken != "" {
+				opts.credentials.RefreshToken = opts.refreshToken
 			}
-			return runAuthRefresh(cmd.Context(), core, opts)
+			return runAuthRefresh(cmd.Context(), opts)
 		},
 	}
 
@@ -33,9 +39,9 @@ func newCmdAuthRefresh(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runAuthRefresh(ctx context.Context, core cmdutil.Factory, opts authRefreshOpts) error {
-	resp, err := core.Client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
-		RefreshToken: opts.refreshToken,
+func runAuthRefresh(ctx context.Context, opts authRefreshOpts) error {
+	resp, err := opts.client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
+		RefreshToken: opts.credentials.RefreshToken,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call RefreshToken method: %w", err)

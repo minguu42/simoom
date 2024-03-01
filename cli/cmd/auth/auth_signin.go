@@ -8,16 +8,21 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type authSigninOpts struct {
+	client simoompbconnect.SimoomServiceClient
+
 	email    string
 	password string
 }
 
-func newCmdAuthSignin(core cmdutil.Factory) *cobra.Command {
-	opts := authSigninOpts{}
+func newCmdAuthSignin(f cmdutil.Factory) *cobra.Command {
+	opts := authSigninOpts{
+		client: f.Client,
+	}
 	cmd := &cobra.Command{
 		Use:   "signin",
 		Short: "Sign in to Simoom",
@@ -29,7 +34,7 @@ func newCmdAuthSignin(core cmdutil.Factory) *cobra.Command {
 			if opts.password == "" {
 				return errors.New("password is required")
 			}
-			return runAuthSignin(cmd.Context(), core, opts)
+			return runAuthSignin(cmd.Context(), opts)
 		},
 	}
 
@@ -39,8 +44,8 @@ func newCmdAuthSignin(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runAuthSignin(ctx context.Context, core cmdutil.Factory, opts authSigninOpts) error {
-	resp, err := core.Client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
+func runAuthSignin(ctx context.Context, opts authSigninOpts) error {
+	resp, err := opts.client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
 		Email:    opts.email,
 		Password: opts.password,
 	}))
