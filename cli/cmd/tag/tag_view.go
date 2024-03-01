@@ -17,7 +17,7 @@ type tagViewOpts struct {
 	offset uint64
 }
 
-func newCmdTagView(core cmdutil.Core) *cobra.Command {
+func newCmdTagView(core cmdutil.Factory) *cobra.Command {
 	var opts tagViewOpts
 	cmd := &cobra.Command{
 		Use:   "view <id> [flags]",
@@ -38,7 +38,7 @@ func newCmdTagView(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runTagView(ctx context.Context, core cmdutil.Core, opts tagViewOpts) error {
+func runTagView(ctx context.Context, core cmdutil.Factory, opts tagViewOpts) error {
 	req := connect.NewRequest(&simoompb.ListTasksByTagIDRequest{
 		TagId:  opts.id,
 		Limit:  opts.limit,

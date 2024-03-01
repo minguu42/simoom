@@ -14,7 +14,7 @@ type stepDeleteOpts struct {
 	id string
 }
 
-func newCmdStepDelete(core cmdutil.Core) *cobra.Command {
+func newCmdStepDelete(core cmdutil.Factory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a step",
@@ -26,7 +26,7 @@ func newCmdStepDelete(core cmdutil.Core) *cobra.Command {
 	}
 }
 
-func runStepDelete(ctx context.Context, core cmdutil.Core, opts stepDeleteOpts) error {
+func runStepDelete(ctx context.Context, core cmdutil.Factory, opts stepDeleteOpts) error {
 	req := connect.NewRequest(&simoompb.DeleteStepRequest{Id: opts.id})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 

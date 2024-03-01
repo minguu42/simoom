@@ -14,7 +14,7 @@ type taskDeleteOpts struct {
 	id string
 }
 
-func newCmdTaskDelete(core cmdutil.Core) *cobra.Command {
+func newCmdTaskDelete(core cmdutil.Factory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a task",
@@ -26,7 +26,7 @@ func newCmdTaskDelete(core cmdutil.Core) *cobra.Command {
 	}
 }
 
-func runTaskDelete(ctx context.Context, core cmdutil.Core, opts taskDeleteOpts) error {
+func runTaskDelete(ctx context.Context, core cmdutil.Factory, opts taskDeleteOpts) error {
 	req := connect.NewRequest(&simoompb.DeleteTaskRequest{Id: opts.id})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 

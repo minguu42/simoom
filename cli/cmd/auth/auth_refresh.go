@@ -15,7 +15,7 @@ type authRefreshOpts struct {
 	refreshToken string
 }
 
-func newCmdAuthRefresh(core cmdutil.Core) *cobra.Command {
+func newCmdAuthRefresh(core cmdutil.Factory) *cobra.Command {
 	opts := authRefreshOpts{}
 	cmd := &cobra.Command{
 		Use:   "refresh",
@@ -33,7 +33,7 @@ func newCmdAuthRefresh(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runAuthRefresh(ctx context.Context, core cmdutil.Core, opts authRefreshOpts) error {
+func runAuthRefresh(ctx context.Context, core cmdutil.Factory, opts authRefreshOpts) error {
 	resp, err := core.Client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
 		RefreshToken: opts.refreshToken,
 	}))

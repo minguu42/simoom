@@ -14,7 +14,7 @@ type tagCreateOpts struct {
 	name string
 }
 
-func newCmdTagCreate(core cmdutil.Core) *cobra.Command {
+func newCmdTagCreate(core cmdutil.Factory) *cobra.Command {
 	var opts tagCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -33,7 +33,7 @@ func newCmdTagCreate(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runTagCreate(ctx context.Context, core cmdutil.Core, opts tagCreateOpts) error {
+func runTagCreate(ctx context.Context, core cmdutil.Factory, opts tagCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateTagRequest{
 		Name: opts.name,
 	})

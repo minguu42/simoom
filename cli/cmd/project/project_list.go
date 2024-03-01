@@ -15,7 +15,7 @@ type projectListOpts struct {
 	offset uint64
 }
 
-func newCmdProjectList(core cmdutil.Core) *cobra.Command {
+func newCmdProjectList(core cmdutil.Factory) *cobra.Command {
 	var opts projectListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
@@ -33,7 +33,7 @@ func newCmdProjectList(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runProjectList(ctx context.Context, core cmdutil.Core, opts projectListOpts) error {
+func runProjectList(ctx context.Context, core cmdutil.Factory, opts projectListOpts) error {
 	req := connect.NewRequest(&simoompb.ListProjectsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,

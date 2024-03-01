@@ -17,7 +17,7 @@ type projectViewOpts struct {
 	offset uint64
 }
 
-func newCmdProjectView(core cmdutil.Core) *cobra.Command {
+func newCmdProjectView(core cmdutil.Factory) *cobra.Command {
 	var opts projectViewOpts
 	cmd := &cobra.Command{
 		Use:   "view <id> [flags]",
@@ -38,7 +38,7 @@ func newCmdProjectView(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runProjectView(ctx context.Context, core cmdutil.Core, opts projectViewOpts) error {
+func runProjectView(ctx context.Context, core cmdutil.Factory, opts projectViewOpts) error {
 	req := connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
 		ProjectId: opts.id,
 		Limit:     opts.limit,

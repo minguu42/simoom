@@ -19,7 +19,7 @@ type taskEditOpts struct {
 	completed bool
 }
 
-func newCmdTaskEdit(core cmdutil.Core) *cobra.Command {
+func newCmdTaskEdit(core cmdutil.Factory) *cobra.Command {
 	var opts taskEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -42,7 +42,7 @@ func newCmdTaskEdit(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runTaskEdit(ctx context.Context, core cmdutil.Core, opts taskEditOpts) error {
+func runTaskEdit(ctx context.Context, core cmdutil.Factory, opts taskEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name

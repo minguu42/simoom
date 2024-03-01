@@ -14,7 +14,7 @@ type projectDeleteOpts struct {
 	id string
 }
 
-func newCmdProjectDelete(core cmdutil.Core) *cobra.Command {
+func newCmdProjectDelete(core cmdutil.Factory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a project",
@@ -26,7 +26,7 @@ func newCmdProjectDelete(core cmdutil.Core) *cobra.Command {
 	}
 }
 
-func runProjectDelete(ctx context.Context, core cmdutil.Core, opts projectDeleteOpts) error {
+func runProjectDelete(ctx context.Context, core cmdutil.Factory, opts projectDeleteOpts) error {
 	req := connect.NewRequest(&simoompb.DeleteProjectRequest{Id: opts.id})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 

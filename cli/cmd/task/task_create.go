@@ -16,7 +16,7 @@ type taskCreateOpts struct {
 	priority  uint32
 }
 
-func newCmdTaskCreate(core cmdutil.Core) *cobra.Command {
+func newCmdTaskCreate(core cmdutil.Factory) *cobra.Command {
 	var opts taskCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -43,7 +43,7 @@ func newCmdTaskCreate(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runTaskCreate(ctx context.Context, core cmdutil.Core, opts taskCreateOpts) error {
+func runTaskCreate(ctx context.Context, core cmdutil.Factory, opts taskCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateTaskRequest{
 		ProjectId: opts.projectID,
 		Name:      opts.name,

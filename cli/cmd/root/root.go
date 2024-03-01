@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdRoot(core cmdutil.Core) *cobra.Command {
+func NewCmdRoot(core cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "simoom <command> <subcommand> [flags]",
 		Short: "Simoom CLI",

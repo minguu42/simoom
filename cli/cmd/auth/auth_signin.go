@@ -16,7 +16,7 @@ type authSigninOpts struct {
 	password string
 }
 
-func newCmdAuthSignin(core cmdutil.Core) *cobra.Command {
+func newCmdAuthSignin(core cmdutil.Factory) *cobra.Command {
 	opts := authSigninOpts{}
 	cmd := &cobra.Command{
 		Use:   "signin",
@@ -39,7 +39,7 @@ func newCmdAuthSignin(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runAuthSignin(ctx context.Context, core cmdutil.Core, opts authSigninOpts) error {
+func runAuthSignin(ctx context.Context, core cmdutil.Factory, opts authSigninOpts) error {
 	resp, err := core.Client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
 		Email:    opts.email,
 		Password: opts.password,

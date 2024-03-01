@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdAuth(core cmdutil.Core) *cobra.Command {
+func NewCmdAuth(core cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auth <command>",
 		Short: "Authenticate simoom",

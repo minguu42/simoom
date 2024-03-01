@@ -28,7 +28,7 @@ func mainRun() exitCode {
 		return exitError
 	}
 	client := simoompbconnect.NewSimoomServiceClient(http.DefaultClient, "http://localhost:8080")
-	c := cmdutil.Core{
+	c := cmdutil.Factory{
 		Client:      client,
 		Credentials: credentials,
 	}

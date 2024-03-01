@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdProject(core cmdutil.Core) *cobra.Command {
+func NewCmdProject(core cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "project <command>",
 		Short: "Manage projects",

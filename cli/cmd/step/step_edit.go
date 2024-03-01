@@ -17,7 +17,7 @@ type stepEditOpts struct {
 	completed bool
 }
 
-func newCmdStepEdit(core cmdutil.Core) *cobra.Command {
+func newCmdStepEdit(core cmdutil.Factory) *cobra.Command {
 	var opts stepEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -35,7 +35,7 @@ func newCmdStepEdit(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runStepEdit(ctx context.Context, core cmdutil.Core, opts stepEditOpts) error {
+func runStepEdit(ctx context.Context, core cmdutil.Factory, opts stepEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name

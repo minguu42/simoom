@@ -16,7 +16,7 @@ type stepCreateOpts struct {
 	name   string
 }
 
-func newCmdStepCreate(core cmdutil.Core) *cobra.Command {
+func newCmdStepCreate(core cmdutil.Factory) *cobra.Command {
 	var opts stepCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -39,7 +39,7 @@ func newCmdStepCreate(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runStepCreate(ctx context.Context, core cmdutil.Core, opts stepCreateOpts) error {
+func runStepCreate(ctx context.Context, core cmdutil.Factory, opts stepCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateStepRequest{
 		TaskId: opts.taskID,
 		Name:   opts.name,

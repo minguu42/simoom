@@ -15,7 +15,7 @@ type tagEditOpts struct {
 	name string
 }
 
-func newCmdTagEdit(core cmdutil.Core) *cobra.Command {
+func newCmdTagEdit(core cmdutil.Factory) *cobra.Command {
 	var opts tagEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -32,7 +32,7 @@ func newCmdTagEdit(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runTagEdit(ctx context.Context, core cmdutil.Core, opts tagEditOpts) error {
+func runTagEdit(ctx context.Context, core cmdutil.Factory, opts tagEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name

@@ -14,7 +14,7 @@ type tagDeleteOpts struct {
 	id string
 }
 
-func newCmdTagDelete(core cmdutil.Core) *cobra.Command {
+func newCmdTagDelete(core cmdutil.Factory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a tag",
@@ -26,7 +26,7 @@ func newCmdTagDelete(core cmdutil.Core) *cobra.Command {
 	}
 }
 
-func runTagDelete(ctx context.Context, core cmdutil.Core, opts tagDeleteOpts) error {
+func runTagDelete(ctx context.Context, core cmdutil.Factory, opts tagDeleteOpts) error {
 	req := connect.NewRequest(&simoompb.DeleteTagRequest{Id: opts.id})
 	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
 

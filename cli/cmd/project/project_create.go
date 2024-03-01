@@ -16,7 +16,7 @@ type projectCreateOpts struct {
 	color string
 }
 
-func newCmdProjectCreate(core cmdutil.Core) *cobra.Command {
+func newCmdProjectCreate(core cmdutil.Factory) *cobra.Command {
 	var opts projectCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -39,7 +39,7 @@ func newCmdProjectCreate(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runProjectCreate(ctx context.Context, core cmdutil.Core, opts projectCreateOpts) error {
+func runProjectCreate(ctx context.Context, core cmdutil.Factory, opts projectCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateProjectRequest{
 		Name:  opts.name,
 		Color: opts.color,

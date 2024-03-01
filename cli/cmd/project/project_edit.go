@@ -17,7 +17,7 @@ type projectEditOpts struct {
 	isArchived bool
 }
 
-func newCmdProjectEdit(core cmdutil.Core) *cobra.Command {
+func newCmdProjectEdit(core cmdutil.Factory) *cobra.Command {
 	var opts projectEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -36,7 +36,7 @@ func newCmdProjectEdit(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runProjectEdit(ctx context.Context, core cmdutil.Core, opts projectEditOpts) error {
+func runProjectEdit(ctx context.Context, core cmdutil.Factory, opts projectEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name

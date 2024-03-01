@@ -15,7 +15,7 @@ type tagListOpts struct {
 	offset uint64
 }
 
-func newCmdTagList(core cmdutil.Core) *cobra.Command {
+func newCmdTagList(core cmdutil.Factory) *cobra.Command {
 	var opts tagListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
@@ -33,7 +33,7 @@ func newCmdTagList(core cmdutil.Core) *cobra.Command {
 	return cmd
 }
 
-func runTagList(ctx context.Context, core cmdutil.Core, opts tagListOpts) error {
+func runTagList(ctx context.Context, core cmdutil.Factory, opts tagListOpts) error {
 	req := connect.NewRequest(&simoompb.ListTagsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,
