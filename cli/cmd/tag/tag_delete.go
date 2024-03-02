@@ -17,20 +17,23 @@ type tagDeleteOpts struct {
 	id string
 }
 
-func newCmdTagDelete(core cmdutil.Factory) *cobra.Command {
+func newCmdTagDelete(f cmdutil.Factory) *cobra.Command {
+	opts := tagDeleteOpts{
+		client: f.Client,
+	}
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a tag",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts := tagDeleteOpts{id: args[0]}
-			return runTagDelete(cmd.Context(), core, opts)
+			opts.id = args[0]
+			return runTagDelete(cmd.Context(), opts)
 		},
 	}
 }
 
-func runTagDelete(ctx context.Context, core cmdutil.Factory, opts tagDeleteOpts) error {
-	if _, err := core.Client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
+func runTagDelete(ctx context.Context, opts tagDeleteOpts) error {
+	if _, err := opts.client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
 		Id: opts.id,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTag method: %w", err)

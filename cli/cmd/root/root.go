@@ -19,6 +19,7 @@ func NewCmdRoot(core cmdutil.Factory) *cobra.Command {
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			if cmdutil.IsAuthCheckEnabled(cmd) {
 				// TODO: 認証情報をチェックし、認証情報が正しくない場合はエラーを返す
+				return nil
 			}
 			return nil
 		},
