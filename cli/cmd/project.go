@@ -14,6 +14,5 @@ func newCmdProject(f cmdutil.Factory) *cobra.Command {
 	cmd.AddCommand(newCmdProjectDelete(f))
 	cmd.AddCommand(newCmdProjectEdit(f))
 	cmd.AddCommand(newCmdProjectList(f))
-	cmd.AddCommand(newCmdProjectView(f))
 	return cmd
 }
