@@ -88,6 +88,12 @@ WHERE id = ?;
 INSERT INTO tasks (id, user_id, project_id, name, content, priority, due_on, completed_at)
 VALUES (?, ?, ?, ?, '', ?, NULL, NULL);
 
+-- name: ListTasks :many
+SELECT *
+FROM tasks
+ORDER BY created_at
+LIMIT ? OFFSET ?;
+
 -- name: ListTasksByProjectID :many
 SELECT *
 FROM tasks
@@ -96,11 +102,19 @@ ORDER BY created_at
 LIMIT ? OFFSET ?;
 
 -- name: ListTasksByTagID :many
-SELECT t1.*
-FROM tasks AS t1
-    INNER JOIN tasks_tags AS tt ON t1.id = tt.task_id
+SELECT t.*
+FROM tasks AS t
+    INNER JOIN tasks_tags AS tt ON t.id = tt.task_id
 WHERE tt.tag_id = ?
-ORDER BY t1.created_at
+ORDER BY t.created_at
+LIMIT ? OFFSET ?;
+
+-- name: ListTasksByProjectIDAndTagID :many
+SELECT t.*
+FROM tasks AS t
+    INNER JOIN tasks_tags AS tt ON t.id = tt.task_id
+WHERE t.project_id = ? AND tt.tag_id = ?
+ORDER BY t.created_at
 LIMIT ? OFFSET ?;
 
 -- name: GetTaskByID :one
