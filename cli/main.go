@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"net/http"
+	"fmt"
 	"os"
 
-	"github.com/minguu42/simoom/cli/cmd/root"
+	"github.com/minguu42/simoom/cli/api"
+	"github.com/minguu42/simoom/cli/cmd"
 	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 )
 
 type exitCode int
@@ -23,17 +23,16 @@ func main() {
 }
 
 func mainRun() exitCode {
-	credentials, err := cmdutil.ReadCredentials()
+	c, err := api.NewClient()
 	if err != nil {
+		fmt.Printf("failed to create api client: %s\n", err)
 		return exitError
 	}
-	client := simoompbconnect.NewSimoomServiceClient(http.DefaultClient, "http://localhost:8080")
-	c := cmdutil.Core{
-		Client:      client,
-		Credentials: credentials,
+	f := cmdutil.Factory{
+		Client: c,
 	}
 
-	rootCmd := root.NewCmdRoot(c)
+	rootCmd := cmd.NewCmdRoot(f)
 	if err := rootCmd.ExecuteContext(context.Background()); err != nil {
 		return exitError
 	}
