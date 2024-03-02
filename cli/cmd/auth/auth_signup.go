@@ -41,6 +41,7 @@ func newCmdAuthSignup(f cmdutil.Factory) *cobra.Command {
 			return runAuthSignup(cmd.Context(), opts)
 		},
 	}
+	cmdutil.DisableAuthCheck(cmd)
 
 	cmd.Flags().StringVar(&opts.name, "name", "", "username")
 	cmd.Flags().StringVar(&opts.email, "email", "", "email")

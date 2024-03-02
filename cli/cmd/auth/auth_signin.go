@@ -37,6 +37,7 @@ func newCmdAuthSignin(f cmdutil.Factory) *cobra.Command {
 			return runAuthSignin(cmd.Context(), opts)
 		},
 	}
+	cmdutil.DisableAuthCheck(cmd)
 
 	cmd.Flags().StringVar(&opts.email, "email", "", "email")
 	cmd.Flags().StringVar(&opts.password, "password", "", "password")
