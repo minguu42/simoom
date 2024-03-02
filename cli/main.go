@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmd/root"
+	"github.com/minguu42/simoom/cli/cmd"
 	"github.com/minguu42/simoom/cli/cmdutil"
 )
 
@@ -32,7 +32,7 @@ func mainRun() exitCode {
 		Client: c,
 	}
 
-	rootCmd := root.NewCmdRoot(f)
+	rootCmd := cmd.NewCmdRoot(f)
 	if err := rootCmd.ExecuteContext(context.Background()); err != nil {
 		return exitError
 	}

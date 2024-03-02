@@ -1,12 +1,11 @@
-// Package step パッケージはstepサブコマンドを定義する
-package step
+package cmd
 
 import (
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/spf13/cobra"
 )
 
-func NewCmdStep(f cmdutil.Factory) *cobra.Command {
+func newCmdStep(f cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "step <command>",
 		Short: "Manage steps",

@@ -1,12 +1,11 @@
-// Package task パッケージはtaskサブコマンドを定義する
-package task
+package cmd
 
 import (
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/spf13/cobra"
 )
 
-func NewCmdTask(f cmdutil.Factory) *cobra.Command {
+func newCmdTask(f cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "task <command>",
 		Short: "Manage tasks",

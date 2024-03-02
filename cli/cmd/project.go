@@ -1,12 +1,11 @@
-// Package project パッケージはprojectサブコマンドを定義する
-package project
+package cmd
 
 import (
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/spf13/cobra"
 )
 
-func NewCmdProject(f cmdutil.Factory) *cobra.Command {
+func newCmdProject(f cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "project <command>",
 		Short: "Manage projects",

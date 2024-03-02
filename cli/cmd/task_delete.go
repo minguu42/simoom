@@ -1,4 +1,4 @@
-package tag
+package cmd
 
 import (
 	"context"
@@ -11,34 +11,34 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type tagDeleteOpts struct {
+type taskDeleteOpts struct {
 	client *api.Client
 
 	id string
 }
 
-func newCmdTagDelete(f cmdutil.Factory) *cobra.Command {
-	opts := tagDeleteOpts{
+func newCmdTaskDelete(f cmdutil.Factory) *cobra.Command {
+	opts := taskDeleteOpts{
 		client: f.Client,
 	}
 	return &cobra.Command{
 		Use:   "delete",
-		Short: "Delete a tag",
+		Short: "Delete a task",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
-			return runTagDelete(cmd.Context(), opts)
+			return runTaskDelete(cmd.Context(), opts)
 		},
 	}
 }
 
-func runTagDelete(ctx context.Context, opts tagDeleteOpts) error {
-	if _, err := opts.client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
+func runTaskDelete(ctx context.Context, opts taskDeleteOpts) error {
+	if _, err := opts.client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
 		Id: opts.id,
 	})); err != nil {
-		return fmt.Errorf("failed to call DeleteTag method: %w", err)
+		return fmt.Errorf("failed to call DeleteTask method: %w", err)
 	}
 
-	fmt.Println("tag deleted")
+	fmt.Println("task deleted")
 	return nil
 }
