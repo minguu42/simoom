@@ -12,7 +12,7 @@ import (
 )
 
 type tagDeleteOpts struct {
-	client *api.Client
+	client api.Client
 
 	id string
 }

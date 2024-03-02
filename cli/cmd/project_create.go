@@ -13,7 +13,7 @@ import (
 )
 
 type projectCreateOpts struct {
-	client *api.Client
+	client api.Client
 
 	name  string
 	color string

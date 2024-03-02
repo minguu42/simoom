@@ -12,7 +12,7 @@ import (
 )
 
 type tagCreateOpts struct {
-	client *api.Client
+	client api.Client
 
 	name string
 }

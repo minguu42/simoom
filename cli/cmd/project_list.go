@@ -12,7 +12,7 @@ import (
 )
 
 type projectListOpts struct {
-	client *api.Client
+	client api.Client
 
 	limit  uint64
 	offset uint64

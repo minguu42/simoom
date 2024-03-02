@@ -13,7 +13,7 @@ import (
 )
 
 type taskEditOpts struct {
-	client *api.Client
+	client api.Client
 
 	id        string
 	name      string

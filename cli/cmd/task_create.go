@@ -12,7 +12,7 @@ import (
 )
 
 type taskCreateOpts struct {
-	client *api.Client
+	client api.Client
 
 	projectID string
 	name      string

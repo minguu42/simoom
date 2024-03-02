@@ -13,7 +13,7 @@ import (
 )
 
 type tagViewOpts struct {
-	client *api.Client
+	client api.Client
 
 	id     string
 	limit  uint64

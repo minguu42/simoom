@@ -13,7 +13,7 @@ import (
 )
 
 type authRefreshOpts struct {
-	client *api.Client
+	client api.Client
 
 	refreshToken string
 }
@@ -27,10 +27,10 @@ func newCmdAuthRefresh(f cmdutil.Factory) *cobra.Command {
 		Short: "Refresh the access token",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.refreshToken == "" {
-				if opts.client.Credentials.RefreshToken == "" {
+				if opts.client.GetRefreshToken() == "" {
 					return errors.New("refresh token is required")
 				}
-				opts.refreshToken = opts.client.Credentials.RefreshToken
+				opts.refreshToken = opts.client.GetRefreshToken()
 			}
 			return runAuthRefresh(cmd.Context(), opts)
 		},

@@ -13,7 +13,7 @@ import (
 )
 
 type projectViewOpts struct {
-	client *api.Client
+	client api.Client
 
 	id     string
 	limit  uint64

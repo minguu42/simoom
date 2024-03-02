@@ -12,7 +12,7 @@ import (
 )
 
 type tagEditOpts struct {
-	client *api.Client
+	client api.Client
 
 	id   string
 	name string

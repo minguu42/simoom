@@ -13,7 +13,7 @@ import (
 )
 
 type stepCreateOpts struct {
-	client *api.Client
+	client api.Client
 
 	taskID string
 	name   string

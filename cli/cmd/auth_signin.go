@@ -13,7 +13,7 @@ import (
 )
 
 type authSigninOpts struct {
-	client *api.Client
+	client api.Client
 
 	email    string
 	password string
