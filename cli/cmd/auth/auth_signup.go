@@ -9,12 +9,11 @@ import (
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type authSignupOpts struct {
-	client simoompbconnect.SimoomServiceClient
+	client *api.Client
 
 	name     string
 	email    string

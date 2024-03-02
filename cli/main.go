@@ -23,18 +23,13 @@ func main() {
 }
 
 func mainRun() exitCode {
-	credentials, err := cmdutil.ReadCredentials()
-	if err != nil {
-		return exitError
-	}
 	c, err := api.NewClient()
 	if err != nil {
 		fmt.Printf("failed to create api client: %s\n", err)
 		return exitError
 	}
 	f := cmdutil.Factory{
-		Client:      c,
-		Credentials: credentials,
+		Client: c,
 	}
 
 	rootCmd := root.NewCmdRoot(f)
