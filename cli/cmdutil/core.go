@@ -1,8 +1,8 @@
 package cmdutil
 
-import "github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
+import "github.com/minguu42/simoom/cli/api"
 
 type Factory struct {
-	Client      simoompbconnect.SimoomServiceClient
+	Client      *api.Client
 	Credentials Credentials
 }

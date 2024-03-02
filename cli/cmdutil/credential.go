@@ -42,31 +42,3 @@ func ReadCredentials() (Credentials, error) {
 	}
 	return c, nil
 }
-
-// WriteCredentials は認証ファイルに認証情報を書き込む
-func WriteCredentials(accessToken, refreshToken string) error {
-	p, err := credentialsFilepath()
-	if err != nil {
-		return fmt.Errorf("failed to get credentials file path: %w", err)
-	}
-	if err := os.MkdirAll(filepath.Dir(p), 0755); err != nil {
-		return fmt.Errorf("failed to make directories: %w", err)
-	}
-	f, err := os.Create(p)
-	if err != nil {
-		return fmt.Errorf("failed to create file: %w", err)
-	}
-	defer f.Close()
-
-	if err := json.NewEncoder(f).Encode(Credentials{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-	}); err != nil {
-		return fmt.Errorf("failed to encode credentials: %w", err)
-	}
-
-	if err := f.Sync(); err != nil {
-		return fmt.Errorf("failed to sync file: %w", err)
-	}
-	return nil
-}

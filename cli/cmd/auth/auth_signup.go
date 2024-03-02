@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
@@ -61,7 +62,7 @@ func runAuthSignup(ctx context.Context, opts authSignupOpts) error {
 	}
 	fmt.Println("Successfully authenticated.")
 
-	if err := cmdutil.WriteCredentials(resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+	if err := api.WriteCredentials(resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)
 	}
 	return nil
