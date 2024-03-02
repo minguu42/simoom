@@ -68,44 +68,6 @@ func (h handler) ListTasks(ctx context.Context, req *connect.Request[simoompb.Li
 	}), nil
 }
 
-func (h handler) ListTasksByProjectID(ctx context.Context, req *connect.Request[simoompb.ListTasksByProjectIDRequest]) (*connect.Response[simoompb.Tasks], error) {
-	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
-	}
-
-	out, err := h.task.ListTasksByProjectID(ctx, usecase.ListTasksByProjectIDInput{
-		ProjectID: req.Msg.ProjectId,
-		Limit:     uint(req.Msg.Limit),
-		Offset:    uint(req.Msg.Offset),
-	})
-	if err != nil {
-		return nil, err
-	}
-	return connect.NewResponse(&simoompb.Tasks{
-		Tasks:   newTasksResponse(out.Tasks),
-		HasNext: out.HasNext,
-	}), nil
-}
-
-func (h handler) ListTasksByTagID(ctx context.Context, req *connect.Request[simoompb.ListTasksByTagIDRequest]) (*connect.Response[simoompb.Tasks], error) {
-	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
-	}
-
-	out, err := h.task.ListTasksByTagID(ctx, usecase.ListTasksByTagIDInput{
-		TagID:  req.Msg.TagId,
-		Limit:  uint(req.Msg.Limit),
-		Offset: uint(req.Msg.Offset),
-	})
-	if err != nil {
-		return nil, err
-	}
-	return connect.NewResponse(&simoompb.Tasks{
-		Tasks:   newTasksResponse(out.Tasks),
-		HasNext: out.HasNext,
-	}), nil
-}
-
 func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.Task], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
 		return nil, ErrInvalidRequest

@@ -30,8 +30,6 @@ service SimoomService {
 
   rpc CreateTask(CreateTaskRequest) returns (Task);
   rpc ListTasks(ListTasksRequest) returns (Tasks);
-  rpc ListTasksByProjectID(ListTasksByProjectIDRequest) returns (Tasks);
-  rpc ListTasksByTagID(ListTasksByTagIDRequest) returns (Tasks);
   rpc UpdateTask(UpdateTaskRequest) returns (Task);
   rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
 
@@ -149,18 +147,6 @@ message ListTasksRequest {
   uint64 offset = 2;
   optional string project_id = 3 [(buf.validate.field).string.len_bytes = 26];
   optional string tag_id = 4 [(buf.validate.field).string.len_bytes = 26];
-}
-
-message ListTasksByProjectIDRequest {
-  string project_id = 1 [(buf.validate.field).string.len_bytes = 26];
-  uint64 limit = 2 [(buf.validate.field).uint64.gt = 0];
-  uint64 offset = 3;
-}
-
-message ListTasksByTagIDRequest {
-  string tag_id = 1 [(buf.validate.field).string.len_bytes = 26];
-  uint64 limit = 2 [(buf.validate.field).uint64.gt = 0];
-  uint64 offset = 3;
 }
 
 message UpdateTaskRequest {
