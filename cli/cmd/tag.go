@@ -14,6 +14,5 @@ func newCmdTag(f cmdutil.Factory) *cobra.Command {
 	cmd.AddCommand(newCmdTagDelete(f))
 	cmd.AddCommand(newCmdTagEdit(f))
 	cmd.AddCommand(newCmdTagList(f))
-	cmd.AddCommand(newCmdTagView(f))
 	return cmd
 }

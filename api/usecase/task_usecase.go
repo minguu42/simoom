@@ -67,59 +67,40 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 	return TaskOutput{Task: t}, nil
 }
 
-type ListTasksByProjectIDInput struct {
-	ProjectID string
+type ListTasksInput struct {
 	Limit     uint
 	Offset    uint
+	ProjectID *string
+	TagID     *string
 }
 
-func (uc Task) ListTasksByProjectID(ctx context.Context, in ListTasksByProjectIDInput) (TasksOutput, error) {
-	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, error) {
+	if in.ProjectID != nil {
+		p, err := uc.repo.GetProjectByID(ctx, *in.ProjectID)
+		if err != nil {
+			if errors.Is(err, repository.ErrModelNotFound) {
+				return TasksOutput{}, ErrProjectNotFound
+			}
+			return TasksOutput{}, fmt.Errorf("failed to get project: %w", err)
+		}
+		if auth.GetUserID(ctx) != p.UserID {
 			return TasksOutput{}, ErrProjectNotFound
 		}
-		return TasksOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
-	if auth.GetUserID(ctx) != p.UserID {
-		return TasksOutput{}, ErrProjectNotFound
-	}
-
-	ts, err := uc.repo.ListTasksByProjectID(ctx, in.ProjectID, in.Limit+1, in.Offset)
-	if err != nil {
-		return TasksOutput{}, fmt.Errorf("failed to list tasks: %w", err)
-	}
-
-	hasNext := false
-	if len(ts) == int(in.Limit+1) {
-		ts = ts[:in.Limit]
-		hasNext = true
-	}
-	return TasksOutput{
-		Tasks:   ts,
-		HasNext: hasNext,
-	}, nil
-}
-
-type ListTasksByTagIDInput struct {
-	TagID  string
-	Limit  uint
-	Offset uint
-}
-
-func (uc Task) ListTasksByTagID(ctx context.Context, in ListTasksByTagIDInput) (TasksOutput, error) {
-	t, err := uc.repo.GetTagByID(ctx, in.TagID)
-	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+	if in.TagID != nil {
+		t, err := uc.repo.GetTagByID(ctx, *in.TagID)
+		if err != nil {
+			if errors.Is(err, repository.ErrModelNotFound) {
+				return TasksOutput{}, ErrTagNotFound
+			}
+			return TasksOutput{}, fmt.Errorf("failed to get tag: %w", err)
+		}
+		if auth.GetUserID(ctx) != t.UserID {
 			return TasksOutput{}, ErrTagNotFound
 		}
-		return TasksOutput{}, fmt.Errorf("failed to get tag: %w", err)
-	}
-	if auth.GetUserID(ctx) != t.UserID {
-		return TasksOutput{}, ErrTagNotFound
 	}
 
-	ts, err := uc.repo.ListTasksByTagID(ctx, in.TagID, in.Limit+1, in.Offset)
+	ts, err := uc.repo.ListTasks(ctx, in.Limit+1, in.Offset, in.ProjectID, in.TagID)
 	if err != nil {
 		return TasksOutput{}, fmt.Errorf("failed to list tasks: %w", err)
 	}

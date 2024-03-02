@@ -64,6 +64,54 @@ func (c *Client) ListTasksByProjectID(ctx context.Context, projectID string, lim
 	return tasks, nil
 }
 
+func (c *Client) ListTasks(ctx context.Context, limit, offset uint, projectID, tagID *string) ([]model.Task, error) {
+	var ts []sqlc.Task
+	var err error
+	switch {
+	case projectID != nil && tagID != nil:
+		ts, err = c.queries(ctx).ListTasksByProjectIDAndTagID(ctx, sqlc.ListTasksByProjectIDAndTagIDParams{
+			ProjectID: *projectID,
+			TagID:     *tagID,
+			Limit:     int32(limit),
+			Offset:    int32(offset),
+		})
+	case projectID != nil:
+		ts, err = c.queries(ctx).ListTasksByProjectID(ctx, sqlc.ListTasksByProjectIDParams{
+			ProjectID: *projectID,
+			Limit:     int32(limit),
+			Offset:    int32(offset),
+		})
+	case tagID != nil:
+		ts, err = c.queries(ctx).ListTasksByTagID(ctx, sqlc.ListTasksByTagIDParams{
+			TagID:  *tagID,
+			Limit:  int32(limit),
+			Offset: int32(offset),
+		})
+	default:
+		ts, err = c.queries(ctx).ListTasks(ctx, sqlc.ListTasksParams{
+			Limit:  int32(limit),
+			Offset: int32(offset),
+		})
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to list tasks: %w", err)
+	}
+
+	tasks := make([]model.Task, 0, len(ts))
+	for _, t := range ts {
+		ss, err := c.queries(ctx).ListStepsByTaskID(ctx, t.ID)
+		if err != nil {
+			return nil, fmt.Errorf("failed to list steps: %w", err)
+		}
+		tags, err := c.queries(ctx).ListTagsByTaskID(ctx, t.ID)
+		if err != nil {
+			return nil, fmt.Errorf("failed to list tags: %w", err)
+		}
+		tasks = append(tasks, newModelTask(t, ss, tags))
+	}
+	return tasks, nil
+}
+
 func (c *Client) ListTasksByTagID(ctx context.Context, tagID string, limit, offset uint) ([]model.Task, error) {
 	ts, err := c.queries(ctx).ListTasksByTagID(ctx, sqlc.ListTasksByTagIDParams{
 		TagID:  tagID,

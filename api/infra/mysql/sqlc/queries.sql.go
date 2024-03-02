@@ -449,6 +449,52 @@ func (q *Queries) ListTagsByUserID(ctx context.Context, arg ListTagsByUserIDPara
 	return items, nil
 }
 
+const listTasks = `-- name: ListTasks :many
+SELECT id, user_id, project_id, name, content, priority, due_on, completed_at, created_at, updated_at
+FROM tasks
+ORDER BY created_at
+LIMIT ? OFFSET ?
+`
+
+type ListTasksParams struct {
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) ListTasks(ctx context.Context, arg ListTasksParams) ([]Task, error) {
+	rows, err := q.db.QueryContext(ctx, listTasks, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Task
+	for rows.Next() {
+		var i Task
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.ProjectID,
+			&i.Name,
+			&i.Content,
+			&i.Priority,
+			&i.DueOn,
+			&i.CompletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listTasksByProjectID = `-- name: ListTasksByProjectID :many
 SELECT id, user_id, project_id, name, content, priority, due_on, completed_at, created_at, updated_at
 FROM tasks
@@ -497,12 +543,67 @@ func (q *Queries) ListTasksByProjectID(ctx context.Context, arg ListTasksByProje
 	return items, nil
 }
 
+const listTasksByProjectIDAndTagID = `-- name: ListTasksByProjectIDAndTagID :many
+SELECT t.id, t.user_id, t.project_id, t.name, t.content, t.priority, t.due_on, t.completed_at, t.created_at, t.updated_at
+FROM tasks AS t
+    INNER JOIN tasks_tags AS tt ON t.id = tt.task_id
+WHERE t.project_id = ? AND tt.tag_id = ?
+ORDER BY t.created_at
+LIMIT ? OFFSET ?
+`
+
+type ListTasksByProjectIDAndTagIDParams struct {
+	ProjectID string
+	TagID     string
+	Limit     int32
+	Offset    int32
+}
+
+func (q *Queries) ListTasksByProjectIDAndTagID(ctx context.Context, arg ListTasksByProjectIDAndTagIDParams) ([]Task, error) {
+	rows, err := q.db.QueryContext(ctx, listTasksByProjectIDAndTagID,
+		arg.ProjectID,
+		arg.TagID,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Task
+	for rows.Next() {
+		var i Task
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.ProjectID,
+			&i.Name,
+			&i.Content,
+			&i.Priority,
+			&i.DueOn,
+			&i.CompletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listTasksByTagID = `-- name: ListTasksByTagID :many
-SELECT t1.id, t1.user_id, t1.project_id, t1.name, t1.content, t1.priority, t1.due_on, t1.completed_at, t1.created_at, t1.updated_at
-FROM tasks AS t1
-    INNER JOIN tasks_tags AS tt ON t1.id = tt.task_id
+SELECT t.id, t.user_id, t.project_id, t.name, t.content, t.priority, t.due_on, t.completed_at, t.created_at, t.updated_at
+FROM tasks AS t
+    INNER JOIN tasks_tags AS tt ON t.id = tt.task_id
 WHERE tt.tag_id = ?
-ORDER BY t1.created_at
+ORDER BY t.created_at
 LIMIT ? OFFSET ?
 `
 
