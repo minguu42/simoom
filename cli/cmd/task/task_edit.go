@@ -5,16 +5,15 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type taskEditOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id        string
 	name      string
@@ -25,8 +24,7 @@ type taskEditOpts struct {
 
 func newCmdTaskEdit(f cmdutil.Factory) *cobra.Command {
 	opts := taskEditOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -66,15 +64,13 @@ func runTaskEdit(ctx context.Context, opts taskEditOpts) error {
 	if opts.completed {
 		completedAt = timestamppb.Now()
 	}
-	req := connect.NewRequest(&simoompb.UpdateTaskRequest{
+	resp, err := opts.client.UpdateTask(ctx, connect.NewRequest(&simoompb.UpdateTaskRequest{
 		Id:          opts.id,
 		Name:        name,
 		Content:     content,
 		Priority:    priority,
 		CompletedAt: completedAt,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.UpdateTask(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call UpdateTask method: %w", err)
 	}

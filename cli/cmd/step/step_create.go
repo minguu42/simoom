@@ -6,15 +6,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type stepCreateOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	taskID string
 	name   string
@@ -22,8 +21,7 @@ type stepCreateOpts struct {
 
 func newCmdStepCreate(f cmdutil.Factory) *cobra.Command {
 	opts := stepCreateOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -47,12 +45,10 @@ func newCmdStepCreate(f cmdutil.Factory) *cobra.Command {
 }
 
 func runStepCreate(ctx context.Context, opts stepCreateOpts) error {
-	req := connect.NewRequest(&simoompb.CreateStepRequest{
+	resp, err := opts.client.CreateStep(ctx, connect.NewRequest(&simoompb.CreateStepRequest{
 		TaskId: opts.taskID,
 		Name:   opts.name,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.CreateStep(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call CreateStep method: %w", err)
 	}

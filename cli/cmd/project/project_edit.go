@@ -5,15 +5,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type projectEditOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id         string
 	name       string
@@ -23,8 +22,7 @@ type projectEditOpts struct {
 
 func newCmdProjectEdit(f cmdutil.Factory) *cobra.Command {
 	opts := projectEditOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -56,14 +54,12 @@ func runProjectEdit(ctx context.Context, opts projectEditOpts) error {
 	if opts.isArchived {
 		isArchived = &opts.isArchived
 	}
-	req := connect.NewRequest(&simoompb.UpdateProjectRequest{
+	resp, err := opts.client.UpdateProject(ctx, connect.NewRequest(&simoompb.UpdateProjectRequest{
 		Id:         opts.id,
 		Name:       name,
 		Color:      color,
 		IsArchived: isArchived,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.UpdateProject(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call UpdateProject method: %w", err)
 	}

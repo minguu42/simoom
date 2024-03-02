@@ -5,23 +5,21 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type taskDeleteOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id string
 }
 
 func newCmdTaskDelete(f cmdutil.Factory) *cobra.Command {
 	opts := taskDeleteOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	return &cobra.Command{
 		Use:   "delete",
@@ -35,10 +33,9 @@ func newCmdTaskDelete(f cmdutil.Factory) *cobra.Command {
 }
 
 func runTaskDelete(ctx context.Context, opts taskDeleteOpts) error {
-	req := connect.NewRequest(&simoompb.DeleteTaskRequest{Id: opts.id})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-
-	if _, err := opts.client.DeleteTask(ctx, req); err != nil {
+	if _, err := opts.client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
+		Id: opts.id,
+	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTask method: %w", err)
 	}
 

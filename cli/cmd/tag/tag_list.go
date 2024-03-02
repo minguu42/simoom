@@ -5,15 +5,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagListOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	limit  uint64
 	offset uint64
@@ -38,13 +37,10 @@ func newCmdTagList(core cmdutil.Factory) *cobra.Command {
 }
 
 func runTagList(ctx context.Context, core cmdutil.Factory, opts tagListOpts) error {
-	req := connect.NewRequest(&simoompb.ListTagsRequest{
+	resp, err := core.Client.ListTags(ctx, connect.NewRequest(&simoompb.ListTagsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.ListTags(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call ListTags method: %w", err)
 	}

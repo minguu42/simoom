@@ -6,13 +6,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdTask(core cmdutil.Factory) *cobra.Command {
+func NewCmdTask(f cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "task <command>",
 		Short: "Manage tasks",
 	}
-	cmd.AddCommand(newCmdTaskCreate(core))
-	cmd.AddCommand(newCmdTaskDelete(core))
-	cmd.AddCommand(newCmdTaskEdit(core))
+	cmd.AddCommand(newCmdTaskCreate(f))
+	cmd.AddCommand(newCmdTaskDelete(f))
+	cmd.AddCommand(newCmdTaskEdit(f))
 	return cmd
 }

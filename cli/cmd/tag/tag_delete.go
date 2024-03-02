@@ -5,15 +5,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagDeleteOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id string
 }
@@ -31,10 +30,9 @@ func newCmdTagDelete(core cmdutil.Factory) *cobra.Command {
 }
 
 func runTagDelete(ctx context.Context, core cmdutil.Factory, opts tagDeleteOpts) error {
-	req := connect.NewRequest(&simoompb.DeleteTagRequest{Id: opts.id})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	if _, err := core.Client.DeleteTag(ctx, req); err != nil {
+	if _, err := core.Client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
+		Id: opts.id,
+	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTag method: %w", err)
 	}
 

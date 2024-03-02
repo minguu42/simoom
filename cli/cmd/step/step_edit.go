@@ -5,16 +5,15 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type stepEditOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id        string
 	name      string
@@ -23,8 +22,7 @@ type stepEditOpts struct {
 
 func newCmdStepEdit(f cmdutil.Factory) *cobra.Command {
 	opts := stepEditOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -51,13 +49,11 @@ func runStepEdit(ctx context.Context, opts stepEditOpts) error {
 	if opts.completed {
 		completedAt = timestamppb.Now()
 	}
-	req := connect.NewRequest(&simoompb.UpdateStepRequest{
+	resp, err := opts.client.UpdateStep(ctx, connect.NewRequest(&simoompb.UpdateStepRequest{
 		Id:          opts.id,
 		Name:        name,
 		CompletedAt: completedAt,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.UpdateStep(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call UpdateStep method: %w", err)
 	}

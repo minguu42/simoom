@@ -6,13 +6,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdStep(core cmdutil.Factory) *cobra.Command {
+func NewCmdStep(f cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "step <command>",
 		Short: "Manage steps",
 	}
-	cmd.AddCommand(newCmdStepCreate(core))
-	cmd.AddCommand(newCmdStepDelete(core))
-	cmd.AddCommand(newCmdStepEdit(core))
+	cmd.AddCommand(newCmdStepCreate(f))
+	cmd.AddCommand(newCmdStepDelete(f))
+	cmd.AddCommand(newCmdStepEdit(f))
 	return cmd
 }

@@ -5,23 +5,21 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagCreateOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	name string
 }
 
 func newCmdTagCreate(f cmdutil.Factory) *cobra.Command {
 	opts := tagCreateOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -41,11 +39,9 @@ func newCmdTagCreate(f cmdutil.Factory) *cobra.Command {
 }
 
 func runTagCreate(ctx context.Context, opts tagCreateOpts) error {
-	req := connect.NewRequest(&simoompb.CreateTagRequest{
+	resp, err := opts.client.CreateTag(ctx, connect.NewRequest(&simoompb.CreateTagRequest{
 		Name: opts.name,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.CreateTag(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call CreateTag method: %w", err)
 	}

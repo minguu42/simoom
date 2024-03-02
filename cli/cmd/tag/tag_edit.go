@@ -5,29 +5,30 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagEditOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id   string
 	name string
 }
 
-func newCmdTagEdit(core cmdutil.Factory) *cobra.Command {
-	var opts tagEditOpts
+func newCmdTagEdit(f cmdutil.Factory) *cobra.Command {
+	opts := tagEditOpts{
+		client: f.Client,
+	}
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a tag",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
-			return runTagEdit(cmd.Context(), core, opts)
+			return runTagEdit(cmd.Context(), f, opts)
 		},
 	}
 
@@ -41,13 +42,10 @@ func runTagEdit(ctx context.Context, core cmdutil.Factory, opts tagEditOpts) err
 	if opts.name != "" {
 		name = &opts.name
 	}
-	req := connect.NewRequest(&simoompb.UpdateTagRequest{
+	resp, err := core.Client.UpdateTag(ctx, connect.NewRequest(&simoompb.UpdateTagRequest{
 		Id:   opts.id,
 		Name: name,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.UpdateTag(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call UpdateTag method: %w", err)
 	}

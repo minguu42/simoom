@@ -5,15 +5,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type projectListOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	limit  uint64
 	offset uint64
@@ -21,8 +20,7 @@ type projectListOpts struct {
 
 func newCmdProjectList(f cmdutil.Factory) *cobra.Command {
 	opts := projectListOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:     "list",
@@ -41,12 +39,10 @@ func newCmdProjectList(f cmdutil.Factory) *cobra.Command {
 }
 
 func runProjectList(ctx context.Context, opts projectListOpts) error {
-	req := connect.NewRequest(&simoompb.ListProjectsRequest{
+	resp, err := opts.client.ListProjects(ctx, connect.NewRequest(&simoompb.ListProjectsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.ListProjects(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call ListProjects method: %w", err)
 	}

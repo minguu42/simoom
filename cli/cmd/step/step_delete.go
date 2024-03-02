@@ -5,23 +5,21 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type stepDeleteOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id string
 }
 
 func newCmdStepDelete(f cmdutil.Factory) *cobra.Command {
 	opts := stepDeleteOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	return &cobra.Command{
 		Use:   "delete",
@@ -35,9 +33,9 @@ func newCmdStepDelete(f cmdutil.Factory) *cobra.Command {
 }
 
 func runStepDelete(ctx context.Context, opts stepDeleteOpts) error {
-	req := connect.NewRequest(&simoompb.DeleteStepRequest{Id: opts.id})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	if _, err := opts.client.DeleteStep(ctx, req); err != nil {
+	if _, err := opts.client.DeleteStep(ctx, connect.NewRequest(&simoompb.DeleteStepRequest{
+		Id: opts.id,
+	})); err != nil {
 		return fmt.Errorf("failed to call DeleteStep method: %w", err)
 	}
 

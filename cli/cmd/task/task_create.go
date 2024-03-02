@@ -5,15 +5,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type taskCreateOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	projectID string
 	name      string
@@ -22,8 +21,7 @@ type taskCreateOpts struct {
 
 func newCmdTaskCreate(f cmdutil.Factory) *cobra.Command {
 	opts := taskCreateOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -51,14 +49,11 @@ func newCmdTaskCreate(f cmdutil.Factory) *cobra.Command {
 }
 
 func runTaskCreate(ctx context.Context, opts taskCreateOpts) error {
-	req := connect.NewRequest(&simoompb.CreateTaskRequest{
+	resp, err := opts.client.CreateTask(ctx, connect.NewRequest(&simoompb.CreateTaskRequest{
 		ProjectId: opts.projectID,
 		Name:      opts.name,
 		Priority:  opts.priority,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-
-	resp, err := opts.client.CreateTask(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call CreateTask method: %w", err)
 	}

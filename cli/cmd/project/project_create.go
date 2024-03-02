@@ -45,11 +45,10 @@ func newCmdProjectCreate(f cmdutil.Factory) *cobra.Command {
 }
 
 func runProjectCreate(ctx context.Context, opts projectCreateOpts) error {
-	req := connect.NewRequest(&simoompb.CreateProjectRequest{
+	resp, err := opts.client.CreateProject(ctx, connect.NewRequest(&simoompb.CreateProjectRequest{
 		Name:  opts.name,
 		Color: opts.color,
-	})
-	resp, err := opts.client.CreateProject(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call CreateProject method: %w", err)
 	}

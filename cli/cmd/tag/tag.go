@@ -6,15 +6,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdTag(core cmdutil.Factory) *cobra.Command {
+func NewCmdTag(f cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "tag <command>",
 		Short: "Manage tags",
 	}
-	cmd.AddCommand(newCmdTagCreate(core))
-	cmd.AddCommand(newCmdTagDelete(core))
-	cmd.AddCommand(newCmdTagEdit(core))
-	cmd.AddCommand(newCmdTagList(core))
-	cmd.AddCommand(newCmdTagView(core))
+	cmd.AddCommand(newCmdTagCreate(f))
+	cmd.AddCommand(newCmdTagDelete(f))
+	cmd.AddCommand(newCmdTagEdit(f))
+	cmd.AddCommand(newCmdTagList(f))
+	cmd.AddCommand(newCmdTagView(f))
 	return cmd
 }

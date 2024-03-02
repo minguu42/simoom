@@ -6,15 +6,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagViewOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id     string
 	limit  uint64
@@ -23,8 +22,7 @@ type tagViewOpts struct {
 
 func newCmdTagView(f cmdutil.Factory) *cobra.Command {
 	opts := tagViewOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "view <id> [flags]",
@@ -46,13 +44,11 @@ func newCmdTagView(f cmdutil.Factory) *cobra.Command {
 }
 
 func runTagView(ctx context.Context, opts tagViewOpts) error {
-	req := connect.NewRequest(&simoompb.ListTasksByTagIDRequest{
+	resp, err := opts.client.ListTasksByTagID(ctx, connect.NewRequest(&simoompb.ListTasksByTagIDRequest{
 		TagId:  opts.id,
 		Limit:  opts.limit,
 		Offset: opts.offset,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.ListTasksByTagID(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call ListTasksByTagID method: %w", err)
 	}

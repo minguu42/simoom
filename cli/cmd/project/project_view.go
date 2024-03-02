@@ -6,15 +6,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
-	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type projectViewOpts struct {
-	client      simoompbconnect.SimoomServiceClient
-	credentials cmdutil.Credentials
+	client *api.Client
 
 	id     string
 	limit  uint64
@@ -23,8 +22,7 @@ type projectViewOpts struct {
 
 func newCmdProjectView(f cmdutil.Factory) *cobra.Command {
 	opts := projectViewOpts{
-		client:      f.Client,
-		credentials: f.Credentials,
+		client: f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "view <id> [flags]",
@@ -46,13 +44,11 @@ func newCmdProjectView(f cmdutil.Factory) *cobra.Command {
 }
 
 func runProjectView(ctx context.Context, opts projectViewOpts) error {
-	req := connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
+	resp, err := opts.client.ListTasksByProjectID(ctx, connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
 		ProjectId: opts.id,
 		Limit:     opts.limit,
 		Offset:    opts.offset,
-	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
-	resp, err := opts.client.ListTasksByProjectID(ctx, req)
+	}))
 	if err != nil {
 		return fmt.Errorf("failed to call ListTasksByProjectID method: %w", err)
 	}
