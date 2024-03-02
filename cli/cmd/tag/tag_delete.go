@@ -7,10 +7,14 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagDeleteOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	id string
 }
 

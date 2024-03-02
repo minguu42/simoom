@@ -7,30 +7,38 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type taskDeleteOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	id string
 }
 
-func newCmdTaskDelete(core cmdutil.Factory) *cobra.Command {
+func newCmdTaskDelete(f cmdutil.Factory) *cobra.Command {
+	opts := taskDeleteOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a task",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts := taskDeleteOpts{id: args[0]}
-			return runTaskDelete(cmd.Context(), core, opts)
+			opts.id = args[0]
+			return runTaskDelete(cmd.Context(), opts)
 		},
 	}
 }
 
-func runTaskDelete(ctx context.Context, core cmdutil.Factory, opts taskDeleteOpts) error {
+func runTaskDelete(ctx context.Context, opts taskDeleteOpts) error {
 	req := connect.NewRequest(&simoompb.DeleteTaskRequest{Id: opts.id})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
 
-	if _, err := core.Client.DeleteTask(ctx, req); err != nil {
+	if _, err := opts.client.DeleteTask(ctx, req); err != nil {
 		return fmt.Errorf("failed to call DeleteTask method: %w", err)
 	}
 

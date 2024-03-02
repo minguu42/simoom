@@ -8,17 +8,24 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagViewOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	id     string
 	limit  uint64
 	offset uint64
 }
 
-func newCmdTagView(core cmdutil.Factory) *cobra.Command {
-	var opts tagViewOpts
+func newCmdTagView(f cmdutil.Factory) *cobra.Command {
+	opts := tagViewOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "view <id> [flags]",
 		Short: "List the tasks with the tag",
@@ -28,7 +35,7 @@ func newCmdTagView(core cmdutil.Factory) *cobra.Command {
 			if len(opts.id) != 26 {
 				return errors.New("id is a 26-character string")
 			}
-			return runTagView(cmd.Context(), core, opts)
+			return runTagView(cmd.Context(), opts)
 		},
 	}
 
@@ -38,15 +45,14 @@ func newCmdTagView(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runTagView(ctx context.Context, core cmdutil.Factory, opts tagViewOpts) error {
+func runTagView(ctx context.Context, opts tagViewOpts) error {
 	req := connect.NewRequest(&simoompb.ListTasksByTagIDRequest{
 		TagId:  opts.id,
 		Limit:  opts.limit,
 		Offset: opts.offset,
 	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.ListTasksByTagID(ctx, req)
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
+	resp, err := opts.client.ListTasksByTagID(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call ListTasksByTagID method: %w", err)
 	}

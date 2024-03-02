@@ -8,16 +8,23 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type projectCreateOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	name  string
 	color string
 }
 
-func newCmdProjectCreate(core cmdutil.Factory) *cobra.Command {
-	var opts projectCreateOpts
+func newCmdProjectCreate(f cmdutil.Factory) *cobra.Command {
+	opts := projectCreateOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a project",
@@ -29,7 +36,7 @@ func newCmdProjectCreate(core cmdutil.Factory) *cobra.Command {
 			if opts.color == "" {
 				return errors.New("color is required")
 			}
-			return runProjectCreate(cmd.Context(), core, opts)
+			return runProjectCreate(cmd.Context(), opts)
 		},
 	}
 
@@ -39,14 +46,13 @@ func newCmdProjectCreate(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runProjectCreate(ctx context.Context, core cmdutil.Factory, opts projectCreateOpts) error {
+func runProjectCreate(ctx context.Context, opts projectCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateProjectRequest{
 		Name:  opts.name,
 		Color: opts.color,
 	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.CreateProject(ctx, req)
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
+	resp, err := opts.client.CreateProject(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call CreateProject method: %w", err)
 	}

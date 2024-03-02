@@ -7,10 +7,14 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type tagListOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	limit  uint64
 	offset uint64
 }

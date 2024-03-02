@@ -8,16 +8,23 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type stepCreateOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	taskID string
 	name   string
 }
 
-func newCmdStepCreate(core cmdutil.Factory) *cobra.Command {
-	var opts stepCreateOpts
+func newCmdStepCreate(f cmdutil.Factory) *cobra.Command {
+	opts := stepCreateOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a step",
@@ -29,7 +36,7 @@ func newCmdStepCreate(core cmdutil.Factory) *cobra.Command {
 			if opts.name == "" {
 				return errors.New("name is required")
 			}
-			return runStepCreate(cmd.Context(), core, opts)
+			return runStepCreate(cmd.Context(), opts)
 		},
 	}
 
@@ -39,14 +46,13 @@ func newCmdStepCreate(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runStepCreate(ctx context.Context, core cmdutil.Factory, opts stepCreateOpts) error {
+func runStepCreate(ctx context.Context, opts stepCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateStepRequest{
 		TaskId: opts.taskID,
 		Name:   opts.name,
 	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.CreateStep(ctx, req)
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
+	resp, err := opts.client.CreateStep(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call CreateStep method: %w", err)
 	}

@@ -7,17 +7,24 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type taskCreateOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	projectID string
 	name      string
 	priority  uint32
 }
 
-func newCmdTaskCreate(core cmdutil.Factory) *cobra.Command {
-	var opts taskCreateOpts
+func newCmdTaskCreate(f cmdutil.Factory) *cobra.Command {
+	opts := taskCreateOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a task",
@@ -32,7 +39,7 @@ func newCmdTaskCreate(core cmdutil.Factory) *cobra.Command {
 			if opts.priority == 99 {
 				return fmt.Errorf("priority is required")
 			}
-			return runTaskCreate(cmd.Context(), core, opts)
+			return runTaskCreate(cmd.Context(), opts)
 		},
 	}
 
@@ -43,15 +50,15 @@ func newCmdTaskCreate(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runTaskCreate(ctx context.Context, core cmdutil.Factory, opts taskCreateOpts) error {
+func runTaskCreate(ctx context.Context, opts taskCreateOpts) error {
 	req := connect.NewRequest(&simoompb.CreateTaskRequest{
 		ProjectId: opts.projectID,
 		Name:      opts.name,
 		Priority:  opts.priority,
 	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
 
-	resp, err := core.Client.CreateTask(ctx, req)
+	resp, err := opts.client.CreateTask(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call CreateTask method: %w", err)
 	}

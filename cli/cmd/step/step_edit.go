@@ -7,25 +7,32 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type stepEditOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	id        string
 	name      string
 	completed bool
 }
 
-func newCmdStepEdit(core cmdutil.Factory) *cobra.Command {
-	var opts stepEditOpts
+func newCmdStepEdit(f cmdutil.Factory) *cobra.Command {
+	opts := stepEditOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a step",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
-			return runStepEdit(cmd.Context(), core, opts)
+			return runStepEdit(cmd.Context(), opts)
 		},
 	}
 
@@ -35,7 +42,7 @@ func newCmdStepEdit(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runStepEdit(ctx context.Context, core cmdutil.Factory, opts stepEditOpts) error {
+func runStepEdit(ctx context.Context, opts stepEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name
@@ -49,9 +56,8 @@ func runStepEdit(ctx context.Context, core cmdutil.Factory, opts stepEditOpts) e
 		Name:        name,
 		CompletedAt: completedAt,
 	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.UpdateStep(ctx, req)
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
+	resp, err := opts.client.UpdateStep(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call UpdateStep method: %w", err)
 	}

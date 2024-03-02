@@ -7,30 +7,37 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type projectDeleteOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	id string
 }
 
-func newCmdProjectDelete(core cmdutil.Factory) *cobra.Command {
+func newCmdProjectDelete(f cmdutil.Factory) *cobra.Command {
+	opts := projectDeleteOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			opts := projectDeleteOpts{id: args[0]}
-			return runProjectDelete(cmd.Context(), core, opts)
+			opts.id = args[0]
+			return runProjectDelete(cmd.Context(), opts)
 		},
 	}
 }
 
-func runProjectDelete(ctx context.Context, core cmdutil.Factory, opts projectDeleteOpts) error {
+func runProjectDelete(ctx context.Context, opts projectDeleteOpts) error {
 	req := connect.NewRequest(&simoompb.DeleteProjectRequest{Id: opts.id})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	if _, err := core.Client.DeleteProject(ctx, req); err != nil {
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
+	if _, err := opts.client.DeleteProject(ctx, req); err != nil {
 		return fmt.Errorf("failed to call DeleteProject method: %w", err)
 	}
 

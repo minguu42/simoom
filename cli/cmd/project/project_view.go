@@ -8,17 +8,24 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 )
 
 type projectViewOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	id     string
 	limit  uint64
 	offset uint64
 }
 
-func newCmdProjectView(core cmdutil.Factory) *cobra.Command {
-	var opts projectViewOpts
+func newCmdProjectView(f cmdutil.Factory) *cobra.Command {
+	opts := projectViewOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "view <id> [flags]",
 		Short: "List the tasks included in that project",
@@ -28,7 +35,7 @@ func newCmdProjectView(core cmdutil.Factory) *cobra.Command {
 			if len(opts.id) != 26 {
 				return errors.New("id is a 26-character string")
 			}
-			return runProjectView(cmd.Context(), core, opts)
+			return runProjectView(cmd.Context(), opts)
 		},
 	}
 
@@ -38,15 +45,14 @@ func newCmdProjectView(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runProjectView(ctx context.Context, core cmdutil.Factory, opts projectViewOpts) error {
+func runProjectView(ctx context.Context, opts projectViewOpts) error {
 	req := connect.NewRequest(&simoompb.ListTasksByProjectIDRequest{
 		ProjectId: opts.id,
 		Limit:     opts.limit,
 		Offset:    opts.offset,
 	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.ListTasksByProjectID(ctx, req)
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
+	resp, err := opts.client.ListTasksByProjectID(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call ListTasksByProjectID method: %w", err)
 	}

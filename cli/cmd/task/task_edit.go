@@ -7,11 +7,15 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
+	"github.com/minguu42/simoom/lib/go/simoompb/v1/simoompbconnect"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type taskEditOpts struct {
+	client      simoompbconnect.SimoomServiceClient
+	credentials cmdutil.Credentials
+
 	id        string
 	name      string
 	content   string
@@ -19,8 +23,11 @@ type taskEditOpts struct {
 	completed bool
 }
 
-func newCmdTaskEdit(core cmdutil.Factory) *cobra.Command {
-	var opts taskEditOpts
+func newCmdTaskEdit(f cmdutil.Factory) *cobra.Command {
+	opts := taskEditOpts{
+		client:      f.Client,
+		credentials: f.Credentials,
+	}
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a task",
@@ -30,7 +37,7 @@ func newCmdTaskEdit(core cmdutil.Factory) *cobra.Command {
 				return fmt.Errorf("id is required")
 			}
 			opts.id = args[0]
-			return runTaskEdit(cmd.Context(), core, opts)
+			return runTaskEdit(cmd.Context(), opts)
 		},
 	}
 
@@ -42,7 +49,7 @@ func newCmdTaskEdit(core cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runTaskEdit(ctx context.Context, core cmdutil.Factory, opts taskEditOpts) error {
+func runTaskEdit(ctx context.Context, opts taskEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name
@@ -66,9 +73,8 @@ func runTaskEdit(ctx context.Context, core cmdutil.Factory, opts taskEditOpts) e
 		Priority:    priority,
 		CompletedAt: completedAt,
 	})
-	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", core.Credentials.AccessToken))
-
-	resp, err := core.Client.UpdateTask(ctx, req)
+	req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", opts.credentials.AccessToken))
+	resp, err := opts.client.UpdateTask(ctx, req)
 	if err != nil {
 		return fmt.Errorf("failed to call UpdateTask method: %w", err)
 	}
