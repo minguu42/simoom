@@ -28,7 +28,7 @@ func newCmdTagEdit(f cmdutil.Factory) *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.id = args[0]
-			return runTagEdit(cmd.Context(), f, opts)
+			return runTagEdit(cmd.Context(), opts)
 		},
 	}
 
@@ -37,12 +37,12 @@ func newCmdTagEdit(f cmdutil.Factory) *cobra.Command {
 	return cmd
 }
 
-func runTagEdit(ctx context.Context, core cmdutil.Factory, opts tagEditOpts) error {
+func runTagEdit(ctx context.Context, opts tagEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name
 	}
-	resp, err := core.Client.UpdateTag(ctx, connect.NewRequest(&simoompb.UpdateTagRequest{
+	resp, err := opts.client.UpdateTag(ctx, connect.NewRequest(&simoompb.UpdateTagRequest{
 		Id:   opts.id,
 		Name: name,
 	}))

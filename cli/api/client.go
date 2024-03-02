@@ -38,3 +38,10 @@ func setAccessToken(token string) connect.UnaryInterceptorFunc {
 		}
 	}
 }
+
+func (c *Client) CheckCredentials() bool {
+	if c.Credentials.AccessToken == "" && c.Credentials.RefreshToken == "" {
+		return false
+	}
+	return true
+}
