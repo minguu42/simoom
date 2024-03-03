@@ -3,18 +3,19 @@ package auth
 
 import (
 	"context"
+
+	"github.com/minguu42/simoom/api/domain/model"
 )
 
 type userKey struct{}
 
-// SetUserID は ctx にユーザIDをセットする
-func SetUserID(ctx context.Context, userID string) context.Context {
-	return context.WithValue(ctx, userKey{}, userID)
+// WithUser は ctx に model.User をセットする
+func WithUser(ctx context.Context, u model.User) context.Context {
+	return context.WithValue(ctx, userKey{}, u)
 }
 
-// GetUserID は ctx からユーザIDを取り出す
-// ctx にユーザIDがセットされていない場合は空文字列を返す
-func GetUserID(ctx context.Context) string {
-	v, _ := ctx.Value(userKey{}).(string)
-	return v
+// User は ctx から model.User を取り出す
+// ctx にユーザがセットされていない場合は空の構造体値を返す
+func User(ctx context.Context) model.User {
+	return ctx.Value(userKey{}).(model.User)
 }

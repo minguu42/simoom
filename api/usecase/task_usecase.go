@@ -56,11 +56,12 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 		}
 		return TaskOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
-	if auth.GetUserID(ctx) != p.UserID {
+	user := auth.User(ctx)
+	if !user.HasProject(p) {
 		return TaskOutput{}, ErrProjectNotFound
 	}
 
-	t := in.Create(uc.idgen, auth.GetUserID(ctx))
+	t := in.Create(uc.idgen, user.ID)
 	if err := uc.repo.CreateTask(ctx, t); err != nil {
 		return TaskOutput{}, fmt.Errorf("failed to create task: %w", err)
 	}
@@ -75,6 +76,7 @@ type ListTasksInput struct {
 }
 
 func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, error) {
+	user := auth.User(ctx)
 	if in.ProjectID != nil {
 		p, err := uc.repo.GetProjectByID(ctx, *in.ProjectID)
 		if err != nil {
@@ -83,7 +85,7 @@ func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, e
 			}
 			return TasksOutput{}, fmt.Errorf("failed to get project: %w", err)
 		}
-		if auth.GetUserID(ctx) != p.UserID {
+		if !user.HasProject(p) {
 			return TasksOutput{}, ErrProjectNotFound
 		}
 	}
@@ -95,7 +97,7 @@ func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, e
 			}
 			return TasksOutput{}, fmt.Errorf("failed to get tag: %w", err)
 		}
-		if auth.GetUserID(ctx) != t.UserID {
+		if !user.HasTag(t) {
 			return TasksOutput{}, ErrTagNotFound
 		}
 	}
@@ -133,7 +135,7 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 		}
 		return TaskOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
-	if auth.GetUserID(ctx) != t.UserID {
+	if !auth.User(ctx).HasTask(t) {
 		return TaskOutput{}, ErrTaskNotFound
 	}
 
@@ -171,7 +173,7 @@ func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
 			}
 			return fmt.Errorf("failed to get task: %w", err)
 		}
-		if auth.GetUserID(ctxWithTx) != t.UserID {
+		if !auth.User(ctx).HasTask(t) {
 			return ErrTaskNotFound
 		}
 

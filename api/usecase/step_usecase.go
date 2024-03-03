@@ -54,11 +54,12 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 		}
 		return StepOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
-	if auth.GetUserID(ctx) != t.UserID {
+	user := auth.User(ctx)
+	if !user.HasTask(t) {
 		return StepOutput{}, ErrTaskNotFound
 	}
 
-	s := in.Create(uc.idgen, auth.GetUserID(ctx))
+	s := in.Create(uc.idgen, user.ID)
 	if err := uc.repo.CreateStep(ctx, s); err != nil {
 		return StepOutput{}, fmt.Errorf("failed to create step: %w", err)
 	}
@@ -79,7 +80,7 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 		}
 		return StepOutput{}, fmt.Errorf("failed to get step: %w", err)
 	}
-	if auth.GetUserID(ctx) != s.UserID {
+	if !auth.User(ctx).HasStep(s) {
 		return StepOutput{}, ErrStepNotFound
 	}
 
@@ -108,7 +109,7 @@ func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
 			}
 			return fmt.Errorf("failed to get step: %w", err)
 		}
-		if auth.GetUserID(ctxWithTx) != s.UserID {
+		if !auth.User(ctx).HasStep(s) {
 			return ErrStepNotFound
 		}
 
