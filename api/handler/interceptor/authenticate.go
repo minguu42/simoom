@@ -9,10 +9,12 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/api/domain/auth"
+	"github.com/minguu42/simoom/api/domain/repository"
+	"github.com/minguu42/simoom/api/usecase"
 )
 
 // NewAuthenticate はユーザ認証を行うインターセプタを返す
-func NewAuthenticate(authenticator auth.Authenticator, secret string) connect.UnaryInterceptorFunc {
+func NewAuthenticate(authenticator auth.Authenticator, secret string, repo repository.Repository) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshToken"}
@@ -20,12 +22,12 @@ func NewAuthenticate(authenticator auth.Authenticator, secret string) connect.Un
 				return next(ctx, req)
 			}
 
-			authHeader := req.Header().Get("Authorization")
-			t := strings.Split(authHeader, " ")
+			t := strings.Split(req.Header().Get("Authorization"), " ")
 			if len(t) != 2 {
 				return nil, errors.New("the Authorization header should include a value in the form 'Bearer xxx'")
 			}
 			token := t[1]
+
 			authorized, err := authenticator.IsAuthorized(token, secret)
 			if err != nil {
 				return nil, fmt.Errorf("failed to authenticate user: %w", err)
@@ -33,12 +35,20 @@ func NewAuthenticate(authenticator auth.Authenticator, secret string) connect.Un
 			if !authorized {
 				return nil, errors.New("authentication failed")
 			}
+
 			userID, err := authenticator.ExtractIDFromToken(token, secret)
 			if err != nil {
 				return nil, fmt.Errorf("failed to extract id from token: %w", err)
 			}
-			ctx = auth.SetUserID(ctx, userID)
-			return next(ctx, req)
+			u, err := repo.GetUserByID(ctx, userID)
+			if err != nil {
+				if errors.Is(err, repository.ErrModelNotFound) {
+					return nil, usecase.ErrUserNotFound
+				}
+				return nil, fmt.Errorf("failed to get user: %w", err)
+			}
+
+			return next(auth.WithUser(ctx, u), req)
 		}
 	}
 }

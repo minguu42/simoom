@@ -44,7 +44,7 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
 		interceptor.NewArrangeErrorAndRecordAccess(),
-		interceptor.NewAuthenticate(authenticator, conf.Auth.AccessTokenSecret),
+		interceptor.NewAuthenticate(authenticator, conf.Auth.AccessTokenSecret, repo),
 	)
 
 	mux := http.NewServeMux()
