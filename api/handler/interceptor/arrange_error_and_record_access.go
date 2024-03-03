@@ -35,6 +35,14 @@ func connectError(err error) *connect.Error {
 		messageJapanese string
 	)
 	switch {
+	case errors.Is(err, apperr.ErrInvalidAuthorizationFormat):
+		code = connect.CodeUnauthenticated
+		message = apperr.ErrInvalidAuthorizationFormat.Error()
+		messageJapanese = "Authorizationヘッダは'Bearer xxx'の形式で認証トークンを指定してください。"
+	case errors.Is(err, apperr.ErrAuthenticationFailed):
+		code = connect.CodeUnauthenticated
+		message = apperr.ErrAuthenticationFailed.Error()
+		messageJapanese = "ユーザの認証に失敗しました。"
 	case errors.Is(err, apperr.ErrProjectNotFound):
 		code = connect.CodeNotFound
 		message = apperr.ErrProjectNotFound.Error()
@@ -51,6 +59,10 @@ func connectError(err error) *connect.Error {
 		code = connect.CodeNotFound
 		message = apperr.ErrTaskNotFound.Error()
 		messageJapanese = "指定したタスクは見つかりません。"
+	case errors.Is(err, apperr.ErrUserNotFound):
+		code = connect.CodeNotFound
+		message = apperr.ErrUserNotFound.Error()
+		messageJapanese = "指定したユーザは見つかりません。"
 	default:
 		code = connect.CodeUnknown
 		message = "some error has occurred on the server side. please wait a few minutes and try again"

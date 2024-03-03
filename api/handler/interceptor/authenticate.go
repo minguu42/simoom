@@ -24,16 +24,12 @@ func NewAuthenticate(authenticator auth.Authenticator, secret string, repo repos
 
 			t := strings.Split(req.Header().Get("Authorization"), " ")
 			if len(t) != 2 {
-				return nil, errors.New("the Authorization header should include a value in the form 'Bearer xxx'")
+				return nil, apperr.ErrInvalidAuthorizationFormat
 			}
 			token := t[1]
 
-			authorized, err := authenticator.IsAuthorized(token, secret)
-			if err != nil {
-				return nil, fmt.Errorf("failed to authenticate user: %w", err)
-			}
-			if !authorized {
-				return nil, errors.New("authentication failed")
+			if authorized, err := authenticator.IsAuthorized(token, secret); !authorized || err != nil {
+				return nil, apperr.ErrAuthenticationFailed
 			}
 
 			userID, err := authenticator.ExtractIDFromToken(token, secret)

@@ -61,13 +61,12 @@ func (a Authenticator) CreateRefreshToken(ctx context.Context, user model.User, 
 
 // IsAuthorized は requestToken が認可されているかどうかをチェックする
 func (a Authenticator) IsAuthorized(tokenString string, secret string) (bool, error) {
-	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
+	if _, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %s", token.Header["alg"])
 		}
 		return []byte(secret), nil
-	})
-	if err != nil {
+	}); err != nil {
 		return false, fmt.Errorf("failed to parse token: %w", err)
 	}
 	return true, nil
