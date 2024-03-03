@@ -44,7 +44,7 @@ func (in CreateTagInput) Create(g model.IDGenerator, userID string) model.Tag {
 }
 
 func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
-	t := in.Create(uc.idgen, auth.GetUserID(ctx))
+	t := in.Create(uc.idgen, auth.User(ctx).ID)
 	if err := uc.repo.CreateTag(ctx, t); err != nil {
 		return TagOutput{}, fmt.Errorf("failed to create tag: %w", err)
 	}
@@ -57,7 +57,7 @@ type ListTagsInput struct {
 }
 
 func (uc Tag) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
-	ts, err := uc.repo.ListTagsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
+	ts, err := uc.repo.ListTagsByUserID(ctx, auth.User(ctx).ID, in.Limit+1, in.Offset)
 	if err != nil {
 		return TagsOutput{}, fmt.Errorf("failed to list tags: %w", err)
 	}
@@ -86,7 +86,7 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 		}
 		return TagOutput{}, fmt.Errorf("failed to get tag: %w", err)
 	}
-	if auth.GetUserID(ctx) != t.UserID {
+	if !auth.User(ctx).HasTag(t) {
 		return TagOutput{}, ErrTagNotFound
 	}
 
@@ -112,7 +112,7 @@ func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 			}
 			return fmt.Errorf("failed to get tag: %w", err)
 		}
-		if auth.GetUserID(ctxWithTx) != t.UserID {
+		if !auth.User(ctxWithTx).HasTag(t) {
 			return ErrTagNotFound
 		}
 

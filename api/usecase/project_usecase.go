@@ -47,7 +47,7 @@ func (in CreateProjectInput) Create(g model.IDGenerator, userID string) model.Pr
 }
 
 func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
-	p := in.Create(uc.idgen, auth.GetUserID(ctx))
+	p := in.Create(uc.idgen, auth.User(ctx).ID)
 	if err := uc.repo.CreateProject(ctx, p); err != nil {
 		return ProjectOutput{}, fmt.Errorf("failed to create project: %w", err)
 	}
@@ -60,7 +60,7 @@ type ListProjectsInput struct {
 }
 
 func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.GetUserID(ctx), in.Limit+1, in.Offset)
+	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.User(ctx).ID, in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, fmt.Errorf("failed to list projects: %w", err)
 	}
@@ -91,7 +91,7 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 		}
 		return ProjectOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
-	if auth.GetUserID(ctx) != p.UserID {
+	if !auth.User(ctx).HasProject(p) {
 		return ProjectOutput{}, ErrProjectNotFound
 	}
 
@@ -123,7 +123,7 @@ func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) erro
 			}
 			return fmt.Errorf("failed to get project: %w", err)
 		}
-		if auth.GetUserID(ctxWithTx) != p.UserID {
+		if !auth.User(ctxWithTx).HasProject(p) {
 			return ErrProjectNotFound
 		}
 

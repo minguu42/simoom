@@ -8,6 +8,7 @@ import (
 	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/domain/auth"
+	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/infra/mysql"
 	"github.com/minguu42/simoom/api/infra/ulidgen"
 	"github.com/minguu42/simoom/api/usecase"
@@ -16,8 +17,12 @@ import (
 )
 
 var (
-	tc       *mysql.Client
-	tctx     = auth.SetUserID(context.Background(), "user_01")
+	tc   *mysql.Client
+	tctx = auth.WithUser(context.Background(), model.User{
+		ID:    "user_01",
+		Name:  "ユーザ1",
+		Email: "testuser1@example.com",
+	})
 	project  usecase.Project
 	step     usecase.Step
 	tag      usecase.Tag
