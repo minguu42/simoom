@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -50,13 +51,13 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return StepOutput{}, ErrTaskNotFound
+			return StepOutput{}, apperr.ErrTaskNotFound
 		}
 		return StepOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
 	user := auth.User(ctx)
 	if !user.HasTask(t) {
-		return StepOutput{}, ErrTaskNotFound
+		return StepOutput{}, apperr.ErrTaskNotFound
 	}
 
 	s := in.Create(uc.idgen, user.ID)
@@ -76,12 +77,12 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return StepOutput{}, ErrStepNotFound
+			return StepOutput{}, apperr.ErrStepNotFound
 		}
 		return StepOutput{}, fmt.Errorf("failed to get step: %w", err)
 	}
 	if !auth.User(ctx).HasStep(s) {
-		return StepOutput{}, ErrStepNotFound
+		return StepOutput{}, apperr.ErrStepNotFound
 	}
 
 	if in.Name != nil {
@@ -105,12 +106,12 @@ func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
 		s, err := uc.repo.GetStepByID(ctxWithTx, in.ID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return ErrStepNotFound
+				return apperr.ErrStepNotFound
 			}
 			return fmt.Errorf("failed to get step: %w", err)
 		}
 		if !auth.User(ctx).HasStep(s) {
-			return ErrStepNotFound
+			return apperr.ErrStepNotFound
 		}
 
 		if err := uc.repo.DeleteStep(ctxWithTx, in.ID); err != nil {

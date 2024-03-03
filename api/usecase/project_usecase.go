@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -87,12 +88,12 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return ProjectOutput{}, ErrProjectNotFound
+			return ProjectOutput{}, apperr.ErrProjectNotFound
 		}
 		return ProjectOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
 	if !auth.User(ctx).HasProject(p) {
-		return ProjectOutput{}, ErrProjectNotFound
+		return ProjectOutput{}, apperr.ErrProjectNotFound
 	}
 
 	if in.Name != nil {
@@ -119,12 +120,12 @@ func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) erro
 		p, err := uc.repo.GetProjectByID(ctxWithTx, in.ID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return ErrProjectNotFound
+				return apperr.ErrProjectNotFound
 			}
 			return fmt.Errorf("failed to get project: %w", err)
 		}
 		if !auth.User(ctxWithTx).HasProject(p) {
-			return ErrProjectNotFound
+			return apperr.ErrProjectNotFound
 		}
 
 		if err := uc.repo.DeleteProject(ctxWithTx, in.ID); err != nil {

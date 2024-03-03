@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -82,12 +83,12 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 	t, err := uc.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return TagOutput{}, ErrTagNotFound
+			return TagOutput{}, apperr.ErrTagNotFound
 		}
 		return TagOutput{}, fmt.Errorf("failed to get tag: %w", err)
 	}
 	if !auth.User(ctx).HasTag(t) {
-		return TagOutput{}, ErrTagNotFound
+		return TagOutput{}, apperr.ErrTagNotFound
 	}
 
 	if in.Name != nil {
@@ -108,12 +109,12 @@ func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 		t, err := uc.repo.GetTagByID(ctxWithTx, in.ID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return ErrTagNotFound
+				return apperr.ErrTagNotFound
 			}
 			return fmt.Errorf("failed to get tag: %w", err)
 		}
 		if !auth.User(ctxWithTx).HasTag(t) {
-			return ErrTagNotFound
+			return apperr.ErrTagNotFound
 		}
 
 		if err := uc.repo.DeleteTag(ctxWithTx, in.ID); err != nil {
