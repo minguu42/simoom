@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -52,13 +53,13 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return TaskOutput{}, ErrProjectNotFound
+			return TaskOutput{}, apperr.ErrProjectNotFound
 		}
 		return TaskOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
 	user := auth.User(ctx)
 	if !user.HasProject(p) {
-		return TaskOutput{}, ErrProjectNotFound
+		return TaskOutput{}, apperr.ErrProjectNotFound
 	}
 
 	t := in.Create(uc.idgen, user.ID)
@@ -81,24 +82,24 @@ func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, e
 		p, err := uc.repo.GetProjectByID(ctx, *in.ProjectID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return TasksOutput{}, ErrProjectNotFound
+				return TasksOutput{}, apperr.ErrProjectNotFound
 			}
 			return TasksOutput{}, fmt.Errorf("failed to get project: %w", err)
 		}
 		if !user.HasProject(p) {
-			return TasksOutput{}, ErrProjectNotFound
+			return TasksOutput{}, apperr.ErrProjectNotFound
 		}
 	}
 	if in.TagID != nil {
 		t, err := uc.repo.GetTagByID(ctx, *in.TagID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return TasksOutput{}, ErrTagNotFound
+				return TasksOutput{}, apperr.ErrTagNotFound
 			}
 			return TasksOutput{}, fmt.Errorf("failed to get tag: %w", err)
 		}
 		if !user.HasTag(t) {
-			return TasksOutput{}, ErrTagNotFound
+			return TasksOutput{}, apperr.ErrTagNotFound
 		}
 	}
 
@@ -131,12 +132,12 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return TaskOutput{}, ErrTaskNotFound
+			return TaskOutput{}, apperr.ErrTaskNotFound
 		}
 		return TaskOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
 	if !auth.User(ctx).HasTask(t) {
-		return TaskOutput{}, ErrTaskNotFound
+		return TaskOutput{}, apperr.ErrTaskNotFound
 	}
 
 	if in.Name != nil {
@@ -169,12 +170,12 @@ func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
 		t, err := uc.repo.GetTaskByID(ctxWithTx, in.ID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return ErrTaskNotFound
+				return apperr.ErrTaskNotFound
 			}
 			return fmt.Errorf("failed to get task: %w", err)
 		}
 		if !auth.User(ctx).HasTask(t) {
-			return ErrTaskNotFound
+			return apperr.ErrTaskNotFound
 		}
 
 		if err := uc.repo.DeleteTask(ctxWithTx, in.ID); err != nil {

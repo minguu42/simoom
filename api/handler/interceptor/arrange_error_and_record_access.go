@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/applog"
-	"github.com/minguu42/simoom/api/usecase"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 )
 
@@ -35,21 +35,21 @@ func connectError(err error) *connect.Error {
 		messageJapanese string
 	)
 	switch {
-	case errors.Is(err, usecase.ErrProjectNotFound):
+	case errors.Is(err, apperr.ErrProjectNotFound):
 		code = connect.CodeNotFound
-		message = usecase.ErrProjectNotFound.Error()
+		message = apperr.ErrProjectNotFound.Error()
 		messageJapanese = "指定したプロジェクトは見つかりません。"
-	case errors.Is(err, usecase.ErrStepNotFound):
+	case errors.Is(err, apperr.ErrStepNotFound):
 		code = connect.CodeNotFound
-		message = usecase.ErrStepNotFound.Error()
+		message = apperr.ErrStepNotFound.Error()
 		messageJapanese = "指定したステップは見つかりません。"
-	case errors.Is(err, usecase.ErrTagNotFound):
+	case errors.Is(err, apperr.ErrTagNotFound):
 		code = connect.CodeNotFound
-		message = usecase.ErrTagNotFound.Error()
+		message = apperr.ErrTagNotFound.Error()
 		messageJapanese = "指定したタグは見つかりません。"
-	case errors.Is(err, usecase.ErrTaskNotFound):
+	case errors.Is(err, apperr.ErrTaskNotFound):
 		code = connect.CodeNotFound
-		message = usecase.ErrTaskNotFound.Error()
+		message = apperr.ErrTaskNotFound.Error()
 		messageJapanese = "指定したタスクは見つかりません。"
 	default:
 		code = connect.CodeUnknown

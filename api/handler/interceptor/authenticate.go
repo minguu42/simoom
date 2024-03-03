@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/repository"
-	"github.com/minguu42/simoom/api/usecase"
 )
 
 // NewAuthenticate はユーザ認証を行うインターセプタを返す
@@ -43,7 +43,7 @@ func NewAuthenticate(authenticator auth.Authenticator, secret string, repo repos
 			u, err := repo.GetUserByID(ctx, userID)
 			if err != nil {
 				if errors.Is(err, repository.ErrModelNotFound) {
-					return nil, usecase.ErrUserNotFound
+					return nil, apperr.ErrUserNotFound
 				}
 				return nil, fmt.Errorf("failed to get user: %w", err)
 			}
