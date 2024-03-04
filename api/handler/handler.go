@@ -43,7 +43,8 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
-		interceptor.NewArrangeErrorAndRecordAccess(),
+		interceptor.NewArrangeError(),
+		interceptor.NewRecordAccess(),
 		interceptor.NewAuthenticate(authenticator, conf.Auth.AccessTokenSecret, repo),
 	)
 

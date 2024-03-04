@@ -6,23 +6,19 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/api/apperr"
-	"github.com/minguu42/simoom/api/applog"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 )
 
 const languageJapanese = "ja-JP"
 
-// NewArrangeErrorAndRecordAccess はリクエスト毎のアクセスログ/エラーログを出力するインターセプタを返す
-func NewArrangeErrorAndRecordAccess() connect.UnaryInterceptorFunc {
+// NewArrangeError はレスポンス用のエラーを生成するインターセプタを返す
+func NewArrangeError() connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			resp, err := next(ctx, req)
 			if err != nil {
-				connectErr := connectError(err)
-				applog.LogAccessError(ctx, connectErr.Code(), req.Spec().Procedure, err)
-				return resp, connectErr
+				return resp, connectError(err)
 			}
-			applog.LogAccess(ctx, req.Spec().Procedure)
 			return resp, nil
 		}
 	}
