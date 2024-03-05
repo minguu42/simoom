@@ -7,16 +7,18 @@ import (
 )
 
 type Factory struct {
-	Client api.Client
+	Profile string
+	Client  api.Client
 }
 
-// NewFactory はFactory を生成し返す
-func NewFactory() (*Factory, error) {
-	c, err := api.NewClient()
+// NewFactory は Factory を生成し返す
+func NewFactory(profile string) (*Factory, error) {
+	c, err := api.NewClient(profile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create api client: %w", err)
 	}
 	return &Factory{
-		Client: c,
+		Profile: profile,
+		Client:  c,
 	}, nil
 }

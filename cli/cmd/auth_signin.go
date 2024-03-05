@@ -13,7 +13,8 @@ import (
 )
 
 type authSigninOpts struct {
-	client api.Client
+	profile string
+	client  api.Client
 
 	email    string
 	password string
@@ -21,7 +22,8 @@ type authSigninOpts struct {
 
 func newCmdAuthSignin(f *cmdutil.Factory) *cobra.Command {
 	opts := authSigninOpts{
-		client: f.Client,
+		profile: f.Profile,
+		client:  f.Client,
 	}
 	cmd := &cobra.Command{
 		Use:   "signin",
@@ -55,7 +57,7 @@ func runAuthSignin(ctx context.Context, opts authSigninOpts) error {
 	}
 	fmt.Println("Successfully authenticated.")
 
-	if err := api.SaveCredentials(resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+	if err := api.SaveCredentials(opts.profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)
 	}
 	return nil

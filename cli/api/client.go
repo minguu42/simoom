@@ -21,14 +21,14 @@ type ServiceClient struct {
 }
 
 func NewClient(profile string) (*ServiceClient, error) {
-	credentials, err := newCredentials()
+	creds, err := newCredentials()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create credentials: %w", err)
 	}
 
 	authInterceptor := connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", credentials.AccessToken))
+			req.Header().Set("Authorization", fmt.Sprintf("Bearer %s", creds.AccessToken))
 			return next(ctx, req)
 		}
 	})
@@ -39,7 +39,7 @@ func NewClient(profile string) (*ServiceClient, error) {
 	)
 	return &ServiceClient{
 		SimoomServiceClient: c,
-		credentials:         credentials,
+		credentials:         creds,
 	}, nil
 }
 

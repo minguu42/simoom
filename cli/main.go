@@ -43,7 +43,7 @@ func mainRun() exitCode {
 	rootCmd.PersistentFlags().StringVar(&flags.profile, "profile", "default", "user profile")
 
 	var err error
-	if f, err = cmdutil.NewFactory(); err != nil {
+	if f, err = cmdutil.NewFactory(flags.profile); err != nil {
 		return exitError
 	}
 
