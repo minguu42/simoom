@@ -17,11 +17,11 @@ type Client interface {
 
 type ServiceClient struct {
 	simoompbconnect.SimoomServiceClient
-	Credentials Credentials
+	credentials credentials
 }
 
-func NewClient() (*ServiceClient, error) {
-	credentials, err := NewCredentials()
+func NewClient(profile string) (*ServiceClient, error) {
+	credentials, err := newCredentials()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create credentials: %w", err)
 	}
@@ -39,17 +39,17 @@ func NewClient() (*ServiceClient, error) {
 	)
 	return &ServiceClient{
 		SimoomServiceClient: c,
-		Credentials:         credentials,
+		credentials:         credentials,
 	}, nil
 }
 
 func (c *ServiceClient) CheckCredentials() bool {
-	if c.Credentials.AccessToken == "" && c.Credentials.RefreshToken == "" {
+	if c.credentials.AccessToken == "" && c.credentials.RefreshToken == "" {
 		return false
 	}
 	return true
 }
 
 func (c *ServiceClient) GetRefreshToken() string {
-	return c.Credentials.RefreshToken
+	return c.credentials.RefreshToken
 }

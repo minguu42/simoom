@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-type Credentials struct {
+type credentials struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
@@ -20,25 +20,25 @@ func filepathCredentials() (string, error) {
 	return filepath.Join(home, ".config", "simoom", "credentials.json"), nil
 }
 
-// NewCredentials は Credentials を作成する
-// 認証ファイルが存在する場合は認証ファイルを読み込み、 存在しない場合は空の Credentials を返す
-func NewCredentials() (Credentials, error) {
+// newCredentials は credentials を作成する
+// 認証ファイルが存在する場合は認証ファイルを読み込み、 存在しない場合は空の credentials を返す
+func newCredentials() (credentials, error) {
 	p, err := filepathCredentials()
 	if err != nil {
-		return Credentials{}, fmt.Errorf("failed to get credentials file path: %w", err)
+		return credentials{}, fmt.Errorf("failed to get credentials file path: %w", err)
 	}
 	f, err := os.Open(p)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return Credentials{}, nil
+			return credentials{}, nil
 		}
-		return Credentials{}, fmt.Errorf("failed to open file: %w", err)
+		return credentials{}, fmt.Errorf("failed to open file: %w", err)
 	}
 	defer f.Close()
 
-	var c Credentials
+	var c credentials
 	if err := json.NewDecoder(f).Decode(&c); err != nil {
-		return Credentials{}, fmt.Errorf("failed to decode credentials: %w", err)
+		return credentials{}, fmt.Errorf("failed to decode credentials: %w", err)
 	}
 	return c, nil
 }
@@ -58,7 +58,7 @@ func WriteCredentials(accessToken, refreshToken string) error {
 	}
 	defer f.Close()
 
-	if err := json.NewEncoder(f).Encode(Credentials{
+	if err := json.NewEncoder(f).Encode(credentials{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}); err != nil {
