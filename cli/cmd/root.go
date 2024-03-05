@@ -20,10 +20,10 @@ func NewCmdRoot(f cmdutil.Factory) *cobra.Command {
 			return nil
 		},
 	}
-	cmd.AddCommand(newCmdAuth(f))
-	cmd.AddCommand(newCmdProject(f))
-	cmd.AddCommand(newCmdStep(f))
-	cmd.AddCommand(newCmdTag(f))
-	cmd.AddCommand(newCmdTask(f))
+	cmd.AddCommand(NewCmdAuth(f))
+	cmd.AddCommand(NewCmdProject(f))
+	cmd.AddCommand(NewCmdStep(f))
+	cmd.AddCommand(NewCmdTag(f))
+	cmd.AddCommand(NewCmdTask(f))
 	return cmd
 }
