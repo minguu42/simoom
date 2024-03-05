@@ -21,7 +21,7 @@ type ServiceClient struct {
 }
 
 func NewClient(profile string) (*ServiceClient, error) {
-	creds, err := newCredentials()
+	creds, err := newCredentials(profile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create credentials: %w", err)
 	}
