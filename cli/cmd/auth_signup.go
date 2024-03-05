@@ -61,7 +61,7 @@ func runAuthSignup(ctx context.Context, opts authSignupOpts) error {
 	}
 	fmt.Println("Successfully authenticated.")
 
-	if err := api.WriteCredentials(resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+	if err := api.SaveCredentials(resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)
 	}
 	return nil
