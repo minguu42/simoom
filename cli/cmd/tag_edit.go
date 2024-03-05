@@ -18,7 +18,7 @@ type tagEditOpts struct {
 	name string
 }
 
-func newCmdTagEdit(f cmdutil.Factory) *cobra.Command {
+func newCmdTagEdit(f *cmdutil.Factory) *cobra.Command {
 	opts := tagEditOpts{
 		client: f.Client,
 	}

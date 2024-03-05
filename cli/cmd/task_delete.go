@@ -17,7 +17,7 @@ type taskDeleteOpts struct {
 	id string
 }
 
-func newCmdTaskDelete(f cmdutil.Factory) *cobra.Command {
+func newCmdTaskDelete(f *cmdutil.Factory) *cobra.Command {
 	opts := taskDeleteOpts{
 		client: f.Client,
 	}

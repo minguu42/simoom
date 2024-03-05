@@ -19,7 +19,7 @@ type projectCreateOpts struct {
 	color string
 }
 
-func newCmdProjectCreate(f cmdutil.Factory) *cobra.Command {
+func newCmdProjectCreate(f *cmdutil.Factory) *cobra.Command {
 	opts := projectCreateOpts{
 		client: f.Client,
 	}

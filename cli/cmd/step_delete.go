@@ -17,7 +17,7 @@ type stepDeleteOpts struct {
 	id string
 }
 
-func newCmdStepDelete(f cmdutil.Factory) *cobra.Command {
+func newCmdStepDelete(f *cmdutil.Factory) *cobra.Command {
 	opts := stepDeleteOpts{
 		client: f.Client,
 	}

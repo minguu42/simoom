@@ -18,7 +18,7 @@ type projectListOpts struct {
 	offset uint64
 }
 
-func newCmdProjectList(f cmdutil.Factory) *cobra.Command {
+func newCmdProjectList(f *cmdutil.Factory) *cobra.Command {
 	opts := projectListOpts{
 		client: f.Client,
 	}

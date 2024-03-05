@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdTag(f cmdutil.Factory) *cobra.Command {
+func NewCmdTag(f *cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "tag <command>",
 		Short: "Manage tags",

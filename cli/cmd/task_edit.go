@@ -22,7 +22,7 @@ type taskEditOpts struct {
 	completed bool
 }
 
-func newCmdTaskEdit(f cmdutil.Factory) *cobra.Command {
+func newCmdTaskEdit(f *cmdutil.Factory) *cobra.Command {
 	opts := taskEditOpts{
 		client: f.Client,
 	}

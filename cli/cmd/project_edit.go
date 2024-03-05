@@ -20,7 +20,7 @@ type projectEditOpts struct {
 	isArchived bool
 }
 
-func newCmdProjectEdit(f cmdutil.Factory) *cobra.Command {
+func newCmdProjectEdit(f *cmdutil.Factory) *cobra.Command {
 	opts := projectEditOpts{
 		client: f.Client,
 	}

@@ -19,7 +19,7 @@ type taskCreateOpts struct {
 	priority  uint32
 }
 
-func newCmdTaskCreate(f cmdutil.Factory) *cobra.Command {
+func newCmdTaskCreate(f *cmdutil.Factory) *cobra.Command {
 	opts := taskCreateOpts{
 		client: f.Client,
 	}

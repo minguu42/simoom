@@ -17,7 +17,7 @@ type tagDeleteOpts struct {
 	id string
 }
 
-func newCmdTagDelete(f cmdutil.Factory) *cobra.Command {
+func newCmdTagDelete(f *cmdutil.Factory) *cobra.Command {
 	opts := tagDeleteOpts{
 		client: f.Client,
 	}

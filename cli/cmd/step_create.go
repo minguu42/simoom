@@ -19,7 +19,7 @@ type stepCreateOpts struct {
 	name   string
 }
 
-func newCmdStepCreate(f cmdutil.Factory) *cobra.Command {
+func newCmdStepCreate(f *cmdutil.Factory) *cobra.Command {
 	opts := stepCreateOpts{
 		client: f.Client,
 	}

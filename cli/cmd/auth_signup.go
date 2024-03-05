@@ -20,7 +20,7 @@ type authSignupOpts struct {
 	password string
 }
 
-func newCmdAuthSignup(f cmdutil.Factory) *cobra.Command {
+func newCmdAuthSignup(f *cmdutil.Factory) *cobra.Command {
 	opts := authSignupOpts{
 		client: f.Client,
 	}

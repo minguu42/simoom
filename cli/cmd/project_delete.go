@@ -17,7 +17,7 @@ type projectDeleteOpts struct {
 	id string
 }
 
-func newCmdProjectDelete(f cmdutil.Factory) *cobra.Command {
+func newCmdProjectDelete(f *cmdutil.Factory) *cobra.Command {
 	opts := projectDeleteOpts{
 		client: f.Client,
 	}

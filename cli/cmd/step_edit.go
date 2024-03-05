@@ -20,7 +20,7 @@ type stepEditOpts struct {
 	completed bool
 }
 
-func newCmdStepEdit(f cmdutil.Factory) *cobra.Command {
+func newCmdStepEdit(f *cmdutil.Factory) *cobra.Command {
 	opts := stepEditOpts{
 		client: f.Client,
 	}

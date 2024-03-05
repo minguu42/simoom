@@ -18,7 +18,7 @@ type tagListOpts struct {
 	offset uint64
 }
 
-func newCmdTagList(f cmdutil.Factory) *cobra.Command {
+func newCmdTagList(f *cmdutil.Factory) *cobra.Command {
 	opts := tagListOpts{
 		client: f.Client,
 	}

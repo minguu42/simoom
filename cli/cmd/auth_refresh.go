@@ -18,7 +18,7 @@ type authRefreshOpts struct {
 	refreshToken string
 }
 
-func newCmdAuthRefresh(f cmdutil.Factory) *cobra.Command {
+func newCmdAuthRefresh(f *cmdutil.Factory) *cobra.Command {
 	opts := authRefreshOpts{
 		client: f.Client,
 	}
