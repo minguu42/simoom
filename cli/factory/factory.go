@@ -1,3 +1,4 @@
+// Package factory はファクトリを定義する
 package factory
 
 import (
