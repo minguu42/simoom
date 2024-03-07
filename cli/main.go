@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 
-	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmd"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
+	"github.com/spf13/cobra"
 )
 
 type exitCode int
@@ -22,17 +24,39 @@ func main() {
 	os.Exit(int(code))
 }
 
-func mainRun() exitCode {
-	c, err := api.NewClient()
-	if err != nil {
-		fmt.Printf("failed to create api client: %s\n", err)
-		return exitError
-	}
-	f := cmdutil.Factory{
-		Client: c,
-	}
+type globalFlags struct {
+	profile string
+}
 
-	rootCmd := cmd.NewCmdRoot(f)
+func mainRun() exitCode {
+	var flags globalFlags
+	rootCmd := &cobra.Command{
+		Use:   "simoom <command> <subcommand> [flags]",
+		Short: "Simoom CLI",
+		Long:  `Work seamlessly with Simoom from the command line.`,
+		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
+			f, err := factory.New(flags.profile)
+			if err != nil {
+				return fmt.Errorf("failed to create factory: %w", err)
+			}
+			if cmdutil.IsAuthCheckEnabled(cmd) && !f.Client.CheckCredentials() {
+				return errors.New("authentication failed")
+			}
+
+			cmd.SetContext(factory.WithFactory(cmd.Context(), f))
+			return nil
+		},
+	}
+	rootCmd.PersistentFlags().StringVar(&flags.profile, "profile", "default", "user profile")
+
+	rootCmd.AddCommand(
+		cmd.NewCmdAuth(),
+		cmd.NewCmdProject(),
+		cmd.NewCmdStep(),
+		cmd.NewCmdTag(),
+		cmd.NewCmdTask(),
+	)
+
 	if err := rootCmd.ExecuteContext(context.Background()); err != nil {
 		return exitError
 	}

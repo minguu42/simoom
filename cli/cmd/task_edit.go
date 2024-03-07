@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -22,15 +23,16 @@ type taskEditOpts struct {
 	completed bool
 }
 
-func newCmdTaskEdit(f cmdutil.Factory) *cobra.Command {
-	opts := taskEditOpts{
-		client: f.Client,
-	}
+func newCmdTaskEdit() *cobra.Command {
+	var opts taskEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a task",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			if args[0] == "" {
 				return fmt.Errorf("id is required")
 			}

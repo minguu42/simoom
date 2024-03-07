@@ -8,6 +8,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
@@ -19,15 +20,16 @@ type stepCreateOpts struct {
 	name   string
 }
 
-func newCmdStepCreate(f cmdutil.Factory) *cobra.Command {
-	opts := stepCreateOpts{
-		client: f.Client,
-	}
+func newCmdStepCreate() *cobra.Command {
+	var opts stepCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a step",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			if opts.taskID == "" {
 				return errors.New("task-id is required")
 			}

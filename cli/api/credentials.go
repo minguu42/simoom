@@ -2,12 +2,16 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 )
 
-type Credentials struct {
+type credentials struct {
+	Profile      string `json:"profile"`
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
@@ -20,35 +24,67 @@ func filepathCredentials() (string, error) {
 	return filepath.Join(home, ".config", "simoom", "credentials.json"), nil
 }
 
-// NewCredentials は Credentials を作成する
-// 認証ファイルが存在する場合は認証ファイルを読み込み、 存在しない場合は空の Credentials を返す
-func NewCredentials() (Credentials, error) {
-	p, err := filepathCredentials()
-	if err != nil {
-		return Credentials{}, fmt.Errorf("failed to get credentials file path: %w", err)
-	}
-	f, err := os.Open(p)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return Credentials{}, nil
+// newCredentials は credentials を作成する
+func newCredentials(profile string) (credentials, error) {
+	var cs []credentials
+	if err := readCredentialsFile(&cs); err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			return credentials{Profile: profile}, nil
 		}
-		return Credentials{}, fmt.Errorf("failed to open file: %w", err)
+		return credentials{}, fmt.Errorf("failed to read credentials file: %w", err)
 	}
-	defer f.Close()
 
-	var c Credentials
-	if err := json.NewDecoder(f).Decode(&c); err != nil {
-		return Credentials{}, fmt.Errorf("failed to decode credentials: %w", err)
+	if i := slices.IndexFunc(cs, func(c credentials) bool {
+		return c.Profile == profile
+	}); i != -1 {
+		return cs[i], nil
 	}
-	return c, nil
+	return credentials{Profile: profile}, nil
 }
 
-// WriteCredentials は認証ファイルに認証情報を書き込む
-func WriteCredentials(accessToken, refreshToken string) error {
+// readCredentialsFile は認証ファイルを読み込む
+func readCredentialsFile(cs *[]credentials) error {
 	p, err := filepathCredentials()
 	if err != nil {
 		return fmt.Errorf("failed to get credentials file path: %w", err)
 	}
+
+	f, err := os.Open(p)
+	if err != nil {
+		return fmt.Errorf("failed to open file: %w", err)
+	}
+	defer f.Close()
+
+	if err := json.NewDecoder(f).Decode(cs); err != nil {
+		return fmt.Errorf("failed to decode credentials: %w", err)
+	}
+	return nil
+}
+
+// SaveCredentials は認証情報を認証ファイルに保存する
+func SaveCredentials(profile, accessToken, refreshToken string) error {
+	p, err := filepathCredentials()
+	if err != nil {
+		return fmt.Errorf("failed to get credentials file path: %w", err)
+	}
+
+	var cs []credentials
+	if err := readCredentialsFile(&cs); err != nil && !errors.Is(err, fs.ErrNotExist) {
+		return fmt.Errorf("failed to read credentials file: %w", err)
+	}
+	c := credentials{
+		Profile:      profile,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
+	if i := slices.IndexFunc(cs, func(c credentials) bool {
+		return c.Profile == profile
+	}); i != -1 {
+		cs[i] = c
+	} else {
+		cs = append(cs, c)
+	}
+
 	if err := os.MkdirAll(filepath.Dir(p), 0755); err != nil {
 		return fmt.Errorf("failed to make directories: %w", err)
 	}
@@ -58,10 +94,9 @@ func WriteCredentials(accessToken, refreshToken string) error {
 	}
 	defer f.Close()
 
-	if err := json.NewEncoder(f).Encode(Credentials{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-	}); err != nil {
+	encoder := json.NewEncoder(f)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(cs); err != nil {
 		return fmt.Errorf("failed to encode credentials: %w", err)
 	}
 

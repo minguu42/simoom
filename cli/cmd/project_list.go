@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
@@ -18,16 +19,17 @@ type projectListOpts struct {
 	offset uint64
 }
 
-func newCmdProjectList(f cmdutil.Factory) *cobra.Command {
-	opts := projectListOpts{
-		client: f.Client,
-	}
+func newCmdProjectList() *cobra.Command {
+	var opts projectListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List the projects",
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			return runProjectList(cmd.Context(), opts)
 		},
 	}

@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
@@ -19,15 +20,16 @@ type taskCreateOpts struct {
 	priority  uint32
 }
 
-func newCmdTaskCreate(f cmdutil.Factory) *cobra.Command {
-	opts := taskCreateOpts{
-		client: f.Client,
-	}
+func newCmdTaskCreate() *cobra.Command {
+	var opts taskCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a task",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			if opts.projectID == "" {
 				return fmt.Errorf("project-id is required")
 			}

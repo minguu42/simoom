@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -20,15 +21,16 @@ type stepEditOpts struct {
 	completed bool
 }
 
-func newCmdStepEdit(f cmdutil.Factory) *cobra.Command {
-	opts := stepEditOpts{
-		client: f.Client,
-	}
+func newCmdStepEdit() *cobra.Command {
+	var opts stepEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a step",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			opts.id = args[0]
 			return runStepEdit(cmd.Context(), opts)
 		},

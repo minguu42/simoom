@@ -8,6 +8,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
@@ -19,15 +20,16 @@ type projectCreateOpts struct {
 	color string
 }
 
-func newCmdProjectCreate(f cmdutil.Factory) *cobra.Command {
-	opts := projectCreateOpts{
-		client: f.Client,
-	}
+func newCmdProjectCreate() *cobra.Command {
+	var opts projectCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a project",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			if opts.name == "" {
 				return errors.New("name is required")
 			}
