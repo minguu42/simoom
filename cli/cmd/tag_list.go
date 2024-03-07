@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
@@ -18,16 +19,17 @@ type tagListOpts struct {
 	offset uint64
 }
 
-func newCmdTagList(f *cmdutil.Factory) *cobra.Command {
-	opts := tagListOpts{
-		client: f.Client,
-	}
+func newCmdTagList() *cobra.Command {
+	var opts tagListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List the tags",
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			return runTagList(cmd.Context(), opts)
 		},
 	}

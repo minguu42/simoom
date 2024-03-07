@@ -8,6 +8,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
@@ -20,16 +21,17 @@ type authSigninOpts struct {
 	password string
 }
 
-func newCmdAuthSignin(f *cmdutil.Factory) *cobra.Command {
-	opts := authSigninOpts{
-		profile: f.Profile,
-		client:  f.Client,
-	}
+func newCmdAuthSignin() *cobra.Command {
+	var opts authSigninOpts
 	cmd := &cobra.Command{
 		Use:   "signin",
 		Short: "Sign in to Simoom",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			f := factory.Value(cmd.Context())
+			opts.profile = f.Profile
+			opts.client = f.Client
+
 			if opts.email == "" {
 				return errors.New("email is required")
 			}

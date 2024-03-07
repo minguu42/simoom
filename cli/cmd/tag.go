@@ -1,18 +1,17 @@
 package cmd
 
-import (
-	"github.com/minguu42/simoom/cli/cmdutil"
-	"github.com/spf13/cobra"
-)
+import "github.com/spf13/cobra"
 
-func NewCmdTag(f *cmdutil.Factory) *cobra.Command {
+func NewCmdTag() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "tag <command>",
 		Short: "Manage tags",
 	}
-	cmd.AddCommand(newCmdTagCreate(f))
-	cmd.AddCommand(newCmdTagDelete(f))
-	cmd.AddCommand(newCmdTagEdit(f))
-	cmd.AddCommand(newCmdTagList(f))
+	cmd.AddCommand(
+		newCmdTagCreate(),
+		newCmdTagDelete(),
+		newCmdTagEdit(),
+		newCmdTagList(),
+	)
 	return cmd
 }

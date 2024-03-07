@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
 	"github.com/minguu42/simoom/cli/cmdutil"
+	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
@@ -17,15 +18,16 @@ type tagCreateOpts struct {
 	name string
 }
 
-func newCmdTagCreate(f *cmdutil.Factory) *cobra.Command {
-	opts := tagCreateOpts{
-		client: f.Client,
-	}
+func newCmdTagCreate() *cobra.Command {
+	var opts tagCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a tag",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			f := factory.Value(cmd.Context())
+			opts.client = f.Client
+
 			if opts.name == "" {
 				return fmt.Errorf("name is required")
 			}
