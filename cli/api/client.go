@@ -43,13 +43,16 @@ func NewClient(profile string) (*ServiceClient, error) {
 	}, nil
 }
 
+// CheckCredentials は認証情報を確認する
+// 認証情報が正しい場合は true を返し、正しくない場合は false を返す
 func (c *ServiceClient) CheckCredentials() bool {
-	if c.credentials.AccessToken == "" && c.credentials.RefreshToken == "" {
+	if c.credentials.Profile == "" || (c.credentials.AccessToken == "" && c.credentials.RefreshToken == "") {
 		return false
 	}
 	return true
 }
 
+// GetRefreshToken はリフレッシュトークンを返す
 func (c *ServiceClient) GetRefreshToken() string {
 	return c.credentials.RefreshToken
 }

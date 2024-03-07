@@ -25,12 +25,11 @@ func filepathCredentials() (string, error) {
 }
 
 // newCredentials は credentials を作成する
-// 認証ファイルが存在する場合は認証ファイルから読み込み、 存在しない場合は空の credentials を返す
 func newCredentials(profile string) (credentials, error) {
 	var cs []credentials
 	if err := readCredentialsFile(&cs); err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
-			return credentials{}, nil
+			return credentials{Profile: profile}, nil
 		}
 		return credentials{}, fmt.Errorf("failed to read credentials file: %w", err)
 	}
@@ -40,7 +39,7 @@ func newCredentials(profile string) (credentials, error) {
 	}); i != -1 {
 		return cs[i], nil
 	}
-	return credentials{}, errors.New("no corresponding credentials for profile")
+	return credentials{Profile: profile}, nil
 }
 
 // readCredentialsFile は認証ファイルを読み込む
