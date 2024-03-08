@@ -57,6 +57,7 @@ func TestClient_CreateTask(t *testing.T) {
 func TestClient_ListTasksByUserID(t *testing.T) {
 	type args struct {
 		ctx       context.Context
+		userID    string
 		limit     uint
 		offset    uint
 		projectID *string
@@ -72,6 +73,7 @@ func TestClient_ListTasksByUserID(t *testing.T) {
 			name: "タグIDからタスク一覧を取得する",
 			args: args{
 				ctx:    context.Background(),
+				userID: "user_01",
 				limit:  1,
 				offset: 0,
 			},
@@ -120,6 +122,7 @@ func TestClient_ListTasksByUserID(t *testing.T) {
 			name: "offsetが大きいので、空のスライスを取得する",
 			args: args{
 				ctx:    context.Background(),
+				userID: "user_01",
 				limit:  10,
 				offset: 1000,
 			},
@@ -128,7 +131,7 @@ func TestClient_ListTasksByUserID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got, err := tc.ListTasksByUserID(tt.args.ctx, tt.args.limit, tt.args.offset, tt.args.projectID, tt.args.tagID); assert.NoError(t, err) {
+			if got, err := tc.ListTasksByUserID(tt.args.ctx, tt.args.userID, tt.args.limit, tt.args.offset, tt.args.projectID, tt.args.tagID); assert.NoError(t, err) {
 				assert.Equal(t, tt.want, got)
 			}
 		})
