@@ -21,7 +21,7 @@ type Repository interface {
 	DeleteProject(ctx context.Context, id string) error
 
 	CreateTask(ctx context.Context, t model.Task) error
-	ListTasks(ctx context.Context, limit, offset uint, projectID, tagID *string) ([]model.Task, error)
+	ListTasksByUserID(ctx context.Context, userID string, limit, offset uint, projectID, tagID *string) ([]model.Task, error)
 	GetTaskByID(ctx context.Context, id string) (model.Task, error)
 	UpdateTask(ctx context.Context, t model.Task) error
 	DeleteTask(ctx context.Context, id string) error
