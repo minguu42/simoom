@@ -449,52 +449,6 @@ func (q *Queries) ListTagsByUserID(ctx context.Context, arg ListTagsByUserIDPara
 	return items, nil
 }
 
-const listTasks = `-- name: ListTasks :many
-SELECT id, user_id, project_id, name, content, priority, due_on, completed_at, created_at, updated_at
-FROM tasks
-ORDER BY created_at
-LIMIT ? OFFSET ?
-`
-
-type ListTasksParams struct {
-	Limit  int32
-	Offset int32
-}
-
-func (q *Queries) ListTasks(ctx context.Context, arg ListTasksParams) ([]Task, error) {
-	rows, err := q.db.QueryContext(ctx, listTasks, arg.Limit, arg.Offset)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Task
-	for rows.Next() {
-		var i Task
-		if err := rows.Scan(
-			&i.ID,
-			&i.UserID,
-			&i.ProjectID,
-			&i.Name,
-			&i.Content,
-			&i.Priority,
-			&i.DueOn,
-			&i.CompletedAt,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const listTasksByProjectID = `-- name: ListTasksByProjectID :many
 SELECT id, user_id, project_id, name, content, priority, due_on, completed_at, created_at, updated_at
 FROM tasks
@@ -615,6 +569,54 @@ type ListTasksByTagIDParams struct {
 
 func (q *Queries) ListTasksByTagID(ctx context.Context, arg ListTasksByTagIDParams) ([]Task, error) {
 	rows, err := q.db.QueryContext(ctx, listTasksByTagID, arg.TagID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Task
+	for rows.Next() {
+		var i Task
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.ProjectID,
+			&i.Name,
+			&i.Content,
+			&i.Priority,
+			&i.DueOn,
+			&i.CompletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listTasksByUserID = `-- name: ListTasksByUserID :many
+SELECT id, user_id, project_id, name, content, priority, due_on, completed_at, created_at, updated_at
+FROM tasks
+WHERE user_id = ?
+ORDER BY created_at
+LIMIT ? OFFSET ?
+`
+
+type ListTasksByUserIDParams struct {
+	UserID string
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) ListTasksByUserID(ctx context.Context, arg ListTasksByUserIDParams) ([]Task, error) {
+	rows, err := q.db.QueryContext(ctx, listTasksByUserID, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

@@ -54,7 +54,7 @@ func TestClient_CreateTask(t *testing.T) {
 	}
 }
 
-func TestClient_ListTasks(t *testing.T) {
+func TestClient_ListTasksByUserID(t *testing.T) {
 	type args struct {
 		ctx       context.Context
 		limit     uint
@@ -128,7 +128,7 @@ func TestClient_ListTasks(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got, err := tc.ListTasks(tt.args.ctx, tt.args.limit, tt.args.offset, tt.args.projectID, tt.args.tagID); assert.NoError(t, err) {
+			if got, err := tc.ListTasksByUserID(tt.args.ctx, tt.args.limit, tt.args.offset, tt.args.projectID, tt.args.tagID); assert.NoError(t, err) {
 				assert.Equal(t, tt.want, got)
 			}
 		})

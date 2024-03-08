@@ -39,7 +39,7 @@ func (c *Client) CreateTask(ctx context.Context, t model.Task) error {
 	return nil
 }
 
-func (c *Client) ListTasks(ctx context.Context, limit, offset uint, projectID, tagID *string) ([]model.Task, error) {
+func (c *Client) ListTasksByUserID(ctx context.Context, userID string, limit, offset uint, projectID, tagID *string) ([]model.Task, error) {
 	var ts []sqlc.Task
 	var err error
 	switch {
@@ -63,7 +63,8 @@ func (c *Client) ListTasks(ctx context.Context, limit, offset uint, projectID, t
 			Offset: int32(offset),
 		})
 	default:
-		ts, err = c.queries(ctx).ListTasks(ctx, sqlc.ListTasksParams{
+		ts, err = c.queries(ctx).ListTasksByUserID(ctx, sqlc.ListTasksByUserIDParams{
+			UserID: userID,
 			Limit:  int32(limit),
 			Offset: int32(offset),
 		})
