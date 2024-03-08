@@ -17,4 +17,3 @@ simoompb/
 sqlc.yaml
 staticcheck.conf
 tbls.yml
-testdata/
