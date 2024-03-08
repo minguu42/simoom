@@ -54,94 +54,14 @@ func TestClient_CreateTask(t *testing.T) {
 	}
 }
 
-func TestClient_ListTasksByProjectID(t *testing.T) {
+func TestClient_ListTasksByUserID(t *testing.T) {
 	type args struct {
 		ctx       context.Context
-		projectID string
+		userID    string
 		limit     uint
 		offset    uint
-	}
-	dueOn := time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)
-	tests := []struct {
-		name string
-		args args
-		want []model.Task
-	}{
-		{
-			name: "プロジェクトIDからタスク一覧を取得する",
-			args: args{
-				ctx:       context.Background(),
-				projectID: "project_01",
-				limit:     1,
-				offset:    0,
-			},
-			want: []model.Task{
-				{
-					ID: "task_01",
-					Steps: []model.Step{
-						{
-							ID:          "step_01",
-							UserID:      "user_01",
-							TaskID:      "task_01",
-							Name:        "ステップ1",
-							CompletedAt: nil,
-						},
-						{
-							ID:          "step_02",
-							UserID:      "user_01",
-							TaskID:      "task_01",
-							Name:        "ステップ2",
-							CompletedAt: nil,
-						},
-					},
-					Tags: []model.Tag{
-						{
-							ID:     "tag_01",
-							UserID: "user_01",
-							Name:   "タグ1",
-						},
-						{
-							ID:     "tag_02",
-							UserID: "user_01",
-							Name:   "タグ2",
-						},
-					},
-					ProjectID:   "project_01",
-					UserID:      "user_01",
-					Name:        "タスク1",
-					Content:     "コンテンツ1",
-					Priority:    3,
-					DueOn:       &dueOn,
-					CompletedAt: nil,
-				},
-			},
-		},
-		{
-			name: "offsetが大きいので、空のスライスを取得する",
-			args: args{
-				ctx:       context.Background(),
-				projectID: "project_01",
-				limit:     10,
-				offset:    1000,
-			},
-			want: []model.Task{},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got, err := tc.ListTasksByProjectID(tt.args.ctx, tt.args.projectID, tt.args.limit, tt.args.offset); assert.NoError(t, err) {
-				assert.Equal(t, tt.want, got)
-			}
-		})
-	}
-}
-
-func TestClient_ListTasksByTagID(t *testing.T) {
-	type args struct {
-		ctx    context.Context
-		tagID  string
-		limit  uint
-		offset uint
+		projectID *string
+		tagID     *string
 	}
 	dueOn := time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)
 	tests := []struct {
@@ -153,7 +73,7 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 			name: "タグIDからタスク一覧を取得する",
 			args: args{
 				ctx:    context.Background(),
-				tagID:  "tag_01",
+				userID: "user_01",
 				limit:  1,
 				offset: 0,
 			},
@@ -202,7 +122,7 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 			name: "offsetが大きいので、空のスライスを取得する",
 			args: args{
 				ctx:    context.Background(),
-				tagID:  "tag_01",
+				userID: "user_01",
 				limit:  10,
 				offset: 1000,
 			},
@@ -211,7 +131,7 @@ func TestClient_ListTasksByTagID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got, err := tc.ListTasksByTagID(tt.args.ctx, tt.args.tagID, tt.args.limit, tt.args.offset); assert.NoError(t, err) {
+			if got, err := tc.ListTasksByUserID(tt.args.ctx, tt.args.userID, tt.args.limit, tt.args.offset, tt.args.projectID, tt.args.tagID); assert.NoError(t, err) {
 				assert.Equal(t, tt.want, got)
 			}
 		})

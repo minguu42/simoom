@@ -103,7 +103,7 @@ func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, e
 		}
 	}
 
-	ts, err := uc.repo.ListTasks(ctx, in.Limit+1, in.Offset, in.ProjectID, in.TagID)
+	ts, err := uc.repo.ListTasksByUserID(ctx, user.ID, in.Limit+1, in.Offset, in.ProjectID, in.TagID)
 	if err != nil {
 		return TasksOutput{}, fmt.Errorf("failed to list tasks: %w", err)
 	}

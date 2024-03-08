@@ -88,9 +88,10 @@ WHERE id = ?;
 INSERT INTO tasks (id, user_id, project_id, name, content, priority, due_on, completed_at)
 VALUES (?, ?, ?, ?, '', ?, NULL, NULL);
 
--- name: ListTasks :many
+-- name: ListTasksByUserID :many
 SELECT *
 FROM tasks
+WHERE user_id = ?
 ORDER BY created_at
 LIMIT ? OFFSET ?;
 
