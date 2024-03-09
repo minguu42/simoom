@@ -18,6 +18,7 @@ migrate-apply: ## DBのスキーマの変更を適用する
 	@mysqldef -u root -h 127.0.0.1 --enable-drop-table --file=./infra/mysql/schema.sql simoomdb
 
 gen: ## コードを生成する
+	@go generate ./...
 	@buf generate
 	@rm -rf ./api/infra/mysql/sqlc && sqlc generate
 	@$(MAKE) fmt
