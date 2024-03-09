@@ -1,5 +1,7 @@
 package auth
 
+//go:generate moq -fmt goimports -out ./authenticator_mock.go -rm . Authenticator
+
 import (
 	"context"
 
