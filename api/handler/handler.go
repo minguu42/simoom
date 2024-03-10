@@ -9,7 +9,6 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/bufbuild/protovalidate-go"
-	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/factory"
 	"github.com/minguu42/simoom/api/handler/interceptor"
 	"github.com/minguu42/simoom/api/usecase"
@@ -33,7 +32,7 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(f *factory.Factory, conf config.Config) (http.Handler, error) {
+func New(f *factory.Factory) (http.Handler, error) {
 	validator, err := protovalidate.New()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create validator: %w", err)
@@ -43,13 +42,13 @@ func New(f *factory.Factory, conf config.Config) (http.Handler, error) {
 		interceptor.NewSetContext(),
 		interceptor.NewArrangeError(),
 		interceptor.NewRecordAccess(),
-		interceptor.NewAuthenticate(f.Authn, conf.Auth.AccessTokenSecret, f.Repo),
+		interceptor.NewAuthenticate(f.Authn, f.Repo),
 	)
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
 		validator:  validator,
-		auth:       usecase.NewAuth(f.Authn, f.Repo, conf.Auth, f.IDGen),
+		auth:       usecase.NewAuth(f.Authn, f.Repo, f.IDGen),
 		monitoring: usecase.Monitoring{},
 		project:    usecase.NewProject(f.Repo, f.IDGen),
 		step:       usecase.NewStep(f.Repo, f.IDGen),

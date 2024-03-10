@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -15,15 +14,13 @@ import (
 type Auth struct {
 	authenticator auth.Authenticator
 	repo          repository.Repository
-	conf          config.Auth
 	idgen         model.IDGenerator
 }
 
-func NewAuth(authenticator auth.Authenticator, repo repository.Repository, conf config.Auth, idgen model.IDGenerator) Auth {
+func NewAuth(authenticator auth.Authenticator, repo repository.Repository, idgen model.IDGenerator) Auth {
 	return Auth{
 		authenticator: authenticator,
 		repo:          repo,
-		conf:          conf,
 		idgen:         idgen,
 	}
 }
@@ -57,11 +54,11 @@ func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error)
 	if err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to create user: %w", err)
 	}
-	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user)
 	if err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
-	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user)
 	if err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
@@ -94,11 +91,11 @@ func (uc Auth) SignIn(ctx context.Context, in SignInInput) (SignInOutput, error)
 		return SignInOutput{}, errors.New("password is not valid")
 	}
 
-	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user)
 	if err != nil {
 		return SignInOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
-	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user)
 	if err != nil {
 		return SignInOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}
@@ -118,7 +115,7 @@ type RefreshTokenOutput struct {
 }
 
 func (uc Auth) RefreshToken(ctx context.Context, in RefreshTokenInput) (RefreshTokenOutput, error) {
-	id, err := uc.authenticator.ExtractIDFromToken(in.RefreshToken, uc.conf.RefreshTokenSecret)
+	id, err := uc.authenticator.ExtractIDFromRefreshToken(in.RefreshToken)
 	if err != nil {
 		return RefreshTokenOutput{}, fmt.Errorf("failed to extract id from token: %w", err)
 	}
@@ -127,11 +124,11 @@ func (uc Auth) RefreshToken(ctx context.Context, in RefreshTokenInput) (RefreshT
 		return RefreshTokenOutput{}, fmt.Errorf("failed to get user: %w", err)
 	}
 
-	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user, uc.conf.AccessTokenSecret, uc.conf.AccessTokenExpiryHour)
+	accessToken, err := uc.authenticator.CreateAccessToken(ctx, user)
 	if err != nil {
 		return RefreshTokenOutput{}, fmt.Errorf("failed to create access token: %w", err)
 	}
-	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user, uc.conf.RefreshTokenSecret, uc.conf.RefreshTokenExpiryHour)
+	refreshToken, err := uc.authenticator.CreateRefreshToken(ctx, user)
 	if err != nil {
 		return RefreshTokenOutput{}, fmt.Errorf("failed to create refresh token: %w", err)
 	}

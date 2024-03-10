@@ -41,7 +41,7 @@ func mainRun(ctx context.Context) error {
 	}
 	defer f.Close()
 
-	h, err := handler.New(f, conf)
+	h, err := handler.New(f)
 	if err != nil {
 		return fmt.Errorf("failed to create handler: %w", err)
 	}

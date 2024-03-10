@@ -22,7 +22,12 @@ func New(conf config.Config) (*Factory, error) {
 		return nil, fmt.Errorf("failed to create mysql client: %w", err)
 	}
 	return &Factory{
-		Authn: jwtauth.Authenticator{},
+		Authn: jwtauth.Authenticator{
+			AccessTokenExpiryHour:  conf.Auth.AccessTokenExpiryHour,
+			RefreshTokenExpiryHour: conf.Auth.RefreshTokenExpiryHour,
+			AccessTokenSecret:      conf.Auth.AccessTokenSecret,
+			RefreshTokenSecret:     conf.Auth.RefreshTokenSecret,
+		},
 		IDGen: ulidgen.Generator{},
 		Repo:  c,
 	}, nil
