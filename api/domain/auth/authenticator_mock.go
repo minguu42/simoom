@@ -32,9 +32,6 @@ var _ Authenticator = &AuthenticatorMock{}
 //			ExtractIDFromTokenFunc: func(tokenString string) (string, error) {
 //				panic("mock out the ExtractIDFromToken method")
 //			},
-//			IsAuthorizedFunc: func(tokenString string) (bool, error) {
-//				panic("mock out the IsAuthorized method")
-//			},
 //		}
 //
 //		// use mockedAuthenticator in code that requires Authenticator
@@ -53,9 +50,6 @@ type AuthenticatorMock struct {
 
 	// ExtractIDFromTokenFunc mocks the ExtractIDFromToken method.
 	ExtractIDFromTokenFunc func(tokenString string) (string, error)
-
-	// IsAuthorizedFunc mocks the IsAuthorized method.
-	IsAuthorizedFunc func(tokenString string) (bool, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -83,17 +77,11 @@ type AuthenticatorMock struct {
 			// TokenString is the tokenString argument value.
 			TokenString string
 		}
-		// IsAuthorized holds details about calls to the IsAuthorized method.
-		IsAuthorized []struct {
-			// TokenString is the tokenString argument value.
-			TokenString string
-		}
 	}
 	lockCreateAccessToken         sync.RWMutex
 	lockCreateRefreshToken        sync.RWMutex
 	lockExtractIDFromRefreshToken sync.RWMutex
 	lockExtractIDFromToken        sync.RWMutex
-	lockIsAuthorized              sync.RWMutex
 }
 
 // CreateAccessToken calls CreateAccessTokenFunc.
@@ -229,37 +217,5 @@ func (mock *AuthenticatorMock) ExtractIDFromTokenCalls() []struct {
 	mock.lockExtractIDFromToken.RLock()
 	calls = mock.calls.ExtractIDFromToken
 	mock.lockExtractIDFromToken.RUnlock()
-	return calls
-}
-
-// IsAuthorized calls IsAuthorizedFunc.
-func (mock *AuthenticatorMock) IsAuthorized(tokenString string) (bool, error) {
-	if mock.IsAuthorizedFunc == nil {
-		panic("AuthenticatorMock.IsAuthorizedFunc: method is nil but Authenticator.IsAuthorized was just called")
-	}
-	callInfo := struct {
-		TokenString string
-	}{
-		TokenString: tokenString,
-	}
-	mock.lockIsAuthorized.Lock()
-	mock.calls.IsAuthorized = append(mock.calls.IsAuthorized, callInfo)
-	mock.lockIsAuthorized.Unlock()
-	return mock.IsAuthorizedFunc(tokenString)
-}
-
-// IsAuthorizedCalls gets all the calls that were made to IsAuthorized.
-// Check the length with:
-//
-//	len(mockedAuthenticator.IsAuthorizedCalls())
-func (mock *AuthenticatorMock) IsAuthorizedCalls() []struct {
-	TokenString string
-} {
-	var calls []struct {
-		TokenString string
-	}
-	mock.lockIsAuthorized.RLock()
-	calls = mock.calls.IsAuthorized
-	mock.lockIsAuthorized.RUnlock()
 	return calls
 }

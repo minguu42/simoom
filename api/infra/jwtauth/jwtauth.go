@@ -64,19 +64,6 @@ func (a Authenticator) CreateRefreshToken(ctx context.Context, user model.User) 
 	return rt, nil
 }
 
-// IsAuthorized は requestToken が認可されているかどうかをチェックする
-func (a Authenticator) IsAuthorized(tokenString string) (bool, error) {
-	if _, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %s", token.Header["alg"])
-		}
-		return []byte(a.AccessTokenSecret), nil
-	}); err != nil {
-		return false, fmt.Errorf("failed to parse token: %w", err)
-	}
-	return true, nil
-}
-
 // ExtractIDFromToken はトークン作成時にエンコードされたIDをデコードして取り出す
 func (a Authenticator) ExtractIDFromToken(tokenString string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
