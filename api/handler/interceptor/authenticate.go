@@ -14,7 +14,7 @@ import (
 )
 
 // NewAuthenticate はユーザ認証を行うインターセプタを返す
-func NewAuthenticate(authenticator auth.Authenticator, secret string, repo repository.Repository) connect.UnaryInterceptorFunc {
+func NewAuthenticate(authenticator auth.Authenticator, repo repository.Repository) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshToken"}
@@ -28,11 +28,7 @@ func NewAuthenticate(authenticator auth.Authenticator, secret string, repo repos
 			}
 			token := t[1]
 
-			if authorized, err := authenticator.IsAuthorized(token, secret); !authorized || err != nil {
-				return nil, apperr.ErrAuthenticationFailed
-			}
-
-			userID, err := authenticator.ExtractIDFromToken(token, secret)
+			userID, err := authenticator.ExtractIDFromAccessToken(token)
 			if err != nil {
 				return nil, fmt.Errorf("failed to extract id from token: %w", err)
 			}

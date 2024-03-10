@@ -9,10 +9,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/bufbuild/protovalidate-go"
-	"github.com/minguu42/simoom/api/config"
-	"github.com/minguu42/simoom/api/domain/auth"
-	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
+	"github.com/minguu42/simoom/api/factory"
 	"github.com/minguu42/simoom/api/handler/interceptor"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
@@ -35,7 +32,7 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(authenticator auth.Authenticator, repo repository.Repository, conf config.Config, idgen model.IDGenerator) (http.Handler, error) {
+func New(f *factory.Factory) (http.Handler, error) {
 	validator, err := protovalidate.New()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create validator: %w", err)
@@ -45,18 +42,18 @@ func New(authenticator auth.Authenticator, repo repository.Repository, conf conf
 		interceptor.NewSetContext(),
 		interceptor.NewArrangeError(),
 		interceptor.NewRecordAccess(),
-		interceptor.NewAuthenticate(authenticator, conf.Auth.AccessTokenSecret, repo),
+		interceptor.NewAuthenticate(f.Authn, f.Repo),
 	)
 
 	mux := http.NewServeMux()
 	mux.Handle(simoompbconnect.NewSimoomServiceHandler(handler{
 		validator:  validator,
-		auth:       usecase.NewAuth(authenticator, repo, conf.Auth, idgen),
+		auth:       usecase.NewAuth(f.Authn, f.Repo, f.IDGen),
 		monitoring: usecase.Monitoring{},
-		project:    usecase.NewProject(repo, idgen),
-		step:       usecase.NewStep(repo, idgen),
-		tag:        usecase.NewTag(repo, idgen),
-		task:       usecase.NewTask(repo, idgen),
+		project:    usecase.NewProject(f.Repo, f.IDGen),
+		step:       usecase.NewStep(f.Repo, f.IDGen),
+		tag:        usecase.NewTag(f.Repo, f.IDGen),
+		task:       usecase.NewTask(f.Repo, f.IDGen),
 	}, opt))
 
 	return h2c.NewHandler(mux, &http2.Server{}), nil

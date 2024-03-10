@@ -10,8 +10,8 @@ import (
 
 // Authenticator はユーザ認証を抽象化する
 type Authenticator interface {
-	CreateAccessToken(ctx context.Context, user model.User, secret string, expiry int) (string, error)
-	CreateRefreshToken(ctx context.Context, user model.User, secret string, expiry int) (string, error)
-	IsAuthorized(tokenString string, secret string) (bool, error)
-	ExtractIDFromToken(tokenString string, secret string) (string, error)
+	CreateAccessToken(ctx context.Context, user model.User) (string, error)
+	CreateRefreshToken(ctx context.Context, user model.User) (string, error)
+	ExtractIDFromAccessToken(token string) (string, error)
+	ExtractIDFromRefreshToken(token string) (string, error)
 }
