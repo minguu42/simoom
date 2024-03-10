@@ -88,12 +88,12 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return ProjectOutput{}, apperr.ErrProjectNotFound
+			return ProjectOutput{}, apperr.ErrProjectNotFound(err)
 		}
 		return ProjectOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
 	if !auth.User(ctx).HasProject(p) {
-		return ProjectOutput{}, apperr.ErrProjectNotFound
+		return ProjectOutput{}, apperr.ErrProjectNotFound(err)
 	}
 
 	if in.Name != nil {
@@ -120,12 +120,12 @@ func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) erro
 		p, err := uc.repo.GetProjectByID(ctxWithTx, in.ID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return apperr.ErrProjectNotFound
+				return apperr.ErrProjectNotFound(err)
 			}
 			return fmt.Errorf("failed to get project: %w", err)
 		}
 		if !auth.User(ctxWithTx).HasProject(p) {
-			return apperr.ErrProjectNotFound
+			return apperr.ErrProjectNotFound(err)
 		}
 
 		if err := uc.repo.DeleteProject(ctxWithTx, in.ID); err != nil {
