@@ -6,7 +6,6 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/bufbuild/protovalidate-go"
-	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -24,10 +23,10 @@ func TestHandler_SignUp(t *testing.T) {
 		validator: validator,
 		auth: usecase.NewAuth(
 			&auth.AuthenticatorMock{
-				CreateAccessTokenFunc: func(_ context.Context, _ model.User, _ string, _ int) (string, error) {
+				CreateAccessTokenFunc: func(_ context.Context, _ model.User) (string, error) {
 					return "some-access-token", nil
 				},
-				CreateRefreshTokenFunc: func(_ context.Context, _ model.User, _ string, _ int) (string, error) {
+				CreateRefreshTokenFunc: func(_ context.Context, _ model.User) (string, error) {
 					return "some-refresh-token", nil
 				},
 			},
@@ -36,7 +35,6 @@ func TestHandler_SignUp(t *testing.T) {
 					return nil
 				},
 			},
-			config.Auth{},
 			&model.IDGeneratorMock{
 				GenerateFunc: func() string {
 					return "user_01"
