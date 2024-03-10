@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/pointers"
@@ -30,7 +31,7 @@ func newSteps(ss []model.Step) []*simoompb.Step {
 
 func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.CreateStepRequest]) (*connect.Response[simoompb.Step], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.step.CreateStep(ctx, usecase.CreateStepInput{
@@ -45,7 +46,7 @@ func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.C
 
 func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.UpdateStepRequest]) (*connect.Response[simoompb.Step], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.step.UpdateStep(ctx, usecase.UpdateStepInput{
@@ -61,7 +62,7 @@ func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.U
 
 func (h handler) DeleteStep(ctx context.Context, req *connect.Request[simoompb.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	if err := h.step.DeleteStep(ctx, usecase.DeleteStepInput{ID: req.Msg.Id}); err != nil {

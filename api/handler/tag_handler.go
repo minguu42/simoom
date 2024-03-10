@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
@@ -27,7 +28,7 @@ func newTags(ts []model.Tag) []*simoompb.Tag {
 
 func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.CreateTagRequest]) (*connect.Response[simoompb.Tag], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.tag.CreateTag(ctx, usecase.CreateTagInput{
@@ -41,7 +42,7 @@ func (h handler) CreateTag(ctx context.Context, req *connect.Request[simoompb.Cr
 
 func (h handler) ListTags(ctx context.Context, req *connect.Request[simoompb.ListTagsRequest]) (*connect.Response[simoompb.Tags], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.tag.ListTags(ctx, usecase.ListTagsInput{
@@ -59,7 +60,7 @@ func (h handler) ListTags(ctx context.Context, req *connect.Request[simoompb.Lis
 
 func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.UpdateTagRequest]) (*connect.Response[simoompb.Tag], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.tag.UpdateTag(ctx, usecase.UpdateTagInput{
@@ -74,7 +75,7 @@ func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.Up
 
 func (h handler) DeleteTag(ctx context.Context, req *connect.Request[simoompb.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	if err := h.tag.DeleteTag(ctx, usecase.DeleteTagInput{ID: req.Msg.Id}); err != nil {

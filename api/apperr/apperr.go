@@ -34,6 +34,15 @@ func (e Error) ConnectError() *connect.Error {
 	return err
 }
 
+func ErrInvalidRequest(err error) Error {
+	return Error{
+		err:             err,
+		code:            connect.CodeInvalidArgument,
+		message:         "the entered value is incorrect",
+		messageJapanese: "入力された値に誤りを含みます",
+	}
+}
+
 func ErrInvalidAuthorizationFormat() Error {
 	return Error{
 		code:            connect.CodeUnauthenticated,
