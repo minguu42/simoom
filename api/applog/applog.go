@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/api/apperr"
 )
 
 // applicationLogger はリクエストスコープ外でアプリケーションの状況を出力するためのロガー
@@ -61,8 +62,9 @@ func LogAccess(ctx context.Context, method string) {
 }
 
 // LogAccessError はリクエストが正常に受け付けられなかった場合のアクセスログを表示する
-func LogAccessError(ctx context.Context, code connect.Code, method string, err error) {
+func LogAccessError(ctx context.Context, method string, err apperr.Error) {
 	level := slog.LevelInfo
+	code := err.ConnectError().Code()
 	if code == connect.CodeUnknown {
 		level = slog.LevelError
 	}
