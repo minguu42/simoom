@@ -2,7 +2,6 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -18,8 +17,6 @@ import (
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
-
-var ErrInvalidRequest = errors.New("the entered value is incorrect")
 
 type handler struct {
 	validator  *protovalidate.Validator

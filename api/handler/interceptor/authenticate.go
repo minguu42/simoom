@@ -24,18 +24,18 @@ func NewAuthenticate(authenticator auth.Authenticator, repo repository.Repositor
 
 			t := strings.Split(req.Header().Get("Authorization"), " ")
 			if len(t) != 2 {
-				return nil, apperr.ErrInvalidAuthorizationFormat
+				return nil, apperr.ErrInvalidAuthorizationFormat()
 			}
 			token := t[1]
 
 			userID, err := authenticator.ExtractIDFromAccessToken(token)
 			if err != nil {
-				return nil, fmt.Errorf("failed to extract id from token: %w", err)
+				return nil, apperr.ErrAuthentication(fmt.Errorf("failed to extract id from token: %w", err))
 			}
 			u, err := repo.GetUserByID(ctx, userID)
 			if err != nil {
 				if errors.Is(err, repository.ErrModelNotFound) {
-					return nil, apperr.ErrUserNotFound
+					return nil, apperr.ErrUserNotFound(err)
 				}
 				return nil, fmt.Errorf("failed to get user: %w", err)
 			}

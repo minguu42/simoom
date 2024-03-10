@@ -5,13 +5,14 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 )
 
 func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignUpRequest]) (*connect.Response[simoompb.SignUpResponse], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.auth.SingUp(ctx, usecase.SignUpInput{
@@ -30,7 +31,7 @@ func (h handler) SignUp(ctx context.Context, req *connect.Request[simoompb.SignU
 
 func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignInRequest]) (*connect.Response[simoompb.SignInResponse], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.auth.SignIn(ctx, usecase.SignInInput{
@@ -48,7 +49,7 @@ func (h handler) SignIn(ctx context.Context, req *connect.Request[simoompb.SignI
 
 func (h handler) RefreshToken(ctx context.Context, req *connect.Request[simoompb.RefreshTokenRequest]) (*connect.Response[simoompb.RefreshTokenResponse], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.auth.RefreshToken(ctx, usecase.RefreshTokenInput{RefreshToken: req.Msg.RefreshToken})

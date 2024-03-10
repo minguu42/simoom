@@ -83,12 +83,12 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 	t, err := uc.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
 		if errors.Is(err, repository.ErrModelNotFound) {
-			return TagOutput{}, apperr.ErrTagNotFound
+			return TagOutput{}, apperr.ErrTagNotFound(err)
 		}
 		return TagOutput{}, fmt.Errorf("failed to get tag: %w", err)
 	}
 	if !auth.User(ctx).HasTag(t) {
-		return TagOutput{}, apperr.ErrTagNotFound
+		return TagOutput{}, apperr.ErrTagNotFound(err)
 	}
 
 	if in.Name != nil {
@@ -109,12 +109,12 @@ func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 		t, err := uc.repo.GetTagByID(ctxWithTx, in.ID)
 		if err != nil {
 			if errors.Is(err, repository.ErrModelNotFound) {
-				return apperr.ErrTagNotFound
+				return apperr.ErrTagNotFound(err)
 			}
 			return fmt.Errorf("failed to get tag: %w", err)
 		}
 		if !auth.User(ctxWithTx).HasTag(t) {
-			return apperr.ErrTagNotFound
+			return apperr.ErrTagNotFound(err)
 		}
 
 		if err := uc.repo.DeleteTag(ctxWithTx, in.ID); err != nil {

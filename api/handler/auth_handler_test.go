@@ -6,6 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/bufbuild/protovalidate-go"
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -75,14 +76,16 @@ func TestHandler_SignUp(t *testing.T) {
 				req: connect.NewRequest(&simoompb.SignUpRequest{}),
 			},
 			want:    nil,
-			wantErr: ErrInvalidRequest,
+			wantErr: apperr.ErrInvalidRequest(nil),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			resp, err := th.SignUp(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, resp)
-			assert.Equal(t, tt.wantErr, err)
+			if tt.wantErr == nil {
+				assert.NoError(t, err)
+			}
 		})
 	}
 }

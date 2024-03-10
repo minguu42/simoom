@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
@@ -34,7 +35,7 @@ func newTasksResponse(ts []model.Task) []*simoompb.Task {
 
 func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.CreateTaskRequest]) (*connect.Response[simoompb.Task], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.task.CreateTask(ctx, usecase.CreateTaskInput{
@@ -50,7 +51,7 @@ func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.C
 
 func (h handler) ListTasks(ctx context.Context, req *connect.Request[simoompb.ListTasksRequest]) (*connect.Response[simoompb.Tasks], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.task.ListTasks(ctx, usecase.ListTasksInput{
@@ -70,7 +71,7 @@ func (h handler) ListTasks(ctx context.Context, req *connect.Request[simoompb.Li
 
 func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.UpdateTaskRequest]) (*connect.Response[simoompb.Task], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	out, err := h.task.UpdateTask(ctx, usecase.UpdateTaskInput{
@@ -89,7 +90,7 @@ func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.U
 
 func (h handler) DeleteTask(ctx context.Context, req *connect.Request[simoompb.DeleteTaskRequest]) (*connect.Response[emptypb.Empty], error) {
 	if err := h.validator.Validate(req.Msg); err != nil {
-		return nil, ErrInvalidRequest
+		return nil, apperr.ErrInvalidRequest(err)
 	}
 
 	if err := h.task.DeleteTask(ctx, usecase.DeleteTaskInput{
