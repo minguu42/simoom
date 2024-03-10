@@ -28,7 +28,7 @@ func NewAuthenticate(authenticator auth.Authenticator, repo repository.Repositor
 			}
 			token := t[1]
 
-			userID, err := authenticator.ExtractIDFromToken(token)
+			userID, err := authenticator.ExtractIDFromAccessToken(token)
 			if err != nil {
 				return nil, fmt.Errorf("failed to extract id from token: %w", err)
 			}

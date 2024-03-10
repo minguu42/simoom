@@ -64,11 +64,11 @@ func (a Authenticator) CreateRefreshToken(ctx context.Context, user model.User) 
 	return rt, nil
 }
 
-// ExtractIDFromToken はトークン作成時にエンコードされたIDをデコードして取り出す
-func (a Authenticator) ExtractIDFromToken(tokenString string) (string, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %s", token.Header["alg"])
+// ExtractIDFromAccessToken はアクセストークン作成時にエンコードされたIDをデコードして取り出す
+func (a Authenticator) ExtractIDFromAccessToken(token string) (string, error) {
+	jwtToken, err := jwt.Parse(token, func(t *jwt.Token) (any, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %s", t.Header["alg"])
 		}
 		return []byte(a.AccessTokenSecret), nil
 	})
@@ -76,8 +76,8 @@ func (a Authenticator) ExtractIDFromToken(tokenString string) (string, error) {
 		return "", fmt.Errorf("failed to parse token: %w", err)
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok && !token.Valid {
+	claims, ok := jwtToken.Claims.(jwt.MapClaims)
+	if !ok && !jwtToken.Valid {
 		return "", errors.New("invalid token")
 	}
 	return claims["id"].(string), nil
@@ -85,9 +85,9 @@ func (a Authenticator) ExtractIDFromToken(tokenString string) (string, error) {
 
 // ExtractIDFromRefreshToken はリフレッシュトークン作成時にエンコードされたIDをデコードして取り出す
 func (a Authenticator) ExtractIDFromRefreshToken(tokenString string) (string, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %s", token.Header["alg"])
+	jwtToken, err := jwt.Parse(tokenString, func(t *jwt.Token) (any, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %s", t.Header["alg"])
 		}
 		return []byte(a.RefreshTokenSecret), nil
 	})
@@ -95,8 +95,8 @@ func (a Authenticator) ExtractIDFromRefreshToken(tokenString string) (string, er
 		return "", fmt.Errorf("failed to parse token: %w", err)
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok && !token.Valid {
+	claims, ok := jwtToken.Claims.(jwt.MapClaims)
+	if !ok && !jwtToken.Valid {
 		return "", errors.New("invalid token")
 	}
 	return claims["id"].(string), nil

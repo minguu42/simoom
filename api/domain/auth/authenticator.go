@@ -12,6 +12,6 @@ import (
 type Authenticator interface {
 	CreateAccessToken(ctx context.Context, user model.User) (string, error)
 	CreateRefreshToken(ctx context.Context, user model.User) (string, error)
-	ExtractIDFromToken(tokenString string) (string, error)
-	ExtractIDFromRefreshToken(tokenString string) (string, error)
+	ExtractIDFromAccessToken(token string) (string, error)
+	ExtractIDFromRefreshToken(token string) (string, error)
 }
