@@ -14,10 +14,8 @@ import (
 
 	"github.com/minguu42/simoom/api/applog"
 	"github.com/minguu42/simoom/api/config"
+	"github.com/minguu42/simoom/api/factory"
 	"github.com/minguu42/simoom/api/handler"
-	"github.com/minguu42/simoom/api/infra/jwtauth"
-	"github.com/minguu42/simoom/api/infra/mysql"
-	"github.com/minguu42/simoom/api/infra/ulidgen"
 )
 
 func main() {
@@ -37,13 +35,13 @@ func mainRun(ctx context.Context) error {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
 
-	c, err := mysql.NewClient(conf.DB)
+	f, err := factory.New(conf)
 	if err != nil {
-		return fmt.Errorf("failed to create mysql client: %w", err)
+		return fmt.Errorf("failed to create factory: %w", err)
 	}
-	defer c.Close()
+	defer f.Close()
 
-	h, err := handler.New(jwtauth.Authenticator{}, c, conf, ulidgen.Generator{})
+	h, err := handler.New(f, conf)
 	if err != nil {
 		return fmt.Errorf("failed to create handler: %w", err)
 	}
