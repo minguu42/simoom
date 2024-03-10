@@ -7,6 +7,7 @@ setup: ## 開発に必要なツールをインストールする
 	go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
 	go install honnef.co/go/tools/cmd/staticcheck@latest
 	go install github.com/bufbuild/buf/cmd/buf@latest
+	go install github.com/matryer/moq@latest
 	go install golang.org/x/tools/cmd/goimports@latest
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
@@ -17,6 +18,7 @@ migrate-apply: ## DBのスキーマの変更を適用する
 	@mysqldef -u root -h 127.0.0.1 --enable-drop-table --file=./infra/mysql/schema.sql simoomdb
 
 gen: ## コードを生成する
+	@go generate ./...
 	@buf generate
 	@rm -rf ./api/infra/mysql/sqlc && sqlc generate
 	@$(MAKE) fmt
