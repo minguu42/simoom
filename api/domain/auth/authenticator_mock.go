@@ -20,16 +20,19 @@ var _ Authenticator = &AuthenticatorMock{}
 //
 //		// make and configure a mocked Authenticator
 //		mockedAuthenticator := &AuthenticatorMock{
-//			CreateAccessTokenFunc: func(ctx context.Context, user model.User, secret string, expiry int) (string, error) {
+//			CreateAccessTokenFunc: func(ctx context.Context, user model.User) (string, error) {
 //				panic("mock out the CreateAccessToken method")
 //			},
-//			CreateRefreshTokenFunc: func(ctx context.Context, user model.User, secret string, expiry int) (string, error) {
+//			CreateRefreshTokenFunc: func(ctx context.Context, user model.User) (string, error) {
 //				panic("mock out the CreateRefreshToken method")
 //			},
-//			ExtractIDFromTokenFunc: func(tokenString string, secret string) (string, error) {
+//			ExtractIDFromRefreshTokenFunc: func(tokenString string) (string, error) {
+//				panic("mock out the ExtractIDFromRefreshToken method")
+//			},
+//			ExtractIDFromTokenFunc: func(tokenString string) (string, error) {
 //				panic("mock out the ExtractIDFromToken method")
 //			},
-//			IsAuthorizedFunc: func(tokenString string, secret string) (bool, error) {
+//			IsAuthorizedFunc: func(tokenString string) (bool, error) {
 //				panic("mock out the IsAuthorized method")
 //			},
 //		}
@@ -40,16 +43,19 @@ var _ Authenticator = &AuthenticatorMock{}
 //	}
 type AuthenticatorMock struct {
 	// CreateAccessTokenFunc mocks the CreateAccessToken method.
-	CreateAccessTokenFunc func(ctx context.Context, user model.User, secret string, expiry int) (string, error)
+	CreateAccessTokenFunc func(ctx context.Context, user model.User) (string, error)
 
 	// CreateRefreshTokenFunc mocks the CreateRefreshToken method.
-	CreateRefreshTokenFunc func(ctx context.Context, user model.User, secret string, expiry int) (string, error)
+	CreateRefreshTokenFunc func(ctx context.Context, user model.User) (string, error)
+
+	// ExtractIDFromRefreshTokenFunc mocks the ExtractIDFromRefreshToken method.
+	ExtractIDFromRefreshTokenFunc func(tokenString string) (string, error)
 
 	// ExtractIDFromTokenFunc mocks the ExtractIDFromToken method.
-	ExtractIDFromTokenFunc func(tokenString string, secret string) (string, error)
+	ExtractIDFromTokenFunc func(tokenString string) (string, error)
 
 	// IsAuthorizedFunc mocks the IsAuthorized method.
-	IsAuthorizedFunc func(tokenString string, secret string) (bool, error)
+	IsAuthorizedFunc func(tokenString string) (bool, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -59,10 +65,6 @@ type AuthenticatorMock struct {
 			Ctx context.Context
 			// User is the user argument value.
 			User model.User
-			// Secret is the secret argument value.
-			Secret string
-			// Expiry is the expiry argument value.
-			Expiry int
 		}
 		// CreateRefreshToken holds details about calls to the CreateRefreshToken method.
 		CreateRefreshToken []struct {
@@ -70,52 +72,46 @@ type AuthenticatorMock struct {
 			Ctx context.Context
 			// User is the user argument value.
 			User model.User
-			// Secret is the secret argument value.
-			Secret string
-			// Expiry is the expiry argument value.
-			Expiry int
+		}
+		// ExtractIDFromRefreshToken holds details about calls to the ExtractIDFromRefreshToken method.
+		ExtractIDFromRefreshToken []struct {
+			// TokenString is the tokenString argument value.
+			TokenString string
 		}
 		// ExtractIDFromToken holds details about calls to the ExtractIDFromToken method.
 		ExtractIDFromToken []struct {
 			// TokenString is the tokenString argument value.
 			TokenString string
-			// Secret is the secret argument value.
-			Secret string
 		}
 		// IsAuthorized holds details about calls to the IsAuthorized method.
 		IsAuthorized []struct {
 			// TokenString is the tokenString argument value.
 			TokenString string
-			// Secret is the secret argument value.
-			Secret string
 		}
 	}
-	lockCreateAccessToken  sync.RWMutex
-	lockCreateRefreshToken sync.RWMutex
-	lockExtractIDFromToken sync.RWMutex
-	lockIsAuthorized       sync.RWMutex
+	lockCreateAccessToken         sync.RWMutex
+	lockCreateRefreshToken        sync.RWMutex
+	lockExtractIDFromRefreshToken sync.RWMutex
+	lockExtractIDFromToken        sync.RWMutex
+	lockIsAuthorized              sync.RWMutex
 }
 
 // CreateAccessToken calls CreateAccessTokenFunc.
-func (mock *AuthenticatorMock) CreateAccessToken(ctx context.Context, user model.User, secret string, expiry int) (string, error) {
+func (mock *AuthenticatorMock) CreateAccessToken(ctx context.Context, user model.User) (string, error) {
 	if mock.CreateAccessTokenFunc == nil {
 		panic("AuthenticatorMock.CreateAccessTokenFunc: method is nil but Authenticator.CreateAccessToken was just called")
 	}
 	callInfo := struct {
-		Ctx    context.Context
-		User   model.User
-		Secret string
-		Expiry int
+		Ctx  context.Context
+		User model.User
 	}{
-		Ctx:    ctx,
-		User:   user,
-		Secret: secret,
-		Expiry: expiry,
+		Ctx:  ctx,
+		User: user,
 	}
 	mock.lockCreateAccessToken.Lock()
 	mock.calls.CreateAccessToken = append(mock.calls.CreateAccessToken, callInfo)
 	mock.lockCreateAccessToken.Unlock()
-	return mock.CreateAccessTokenFunc(ctx, user, secret, expiry)
+	return mock.CreateAccessTokenFunc(ctx, user)
 }
 
 // CreateAccessTokenCalls gets all the calls that were made to CreateAccessToken.
@@ -123,16 +119,12 @@ func (mock *AuthenticatorMock) CreateAccessToken(ctx context.Context, user model
 //
 //	len(mockedAuthenticator.CreateAccessTokenCalls())
 func (mock *AuthenticatorMock) CreateAccessTokenCalls() []struct {
-	Ctx    context.Context
-	User   model.User
-	Secret string
-	Expiry int
+	Ctx  context.Context
+	User model.User
 } {
 	var calls []struct {
-		Ctx    context.Context
-		User   model.User
-		Secret string
-		Expiry int
+		Ctx  context.Context
+		User model.User
 	}
 	mock.lockCreateAccessToken.RLock()
 	calls = mock.calls.CreateAccessToken
@@ -141,25 +133,21 @@ func (mock *AuthenticatorMock) CreateAccessTokenCalls() []struct {
 }
 
 // CreateRefreshToken calls CreateRefreshTokenFunc.
-func (mock *AuthenticatorMock) CreateRefreshToken(ctx context.Context, user model.User, secret string, expiry int) (string, error) {
+func (mock *AuthenticatorMock) CreateRefreshToken(ctx context.Context, user model.User) (string, error) {
 	if mock.CreateRefreshTokenFunc == nil {
 		panic("AuthenticatorMock.CreateRefreshTokenFunc: method is nil but Authenticator.CreateRefreshToken was just called")
 	}
 	callInfo := struct {
-		Ctx    context.Context
-		User   model.User
-		Secret string
-		Expiry int
+		Ctx  context.Context
+		User model.User
 	}{
-		Ctx:    ctx,
-		User:   user,
-		Secret: secret,
-		Expiry: expiry,
+		Ctx:  ctx,
+		User: user,
 	}
 	mock.lockCreateRefreshToken.Lock()
 	mock.calls.CreateRefreshToken = append(mock.calls.CreateRefreshToken, callInfo)
 	mock.lockCreateRefreshToken.Unlock()
-	return mock.CreateRefreshTokenFunc(ctx, user, secret, expiry)
+	return mock.CreateRefreshTokenFunc(ctx, user)
 }
 
 // CreateRefreshTokenCalls gets all the calls that were made to CreateRefreshToken.
@@ -167,16 +155,12 @@ func (mock *AuthenticatorMock) CreateRefreshToken(ctx context.Context, user mode
 //
 //	len(mockedAuthenticator.CreateRefreshTokenCalls())
 func (mock *AuthenticatorMock) CreateRefreshTokenCalls() []struct {
-	Ctx    context.Context
-	User   model.User
-	Secret string
-	Expiry int
+	Ctx  context.Context
+	User model.User
 } {
 	var calls []struct {
-		Ctx    context.Context
-		User   model.User
-		Secret string
-		Expiry int
+		Ctx  context.Context
+		User model.User
 	}
 	mock.lockCreateRefreshToken.RLock()
 	calls = mock.calls.CreateRefreshToken
@@ -184,22 +168,52 @@ func (mock *AuthenticatorMock) CreateRefreshTokenCalls() []struct {
 	return calls
 }
 
+// ExtractIDFromRefreshToken calls ExtractIDFromRefreshTokenFunc.
+func (mock *AuthenticatorMock) ExtractIDFromRefreshToken(tokenString string) (string, error) {
+	if mock.ExtractIDFromRefreshTokenFunc == nil {
+		panic("AuthenticatorMock.ExtractIDFromRefreshTokenFunc: method is nil but Authenticator.ExtractIDFromRefreshToken was just called")
+	}
+	callInfo := struct {
+		TokenString string
+	}{
+		TokenString: tokenString,
+	}
+	mock.lockExtractIDFromRefreshToken.Lock()
+	mock.calls.ExtractIDFromRefreshToken = append(mock.calls.ExtractIDFromRefreshToken, callInfo)
+	mock.lockExtractIDFromRefreshToken.Unlock()
+	return mock.ExtractIDFromRefreshTokenFunc(tokenString)
+}
+
+// ExtractIDFromRefreshTokenCalls gets all the calls that were made to ExtractIDFromRefreshToken.
+// Check the length with:
+//
+//	len(mockedAuthenticator.ExtractIDFromRefreshTokenCalls())
+func (mock *AuthenticatorMock) ExtractIDFromRefreshTokenCalls() []struct {
+	TokenString string
+} {
+	var calls []struct {
+		TokenString string
+	}
+	mock.lockExtractIDFromRefreshToken.RLock()
+	calls = mock.calls.ExtractIDFromRefreshToken
+	mock.lockExtractIDFromRefreshToken.RUnlock()
+	return calls
+}
+
 // ExtractIDFromToken calls ExtractIDFromTokenFunc.
-func (mock *AuthenticatorMock) ExtractIDFromToken(tokenString string, secret string) (string, error) {
+func (mock *AuthenticatorMock) ExtractIDFromToken(tokenString string) (string, error) {
 	if mock.ExtractIDFromTokenFunc == nil {
 		panic("AuthenticatorMock.ExtractIDFromTokenFunc: method is nil but Authenticator.ExtractIDFromToken was just called")
 	}
 	callInfo := struct {
 		TokenString string
-		Secret      string
 	}{
 		TokenString: tokenString,
-		Secret:      secret,
 	}
 	mock.lockExtractIDFromToken.Lock()
 	mock.calls.ExtractIDFromToken = append(mock.calls.ExtractIDFromToken, callInfo)
 	mock.lockExtractIDFromToken.Unlock()
-	return mock.ExtractIDFromTokenFunc(tokenString, secret)
+	return mock.ExtractIDFromTokenFunc(tokenString)
 }
 
 // ExtractIDFromTokenCalls gets all the calls that were made to ExtractIDFromToken.
@@ -208,11 +222,9 @@ func (mock *AuthenticatorMock) ExtractIDFromToken(tokenString string, secret str
 //	len(mockedAuthenticator.ExtractIDFromTokenCalls())
 func (mock *AuthenticatorMock) ExtractIDFromTokenCalls() []struct {
 	TokenString string
-	Secret      string
 } {
 	var calls []struct {
 		TokenString string
-		Secret      string
 	}
 	mock.lockExtractIDFromToken.RLock()
 	calls = mock.calls.ExtractIDFromToken
@@ -221,21 +233,19 @@ func (mock *AuthenticatorMock) ExtractIDFromTokenCalls() []struct {
 }
 
 // IsAuthorized calls IsAuthorizedFunc.
-func (mock *AuthenticatorMock) IsAuthorized(tokenString string, secret string) (bool, error) {
+func (mock *AuthenticatorMock) IsAuthorized(tokenString string) (bool, error) {
 	if mock.IsAuthorizedFunc == nil {
 		panic("AuthenticatorMock.IsAuthorizedFunc: method is nil but Authenticator.IsAuthorized was just called")
 	}
 	callInfo := struct {
 		TokenString string
-		Secret      string
 	}{
 		TokenString: tokenString,
-		Secret:      secret,
 	}
 	mock.lockIsAuthorized.Lock()
 	mock.calls.IsAuthorized = append(mock.calls.IsAuthorized, callInfo)
 	mock.lockIsAuthorized.Unlock()
-	return mock.IsAuthorizedFunc(tokenString, secret)
+	return mock.IsAuthorizedFunc(tokenString)
 }
 
 // IsAuthorizedCalls gets all the calls that were made to IsAuthorized.
@@ -244,11 +254,9 @@ func (mock *AuthenticatorMock) IsAuthorized(tokenString string, secret string) (
 //	len(mockedAuthenticator.IsAuthorizedCalls())
 func (mock *AuthenticatorMock) IsAuthorizedCalls() []struct {
 	TokenString string
-	Secret      string
 } {
 	var calls []struct {
 		TokenString string
-		Secret      string
 	}
 	mock.lockIsAuthorized.RLock()
 	calls = mock.calls.IsAuthorized
