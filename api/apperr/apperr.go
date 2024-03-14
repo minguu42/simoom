@@ -43,6 +43,24 @@ func ErrInvalidRequest(err error) Error {
 	}
 }
 
+func ErrDuplicateUserName(err error) Error {
+	return Error{
+		err:             err,
+		code:            connect.CodeInvalidArgument,
+		message:         "the name is already in use",
+		messageJapanese: "そのユーザ名は既に使用されています",
+	}
+}
+
+func ErrDuplicateUserEmail(err error) Error {
+	return Error{
+		err:             err,
+		code:            connect.CodeInvalidArgument,
+		message:         "the mail address is already in use",
+		messageJapanese: "そのメールアドレスは既に使用されています",
+	}
+}
+
 func ErrInvalidAuthorizationFormat() Error {
 	return Error{
 		code:            connect.CodeUnauthenticated,
