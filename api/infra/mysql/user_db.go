@@ -43,6 +43,17 @@ func (c *Client) GetUserByID(ctx context.Context, id string) (model.User, error)
 	return newModelUser(u), nil
 }
 
+func (c *Client) GetUserByName(ctx context.Context, name string) (model.User, error) {
+	u, err := c.queries(ctx).GetUserByName(ctx, name)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.User{}, repository.ErrModelNotFound
+		}
+		return model.User{}, fmt.Errorf("failed to get user: %w", err)
+	}
+	return newModelUser(u), nil
+}
+
 func (c *Client) GetUserByEmail(ctx context.Context, email string) (model.User, error) {
 	u, err := c.queries(ctx).GetUserByEmail(ctx, email)
 	if err != nil {

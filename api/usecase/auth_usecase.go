@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
@@ -50,6 +51,13 @@ type SignUpOutput struct {
 }
 
 func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
+	if _, err := uc.repo.GetUserByName(ctx, in.Name); !errors.Is(err, repository.ErrModelNotFound) {
+		return SignUpOutput{}, apperr.ErrDuplicateUserName(err)
+	}
+	if _, err := uc.repo.GetUserByEmail(ctx, in.Email); !errors.Is(err, repository.ErrModelNotFound) {
+		return SignUpOutput{}, apperr.ErrDuplicateUserEmail(err)
+	}
+
 	user, err := in.Create(uc.idgen)
 	if err != nil {
 		return SignUpOutput{}, fmt.Errorf("failed to create user: %w", err)

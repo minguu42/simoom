@@ -65,6 +65,9 @@ var _ Repository = &RepositoryMock{}
 //			GetUserByIDFunc: func(ctx context.Context, id string) (model.User, error) {
 //				panic("mock out the GetUserByID method")
 //			},
+//			GetUserByNameFunc: func(ctx context.Context, name string) (model.User, error) {
+//				panic("mock out the GetUserByName method")
+//			},
 //			ListProjectsByUserIDFunc: func(ctx context.Context, userID string, limit uint, offset uint) ([]model.Project, error) {
 //				panic("mock out the ListProjectsByUserID method")
 //			},
@@ -140,6 +143,9 @@ type RepositoryMock struct {
 
 	// GetUserByIDFunc mocks the GetUserByID method.
 	GetUserByIDFunc func(ctx context.Context, id string) (model.User, error)
+
+	// GetUserByNameFunc mocks the GetUserByName method.
+	GetUserByNameFunc func(ctx context.Context, name string) (model.User, error)
 
 	// ListProjectsByUserIDFunc mocks the ListProjectsByUserID method.
 	ListProjectsByUserIDFunc func(ctx context.Context, userID string, limit uint, offset uint) ([]model.Project, error)
@@ -272,6 +278,13 @@ type RepositoryMock struct {
 			// ID is the id argument value.
 			ID string
 		}
+		// GetUserByName holds details about calls to the GetUserByName method.
+		GetUserByName []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Name is the name argument value.
+			Name string
+		}
 		// ListProjectsByUserID holds details about calls to the ListProjectsByUserID method.
 		ListProjectsByUserID []struct {
 			// Ctx is the ctx argument value.
@@ -360,6 +373,7 @@ type RepositoryMock struct {
 	lockGetTaskByID          sync.RWMutex
 	lockGetUserByEmail       sync.RWMutex
 	lockGetUserByID          sync.RWMutex
+	lockGetUserByName        sync.RWMutex
 	lockListProjectsByUserID sync.RWMutex
 	lockListTagsByUserID     sync.RWMutex
 	lockListTasksByUserID    sync.RWMutex
@@ -907,6 +921,42 @@ func (mock *RepositoryMock) GetUserByIDCalls() []struct {
 	mock.lockGetUserByID.RLock()
 	calls = mock.calls.GetUserByID
 	mock.lockGetUserByID.RUnlock()
+	return calls
+}
+
+// GetUserByName calls GetUserByNameFunc.
+func (mock *RepositoryMock) GetUserByName(ctx context.Context, name string) (model.User, error) {
+	if mock.GetUserByNameFunc == nil {
+		panic("RepositoryMock.GetUserByNameFunc: method is nil but Repository.GetUserByName was just called")
+	}
+	callInfo := struct {
+		Ctx  context.Context
+		Name string
+	}{
+		Ctx:  ctx,
+		Name: name,
+	}
+	mock.lockGetUserByName.Lock()
+	mock.calls.GetUserByName = append(mock.calls.GetUserByName, callInfo)
+	mock.lockGetUserByName.Unlock()
+	return mock.GetUserByNameFunc(ctx, name)
+}
+
+// GetUserByNameCalls gets all the calls that were made to GetUserByName.
+// Check the length with:
+//
+//	len(mockedRepository.GetUserByNameCalls())
+func (mock *RepositoryMock) GetUserByNameCalls() []struct {
+	Ctx  context.Context
+	Name string
+} {
+	var calls []struct {
+		Ctx  context.Context
+		Name string
+	}
+	mock.lockGetUserByName.RLock()
+	calls = mock.calls.GetUserByName
+	mock.lockGetUserByName.RUnlock()
 	return calls
 }
 

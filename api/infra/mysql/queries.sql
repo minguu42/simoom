@@ -146,6 +146,11 @@ SELECT *
 FROM users
 WHERE id = ?;
 
+-- name: GetUserByName :one
+SELECT *
+FROM users
+WHERE name = ?;
+
 -- name: GetUserByEmail :one
 SELECT *
 FROM users

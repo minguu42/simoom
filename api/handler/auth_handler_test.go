@@ -35,6 +35,12 @@ func TestHandler_SignUp(t *testing.T) {
 				CreateUserFunc: func(_ context.Context, _ model.User) error {
 					return nil
 				},
+				GetUserByNameFunc: func(_ context.Context, _ string) (model.User, error) {
+					return model.User{}, repository.ErrModelNotFound
+				},
+				GetUserByEmailFunc: func(_ context.Context, _ string) (model.User, error) {
+					return model.User{}, repository.ErrModelNotFound
+				},
 			},
 			&model.IDGeneratorMock{
 				GenerateFunc: func() string {
