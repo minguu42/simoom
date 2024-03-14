@@ -44,7 +44,7 @@ func (c *Client) GetUserByID(ctx context.Context, id string) (model.User, error)
 }
 
 func (c *Client) GetUserByName(ctx context.Context, name string) (model.User, error) {
-	u, err := c.queries(ctx).GetUserByEmail(ctx, name)
+	u, err := c.queries(ctx).GetUserByName(ctx, name)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.User{}, repository.ErrModelNotFound
