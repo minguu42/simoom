@@ -143,7 +143,7 @@ message CreateTaskRequest {
 }
 
 message ListTasksRequest {
-  uint64 limit = 1;
+  uint64 limit = 1 [(buf.validate.field).uint64.gt = 0];
   uint64 offset = 2;
   optional string project_id = 3 [(buf.validate.field).string.len_bytes = 26];
   optional string tag_id = 4 [(buf.validate.field).string.len_bytes = 26];
