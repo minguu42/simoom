@@ -8,24 +8,25 @@ import (
 	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func TestHandler_SignUp(t *testing.T) {
+func TestHandler_CreateStep(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.SignUpRequest]
+		req *connect.Request[simoompb.CreateStepRequest]
 	}
 	tests := []struct {
 		name    string
 		args    args
-		want    *connect.Response[simoompb.SignUpResponse]
+		want    *connect.Response[simoompb.Step]
 		wantErr apperr.Error
 	}{
 		{
 			name: "不正なリクエストはバリデーションではじく",
 			args: args{
 				ctx: context.Background(),
-				req: connect.NewRequest(&simoompb.SignUpRequest{}),
+				req: connect.NewRequest(&simoompb.CreateStepRequest{}),
 			},
 			want:    nil,
 			wantErr: apperr.ErrInvalidRequest(nil),
@@ -33,7 +34,7 @@ func TestHandler_SignUp(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resp, err := testHandler.SignUp(tt.args.ctx, tt.args.req)
+			resp, err := testHandler.CreateStep(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, resp)
 
 			var appErr apperr.Error
@@ -44,22 +45,22 @@ func TestHandler_SignUp(t *testing.T) {
 	}
 }
 
-func TestHandler_SignIn(t *testing.T) {
+func TestHandler_UpdateStep(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.SignInRequest]
+		req *connect.Request[simoompb.UpdateStepRequest]
 	}
 	tests := []struct {
 		name    string
 		args    args
-		want    *connect.Response[simoompb.SignInResponse]
+		want    *connect.Response[simoompb.Step]
 		wantErr apperr.Error
 	}{
 		{
 			name: "不正なリクエストはバリデーションではじく",
 			args: args{
 				ctx: context.Background(),
-				req: connect.NewRequest(&simoompb.SignInRequest{}),
+				req: connect.NewRequest(&simoompb.UpdateStepRequest{}),
 			},
 			want:    nil,
 			wantErr: apperr.ErrInvalidRequest(nil),
@@ -67,7 +68,7 @@ func TestHandler_SignIn(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resp, err := testHandler.SignIn(tt.args.ctx, tt.args.req)
+			resp, err := testHandler.UpdateStep(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, resp)
 
 			var appErr apperr.Error
@@ -78,22 +79,22 @@ func TestHandler_SignIn(t *testing.T) {
 	}
 }
 
-func TestHandler_RefreshToken(t *testing.T) {
+func TestHandler_DeleteStep(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		req *connect.Request[simoompb.RefreshTokenRequest]
+		req *connect.Request[simoompb.DeleteStepRequest]
 	}
 	tests := []struct {
 		name    string
 		args    args
-		want    *connect.Response[simoompb.RefreshTokenResponse]
+		want    *connect.Response[emptypb.Empty]
 		wantErr apperr.Error
 	}{
 		{
 			name: "不正なリクエストはバリデーションではじく",
 			args: args{
 				ctx: context.Background(),
-				req: connect.NewRequest(&simoompb.RefreshTokenRequest{}),
+				req: connect.NewRequest(&simoompb.DeleteStepRequest{}),
 			},
 			want:    nil,
 			wantErr: apperr.ErrInvalidRequest(nil),
@@ -101,7 +102,7 @@ func TestHandler_RefreshToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resp, err := testHandler.RefreshToken(tt.args.ctx, tt.args.req)
+			resp, err := testHandler.DeleteStep(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, resp)
 
 			var appErr apperr.Error
