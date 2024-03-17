@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"connectrpc.com/connect"
-	"github.com/bufbuild/protovalidate-go"
 	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
@@ -16,12 +15,8 @@ import (
 )
 
 func TestHandler_SignUp(t *testing.T) {
-	validator, err := protovalidate.New()
-	if err != nil {
-		t.Fatalf("failed to create validator: %s", err)
-	}
 	th := handler{
-		validator: validator,
+		validator: testValidator,
 		auth: usecase.NewAuth(
 			&auth.AuthenticatorMock{
 				CreateAccessTokenFunc: func(_ context.Context, _ model.User) (string, error) {
@@ -57,7 +52,7 @@ func TestHandler_SignUp(t *testing.T) {
 		name    string
 		args    args
 		want    *connect.Response[simoompb.SignUpResponse]
-		wantErr error
+		wantErr apperr.Error
 	}{
 		{
 			name: "ユーザを登録し、認証情報を返す",
@@ -73,7 +68,7 @@ func TestHandler_SignUp(t *testing.T) {
 				AccessToken:  "some-access-token",
 				RefreshToken: "some-refresh-token",
 			}),
-			wantErr: nil,
+			wantErr: apperr.Error{},
 		},
 		{
 			name: "不正なリクエストはバリデーションではじく",
@@ -89,8 +84,10 @@ func TestHandler_SignUp(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			resp, err := th.SignUp(tt.args.ctx, tt.args.req)
 			assert.Equal(t, tt.want, resp)
-			if tt.wantErr == nil {
-				assert.NoError(t, err)
+
+			var appErr apperr.Error
+			if tt.wantErr.Error() != "" && assert.ErrorAs(t, err, &appErr) {
+				assert.Equal(t, tt.wantErr.ConnectError().Code(), appErr.ConnectError().Code())
 			}
 		})
 	}
