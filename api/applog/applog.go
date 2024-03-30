@@ -3,6 +3,7 @@ package applog
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -54,19 +55,21 @@ func logger(ctx context.Context) *slog.Logger {
 	return applicationLogger
 }
 
-// LogAccess はリクエストが正常に受け付けられた場合のアクセスログを表示する
-func LogAccess(ctx context.Context, method string) {
-	msg := fmt.Sprintf("ok (0) %s", method)
-	logger(ctx).LogAttrs(ctx, slog.LevelInfo, msg)
-}
+// Access はアクセスログを出力する
+func Access(ctx context.Context, method string, err error) {
+	if err == nil { // if NO error
+		logger(ctx).LogAttrs(ctx, slog.LevelInfo, fmt.Sprintf("ok (0) %s", method))
+		return
+	}
 
-// LogAccessError はリクエストが正常に受け付けられなかった場合のアクセスログを表示する
-func LogAccessError(ctx context.Context, method string, err apperr.Error) {
+	var appErr apperr.Error
+	if !errors.As(err, &appErr) {
+		appErr = apperr.ErrUnknown(err)
+	}
 	level := slog.LevelInfo
-	code := err.ConnectError().Code()
-	if code == connect.CodeUnknown {
+	if appErr.Code() == connect.CodeUnknown {
 		level = slog.LevelError
 	}
-	msg := fmt.Sprintf("%s (%[1]d) %s", code, method)
+	msg := fmt.Sprintf("%s (%[1]d) %s", appErr.Code(), method)
 	logger(ctx).LogAttrs(ctx, level, msg, slog.String("detail", err.Error()))
 }
