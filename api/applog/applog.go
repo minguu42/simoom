@@ -13,8 +13,7 @@ import (
 	"github.com/minguu42/simoom/api/apperr"
 )
 
-// applicationLogger はリクエストスコープ外でアプリケーションの状況を出力するためのロガー
-// リクエストスコープ内ではこのロガーは使用せず、コンテキスト中のリクエストロガーを使用する
+// applicationLogger はリクエストスコープ外で使用するアプリケーションのデフォルトロガー
 var applicationLogger *slog.Logger
 
 func init() {
@@ -46,14 +45,14 @@ func logger(ctx context.Context) *slog.Logger {
 	return applicationLogger
 }
 
-// Event はINFOレベルでイベントのログを出力する
+// Event はINFOレベルのイベントログを出力する
 func Event(ctx context.Context, msg string) {
-	applicationLogger.Log(ctx, slog.LevelInfo, msg)
+	logger(ctx).Log(ctx, slog.LevelInfo, msg)
 }
 
-// Error はERRORレベルでエラーログを出力する
+// Error はERRORレベルのエラーログを出力する
 func Error(ctx context.Context, msg string) {
-	applicationLogger.Log(ctx, slog.LevelError, msg)
+	logger(ctx).Log(ctx, slog.LevelError, msg)
 }
 
 // Access はアクセスログを出力する
