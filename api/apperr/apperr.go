@@ -24,6 +24,10 @@ func (e Error) Error() string {
 	return e.message
 }
 
+func (e Error) Code() connect.Code {
+	return e.code
+}
+
 func (e Error) ConnectError() *connect.Error {
 	err := connect.NewError(e.code, errors.New(e.message))
 	d, _ := connect.NewErrorDetail(&errdetails.LocalizedMessage{
