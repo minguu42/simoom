@@ -27,13 +27,13 @@ func init() {
 	}))
 }
 
-// LogApplicationEvent はINFOレベルでアプリケーションの状況のログを出力する
-func LogApplicationEvent(ctx context.Context, msg string) {
+// Event はINFOレベルでイベントのログを出力する
+func Event(ctx context.Context, msg string) {
 	applicationLogger.Log(ctx, slog.LevelInfo, msg)
 }
 
-// LogApplicationError はERRORレベルでアプリケーションエラーのログを出力する
-func LogApplicationError(ctx context.Context, msg string) {
+// Error はERRORレベルでエラーログを出力する
+func Error(ctx context.Context, msg string) {
 	applicationLogger.Log(ctx, slog.LevelError, msg)
 }
 

@@ -23,7 +23,7 @@ func main() {
 
 	ctx := context.Background()
 	if err := mainRun(ctx); err != nil {
-		applog.LogApplicationError(ctx, fmt.Sprintf("failed to run server: %s", err))
+		applog.Error(ctx, fmt.Sprintf("failed to run server: %s", err))
 		os.Exit(1)
 	}
 }
@@ -52,9 +52,9 @@ func mainRun(ctx context.Context) error {
 		MaxHeaderBytes:    1 << 20,
 	}
 	go func() {
-		applog.LogApplicationEvent(ctx, "Start accepting requests")
+		applog.Event(ctx, "Start accepting requests")
 		if err := s.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			applog.LogApplicationError(ctx, fmt.Sprintf("failed to listen and handle requests: %s", err))
+			applog.Error(ctx, fmt.Sprintf("failed to listen and handle requests: %s", err))
 			return
 		}
 	}()
@@ -65,7 +65,7 @@ func mainRun(ctx context.Context) error {
 	if err := s.Shutdown(ctx); err != nil {
 		return fmt.Errorf("failed to shutdown server: %w", err)
 	}
-	applog.LogApplicationEvent(ctx, "Stop accepting requests")
+	applog.Event(ctx, "Stop accepting requests")
 
 	return nil
 }
