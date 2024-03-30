@@ -29,12 +29,6 @@ func init() {
 
 type loggerKey struct{}
 
-// SetLogger はリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
-func SetLogger(ctx context.Context, method string) context.Context {
-	l := applicationLogger.With(slog.String("method", method))
-	return context.WithValue(ctx, loggerKey{}, l)
-}
-
 // logger はコンテキストからリクエストロガーを取り出す
 // コンテキストにリクエストロガーが存在しなければアプリケーションロガーを使用する
 func logger(ctx context.Context) *slog.Logger {
@@ -45,12 +39,18 @@ func logger(ctx context.Context) *slog.Logger {
 	return applicationLogger
 }
 
-// Event はINFOレベルのイベントログを出力する
+// SetLogger はリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
+func SetLogger(ctx context.Context, method string) context.Context {
+	l := applicationLogger.With(slog.String("method", method))
+	return context.WithValue(ctx, loggerKey{}, l)
+}
+
+// Event はイベントログを出力する
 func Event(ctx context.Context, msg string) {
 	logger(ctx).Log(ctx, slog.LevelInfo, msg)
 }
 
-// Error はERRORレベルのエラーログを出力する
+// Error はエラーログを出力する
 func Error(ctx context.Context, msg string) {
 	logger(ctx).Log(ctx, slog.LevelError, msg)
 }
