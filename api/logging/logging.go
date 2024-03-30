@@ -1,5 +1,5 @@
-// Package applog はアプリケーションのログを扱うパッケージである
-package applog
+// Package logging はアプリケーションのロギングを行う関数を提供する
+package logging
 
 import (
 	"context"
