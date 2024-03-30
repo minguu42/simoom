@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"time"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/api/apperr"
@@ -27,19 +28,9 @@ func init() {
 	}))
 }
 
-// Event はINFOレベルでイベントのログを出力する
-func Event(ctx context.Context, msg string) {
-	applicationLogger.Log(ctx, slog.LevelInfo, msg)
-}
-
-// Error はERRORレベルでエラーログを出力する
-func Error(ctx context.Context, msg string) {
-	applicationLogger.Log(ctx, slog.LevelError, msg)
-}
-
 type loggerKey struct{}
 
-// SetLogger はアプリケーションロガーからリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
+// SetLogger はリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
 func SetLogger(ctx context.Context, method string) context.Context {
 	l := applicationLogger.With(slog.String("method", method))
 	return context.WithValue(ctx, loggerKey{}, l)
@@ -55,10 +46,22 @@ func logger(ctx context.Context) *slog.Logger {
 	return applicationLogger
 }
 
+// Event はINFOレベルでイベントのログを出力する
+func Event(ctx context.Context, msg string) {
+	applicationLogger.Log(ctx, slog.LevelInfo, msg)
+}
+
+// Error はERRORレベルでエラーログを出力する
+func Error(ctx context.Context, msg string) {
+	applicationLogger.Log(ctx, slog.LevelError, msg)
+}
+
 // Access はアクセスログを出力する
-func Access(ctx context.Context, method string, err error) {
+func Access(ctx context.Context, method string, executionTime time.Duration, err error) {
 	if err == nil { // if NO error
-		logger(ctx).LogAttrs(ctx, slog.LevelInfo, fmt.Sprintf("ok (0) %s", method))
+		logger(ctx).LogAttrs(ctx, slog.LevelInfo, fmt.Sprintf("ok (0) %s", method),
+			slog.Int64("execution_time", executionTime.Milliseconds()),
+		)
 		return
 	}
 
@@ -70,6 +73,8 @@ func Access(ctx context.Context, method string, err error) {
 	if appErr.Code() == connect.CodeUnknown {
 		level = slog.LevelError
 	}
-	msg := fmt.Sprintf("%s (%[1]d) %s", appErr.Code(), method)
-	logger(ctx).LogAttrs(ctx, level, msg, slog.String("detail", err.Error()))
+	logger(ctx).LogAttrs(ctx, level, fmt.Sprintf("%s (%[1]d) %s", appErr.Code(), method),
+		slog.Int64("execution_time", executionTime.Milliseconds()),
+		slog.String("detail", err.Error()),
+	)
 }
