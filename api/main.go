@@ -20,7 +20,6 @@ import (
 
 func main() {
 	time.Local = time.UTC
-	applog.Init()
 
 	ctx := context.Background()
 	if err := mainRun(ctx); err != nil {

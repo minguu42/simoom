@@ -15,10 +15,9 @@ import (
 // リクエストスコープ内ではこのロガーは使用せず、コンテキスト中のリクエストロガーを使用する
 var applicationLogger *slog.Logger
 
-// Init はアプリケーションロガーを初期化する
-func Init() {
+func init() {
 	applicationLogger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+		ReplaceAttr: func(_ []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.MessageKey {
 				a.Key = "message"
 			}
