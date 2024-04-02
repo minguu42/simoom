@@ -8,6 +8,8 @@ package sqlc
 import (
 	"context"
 	"database/sql"
+	"strings"
+	"time"
 )
 
 const createProject = `-- name: CreateProject :exec
@@ -390,6 +392,54 @@ func (q *Queries) ListStepsByTaskID(ctx context.Context, taskID string) ([]Step,
 	return items, nil
 }
 
+const listStepsByTaskIDs = `-- name: ListStepsByTaskIDs :many
+SELECT id, user_id, task_id, name, completed_at, created_at, updated_at
+FROM steps
+WHERE task_id IN (/*SLICE:task_IDs*/?)
+ORDER BY created_at
+`
+
+func (q *Queries) ListStepsByTaskIDs(ctx context.Context, taskIDs []string) ([]Step, error) {
+	query := listStepsByTaskIDs
+	var queryParams []interface{}
+	if len(taskIDs) > 0 {
+		for _, v := range taskIDs {
+			queryParams = append(queryParams, v)
+		}
+		query = strings.Replace(query, "/*SLICE:task_IDs*/?", strings.Repeat(",?", len(taskIDs))[1:], 1)
+	} else {
+		query = strings.Replace(query, "/*SLICE:task_IDs*/?", "NULL", 1)
+	}
+	rows, err := q.db.QueryContext(ctx, query, queryParams...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Step
+	for rows.Next() {
+		var i Step
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.TaskID,
+			&i.Name,
+			&i.CompletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listTagsByTaskID = `-- name: ListTagsByTaskID :many
 SELECT t.id, t.user_id, t.name, t.created_at, t.updated_at
 FROM tags AS t
@@ -412,6 +462,62 @@ func (q *Queries) ListTagsByTaskID(ctx context.Context, taskID string) ([]Tag, e
 			&i.Name,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listTagsByTaskIDs = `-- name: ListTagsByTaskIDs :many
+SELECT t.id, t.user_id, t.name, t.created_at, t.updated_at, tt.task_id
+FROM tags AS t
+  INNER JOIN tasks_tags AS tt ON t.id = tt.tag_id
+WHERE tt.task_id IN (/*SLICE:task_IDs*/?)
+`
+
+type ListTagsByTaskIDsRow struct {
+	ID        string
+	UserID    string
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	TaskID    string
+}
+
+func (q *Queries) ListTagsByTaskIDs(ctx context.Context, taskIDs []string) ([]ListTagsByTaskIDsRow, error) {
+	query := listTagsByTaskIDs
+	var queryParams []interface{}
+	if len(taskIDs) > 0 {
+		for _, v := range taskIDs {
+			queryParams = append(queryParams, v)
+		}
+		query = strings.Replace(query, "/*SLICE:task_IDs*/?", strings.Repeat(",?", len(taskIDs))[1:], 1)
+	} else {
+		query = strings.Replace(query, "/*SLICE:task_IDs*/?", "NULL", 1)
+	}
+	rows, err := q.db.QueryContext(ctx, query, queryParams...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListTagsByTaskIDsRow
+	for rows.Next() {
+		var i ListTagsByTaskIDsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.TaskID,
 		); err != nil {
 			return nil, err
 		}

@@ -36,6 +36,12 @@ FROM steps
 WHERE task_id = ?
 ORDER BY created_at;
 
+-- name: ListStepsByTaskIDs :many
+SELECT *
+FROM steps
+WHERE task_id IN (sqlc.slice('task_IDs'))
+ORDER BY created_at;
+
 -- name: GetStepByID :one
 SELECT *
 FROM steps
@@ -68,6 +74,12 @@ SELECT t.*
 FROM tags AS t
     INNER JOIN tasks_tags AS tt ON t.id = tt.tag_id
 WHERE tt.task_id = ?;
+
+-- name: ListTagsByTaskIDs :many
+SELECT t.*, tt.task_id
+FROM tags AS t
+  INNER JOIN tasks_tags AS tt ON t.id = tt.tag_id
+WHERE tt.task_id IN (sqlc.slice('task_IDs'));
 
 -- name: GetTagByID :one
 SELECT *
