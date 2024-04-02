@@ -20,7 +20,7 @@ migrate-apply: ## DBのスキーマの変更を適用する
 gen: ## コードを生成する
 	@go generate ./...
 	@buf generate
-	@rm -rf ./api/infra/mysql/sqlc && sqlc generate
+	@sqlc generate
 	@$(MAKE) fmt
 
 fmt: fmt-go fmt-proto fmt-tf ## コードを整形する
