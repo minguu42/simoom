@@ -36,9 +36,9 @@ type CreateTagInput struct {
 	Name string
 }
 
-func (in CreateTagInput) Create(g model.IDGenerator, userID string) model.Tag {
+func (in CreateTagInput) Create(g model.IDGenerator, userID model.UserID) model.Tag {
 	return model.Tag{
-		ID:     g.Generate(),
+		ID:     model.TagID(g.Generate()),
 		UserID: userID,
 		Name:   in.Name,
 	}
@@ -75,7 +75,7 @@ func (uc Tag) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error
 }
 
 type UpdateTagInput struct {
-	ID   string
+	ID   model.TagID
 	Name *string
 }
 
@@ -101,7 +101,7 @@ func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, erro
 }
 
 type DeleteTagInput struct {
-	ID string
+	ID model.TagID
 }
 
 func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {

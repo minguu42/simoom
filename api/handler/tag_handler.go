@@ -13,7 +13,7 @@ import (
 
 func newTag(t model.Tag) *simoompb.Tag {
 	return &simoompb.Tag{
-		Id:   t.ID,
+		Id:   string(t.ID),
 		Name: t.Name,
 	}
 }
@@ -64,7 +64,7 @@ func (h handler) UpdateTag(ctx context.Context, req *connect.Request[simoompb.Up
 	}
 
 	out, err := h.tag.UpdateTag(ctx, usecase.UpdateTagInput{
-		ID:   req.Msg.Id,
+		ID:   model.TagID(req.Msg.Id),
 		Name: req.Msg.Name,
 	})
 	if err != nil {
@@ -78,7 +78,9 @@ func (h handler) DeleteTag(ctx context.Context, req *connect.Request[simoompb.De
 		return nil, apperr.ErrInvalidRequest(err)
 	}
 
-	if err := h.tag.DeleteTag(ctx, usecase.DeleteTagInput{ID: req.Msg.Id}); err != nil {
+	if err := h.tag.DeleteTag(ctx, usecase.DeleteTagInput{
+		ID: model.TagID(req.Msg.Id),
+	}); err != nil {
 		return nil, err
 	}
 	return connect.NewResponse(&emptypb.Empty{}), nil

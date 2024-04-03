@@ -14,8 +14,8 @@ import (
 
 func newStep(s model.Step) *simoompb.Step {
 	return &simoompb.Step{
-		Id:          s.ID,
-		TaskId:      s.TaskID,
+		Id:          string(s.ID),
+		TaskId:      string(s.TaskID),
 		Name:        s.Name,
 		CompletedAt: newTimestamp(s.CompletedAt),
 	}
@@ -35,7 +35,7 @@ func (h handler) CreateStep(ctx context.Context, req *connect.Request[simoompb.C
 	}
 
 	out, err := h.step.CreateStep(ctx, usecase.CreateStepInput{
-		TaskID: req.Msg.TaskId,
+		TaskID: model.TaskID(req.Msg.TaskId),
 		Name:   req.Msg.Name,
 	})
 	if err != nil {
@@ -50,7 +50,7 @@ func (h handler) UpdateStep(ctx context.Context, req *connect.Request[simoompb.U
 	}
 
 	out, err := h.step.UpdateStep(ctx, usecase.UpdateStepInput{
-		ID:          req.Msg.Id,
+		ID:          model.StepID(req.Msg.Id),
 		Name:        req.Msg.Name,
 		CompletedAt: pointers.Ref(req.Msg.CompletedAt.AsTime()),
 	})
@@ -65,7 +65,9 @@ func (h handler) DeleteStep(ctx context.Context, req *connect.Request[simoompb.D
 		return nil, apperr.ErrInvalidRequest(err)
 	}
 
-	if err := h.step.DeleteStep(ctx, usecase.DeleteStepInput{ID: req.Msg.Id}); err != nil {
+	if err := h.step.DeleteStep(ctx, usecase.DeleteStepInput{
+		ID: model.StepID(req.Msg.Id),
+	}); err != nil {
 		return nil, err
 	}
 	return connect.NewResponse(&emptypb.Empty{}), nil

@@ -13,8 +13,8 @@ import (
 
 func newTask(t model.Task) *simoompb.Task {
 	return &simoompb.Task{
-		Id:          t.ID,
-		ProjectId:   t.ProjectID,
+		Id:          string(t.ID),
+		ProjectId:   string(t.ProjectID),
 		Steps:       newSteps(t.Steps),
 		Tags:        newTags(t.Tags),
 		Name:        t.Name,
@@ -39,7 +39,7 @@ func (h handler) CreateTask(ctx context.Context, req *connect.Request[simoompb.C
 	}
 
 	out, err := h.task.CreateTask(ctx, usecase.CreateTaskInput{
-		ProjectID: req.Msg.ProjectId,
+		ProjectID: model.ProjectID(req.Msg.ProjectId),
 		Name:      req.Msg.Name,
 		Priority:  uint(req.Msg.Priority),
 	})
@@ -57,8 +57,8 @@ func (h handler) ListTasks(ctx context.Context, req *connect.Request[simoompb.Li
 	out, err := h.task.ListTasks(ctx, usecase.ListTasksInput{
 		Limit:     uint(req.Msg.Limit),
 		Offset:    uint(req.Msg.Offset),
-		ProjectID: req.Msg.ProjectId,
-		TagID:     req.Msg.TagId,
+		ProjectID: (*model.ProjectID)(req.Msg.ProjectId),
+		TagID:     (*model.TagID)(req.Msg.TagId),
 	})
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.U
 	}
 
 	out, err := h.task.UpdateTask(ctx, usecase.UpdateTaskInput{
-		ID:          req.Msg.Id,
+		ID:          model.TaskID(req.Msg.Id),
 		Name:        req.Msg.Name,
 		Content:     req.Msg.Content,
 		Priority:    nil,
@@ -94,7 +94,7 @@ func (h handler) DeleteTask(ctx context.Context, req *connect.Request[simoompb.D
 	}
 
 	if err := h.task.DeleteTask(ctx, usecase.DeleteTaskInput{
-		ID: req.Msg.Id,
+		ID: model.TaskID(req.Msg.Id),
 	}); err != nil {
 		return nil, err
 	}

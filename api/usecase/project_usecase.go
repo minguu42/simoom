@@ -37,9 +37,9 @@ type CreateProjectInput struct {
 	Color string
 }
 
-func (in CreateProjectInput) Create(g model.IDGenerator, userID string) model.Project {
+func (in CreateProjectInput) Create(g model.IDGenerator, userID model.UserID) model.Project {
 	return model.Project{
-		ID:         g.Generate(),
+		ID:         model.ProjectID(g.Generate()),
 		UserID:     userID,
 		Name:       in.Name,
 		Color:      in.Color,
@@ -78,7 +78,7 @@ func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (Proje
 }
 
 type UpdateProjectInput struct {
-	ID         string
+	ID         model.ProjectID
 	Name       *string
 	Color      *string
 	IsArchived *bool
@@ -112,7 +112,7 @@ func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (Pro
 }
 
 type DeleteProjectInput struct {
-	ID string
+	ID model.ProjectID
 }
 
 func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) error {
