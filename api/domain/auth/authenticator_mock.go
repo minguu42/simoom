@@ -26,10 +26,10 @@ var _ Authenticator = &AuthenticatorMock{}
 //			CreateRefreshTokenFunc: func(ctx context.Context, user model.User) (string, error) {
 //				panic("mock out the CreateRefreshToken method")
 //			},
-//			ExtractIDFromAccessTokenFunc: func(token string) (string, error) {
+//			ExtractIDFromAccessTokenFunc: func(token string) (model.UserID, error) {
 //				panic("mock out the ExtractIDFromAccessToken method")
 //			},
-//			ExtractIDFromRefreshTokenFunc: func(token string) (string, error) {
+//			ExtractIDFromRefreshTokenFunc: func(token string) (model.UserID, error) {
 //				panic("mock out the ExtractIDFromRefreshToken method")
 //			},
 //		}
@@ -46,10 +46,10 @@ type AuthenticatorMock struct {
 	CreateRefreshTokenFunc func(ctx context.Context, user model.User) (string, error)
 
 	// ExtractIDFromAccessTokenFunc mocks the ExtractIDFromAccessToken method.
-	ExtractIDFromAccessTokenFunc func(token string) (string, error)
+	ExtractIDFromAccessTokenFunc func(token string) (model.UserID, error)
 
 	// ExtractIDFromRefreshTokenFunc mocks the ExtractIDFromRefreshToken method.
-	ExtractIDFromRefreshTokenFunc func(token string) (string, error)
+	ExtractIDFromRefreshTokenFunc func(token string) (model.UserID, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -157,7 +157,7 @@ func (mock *AuthenticatorMock) CreateRefreshTokenCalls() []struct {
 }
 
 // ExtractIDFromAccessToken calls ExtractIDFromAccessTokenFunc.
-func (mock *AuthenticatorMock) ExtractIDFromAccessToken(token string) (string, error) {
+func (mock *AuthenticatorMock) ExtractIDFromAccessToken(token string) (model.UserID, error) {
 	if mock.ExtractIDFromAccessTokenFunc == nil {
 		panic("AuthenticatorMock.ExtractIDFromAccessTokenFunc: method is nil but Authenticator.ExtractIDFromAccessToken was just called")
 	}
@@ -189,7 +189,7 @@ func (mock *AuthenticatorMock) ExtractIDFromAccessTokenCalls() []struct {
 }
 
 // ExtractIDFromRefreshToken calls ExtractIDFromRefreshTokenFunc.
-func (mock *AuthenticatorMock) ExtractIDFromRefreshToken(token string) (string, error) {
+func (mock *AuthenticatorMock) ExtractIDFromRefreshToken(token string) (model.UserID, error) {
 	if mock.ExtractIDFromRefreshTokenFunc == nil {
 		panic("AuthenticatorMock.ExtractIDFromRefreshTokenFunc: method is nil but Authenticator.ExtractIDFromRefreshToken was just called")
 	}
