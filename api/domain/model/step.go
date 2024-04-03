@@ -2,10 +2,12 @@ package model
 
 import "time"
 
+type StepID string
+
 type Step struct {
-	ID          string
-	UserID      string
-	TaskID      string
+	ID          StepID
+	UserID      UserID
+	TaskID      TaskID
 	Name        string
 	CompletedAt *time.Time
 }

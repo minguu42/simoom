@@ -1,7 +1,9 @@
 package model
 
+type TagID string
+
 type Tag struct {
-	ID     string
-	UserID string
+	ID     TagID
+	UserID UserID
 	Name   string
 }

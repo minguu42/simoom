@@ -2,12 +2,14 @@ package model
 
 import "time"
 
+type TaskID string
+
 type Task struct {
-	ID          string
+	ID          TaskID
 	Steps       []Step
 	Tags        []Tag
-	UserID      string
-	ProjectID   string
+	UserID      UserID
+	ProjectID   ProjectID
 	Name        string
 	Content     string
 	Priority    uint

@@ -1,8 +1,10 @@
 package model
 
+type ProjectID string
+
 type Project struct {
-	ID         string
-	UserID     string
+	ID         ProjectID
+	UserID     UserID
 	Name       string
 	Color      string
 	IsArchived bool
