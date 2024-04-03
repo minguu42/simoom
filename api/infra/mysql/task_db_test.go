@@ -57,11 +57,11 @@ func TestClient_CreateTask(t *testing.T) {
 func TestClient_ListTasksByUserID(t *testing.T) {
 	type args struct {
 		ctx       context.Context
-		userID    string
+		userID    model.UserID
 		limit     uint
 		offset    uint
-		projectID *string
-		tagID     *string
+		projectID *model.ProjectID
+		tagID     *model.TagID
 	}
 	dueOn := time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)
 	tests := []struct {
@@ -141,7 +141,7 @@ func TestClient_ListTasksByUserID(t *testing.T) {
 func TestClient_GetTaskByID(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.TaskID
 	}
 	dueOn := time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)
 	tests := []struct {
@@ -281,7 +281,7 @@ func TestClient_UpdateTask(t *testing.T) {
 func TestClient_DeleteTask(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.TaskID
 	}
 	tests := []struct {
 		name string

@@ -22,13 +22,13 @@ type Authenticator struct {
 
 type accessTokenClaims struct {
 	jwt.RegisteredClaims
-	Name string `json:"name"`
-	ID   string `json:"id"`
+	Name string       `json:"name"`
+	ID   model.UserID `json:"id"`
 }
 
 type refreshTokenClaims struct {
 	jwt.RegisteredClaims
-	ID string `json:"id"`
+	ID model.UserID `json:"id"`
 }
 
 // CreateAccessToken はアクセスシークレットで署名された、ユーザ名とユーザID、有効期限からなるペイロードをエンコードしてアクセストークンを作成する

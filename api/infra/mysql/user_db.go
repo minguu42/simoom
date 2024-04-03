@@ -13,7 +13,7 @@ import (
 
 func newModelUser(u sqlc.User) model.User {
 	return model.User{
-		ID:       u.ID,
+		ID:       model.UserID(u.ID),
 		Name:     u.Name,
 		Email:    u.Email,
 		Password: u.Password,
@@ -22,7 +22,7 @@ func newModelUser(u sqlc.User) model.User {
 
 func (c *Client) CreateUser(ctx context.Context, u model.User) error {
 	if err := c.queries(ctx).CreateUser(ctx, sqlc.CreateUserParams{
-		ID:       u.ID,
+		ID:       string(u.ID),
 		Name:     u.Name,
 		Email:    u.Email,
 		Password: u.Password,
@@ -32,8 +32,8 @@ func (c *Client) CreateUser(ctx context.Context, u model.User) error {
 	return nil
 }
 
-func (c *Client) GetUserByID(ctx context.Context, id string) (model.User, error) {
-	u, err := c.queries(ctx).GetUserByID(ctx, id)
+func (c *Client) GetUserByID(ctx context.Context, id model.UserID) (model.User, error) {
+	u, err := c.queries(ctx).GetUserByID(ctx, string(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.User{}, repository.ErrModelNotFound
