@@ -35,46 +35,46 @@ var _ Repository = &RepositoryMock{}
 //			CreateUserFunc: func(ctx context.Context, u model.User) error {
 //				panic("mock out the CreateUser method")
 //			},
-//			DeleteProjectFunc: func(ctx context.Context, id string) error {
+//			DeleteProjectFunc: func(ctx context.Context, id model.ProjectID) error {
 //				panic("mock out the DeleteProject method")
 //			},
-//			DeleteStepFunc: func(ctx context.Context, id string) error {
+//			DeleteStepFunc: func(ctx context.Context, id model.StepID) error {
 //				panic("mock out the DeleteStep method")
 //			},
-//			DeleteTagFunc: func(ctx context.Context, id string) error {
+//			DeleteTagFunc: func(ctx context.Context, id model.TagID) error {
 //				panic("mock out the DeleteTag method")
 //			},
-//			DeleteTaskFunc: func(ctx context.Context, id string) error {
+//			DeleteTaskFunc: func(ctx context.Context, id model.TaskID) error {
 //				panic("mock out the DeleteTask method")
 //			},
-//			GetProjectByIDFunc: func(ctx context.Context, id string) (model.Project, error) {
+//			GetProjectByIDFunc: func(ctx context.Context, id model.ProjectID) (model.Project, error) {
 //				panic("mock out the GetProjectByID method")
 //			},
-//			GetStepByIDFunc: func(ctx context.Context, id string) (model.Step, error) {
+//			GetStepByIDFunc: func(ctx context.Context, id model.StepID) (model.Step, error) {
 //				panic("mock out the GetStepByID method")
 //			},
-//			GetTagByIDFunc: func(ctx context.Context, id string) (model.Tag, error) {
+//			GetTagByIDFunc: func(ctx context.Context, id model.TagID) (model.Tag, error) {
 //				panic("mock out the GetTagByID method")
 //			},
-//			GetTaskByIDFunc: func(ctx context.Context, id string) (model.Task, error) {
+//			GetTaskByIDFunc: func(ctx context.Context, id model.TaskID) (model.Task, error) {
 //				panic("mock out the GetTaskByID method")
 //			},
 //			GetUserByEmailFunc: func(ctx context.Context, email string) (model.User, error) {
 //				panic("mock out the GetUserByEmail method")
 //			},
-//			GetUserByIDFunc: func(ctx context.Context, id string) (model.User, error) {
+//			GetUserByIDFunc: func(ctx context.Context, id model.UserID) (model.User, error) {
 //				panic("mock out the GetUserByID method")
 //			},
 //			GetUserByNameFunc: func(ctx context.Context, name string) (model.User, error) {
 //				panic("mock out the GetUserByName method")
 //			},
-//			ListProjectsByUserIDFunc: func(ctx context.Context, userID string, limit uint, offset uint) ([]model.Project, error) {
+//			ListProjectsByUserIDFunc: func(ctx context.Context, userID model.UserID, limit uint, offset uint) ([]model.Project, error) {
 //				panic("mock out the ListProjectsByUserID method")
 //			},
-//			ListTagsByUserIDFunc: func(ctx context.Context, userID string, limit uint, offset uint) ([]model.Tag, error) {
+//			ListTagsByUserIDFunc: func(ctx context.Context, userID model.UserID, limit uint, offset uint) ([]model.Tag, error) {
 //				panic("mock out the ListTagsByUserID method")
 //			},
-//			ListTasksByUserIDFunc: func(ctx context.Context, userID string, limit uint, offset uint, projectID *string, tagID *string) ([]model.Task, error) {
+//			ListTasksByUserIDFunc: func(ctx context.Context, userID model.UserID, limit uint, offset uint, projectID *model.ProjectID, tagID *model.TagID) ([]model.Task, error) {
 //				panic("mock out the ListTasksByUserID method")
 //			},
 //			TransactionFunc: func(ctx context.Context, fn func(ctxWithTx context.Context) error) error {
@@ -115,46 +115,46 @@ type RepositoryMock struct {
 	CreateUserFunc func(ctx context.Context, u model.User) error
 
 	// DeleteProjectFunc mocks the DeleteProject method.
-	DeleteProjectFunc func(ctx context.Context, id string) error
+	DeleteProjectFunc func(ctx context.Context, id model.ProjectID) error
 
 	// DeleteStepFunc mocks the DeleteStep method.
-	DeleteStepFunc func(ctx context.Context, id string) error
+	DeleteStepFunc func(ctx context.Context, id model.StepID) error
 
 	// DeleteTagFunc mocks the DeleteTag method.
-	DeleteTagFunc func(ctx context.Context, id string) error
+	DeleteTagFunc func(ctx context.Context, id model.TagID) error
 
 	// DeleteTaskFunc mocks the DeleteTask method.
-	DeleteTaskFunc func(ctx context.Context, id string) error
+	DeleteTaskFunc func(ctx context.Context, id model.TaskID) error
 
 	// GetProjectByIDFunc mocks the GetProjectByID method.
-	GetProjectByIDFunc func(ctx context.Context, id string) (model.Project, error)
+	GetProjectByIDFunc func(ctx context.Context, id model.ProjectID) (model.Project, error)
 
 	// GetStepByIDFunc mocks the GetStepByID method.
-	GetStepByIDFunc func(ctx context.Context, id string) (model.Step, error)
+	GetStepByIDFunc func(ctx context.Context, id model.StepID) (model.Step, error)
 
 	// GetTagByIDFunc mocks the GetTagByID method.
-	GetTagByIDFunc func(ctx context.Context, id string) (model.Tag, error)
+	GetTagByIDFunc func(ctx context.Context, id model.TagID) (model.Tag, error)
 
 	// GetTaskByIDFunc mocks the GetTaskByID method.
-	GetTaskByIDFunc func(ctx context.Context, id string) (model.Task, error)
+	GetTaskByIDFunc func(ctx context.Context, id model.TaskID) (model.Task, error)
 
 	// GetUserByEmailFunc mocks the GetUserByEmail method.
 	GetUserByEmailFunc func(ctx context.Context, email string) (model.User, error)
 
 	// GetUserByIDFunc mocks the GetUserByID method.
-	GetUserByIDFunc func(ctx context.Context, id string) (model.User, error)
+	GetUserByIDFunc func(ctx context.Context, id model.UserID) (model.User, error)
 
 	// GetUserByNameFunc mocks the GetUserByName method.
 	GetUserByNameFunc func(ctx context.Context, name string) (model.User, error)
 
 	// ListProjectsByUserIDFunc mocks the ListProjectsByUserID method.
-	ListProjectsByUserIDFunc func(ctx context.Context, userID string, limit uint, offset uint) ([]model.Project, error)
+	ListProjectsByUserIDFunc func(ctx context.Context, userID model.UserID, limit uint, offset uint) ([]model.Project, error)
 
 	// ListTagsByUserIDFunc mocks the ListTagsByUserID method.
-	ListTagsByUserIDFunc func(ctx context.Context, userID string, limit uint, offset uint) ([]model.Tag, error)
+	ListTagsByUserIDFunc func(ctx context.Context, userID model.UserID, limit uint, offset uint) ([]model.Tag, error)
 
 	// ListTasksByUserIDFunc mocks the ListTasksByUserID method.
-	ListTasksByUserIDFunc func(ctx context.Context, userID string, limit uint, offset uint, projectID *string, tagID *string) ([]model.Task, error)
+	ListTasksByUserIDFunc func(ctx context.Context, userID model.UserID, limit uint, offset uint, projectID *model.ProjectID, tagID *model.TagID) ([]model.Task, error)
 
 	// TransactionFunc mocks the Transaction method.
 	TransactionFunc func(ctx context.Context, fn func(ctxWithTx context.Context) error) error
@@ -213,56 +213,56 @@ type RepositoryMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.ProjectID
 		}
 		// DeleteStep holds details about calls to the DeleteStep method.
 		DeleteStep []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.StepID
 		}
 		// DeleteTag holds details about calls to the DeleteTag method.
 		DeleteTag []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.TagID
 		}
 		// DeleteTask holds details about calls to the DeleteTask method.
 		DeleteTask []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.TaskID
 		}
 		// GetProjectByID holds details about calls to the GetProjectByID method.
 		GetProjectByID []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.ProjectID
 		}
 		// GetStepByID holds details about calls to the GetStepByID method.
 		GetStepByID []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.StepID
 		}
 		// GetTagByID holds details about calls to the GetTagByID method.
 		GetTagByID []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.TagID
 		}
 		// GetTaskByID holds details about calls to the GetTaskByID method.
 		GetTaskByID []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.TaskID
 		}
 		// GetUserByEmail holds details about calls to the GetUserByEmail method.
 		GetUserByEmail []struct {
@@ -276,7 +276,7 @@ type RepositoryMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ID is the id argument value.
-			ID string
+			ID model.UserID
 		}
 		// GetUserByName holds details about calls to the GetUserByName method.
 		GetUserByName []struct {
@@ -290,7 +290,7 @@ type RepositoryMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// UserID is the userID argument value.
-			UserID string
+			UserID model.UserID
 			// Limit is the limit argument value.
 			Limit uint
 			// Offset is the offset argument value.
@@ -301,7 +301,7 @@ type RepositoryMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// UserID is the userID argument value.
-			UserID string
+			UserID model.UserID
 			// Limit is the limit argument value.
 			Limit uint
 			// Offset is the offset argument value.
@@ -312,15 +312,15 @@ type RepositoryMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// UserID is the userID argument value.
-			UserID string
+			UserID model.UserID
 			// Limit is the limit argument value.
 			Limit uint
 			// Offset is the offset argument value.
 			Offset uint
 			// ProjectID is the projectID argument value.
-			ProjectID *string
+			ProjectID *model.ProjectID
 			// TagID is the tagID argument value.
-			TagID *string
+			TagID *model.TagID
 		}
 		// Transaction holds details about calls to the Transaction method.
 		Transaction []struct {
@@ -565,13 +565,13 @@ func (mock *RepositoryMock) CreateUserCalls() []struct {
 }
 
 // DeleteProject calls DeleteProjectFunc.
-func (mock *RepositoryMock) DeleteProject(ctx context.Context, id string) error {
+func (mock *RepositoryMock) DeleteProject(ctx context.Context, id model.ProjectID) error {
 	if mock.DeleteProjectFunc == nil {
 		panic("RepositoryMock.DeleteProjectFunc: method is nil but Repository.DeleteProject was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.ProjectID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -588,11 +588,11 @@ func (mock *RepositoryMock) DeleteProject(ctx context.Context, id string) error 
 //	len(mockedRepository.DeleteProjectCalls())
 func (mock *RepositoryMock) DeleteProjectCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.ProjectID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.ProjectID
 	}
 	mock.lockDeleteProject.RLock()
 	calls = mock.calls.DeleteProject
@@ -601,13 +601,13 @@ func (mock *RepositoryMock) DeleteProjectCalls() []struct {
 }
 
 // DeleteStep calls DeleteStepFunc.
-func (mock *RepositoryMock) DeleteStep(ctx context.Context, id string) error {
+func (mock *RepositoryMock) DeleteStep(ctx context.Context, id model.StepID) error {
 	if mock.DeleteStepFunc == nil {
 		panic("RepositoryMock.DeleteStepFunc: method is nil but Repository.DeleteStep was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.StepID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -624,11 +624,11 @@ func (mock *RepositoryMock) DeleteStep(ctx context.Context, id string) error {
 //	len(mockedRepository.DeleteStepCalls())
 func (mock *RepositoryMock) DeleteStepCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.StepID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.StepID
 	}
 	mock.lockDeleteStep.RLock()
 	calls = mock.calls.DeleteStep
@@ -637,13 +637,13 @@ func (mock *RepositoryMock) DeleteStepCalls() []struct {
 }
 
 // DeleteTag calls DeleteTagFunc.
-func (mock *RepositoryMock) DeleteTag(ctx context.Context, id string) error {
+func (mock *RepositoryMock) DeleteTag(ctx context.Context, id model.TagID) error {
 	if mock.DeleteTagFunc == nil {
 		panic("RepositoryMock.DeleteTagFunc: method is nil but Repository.DeleteTag was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TagID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -660,11 +660,11 @@ func (mock *RepositoryMock) DeleteTag(ctx context.Context, id string) error {
 //	len(mockedRepository.DeleteTagCalls())
 func (mock *RepositoryMock) DeleteTagCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.TagID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TagID
 	}
 	mock.lockDeleteTag.RLock()
 	calls = mock.calls.DeleteTag
@@ -673,13 +673,13 @@ func (mock *RepositoryMock) DeleteTagCalls() []struct {
 }
 
 // DeleteTask calls DeleteTaskFunc.
-func (mock *RepositoryMock) DeleteTask(ctx context.Context, id string) error {
+func (mock *RepositoryMock) DeleteTask(ctx context.Context, id model.TaskID) error {
 	if mock.DeleteTaskFunc == nil {
 		panic("RepositoryMock.DeleteTaskFunc: method is nil but Repository.DeleteTask was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TaskID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -696,11 +696,11 @@ func (mock *RepositoryMock) DeleteTask(ctx context.Context, id string) error {
 //	len(mockedRepository.DeleteTaskCalls())
 func (mock *RepositoryMock) DeleteTaskCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.TaskID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TaskID
 	}
 	mock.lockDeleteTask.RLock()
 	calls = mock.calls.DeleteTask
@@ -709,13 +709,13 @@ func (mock *RepositoryMock) DeleteTaskCalls() []struct {
 }
 
 // GetProjectByID calls GetProjectByIDFunc.
-func (mock *RepositoryMock) GetProjectByID(ctx context.Context, id string) (model.Project, error) {
+func (mock *RepositoryMock) GetProjectByID(ctx context.Context, id model.ProjectID) (model.Project, error) {
 	if mock.GetProjectByIDFunc == nil {
 		panic("RepositoryMock.GetProjectByIDFunc: method is nil but Repository.GetProjectByID was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.ProjectID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -732,11 +732,11 @@ func (mock *RepositoryMock) GetProjectByID(ctx context.Context, id string) (mode
 //	len(mockedRepository.GetProjectByIDCalls())
 func (mock *RepositoryMock) GetProjectByIDCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.ProjectID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.ProjectID
 	}
 	mock.lockGetProjectByID.RLock()
 	calls = mock.calls.GetProjectByID
@@ -745,13 +745,13 @@ func (mock *RepositoryMock) GetProjectByIDCalls() []struct {
 }
 
 // GetStepByID calls GetStepByIDFunc.
-func (mock *RepositoryMock) GetStepByID(ctx context.Context, id string) (model.Step, error) {
+func (mock *RepositoryMock) GetStepByID(ctx context.Context, id model.StepID) (model.Step, error) {
 	if mock.GetStepByIDFunc == nil {
 		panic("RepositoryMock.GetStepByIDFunc: method is nil but Repository.GetStepByID was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.StepID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -768,11 +768,11 @@ func (mock *RepositoryMock) GetStepByID(ctx context.Context, id string) (model.S
 //	len(mockedRepository.GetStepByIDCalls())
 func (mock *RepositoryMock) GetStepByIDCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.StepID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.StepID
 	}
 	mock.lockGetStepByID.RLock()
 	calls = mock.calls.GetStepByID
@@ -781,13 +781,13 @@ func (mock *RepositoryMock) GetStepByIDCalls() []struct {
 }
 
 // GetTagByID calls GetTagByIDFunc.
-func (mock *RepositoryMock) GetTagByID(ctx context.Context, id string) (model.Tag, error) {
+func (mock *RepositoryMock) GetTagByID(ctx context.Context, id model.TagID) (model.Tag, error) {
 	if mock.GetTagByIDFunc == nil {
 		panic("RepositoryMock.GetTagByIDFunc: method is nil but Repository.GetTagByID was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TagID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -804,11 +804,11 @@ func (mock *RepositoryMock) GetTagByID(ctx context.Context, id string) (model.Ta
 //	len(mockedRepository.GetTagByIDCalls())
 func (mock *RepositoryMock) GetTagByIDCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.TagID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TagID
 	}
 	mock.lockGetTagByID.RLock()
 	calls = mock.calls.GetTagByID
@@ -817,13 +817,13 @@ func (mock *RepositoryMock) GetTagByIDCalls() []struct {
 }
 
 // GetTaskByID calls GetTaskByIDFunc.
-func (mock *RepositoryMock) GetTaskByID(ctx context.Context, id string) (model.Task, error) {
+func (mock *RepositoryMock) GetTaskByID(ctx context.Context, id model.TaskID) (model.Task, error) {
 	if mock.GetTaskByIDFunc == nil {
 		panic("RepositoryMock.GetTaskByIDFunc: method is nil but Repository.GetTaskByID was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TaskID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -840,11 +840,11 @@ func (mock *RepositoryMock) GetTaskByID(ctx context.Context, id string) (model.T
 //	len(mockedRepository.GetTaskByIDCalls())
 func (mock *RepositoryMock) GetTaskByIDCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.TaskID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.TaskID
 	}
 	mock.lockGetTaskByID.RLock()
 	calls = mock.calls.GetTaskByID
@@ -889,13 +889,13 @@ func (mock *RepositoryMock) GetUserByEmailCalls() []struct {
 }
 
 // GetUserByID calls GetUserByIDFunc.
-func (mock *RepositoryMock) GetUserByID(ctx context.Context, id string) (model.User, error) {
+func (mock *RepositoryMock) GetUserByID(ctx context.Context, id model.UserID) (model.User, error) {
 	if mock.GetUserByIDFunc == nil {
 		panic("RepositoryMock.GetUserByIDFunc: method is nil but Repository.GetUserByID was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context
-		ID  string
+		ID  model.UserID
 	}{
 		Ctx: ctx,
 		ID:  id,
@@ -912,11 +912,11 @@ func (mock *RepositoryMock) GetUserByID(ctx context.Context, id string) (model.U
 //	len(mockedRepository.GetUserByIDCalls())
 func (mock *RepositoryMock) GetUserByIDCalls() []struct {
 	Ctx context.Context
-	ID  string
+	ID  model.UserID
 } {
 	var calls []struct {
 		Ctx context.Context
-		ID  string
+		ID  model.UserID
 	}
 	mock.lockGetUserByID.RLock()
 	calls = mock.calls.GetUserByID
@@ -961,13 +961,13 @@ func (mock *RepositoryMock) GetUserByNameCalls() []struct {
 }
 
 // ListProjectsByUserID calls ListProjectsByUserIDFunc.
-func (mock *RepositoryMock) ListProjectsByUserID(ctx context.Context, userID string, limit uint, offset uint) ([]model.Project, error) {
+func (mock *RepositoryMock) ListProjectsByUserID(ctx context.Context, userID model.UserID, limit uint, offset uint) ([]model.Project, error) {
 	if mock.ListProjectsByUserIDFunc == nil {
 		panic("RepositoryMock.ListProjectsByUserIDFunc: method is nil but Repository.ListProjectsByUserID was just called")
 	}
 	callInfo := struct {
 		Ctx    context.Context
-		UserID string
+		UserID model.UserID
 		Limit  uint
 		Offset uint
 	}{
@@ -988,13 +988,13 @@ func (mock *RepositoryMock) ListProjectsByUserID(ctx context.Context, userID str
 //	len(mockedRepository.ListProjectsByUserIDCalls())
 func (mock *RepositoryMock) ListProjectsByUserIDCalls() []struct {
 	Ctx    context.Context
-	UserID string
+	UserID model.UserID
 	Limit  uint
 	Offset uint
 } {
 	var calls []struct {
 		Ctx    context.Context
-		UserID string
+		UserID model.UserID
 		Limit  uint
 		Offset uint
 	}
@@ -1005,13 +1005,13 @@ func (mock *RepositoryMock) ListProjectsByUserIDCalls() []struct {
 }
 
 // ListTagsByUserID calls ListTagsByUserIDFunc.
-func (mock *RepositoryMock) ListTagsByUserID(ctx context.Context, userID string, limit uint, offset uint) ([]model.Tag, error) {
+func (mock *RepositoryMock) ListTagsByUserID(ctx context.Context, userID model.UserID, limit uint, offset uint) ([]model.Tag, error) {
 	if mock.ListTagsByUserIDFunc == nil {
 		panic("RepositoryMock.ListTagsByUserIDFunc: method is nil but Repository.ListTagsByUserID was just called")
 	}
 	callInfo := struct {
 		Ctx    context.Context
-		UserID string
+		UserID model.UserID
 		Limit  uint
 		Offset uint
 	}{
@@ -1032,13 +1032,13 @@ func (mock *RepositoryMock) ListTagsByUserID(ctx context.Context, userID string,
 //	len(mockedRepository.ListTagsByUserIDCalls())
 func (mock *RepositoryMock) ListTagsByUserIDCalls() []struct {
 	Ctx    context.Context
-	UserID string
+	UserID model.UserID
 	Limit  uint
 	Offset uint
 } {
 	var calls []struct {
 		Ctx    context.Context
-		UserID string
+		UserID model.UserID
 		Limit  uint
 		Offset uint
 	}
@@ -1049,17 +1049,17 @@ func (mock *RepositoryMock) ListTagsByUserIDCalls() []struct {
 }
 
 // ListTasksByUserID calls ListTasksByUserIDFunc.
-func (mock *RepositoryMock) ListTasksByUserID(ctx context.Context, userID string, limit uint, offset uint, projectID *string, tagID *string) ([]model.Task, error) {
+func (mock *RepositoryMock) ListTasksByUserID(ctx context.Context, userID model.UserID, limit uint, offset uint, projectID *model.ProjectID, tagID *model.TagID) ([]model.Task, error) {
 	if mock.ListTasksByUserIDFunc == nil {
 		panic("RepositoryMock.ListTasksByUserIDFunc: method is nil but Repository.ListTasksByUserID was just called")
 	}
 	callInfo := struct {
 		Ctx       context.Context
-		UserID    string
+		UserID    model.UserID
 		Limit     uint
 		Offset    uint
-		ProjectID *string
-		TagID     *string
+		ProjectID *model.ProjectID
+		TagID     *model.TagID
 	}{
 		Ctx:       ctx,
 		UserID:    userID,
@@ -1080,19 +1080,19 @@ func (mock *RepositoryMock) ListTasksByUserID(ctx context.Context, userID string
 //	len(mockedRepository.ListTasksByUserIDCalls())
 func (mock *RepositoryMock) ListTasksByUserIDCalls() []struct {
 	Ctx       context.Context
-	UserID    string
+	UserID    model.UserID
 	Limit     uint
 	Offset    uint
-	ProjectID *string
-	TagID     *string
+	ProjectID *model.ProjectID
+	TagID     *model.TagID
 } {
 	var calls []struct {
 		Ctx       context.Context
-		UserID    string
+		UserID    model.UserID
 		Limit     uint
 		Offset    uint
-		ProjectID *string
-		TagID     *string
+		ProjectID *model.ProjectID
+		TagID     *model.TagID
 	}
 	mock.lockListTasksByUserID.RLock()
 	calls = mock.calls.ListTasksByUserID

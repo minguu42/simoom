@@ -13,7 +13,7 @@ import (
 
 func newProject(p model.Project) *simoompb.Project {
 	return &simoompb.Project{
-		Id:         p.ID,
+		Id:         string(p.ID),
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
@@ -67,7 +67,7 @@ func (h handler) UpdateProject(ctx context.Context, req *connect.Request[simoomp
 	}
 
 	out, err := h.project.UpdateProject(ctx, usecase.UpdateProjectInput{
-		ID:         req.Msg.Id,
+		ID:         model.ProjectID(req.Msg.Id),
 		Name:       req.Msg.Name,
 		Color:      req.Msg.Color,
 		IsArchived: req.Msg.IsArchived,
@@ -84,7 +84,7 @@ func (h handler) DeleteProject(ctx context.Context, req *connect.Request[simoomp
 	}
 
 	if err := h.project.DeleteProject(ctx, usecase.DeleteProjectInput{
-		ID: req.Msg.Id,
+		ID: model.ProjectID(req.Msg.Id),
 	}); err != nil {
 		return nil, err
 	}

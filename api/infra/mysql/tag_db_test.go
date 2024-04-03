@@ -49,7 +49,7 @@ func TestClient_CreateTag(t *testing.T) {
 func TestClient_ListTagsByUserID(t *testing.T) {
 	type args struct {
 		ctx    context.Context
-		userID string
+		userID model.UserID
 		limit  uint
 		offset uint
 	}
@@ -97,7 +97,7 @@ func TestClient_ListTagsByUserID(t *testing.T) {
 func TestClient_GetTagByID(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.TagID
 	}
 	tests := []struct {
 		name    string
@@ -174,7 +174,7 @@ func TestClient_UpdateTag(t *testing.T) {
 func TestClient_DeleteTag(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.TagID
 	}
 	tests := []struct {
 		name string

@@ -34,14 +34,14 @@ type TasksOutput struct {
 }
 
 type CreateTaskInput struct {
-	ProjectID string
+	ProjectID model.ProjectID
 	Name      string
 	Priority  uint
 }
 
-func (in CreateTaskInput) Create(g model.IDGenerator, userID string) model.Task {
+func (in CreateTaskInput) Create(g model.IDGenerator, userID model.UserID) model.Task {
 	return model.Task{
-		ID:        g.Generate(),
+		ID:        model.TaskID(g.Generate()),
 		UserID:    userID,
 		ProjectID: in.ProjectID,
 		Name:      in.Name,
@@ -72,8 +72,8 @@ func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, 
 type ListTasksInput struct {
 	Limit     uint
 	Offset    uint
-	ProjectID *string
-	TagID     *string
+	ProjectID *model.ProjectID
+	TagID     *model.TagID
 }
 
 func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, error) {
@@ -120,7 +120,7 @@ func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, e
 }
 
 type UpdateTaskInput struct {
-	ID          string
+	ID          model.TaskID
 	Name        *string
 	Content     *string
 	Priority    *uint
@@ -162,7 +162,7 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 }
 
 type DeleteTaskInput struct {
-	ID string
+	ID model.TaskID
 }
 
 func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {

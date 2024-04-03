@@ -13,8 +13,8 @@ import (
 
 func newModelProject(p sqlc.Project) model.Project {
 	return model.Project{
-		ID:         p.ID,
-		UserID:     p.UserID,
+		ID:         model.ProjectID(p.ID),
+		UserID:     model.UserID(p.UserID),
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
@@ -31,8 +31,8 @@ func newModelProjects(ps []sqlc.Project) []model.Project {
 
 func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 	if err := c.queries(ctx).CreateProject(ctx, sqlc.CreateProjectParams{
-		ID:         p.ID,
-		UserID:     p.UserID,
+		ID:         string(p.ID),
+		UserID:     string(p.UserID),
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
@@ -42,9 +42,9 @@ func (c *Client) CreateProject(ctx context.Context, p model.Project) error {
 	return nil
 }
 
-func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit, offset uint) ([]model.Project, error) {
+func (c *Client) ListProjectsByUserID(ctx context.Context, userID model.UserID, limit, offset uint) ([]model.Project, error) {
 	ps, err := c.queries(ctx).ListProjectsByUserID(ctx, sqlc.ListProjectsByUserIDParams{
-		UserID: userID,
+		UserID: string(userID),
 		Limit:  int32(limit),
 		Offset: int32(offset),
 	})
@@ -54,8 +54,8 @@ func (c *Client) ListProjectsByUserID(ctx context.Context, userID string, limit,
 	return newModelProjects(ps), nil
 }
 
-func (c *Client) GetProjectByID(ctx context.Context, id string) (model.Project, error) {
-	p, err := c.queries(ctx).GetProjectByID(ctx, id)
+func (c *Client) GetProjectByID(ctx context.Context, id model.ProjectID) (model.Project, error) {
+	p, err := c.queries(ctx).GetProjectByID(ctx, string(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return model.Project{}, repository.ErrModelNotFound
@@ -70,15 +70,15 @@ func (c *Client) UpdateProject(ctx context.Context, p model.Project) error {
 		Name:       p.Name,
 		Color:      p.Color,
 		IsArchived: p.IsArchived,
-		ID:         p.ID,
+		ID:         string(p.ID),
 	}); err != nil {
 		return fmt.Errorf("failed to update project: %w", err)
 	}
 	return nil
 }
 
-func (c *Client) DeleteProject(ctx context.Context, id string) error {
-	if err := c.queries(ctx).DeleteProject(ctx, id); err != nil {
+func (c *Client) DeleteProject(ctx context.Context, id model.ProjectID) error {
+	if err := c.queries(ctx).DeleteProject(ctx, string(id)); err != nil {
 		return fmt.Errorf("failed to delete project: %w", err)
 	}
 	return nil

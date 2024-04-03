@@ -22,13 +22,13 @@ type Authenticator struct {
 
 type accessTokenClaims struct {
 	jwt.RegisteredClaims
-	Name string `json:"name"`
-	ID   string `json:"id"`
+	Name string       `json:"name"`
+	ID   model.UserID `json:"id"`
 }
 
 type refreshTokenClaims struct {
 	jwt.RegisteredClaims
-	ID string `json:"id"`
+	ID model.UserID `json:"id"`
 }
 
 // CreateAccessToken はアクセスシークレットで署名された、ユーザ名とユーザID、有効期限からなるペイロードをエンコードしてアクセストークンを作成する
@@ -65,7 +65,7 @@ func (a Authenticator) CreateRefreshToken(ctx context.Context, user model.User) 
 }
 
 // ExtractIDFromAccessToken はアクセストークン作成時にエンコードされたIDをデコードして取り出す
-func (a Authenticator) ExtractIDFromAccessToken(token string) (string, error) {
+func (a Authenticator) ExtractIDFromAccessToken(token string) (model.UserID, error) {
 	jwtToken, err := jwt.Parse(token, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %s", t.Header["alg"])
@@ -80,11 +80,11 @@ func (a Authenticator) ExtractIDFromAccessToken(token string) (string, error) {
 	if !ok && !jwtToken.Valid {
 		return "", errors.New("invalid token")
 	}
-	return claims["id"].(string), nil
+	return claims["id"].(model.UserID), nil
 }
 
 // ExtractIDFromRefreshToken はリフレッシュトークン作成時にエンコードされたIDをデコードして取り出す
-func (a Authenticator) ExtractIDFromRefreshToken(tokenString string) (string, error) {
+func (a Authenticator) ExtractIDFromRefreshToken(tokenString string) (model.UserID, error) {
 	jwtToken, err := jwt.Parse(tokenString, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %s", t.Header["alg"])
@@ -99,5 +99,5 @@ func (a Authenticator) ExtractIDFromRefreshToken(tokenString string) (string, er
 	if !ok && !jwtToken.Valid {
 		return "", errors.New("invalid token")
 	}
-	return claims["id"].(string), nil
+	return claims["id"].(model.UserID), nil
 }

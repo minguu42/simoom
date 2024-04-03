@@ -34,13 +34,13 @@ type StepsOutput struct {
 }
 
 type CreateStepInput struct {
-	TaskID string
+	TaskID model.TaskID
 	Name   string
 }
 
-func (in CreateStepInput) Create(g model.IDGenerator, userID string) model.Step {
+func (in CreateStepInput) Create(g model.IDGenerator, userID model.UserID) model.Step {
 	return model.Step{
-		ID:     g.Generate(),
+		ID:     model.StepID(g.Generate()),
 		UserID: userID,
 		TaskID: in.TaskID,
 		Name:   in.Name,
@@ -68,7 +68,7 @@ func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, 
 }
 
 type UpdateStepInput struct {
-	ID          string
+	ID          model.StepID
 	Name        *string
 	CompletedAt *time.Time
 }
@@ -98,7 +98,7 @@ func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, 
 }
 
 type DeleteStepInput struct {
-	ID string
+	ID model.StepID
 }
 
 func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {

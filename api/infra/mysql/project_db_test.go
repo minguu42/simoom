@@ -51,7 +51,7 @@ func TestClient_CreateProject(t *testing.T) {
 func TestClient_ListProjectsByUserID(t *testing.T) {
 	type args struct {
 		ctx    context.Context
-		userID string
+		userID model.UserID
 		limit  uint
 		offset uint
 	}
@@ -101,7 +101,7 @@ func TestClient_ListProjectsByUserID(t *testing.T) {
 func TestClient_GetProjectByID(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.ProjectID
 	}
 	tests := []struct {
 		name    string
@@ -182,7 +182,7 @@ func TestClient_UpdateProject(t *testing.T) {
 func TestClient_DeleteProject(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.ProjectID
 	}
 	tests := []struct {
 		name string

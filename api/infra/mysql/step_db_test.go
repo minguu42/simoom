@@ -51,7 +51,7 @@ func TestClient_CreateStep(t *testing.T) {
 func TestClient_GetStepByID(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.StepID
 	}
 	tests := []struct {
 		name    string
@@ -132,7 +132,7 @@ func TestClient_UpdateStep(t *testing.T) {
 func TestClient_DeleteStep(t *testing.T) {
 	type args struct {
 		ctx context.Context
-		id  string
+		id  model.StepID
 	}
 	tests := []struct {
 		name string

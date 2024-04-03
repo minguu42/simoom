@@ -38,7 +38,7 @@ func (in SignUpInput) Create(g model.IDGenerator) (model.User, error) {
 		return model.User{}, fmt.Errorf("failed to generate encypted password: %w", err)
 	}
 	return model.User{
-		ID:       g.Generate(),
+		ID:       model.UserID(g.Generate()),
 		Name:     in.Name,
 		Email:    in.Email,
 		Password: string(encryptedPassword),
