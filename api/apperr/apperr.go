@@ -3,12 +3,25 @@
 package apperr
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
 	"connectrpc.com/connect"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 )
+
+func NewError(err error) Error {
+	var appErr Error
+	switch {
+	case errors.As(err, &appErr):
+		return appErr
+	case errors.Is(err, context.DeadlineExceeded), errors.Is(err, context.Canceled):
+		return ErrDeadlineExceeded(err)
+	default:
+		return ErrUnknown(err)
+	}
+}
 
 type Error struct {
 	err             error
@@ -62,6 +75,15 @@ func ErrDuplicateUserEmail(err error) Error {
 		code:            connect.CodeInvalidArgument,
 		message:         "the mail address is already in use",
 		messageJapanese: "そのメールアドレスは既に使用されています",
+	}
+}
+
+func ErrDeadlineExceeded(err error) Error {
+	return Error{
+		err:             err,
+		code:            connect.CodeDeadlineExceeded,
+		message:         "request was not processed within the specified time",
+		messageJapanese: "リクエストは規定時間内に処理されませんでした",
 	}
 }
 
