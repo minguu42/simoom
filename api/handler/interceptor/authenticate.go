@@ -13,8 +13,8 @@ import (
 	"github.com/minguu42/simoom/api/domain/repository"
 )
 
-// NewAuthenticate はユーザ認証を行うインターセプタを返す
-func NewAuthenticate(authenticator auth.Authenticator, repo repository.Repository) connect.UnaryInterceptorFunc {
+// Authenticate はユーザ認証を行うインターセプタを返す
+func Authenticate(authenticator auth.Authenticator, repo repository.Repository) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshToken"}

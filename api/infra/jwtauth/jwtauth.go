@@ -80,7 +80,7 @@ func (a Authenticator) ExtractIDFromAccessToken(token string) (model.UserID, err
 	if !ok && !jwtToken.Valid {
 		return "", errors.New("invalid token")
 	}
-	return claims["id"].(model.UserID), nil
+	return model.UserID(claims["id"].(string)), nil
 }
 
 // ExtractIDFromRefreshToken はリフレッシュトークン作成時にエンコードされたIDをデコードして取り出す
@@ -99,5 +99,5 @@ func (a Authenticator) ExtractIDFromRefreshToken(tokenString string) (model.User
 	if !ok && !jwtToken.Valid {
 		return "", errors.New("invalid token")
 	}
-	return claims["id"].(model.UserID), nil
+	return model.UserID(claims["id"].(string)), nil
 }

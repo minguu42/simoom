@@ -3,7 +3,6 @@ package logging
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -39,8 +38,8 @@ func logger(ctx context.Context) *slog.Logger {
 	return applicationLogger
 }
 
-// SetLogger はリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
-func SetLogger(ctx context.Context, method string) context.Context {
+// ContextWithLogger はリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
+func ContextWithLogger(ctx context.Context, method string) context.Context {
 	l := applicationLogger.With(slog.String("method", method))
 	return context.WithValue(ctx, loggerKey{}, l)
 }
@@ -64,11 +63,8 @@ func Access(ctx context.Context, method string, executionTime time.Duration, err
 		return
 	}
 
-	var appErr apperr.Error
-	if !errors.As(err, &appErr) {
-		appErr = apperr.ErrUnknown(err)
-	}
-	level := slog.LevelInfo
+	appErr := apperr.NewError(err)
+	level := slog.LevelWarn
 	if appErr.Code() == connect.CodeUnknown {
 		level = slog.LevelError
 	}
