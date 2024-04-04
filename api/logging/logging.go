@@ -39,8 +39,8 @@ func logger(ctx context.Context) *slog.Logger {
 	return applicationLogger
 }
 
-// SetLogger はリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
-func SetLogger(ctx context.Context, method string) context.Context {
+// ContextWithLogger はリクエストロガーを生成し、コンテキストにリクエストロガーをセットする
+func ContextWithLogger(ctx context.Context, method string) context.Context {
 	l := applicationLogger.With(slog.String("method", method))
 	return context.WithValue(ctx, loggerKey{}, l)
 }

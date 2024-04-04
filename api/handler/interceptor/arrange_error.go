@@ -8,8 +8,8 @@ import (
 	"github.com/minguu42/simoom/api/apperr"
 )
 
-// NewArrangeError はレスポンス用のエラーを生成するインターセプタを返す
-func NewArrangeError() connect.UnaryInterceptorFunc {
+// ArrangeError はレスポンス用のエラーを生成するインターセプタを返す
+func ArrangeError() connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			resp, err := next(ctx, req)

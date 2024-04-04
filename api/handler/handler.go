@@ -36,11 +36,11 @@ func New(f *factory.Factory) (http.Handler, error) {
 	}
 
 	opt := connect.WithInterceptors(
-		interceptor.NewSetContext(),
+		interceptor.WithLogger(),
 		interceptor.Timeout(2*time.Second),
-		interceptor.NewArrangeError(),
-		interceptor.NewRecordAccess(),
-		interceptor.NewAuthenticate(f.Authn, f.Repo),
+		interceptor.ArrangeError(),
+		interceptor.AccessLog(),
+		interceptor.Authenticate(f.Authn, f.Repo),
 	)
 
 	mux := http.NewServeMux()
