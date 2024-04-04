@@ -37,6 +37,7 @@ func New(f *factory.Factory) (http.Handler, error) {
 
 	opt := connect.WithInterceptors(
 		interceptor.NewSetContext(),
+		interceptor.Timeout(2*time.Second),
 		interceptor.NewArrangeError(),
 		interceptor.NewRecordAccess(),
 		interceptor.NewAuthenticate(f.Authn, f.Repo),
