@@ -5,7 +5,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -43,17 +42,8 @@ func NewClient(conf config.DB) (*Client, error) {
 	db.SetMaxOpenConns(conf.MaxOpenConns)
 	db.SetMaxIdleConns(conf.MaxIdleConns)
 
-	maxFailureTimes := 2
-	for i := 0; i <= maxFailureTimes; i++ {
-		if err := db.Ping(); err != nil {
-			if i == maxFailureTimes {
-				return nil, fmt.Errorf("failed to verify a connection to the database: %w", err)
-			}
-			log.Println("db.Ping failed. try again after 15 seconds")
-			time.Sleep(15 * time.Second)
-			continue
-		}
-		break
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("failed to verify a connection to the database: %w", err)
 	}
 
 	return &Client{db: db}, nil
