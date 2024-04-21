@@ -159,6 +159,8 @@ message UpdateTaskRequest {
   optional uint32 priority = 4 [(buf.validate.field).uint32.lt = 3];
   optional Date due_on = 5;
   optional google.protobuf.Timestamp completed_at = 6;
+  bool should_update_tag = 7;
+  repeated string tag_ids = 8; // should_update_tagがtrueの場合に使用する
 }
 
 message DeleteTaskRequest {
