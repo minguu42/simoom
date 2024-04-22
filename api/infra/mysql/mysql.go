@@ -42,11 +42,17 @@ func NewClient(conf config.DB) (*Client, error) {
 	db.SetMaxOpenConns(conf.MaxOpenConns)
 	db.SetMaxIdleConns(conf.MaxIdleConns)
 
-	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("failed to verify a connection to the database: %w", err)
+	maxRetryCount := 3
+	for count := 0; count < maxRetryCount; count++ {
+		err := db.Ping()
+		if err == nil {
+			return &Client{db: db}, nil
+		}
+		if count < maxRetryCount-1 {
+			time.Sleep(1 * time.Second)
+		}
 	}
-
-	return &Client{db: db}, nil
+	return nil, fmt.Errorf("failed to connect to database: %w", err)
 }
 
 // queries は ctx から *sqlc.Queries を取得する
