@@ -149,6 +149,14 @@ DELETE
 FROM tasks
 WHERE id = ?;
 
+-- name: AttachTag :exec
+INSERT INTO tasks_tags (task_id, tag_id) VALUES (?, ?);
+
+-- name: DetachAllTags :exec
+DELETE
+FROM tasks_tags
+WHERE task_id = ?;
+
 -- name: CreateUser :exec
 INSERT INTO users (id, name, email, password)
 VALUES (?, ?, ?, ?);

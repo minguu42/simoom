@@ -143,3 +143,18 @@ func (c *Client) DeleteTask(ctx context.Context, id model.TaskID) error {
 	}
 	return nil
 }
+
+func (c *Client) UpdateTaskTags(ctx context.Context, id model.TaskID, tagIDs []model.TagID) error {
+	if err := c.queries(ctx).DetachAllTags(ctx, string(id)); err != nil {
+		return fmt.Errorf("failed to detach tags: %w", err)
+	}
+	for _, tagID := range tagIDs {
+		if err := c.queries(ctx).AttachTag(ctx, sqlc.AttachTagParams{
+			TaskID: string(id),
+			TagID:  string(tagID),
+		}); err != nil {
+			return fmt.Errorf("failed to attach tag: %w", err)
+		}
+	}
+	return nil
+}

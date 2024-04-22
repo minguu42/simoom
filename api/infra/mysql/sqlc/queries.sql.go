@@ -12,6 +12,20 @@ import (
 	"time"
 )
 
+const attachTag = `-- name: AttachTag :exec
+INSERT INTO tasks_tags (task_id, tag_id) VALUES (?, ?)
+`
+
+type AttachTagParams struct {
+	TaskID string
+	TagID  string
+}
+
+func (q *Queries) AttachTag(ctx context.Context, arg AttachTagParams) error {
+	_, err := q.db.ExecContext(ctx, attachTag, arg.TaskID, arg.TagID)
+	return err
+}
+
 const createProject = `-- name: CreateProject :exec
 INSERT INTO projects (id, user_id, name, color, is_archived)
 VALUES (?, ?, ?, ?, ?)
@@ -161,6 +175,17 @@ WHERE id = ?
 
 func (q *Queries) DeleteTask(ctx context.Context, id string) error {
 	_, err := q.db.ExecContext(ctx, deleteTask, id)
+	return err
+}
+
+const detachAllTags = `-- name: DetachAllTags :exec
+DELETE
+FROM tasks_tags
+WHERE task_id = ?
+`
+
+func (q *Queries) DetachAllTags(ctx context.Context, taskID string) error {
+	_, err := q.db.ExecContext(ctx, detachAllTags, taskID)
 	return err
 }
 
