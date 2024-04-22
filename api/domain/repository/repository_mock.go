@@ -92,6 +92,9 @@ var _ Repository = &RepositoryMock{}
 //			UpdateTaskFunc: func(ctx context.Context, t model.Task) error {
 //				panic("mock out the UpdateTask method")
 //			},
+//			UpdateTaskTagsFunc: func(ctx context.Context, id model.TaskID, tagIDs []model.TagID) error {
+//				panic("mock out the UpdateTaskTags method")
+//			},
 //		}
 //
 //		// use mockedRepository in code that requires Repository
@@ -170,6 +173,9 @@ type RepositoryMock struct {
 
 	// UpdateTaskFunc mocks the UpdateTask method.
 	UpdateTaskFunc func(ctx context.Context, t model.Task) error
+
+	// UpdateTaskTagsFunc mocks the UpdateTaskTags method.
+	UpdateTaskTagsFunc func(ctx context.Context, id model.TaskID, tagIDs []model.TagID) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -357,6 +363,15 @@ type RepositoryMock struct {
 			// T is the t argument value.
 			T model.Task
 		}
+		// UpdateTaskTags holds details about calls to the UpdateTaskTags method.
+		UpdateTaskTags []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// ID is the id argument value.
+			ID model.TaskID
+			// TagIDs is the tagIDs argument value.
+			TagIDs []model.TagID
+		}
 	}
 	lockCreateProject        sync.RWMutex
 	lockCreateStep           sync.RWMutex
@@ -382,6 +397,7 @@ type RepositoryMock struct {
 	lockUpdateStep           sync.RWMutex
 	lockUpdateTag            sync.RWMutex
 	lockUpdateTask           sync.RWMutex
+	lockUpdateTaskTags       sync.RWMutex
 }
 
 // CreateProject calls CreateProjectFunc.
@@ -1277,5 +1293,45 @@ func (mock *RepositoryMock) UpdateTaskCalls() []struct {
 	mock.lockUpdateTask.RLock()
 	calls = mock.calls.UpdateTask
 	mock.lockUpdateTask.RUnlock()
+	return calls
+}
+
+// UpdateTaskTags calls UpdateTaskTagsFunc.
+func (mock *RepositoryMock) UpdateTaskTags(ctx context.Context, id model.TaskID, tagIDs []model.TagID) error {
+	if mock.UpdateTaskTagsFunc == nil {
+		panic("RepositoryMock.UpdateTaskTagsFunc: method is nil but Repository.UpdateTaskTags was just called")
+	}
+	callInfo := struct {
+		Ctx    context.Context
+		ID     model.TaskID
+		TagIDs []model.TagID
+	}{
+		Ctx:    ctx,
+		ID:     id,
+		TagIDs: tagIDs,
+	}
+	mock.lockUpdateTaskTags.Lock()
+	mock.calls.UpdateTaskTags = append(mock.calls.UpdateTaskTags, callInfo)
+	mock.lockUpdateTaskTags.Unlock()
+	return mock.UpdateTaskTagsFunc(ctx, id, tagIDs)
+}
+
+// UpdateTaskTagsCalls gets all the calls that were made to UpdateTaskTags.
+// Check the length with:
+//
+//	len(mockedRepository.UpdateTaskTagsCalls())
+func (mock *RepositoryMock) UpdateTaskTagsCalls() []struct {
+	Ctx    context.Context
+	ID     model.TaskID
+	TagIDs []model.TagID
+} {
+	var calls []struct {
+		Ctx    context.Context
+		ID     model.TaskID
+		TagIDs []model.TagID
+	}
+	mock.lockUpdateTaskTags.RLock()
+	calls = mock.calls.UpdateTaskTags
+	mock.lockUpdateTaskTags.RUnlock()
 	return calls
 }

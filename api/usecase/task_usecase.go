@@ -126,6 +126,7 @@ type UpdateTaskInput struct {
 	Priority    *uint
 	DueOn       *time.Time
 	CompletedAt *time.Time
+	TagIDs      []model.TagID
 }
 
 func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, error) {
@@ -155,10 +156,25 @@ func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, 
 	if in.CompletedAt != nil {
 		t.CompletedAt = in.CompletedAt
 	}
-	if err := uc.repo.UpdateTask(ctx, t); err != nil {
-		return TaskOutput{}, fmt.Errorf("failed to update task: %w", err)
+	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
+		if err := uc.repo.UpdateTask(ctxWithTx, t); err != nil {
+			return fmt.Errorf("failed to update task: %w", err)
+		}
+		if in.TagIDs != nil {
+			if err := uc.repo.UpdateTaskTags(ctxWithTx, in.ID, in.TagIDs); err != nil {
+				return fmt.Errorf("failed to attach tags: %w", err)
+			}
+		}
+		return nil
+	}); err != nil {
+		return TaskOutput{}, fmt.Errorf("failed to run transaction: %w", err)
 	}
-	return TaskOutput{Task: t}, nil
+
+	updatedTask, err := uc.repo.GetTaskByID(ctx, t.ID)
+	if err != nil {
+		return TaskOutput{}, fmt.Errorf("failed to get updated task: %w", err)
+	}
+	return TaskOutput{Task: updatedTask}, nil
 }
 
 type DeleteTaskInput struct {
