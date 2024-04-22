@@ -8,6 +8,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/bufbuild/protovalidate-go"
+	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/factory"
 	"github.com/minguu42/simoom/api/handler/interceptor"
 	"github.com/minguu42/simoom/api/usecase"
@@ -73,4 +74,15 @@ func newTimestamp(t *time.Time) *timestamppb.Timestamp {
 		timestamppb.New(*t)
 	}
 	return nil
+}
+
+func tagIDsOrNil(ids []string, isNil bool) []model.TagID {
+	if isNil {
+		return nil
+	}
+	tagIDs := make([]model.TagID, 0, len(ids))
+	for _, id := range ids {
+		tagIDs = append(tagIDs, model.TagID(id))
+	}
+	return tagIDs
 }

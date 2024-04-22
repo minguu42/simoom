@@ -81,6 +81,7 @@ func (h handler) UpdateTask(ctx context.Context, req *connect.Request[simoompb.U
 		Priority:    nil,
 		DueOn:       nil,
 		CompletedAt: nil,
+		TagIDs:      tagIDsOrNil(req.Msg.TagIds, !req.Msg.ShouldUpdateTag),
 	})
 	if err != nil {
 		return nil, err
