@@ -43,7 +43,7 @@ func mainRun() exitCode {
 				return errors.New("authentication failed")
 			}
 
-			cmd.SetContext(factory.WithFactory(cmd.Context(), f))
+			cmd.SetContext(factory.ContextWithFactory(cmd.Context(), f))
 			return nil
 		},
 	}

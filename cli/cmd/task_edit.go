@@ -30,7 +30,7 @@ func newCmdTaskEdit() *cobra.Command {
 		Short: "Edit a task",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			f := factory.Value(cmd.Context())
+			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
 			if args[0] == "" {

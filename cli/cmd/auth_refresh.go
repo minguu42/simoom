@@ -26,7 +26,7 @@ func newCmdAuthRefresh() *cobra.Command {
 		Use:   "refresh",
 		Short: "Refresh the access token",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			f := factory.Value(cmd.Context())
+			f := factory.FromContext(cmd.Context())
 			opts.profile = f.Profile
 			opts.client = f.Client
 

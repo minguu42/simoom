@@ -29,7 +29,7 @@ func newCmdTaskList() *cobra.Command {
 		Short:   "List the tasks",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			f := factory.Value(cmd.Context())
+			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 			return runTaskList(cmd.Context(), opts)
 		},
