@@ -26,7 +26,7 @@ func newCmdTagEdit() *cobra.Command {
 		Short: "Edit a tag",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			f := factory.Value(cmd.Context())
+			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
 			opts.id = args[0]

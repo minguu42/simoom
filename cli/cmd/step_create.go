@@ -27,7 +27,7 @@ func newCmdStepCreate() *cobra.Command {
 		Short: "Create a step",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			f := factory.Value(cmd.Context())
+			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
 			if opts.taskID == "" {

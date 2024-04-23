@@ -27,7 +27,7 @@ func newCmdTagList() *cobra.Command {
 		Short:   "List the tags",
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			f := factory.Value(cmd.Context())
+			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
 			return runTagList(cmd.Context(), opts)

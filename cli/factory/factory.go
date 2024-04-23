@@ -27,12 +27,12 @@ func New(profile string) (*Factory, error) {
 
 type factoryKey struct{}
 
-// Value はコンテキストから Factory を取り出す
-func Value(ctx context.Context) *Factory {
+// FromContext はコンテキストから Factory を取り出す
+func FromContext(ctx context.Context) *Factory {
 	return ctx.Value(factoryKey{}).(*Factory)
 }
 
-// WithFactory は Factory を含めたコンテキストを返す
-func WithFactory(ctx context.Context, f *Factory) context.Context {
+// ContextWithFactory は Factory を含めたコンテキストを返す
+func ContextWithFactory(ctx context.Context, f *Factory) context.Context {
 	return context.WithValue(ctx, factoryKey{}, f)
 }

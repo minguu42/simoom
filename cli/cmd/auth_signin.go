@@ -28,7 +28,7 @@ func newCmdAuthSignin() *cobra.Command {
 		Short: "Sign in to Simoom",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			f := factory.Value(cmd.Context())
+			f := factory.FromContext(cmd.Context())
 			opts.profile = f.Profile
 			opts.client = f.Client
 
