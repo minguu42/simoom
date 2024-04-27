@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type authSigninOpts struct {
+type AuthSigninOpts struct {
 	profile string
 	client  api.Client
 
@@ -21,8 +21,8 @@ type authSigninOpts struct {
 	password string
 }
 
-func newCmdAuthSignin() *cobra.Command {
-	var opts authSigninOpts
+func NewCmdAuthSignin() *cobra.Command {
+	var opts AuthSigninOpts
 	cmd := &cobra.Command{
 		Use:   "signin",
 		Short: "Sign in to Simoom",
@@ -32,24 +32,19 @@ func newCmdAuthSignin() *cobra.Command {
 			opts.profile = f.Profile
 			opts.client = f.Client
 
-			if opts.email == "" {
-				return errors.New("email is required")
-			}
-			if opts.password == "" {
-				return errors.New("password is required")
-			}
-			return runAuthSignin(cmd.Context(), opts)
+			return AuthSigninRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
 
 	cmd.Flags().StringVar(&opts.email, "email", "", "email")
 	cmd.Flags().StringVar(&opts.password, "password", "", "password")
-
+	_ = cmd.MarkFlagRequired("email")
+	_ = cmd.MarkFlagRequired("password")
 	return cmd
 }
 
-func runAuthSignin(ctx context.Context, opts authSigninOpts) error {
+func AuthSigninRun(ctx context.Context, out io.Writer, opts AuthSigninOpts) error {
 	resp, err := opts.client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
 		Email:    opts.email,
 		Password: opts.password,
@@ -57,7 +52,7 @@ func runAuthSignin(ctx context.Context, opts authSigninOpts) error {
 	if err != nil {
 		return fmt.Errorf("failed to call SignIn method. %w", err)
 	}
-	fmt.Println("Successfully authenticated.")
+	fmt.Fprintln(out, "Successfully authenticated")
 
 	if err := api.SaveCredentials(opts.profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)

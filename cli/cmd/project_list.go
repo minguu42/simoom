@@ -3,24 +3,24 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
-type projectListOpts struct {
-	client api.Client
+type ProjectListOpts struct {
+	Client api.Client
 
-	limit  uint64
-	offset uint64
+	Limit  uint64
+	Offset uint64
 }
 
-func newCmdProjectList() *cobra.Command {
-	var opts projectListOpts
+func NewCmdProjectList() *cobra.Command {
+	var opts ProjectListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
@@ -28,29 +28,30 @@ func newCmdProjectList() *cobra.Command {
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			return runProjectList(cmd.Context(), opts)
+			return ProjectListRun(cmd.Context(), f.Out, opts)
 		},
 	}
-
-	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
-	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
-
+	cmd.Flags().Uint64Var(&opts.Limit, "limit", 10, "limit")
+	cmd.Flags().Uint64Var(&opts.Offset, "offset", 0, "offset")
 	return cmd
 }
 
-func runProjectList(ctx context.Context, opts projectListOpts) error {
-	resp, err := opts.client.ListProjects(ctx, connect.NewRequest(&simoompb.ListProjectsRequest{
-		Limit:  opts.limit,
-		Offset: opts.offset,
+func ProjectListRun(ctx context.Context, out io.Writer, opts ProjectListOpts) error {
+	resp, err := opts.Client.ListProjects(ctx, connect.NewRequest(&simoompb.ListProjectsRequest{
+		Limit:  opts.Limit,
+		Offset: opts.Offset,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call ListProjects method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
+	for _, p := range resp.Msg.Projects {
+		if p == nil {
+			continue
+		}
+		fmt.Fprintf(out, "%s %s\n", p.Id, p.Name)
 	}
 	return nil
 }

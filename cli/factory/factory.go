@@ -4,11 +4,14 @@ package factory
 import (
 	"context"
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/minguu42/simoom/cli/api"
 )
 
 type Factory struct {
+	Out     io.Writer
 	Profile string
 	Client  api.Client
 }
@@ -20,6 +23,7 @@ func New(profile string) (*Factory, error) {
 		return nil, fmt.Errorf("failed to create api client: %w", err)
 	}
 	return &Factory{
+		Out:     os.Stdout,
 		Profile: profile,
 		Client:  c,
 	}, nil

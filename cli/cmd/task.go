@@ -8,10 +8,10 @@ func NewCmdTask() *cobra.Command {
 		Short: "Manage tasks",
 	}
 	cmd.AddCommand(
-		newCmdTaskCreate(),
-		newCmdTaskDelete(),
-		newCmdTaskEdit(),
-		newCmdTaskList(),
+		NewCmdTaskCreate(),
+		NewCmdTaskDelete(),
+		NewCmdTaskEdit(),
+		NewCmdTaskList(),
 	)
 	return cmd
 }

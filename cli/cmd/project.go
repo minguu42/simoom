@@ -8,10 +8,10 @@ func NewCmdProject() *cobra.Command {
 		Short: "Manage projects",
 	}
 	cmd.AddCommand(
-		newCmdProjectCreate(),
-		newCmdProjectDelete(),
-		newCmdProjectEdit(),
-		newCmdProjectList(),
+		NewCmdProjectCreate(),
+		NewCmdProjectDelete(),
+		NewCmdProjectEdit(),
+		NewCmdProjectList(),
 	)
 	return cmd
 }

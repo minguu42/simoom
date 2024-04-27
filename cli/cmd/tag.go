@@ -8,10 +8,10 @@ func NewCmdTag() *cobra.Command {
 		Short: "Manage tags",
 	}
 	cmd.AddCommand(
-		newCmdTagCreate(),
-		newCmdTagDelete(),
-		newCmdTagEdit(),
-		newCmdTagList(),
+		NewCmdTagCreate(),
+		NewCmdTagDelete(),
+		NewCmdTagEdit(),
+		NewCmdTagList(),
 	)
 	return cmd
 }

@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -11,35 +12,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type stepDeleteOpts struct {
-	client api.Client
+type StepDeleteOpts struct {
+	Client api.Client
 
-	id string
+	ID string
 }
 
-func newCmdStepDelete() *cobra.Command {
-	var opts stepDeleteOpts
+func NewCmdStepDelete() *cobra.Command {
+	var opts StepDeleteOpts
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a step",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
-			return runStepDelete(cmd.Context(), opts)
+			opts.ID = args[0]
+			return StepDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
-func runStepDelete(ctx context.Context, opts stepDeleteOpts) error {
-	if _, err := opts.client.DeleteStep(ctx, connect.NewRequest(&simoompb.DeleteStepRequest{
-		Id: opts.id,
+func StepDeleteRun(ctx context.Context, out io.Writer, opts StepDeleteOpts) error {
+	if _, err := opts.Client.DeleteStep(ctx, connect.NewRequest(&simoompb.DeleteStepRequest{
+		Id: opts.ID,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteStep method: %w", err)
 	}
 
-	fmt.Println("step deleted")
+	fmt.Fprintf(out, "Step %s deleted\n", opts.ID)
 	return nil
 }

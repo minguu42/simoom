@@ -3,53 +3,47 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
-type tagCreateOpts struct {
-	client api.Client
+type TagCreateOpts struct {
+	Client api.Client
 
-	name string
+	Name string
 }
 
-func newCmdTagCreate() *cobra.Command {
-	var opts tagCreateOpts
+func NewCmdTagCreate() *cobra.Command {
+	var opts TagCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a tag",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			if opts.name == "" {
-				return fmt.Errorf("name is required")
-			}
-			return runTagCreate(cmd.Context(), opts)
+			return TagCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.name, "name", "", "tag name")
-
+	cmd.Flags().StringVar(&opts.Name, "name", "", "tag name")
+	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
 
-func runTagCreate(ctx context.Context, opts tagCreateOpts) error {
-	resp, err := opts.client.CreateTag(ctx, connect.NewRequest(&simoompb.CreateTagRequest{
-		Name: opts.name,
+func TagCreateRun(ctx context.Context, out io.Writer, opts TagCreateOpts) error {
+	resp, err := opts.Client.CreateTag(ctx, connect.NewRequest(&simoompb.CreateTagRequest{
+		Name: opts.Name,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call CreateTag method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Tag %s (%s) created\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

@@ -8,9 +8,9 @@ func NewCmdStep() *cobra.Command {
 		Short: "Manage steps",
 	}
 	cmd.AddCommand(
-		newCmdStepCreate(),
-		newCmdStepDelete(),
-		newCmdStepEdit(),
+		NewCmdStepCreate(),
+		NewCmdStepDelete(),
+		NewCmdStepEdit(),
 	)
 	return cmd
 }

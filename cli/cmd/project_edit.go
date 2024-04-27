@@ -3,61 +3,59 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
 )
 
-type projectEditOpts struct {
-	client api.Client
+type ProjectEditOpts struct {
+	Client api.Client
 
-	id         string
-	name       string
-	color      string
-	isArchived bool
+	ID         string
+	Name       string
+	Color      string
+	IsArchived bool
 }
 
-func newCmdProjectEdit() *cobra.Command {
-	var opts projectEditOpts
+func NewCmdProjectEdit() *cobra.Command {
+	var opts ProjectEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
-			return runProjectEdit(cmd.Context(), opts)
+			opts.ID = args[0]
+			return ProjectEditRun(cmd.Context(), f.Out, opts)
 		},
 	}
-
-	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
-	cmd.Flags().StringVar(&opts.color, "color", "", "project color")
-	cmd.Flags().BoolVar(&opts.isArchived, "archived", false, "whether to archive the project")
-
+	cmd.Flags().StringVar(&opts.Name, "name", "", "project name")
+	cmd.Flags().StringVar(&opts.Color, "color", "", "project color")
+	cmd.Flags().BoolVar(&opts.IsArchived, "archived", false, "whether to archive the project")
 	return cmd
 }
 
-func runProjectEdit(ctx context.Context, opts projectEditOpts) error {
+func ProjectEditRun(ctx context.Context, out io.Writer, opts ProjectEditOpts) error {
 	var name *string
-	if opts.name != "" {
-		name = &opts.name
+	if opts.Name != "" {
+		name = &opts.Name
 	}
 	var color *string
-	if opts.color != "" {
-		color = &opts.color
+	if opts.Color != "" {
+		color = &opts.Color
 	}
 	var isArchived *bool
-	if opts.isArchived {
-		isArchived = &opts.isArchived
+	if opts.IsArchived {
+		isArchived = &opts.IsArchived
 	}
-	resp, err := opts.client.UpdateProject(ctx, connect.NewRequest(&simoompb.UpdateProjectRequest{
-		Id:         opts.id,
+	resp, err := opts.Client.UpdateProject(ctx, connect.NewRequest(&simoompb.UpdateProjectRequest{
+		Id:         opts.ID,
 		Name:       name,
 		Color:      color,
 		IsArchived: isArchived,
@@ -66,8 +64,6 @@ func runProjectEdit(ctx context.Context, opts projectEditOpts) error {
 		return fmt.Errorf("failed to call UpdateProject method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Project %s (%s) edited\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

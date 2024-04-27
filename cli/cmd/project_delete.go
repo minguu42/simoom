@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -11,35 +12,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type projectDeleteOpts struct {
-	client api.Client
+type ProjectDeleteOpts struct {
+	Client api.Client
 
-	id string
+	ID string
 }
 
-func newCmdProjectDelete() *cobra.Command {
-	var opts projectDeleteOpts
+func NewCmdProjectDelete() *cobra.Command {
+	var opts ProjectDeleteOpts
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
-			return runProjectDelete(cmd.Context(), opts)
+			opts.ID = args[0]
+			return ProjectDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
-func runProjectDelete(ctx context.Context, opts projectDeleteOpts) error {
-	if _, err := opts.client.DeleteProject(ctx, connect.NewRequest(&simoompb.DeleteProjectRequest{
-		Id: opts.id,
+func ProjectDeleteRun(ctx context.Context, out io.Writer, opts ProjectDeleteOpts) error {
+	if _, err := opts.Client.DeleteProject(ctx, connect.NewRequest(&simoompb.DeleteProjectRequest{
+		Id: opts.ID,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteProject method: %w", err)
 	}
 
-	fmt.Println("project deleted")
+	fmt.Fprintf(out, "Project %s deleted\n", opts.ID)
 	return nil
 }

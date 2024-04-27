@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -11,35 +12,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type taskDeleteOpts struct {
-	client api.Client
+type TaskDeleteOpts struct {
+	Client api.Client
 
-	id string
+	ID string
 }
 
-func newCmdTaskDelete() *cobra.Command {
-	var opts taskDeleteOpts
+func NewCmdTaskDelete() *cobra.Command {
+	var opts TaskDeleteOpts
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a task",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
-			return runTaskDelete(cmd.Context(), opts)
+			opts.ID = args[0]
+			return TaskDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
-func runTaskDelete(ctx context.Context, opts taskDeleteOpts) error {
-	if _, err := opts.client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
-		Id: opts.id,
+func TaskDeleteRun(ctx context.Context, out io.Writer, opts TaskDeleteOpts) error {
+	if _, err := opts.Client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
+		Id: opts.ID,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTask method: %w", err)
 	}
 
-	fmt.Println("task deleted")
+	fmt.Fprintf(out, "Task %s deleted\n", opts.ID)
 	return nil
 }
