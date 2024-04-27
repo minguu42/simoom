@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -31,7 +31,7 @@ func NewCmdTaskList() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
-			return TaskListRun(cmd.Context(), opts)
+			return TaskListRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "Maximum number of tasks to fetch")
@@ -41,7 +41,7 @@ func NewCmdTaskList() *cobra.Command {
 	return cmd
 }
 
-func TaskListRun(ctx context.Context, opts TaskListOpts) error {
+func TaskListRun(ctx context.Context, out io.Writer, opts TaskListOpts) error {
 	var projectID *string
 	if opts.projectID != "" {
 		projectID = &opts.projectID
@@ -60,8 +60,11 @@ func TaskListRun(ctx context.Context, opts TaskListOpts) error {
 		return fmt.Errorf("failed to call ListTasks method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
+	for _, t := range resp.Msg.Tasks {
+		if t == nil {
+			continue
+		}
+		fmt.Fprintf(out, " %s %s\n", t.Id, t.Name)
 	}
 	return nil
 }

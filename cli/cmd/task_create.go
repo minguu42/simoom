@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -30,7 +30,7 @@ func NewCmdTaskCreate() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			return TaskCreateRun(cmd.Context(), opts)
+			return TaskCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.projectID, "project-id", "", "project id")
@@ -42,7 +42,7 @@ func NewCmdTaskCreate() *cobra.Command {
 	return cmd
 }
 
-func TaskCreateRun(ctx context.Context, opts TaskCreateOpts) error {
+func TaskCreateRun(ctx context.Context, out io.Writer, opts TaskCreateOpts) error {
 	resp, err := opts.client.CreateTask(ctx, connect.NewRequest(&simoompb.CreateTaskRequest{
 		ProjectId: opts.projectID,
 		Name:      opts.name,
@@ -52,8 +52,6 @@ func TaskCreateRun(ctx context.Context, opts TaskCreateOpts) error {
 		return fmt.Errorf("failed to call CreateTask method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Task %s (%s) created\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

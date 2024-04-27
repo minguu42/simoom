@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -31,7 +32,7 @@ func NewCmdAuthSignin() *cobra.Command {
 			opts.profile = f.Profile
 			opts.client = f.Client
 
-			return AuthSigninRun(cmd.Context(), opts)
+			return AuthSigninRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
@@ -43,7 +44,7 @@ func NewCmdAuthSignin() *cobra.Command {
 	return cmd
 }
 
-func AuthSigninRun(ctx context.Context, opts AuthSigninOpts) error {
+func AuthSigninRun(ctx context.Context, out io.Writer, opts AuthSigninOpts) error {
 	resp, err := opts.client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
 		Email:    opts.email,
 		Password: opts.password,
@@ -51,7 +52,7 @@ func AuthSigninRun(ctx context.Context, opts AuthSigninOpts) error {
 	if err != nil {
 		return fmt.Errorf("failed to call SignIn method. %w", err)
 	}
-	fmt.Println("Successfully authenticated.")
+	fmt.Fprintln(out, "Successfully authenticated")
 
 	if err := api.SaveCredentials(opts.profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)

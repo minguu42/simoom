@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -36,7 +36,7 @@ func NewCmdStepCreate() *cobra.Command {
 			if opts.name == "" {
 				return errors.New("name is required")
 			}
-			return StepCreateRun(cmd.Context(), opts)
+			return StepCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.taskID, "task-id", "", "task id")
@@ -46,7 +46,7 @@ func NewCmdStepCreate() *cobra.Command {
 	return cmd
 }
 
-func StepCreateRun(ctx context.Context, opts StepCreateOpts) error {
+func StepCreateRun(ctx context.Context, out io.Writer, opts StepCreateOpts) error {
 	resp, err := opts.client.CreateStep(ctx, connect.NewRequest(&simoompb.CreateStepRequest{
 		TaskId: opts.taskID,
 		Name:   opts.name,
@@ -55,8 +55,6 @@ func StepCreateRun(ctx context.Context, opts StepCreateOpts) error {
 		return fmt.Errorf("failed to call CreateStep method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Step %s (%s) created\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

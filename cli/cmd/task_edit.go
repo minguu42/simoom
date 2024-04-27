@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -37,7 +37,7 @@ func NewCmdTaskEdit() *cobra.Command {
 				return fmt.Errorf("id is required")
 			}
 			opts.id = args[0]
-			return TaskEditRun(cmd.Context(), opts)
+			return TaskEditRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "task name")
@@ -47,7 +47,7 @@ func NewCmdTaskEdit() *cobra.Command {
 	return cmd
 }
 
-func TaskEditRun(ctx context.Context, opts TaskEditOpts) error {
+func TaskEditRun(ctx context.Context, out io.Writer, opts TaskEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name
@@ -75,8 +75,6 @@ func TaskEditRun(ctx context.Context, opts TaskEditOpts) error {
 		return fmt.Errorf("failed to call UpdateTask method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Task %s (%s) edited\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

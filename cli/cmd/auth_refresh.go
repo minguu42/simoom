@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -36,7 +37,7 @@ func NewCmdAuthRefresh() *cobra.Command {
 				}
 				opts.refreshToken = opts.client.GetRefreshToken()
 			}
-			return AuthRefreshRun(cmd.Context(), opts)
+			return AuthRefreshRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
@@ -45,14 +46,14 @@ func NewCmdAuthRefresh() *cobra.Command {
 	return cmd
 }
 
-func AuthRefreshRun(ctx context.Context, opts AuthRefreshOpts) error {
+func AuthRefreshRun(ctx context.Context, out io.Writer, opts AuthRefreshOpts) error {
 	resp, err := opts.client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
 		RefreshToken: opts.refreshToken,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call RefreshToken method: %w", err)
 	}
-	fmt.Println("Successfully authenticated.")
+	fmt.Fprintln(out, "Successfully authenticated")
 
 	if err := api.SaveCredentials(opts.profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)

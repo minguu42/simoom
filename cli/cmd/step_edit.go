@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -32,7 +32,7 @@ func NewCmdStepEdit() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return StepEditRun(cmd.Context(), opts)
+			return StepEditRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "step name")
@@ -40,7 +40,7 @@ func NewCmdStepEdit() *cobra.Command {
 	return cmd
 }
 
-func StepEditRun(ctx context.Context, opts StepEditOpts) error {
+func StepEditRun(ctx context.Context, out io.Writer, opts StepEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name
@@ -58,8 +58,6 @@ func StepEditRun(ctx context.Context, opts StepEditOpts) error {
 		return fmt.Errorf("failed to call UpdateStep method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Step %s (%s) edited\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

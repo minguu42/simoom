@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -28,18 +29,18 @@ func NewCmdTaskDelete() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return TaskDeleteRun(cmd.Context(), opts)
+			return TaskDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
-func TaskDeleteRun(ctx context.Context, opts TaskDeleteOpts) error {
+func TaskDeleteRun(ctx context.Context, out io.Writer, opts TaskDeleteOpts) error {
 	if _, err := opts.client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
 		Id: opts.id,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTask method: %w", err)
 	}
 
-	fmt.Println("task deleted")
+	fmt.Fprintf(out, "Task %s deleted\n", opts.id)
 	return nil
 }

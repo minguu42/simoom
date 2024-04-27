@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -32,7 +32,7 @@ func NewCmdProjectEdit() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return runProjectEdit(cmd.Context(), opts)
+			return ProjectEditRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
@@ -41,7 +41,7 @@ func NewCmdProjectEdit() *cobra.Command {
 	return cmd
 }
 
-func runProjectEdit(ctx context.Context, opts projectEditOpts) error {
+func ProjectEditRun(ctx context.Context, out io.Writer, opts projectEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name
@@ -64,8 +64,6 @@ func runProjectEdit(ctx context.Context, opts projectEditOpts) error {
 		return fmt.Errorf("failed to call UpdateProject method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Project %s (%s) edited\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

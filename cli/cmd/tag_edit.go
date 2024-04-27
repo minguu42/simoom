@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -30,14 +30,14 @@ func NewCmdTagEdit() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return TagEditRun(cmd.Context(), opts)
+			return TagEditRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "tag name")
 	return cmd
 }
 
-func TagEditRun(ctx context.Context, opts TagEditOpts) error {
+func TagEditRun(ctx context.Context, out io.Writer, opts TagEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name
@@ -50,8 +50,6 @@ func TagEditRun(ctx context.Context, opts TagEditOpts) error {
 		return fmt.Errorf("failed to call UpdateTag method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Tag %s (%s) edited\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

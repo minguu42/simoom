@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -28,18 +29,18 @@ func NewCmdStepDelete() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return StepDeleteRun(cmd.Context(), opts)
+			return StepDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
-func StepDeleteRun(ctx context.Context, opts StepDeleteOpts) error {
+func StepDeleteRun(ctx context.Context, out io.Writer, opts StepDeleteOpts) error {
 	if _, err := opts.client.DeleteStep(ctx, connect.NewRequest(&simoompb.DeleteStepRequest{
 		Id: opts.id,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteStep method: %w", err)
 	}
 
-	fmt.Println("step deleted")
+	fmt.Fprintf(out, "Step %s deleted\n", opts.id)
 	return nil
 }

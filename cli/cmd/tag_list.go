@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -30,7 +30,7 @@ func NewCmdTagList() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			return TagListRun(cmd.Context(), opts)
+			return TagListRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
@@ -38,7 +38,7 @@ func NewCmdTagList() *cobra.Command {
 	return cmd
 }
 
-func TagListRun(ctx context.Context, opts TagListOpts) error {
+func TagListRun(ctx context.Context, out io.Writer, opts TagListOpts) error {
 	resp, err := opts.client.ListTags(ctx, connect.NewRequest(&simoompb.ListTagsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,
@@ -47,8 +47,11 @@ func TagListRun(ctx context.Context, opts TagListOpts) error {
 		return fmt.Errorf("failed to call ListTags method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
+	for _, t := range resp.Msg.Tags {
+		if t == nil {
+			continue
+		}
+		fmt.Fprintf(out, "%s %s\n", t.Id, t.Name)
 	}
 	return nil
 }

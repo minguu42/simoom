@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -30,7 +30,7 @@ func NewCmdProjectList() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			return ProjectListRun(cmd.Context(), opts)
+			return ProjectListRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
@@ -38,7 +38,7 @@ func NewCmdProjectList() *cobra.Command {
 	return cmd
 }
 
-func ProjectListRun(ctx context.Context, opts ProjectListOpts) error {
+func ProjectListRun(ctx context.Context, out io.Writer, opts ProjectListOpts) error {
 	resp, err := opts.client.ListProjects(ctx, connect.NewRequest(&simoompb.ListProjectsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,
@@ -47,8 +47,11 @@ func ProjectListRun(ctx context.Context, opts ProjectListOpts) error {
 		return fmt.Errorf("failed to call ListProjects method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
+	for _, p := range resp.Msg.Projects {
+		if p == nil {
+			continue
+		}
+		fmt.Fprintf(out, "%s %s\n", p.Id, p.Name)
 	}
 	return nil
 }

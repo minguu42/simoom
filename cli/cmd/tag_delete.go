@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
@@ -28,18 +29,18 @@ func NewCmdTagDelete() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return TagDeleteRun(cmd.Context(), opts)
+			return TagDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
-func TagDeleteRun(ctx context.Context, opts TagDeleteOpts) error {
+func TagDeleteRun(ctx context.Context, out io.Writer, opts TagDeleteOpts) error {
 	if _, err := opts.client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
 		Id: opts.id,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTag method: %w", err)
 	}
 
-	fmt.Println("tag deleted")
+	fmt.Fprintf(out, "Tag %s deleted\n", opts.id)
 	return nil
 }

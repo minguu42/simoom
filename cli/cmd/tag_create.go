@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -28,7 +28,7 @@ func NewCmdTagCreate() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			return TagCreateRun(cmd.Context(), opts)
+			return TagCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "tag name")
@@ -36,7 +36,7 @@ func NewCmdTagCreate() *cobra.Command {
 	return cmd
 }
 
-func TagCreateRun(ctx context.Context, opts TagCreateOpts) error {
+func TagCreateRun(ctx context.Context, out io.Writer, opts TagCreateOpts) error {
 	resp, err := opts.client.CreateTag(ctx, connect.NewRequest(&simoompb.CreateTagRequest{
 		Name: opts.name,
 	}))
@@ -44,8 +44,6 @@ func TagCreateRun(ctx context.Context, opts TagCreateOpts) error {
 		return fmt.Errorf("failed to call CreateTag method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Tag %s (%s) created\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }

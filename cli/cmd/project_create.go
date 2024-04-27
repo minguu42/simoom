@@ -3,10 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/cli/api"
-	"github.com/minguu42/simoom/cli/cmdutil"
 	"github.com/minguu42/simoom/cli/factory"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/spf13/cobra"
@@ -29,7 +29,7 @@ func NewCmdProjectCreate() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			return ProjectCreateRun(cmd.Context(), opts)
+			return ProjectCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
@@ -39,7 +39,7 @@ func NewCmdProjectCreate() *cobra.Command {
 	return cmd
 }
 
-func ProjectCreateRun(ctx context.Context, opts ProjectCreateOpts) error {
+func ProjectCreateRun(ctx context.Context, out io.Writer, opts ProjectCreateOpts) error {
 	resp, err := opts.client.CreateProject(ctx, connect.NewRequest(&simoompb.CreateProjectRequest{
 		Name:  opts.name,
 		Color: opts.color,
@@ -48,8 +48,6 @@ func ProjectCreateRun(ctx context.Context, opts ProjectCreateOpts) error {
 		return fmt.Errorf("failed to call CreateProject method: %w", err)
 	}
 
-	if err := cmdutil.PrintJSON(resp.Msg); err != nil {
-		return fmt.Errorf("failed to print json output: %w", err)
-	}
+	fmt.Fprintf(out, "Project %s (%s) created\n", resp.Msg.Name, resp.Msg.Id)
 	return nil
 }
