@@ -64,7 +64,7 @@ func TaskListRun(ctx context.Context, out io.Writer, opts TaskListOpts) error {
 		if t == nil {
 			continue
 		}
-		fmt.Fprintf(out, " %s %s\n", t.Id, t.Name)
+		fmt.Fprintf(out, "%s %s\n", t.Id, t.Name)
 	}
 	return nil
 }
