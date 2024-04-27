@@ -25,7 +25,7 @@ func TestProjectDeleteRun(t *testing.T) {
 		wantOut string
 	}{
 		{
-			name: "ユーザを削除する",
+			name: "プロジェクトを削除する",
 			args: args{
 				ctx: context.Background(),
 				opts: cmd.ProjectDeleteOpts{

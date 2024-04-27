@@ -11,12 +11,13 @@ import (
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func TestProjectCreateRun(t *testing.T) {
+func TestStepDeleteRun(t *testing.T) {
 	type args struct {
 		ctx  context.Context
-		opts cmd.ProjectCreateOpts
+		opts cmd.StepDeleteOpts
 	}
 	tests := []struct {
 		name    string
@@ -24,30 +25,25 @@ func TestProjectCreateRun(t *testing.T) {
 		wantOut string
 	}{
 		{
-			name: "プロジェクトを作成する",
+			name: "ステップを削除する",
 			args: args{
 				ctx: context.Background(),
-				opts: cmd.ProjectCreateOpts{
+				opts: cmd.StepDeleteOpts{
 					Client: &api.ClientMock{
-						CreateProjectFunc: func(_ context.Context, _ *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
-							return connect.NewResponse(&simoompb.Project{
-								Id:    "project-01",
-								Name:  "テストプロジェクト1",
-								Color: "#123456",
-							}), nil
+						DeleteStepFunc: func(_ context.Context, _ *connect.Request[simoompb.DeleteStepRequest]) (*connect.Response[emptypb.Empty], error) {
+							return connect.NewResponse(&emptypb.Empty{}), nil
 						},
 					},
-					Name:  "テストプロジェクト1",
-					Color: "#123456",
+					ID: "step-01",
 				},
 			},
-			wantOut: "Project テストプロジェクト1 (project-01) created\n",
+			wantOut: "Step step-01 deleted\n",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			out := &bytes.Buffer{}
-			err := cmd.ProjectCreateRun(tt.args.ctx, out, tt.args.opts)
+			err := cmd.StepDeleteRun(tt.args.ctx, out, tt.args.opts)
 			require.NoError(t, err)
 			assert.Equal(t, tt.wantOut, out.String())
 		})

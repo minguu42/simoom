@@ -13,9 +13,9 @@ import (
 )
 
 type StepDeleteOpts struct {
-	client api.Client
+	Client api.Client
 
-	id string
+	ID string
 }
 
 func NewCmdStepDelete() *cobra.Command {
@@ -26,21 +26,21 @@ func NewCmdStepDelete() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
+			opts.ID = args[0]
 			return StepDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
 func StepDeleteRun(ctx context.Context, out io.Writer, opts StepDeleteOpts) error {
-	if _, err := opts.client.DeleteStep(ctx, connect.NewRequest(&simoompb.DeleteStepRequest{
-		Id: opts.id,
+	if _, err := opts.Client.DeleteStep(ctx, connect.NewRequest(&simoompb.DeleteStepRequest{
+		Id: opts.ID,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteStep method: %w", err)
 	}
 
-	fmt.Fprintf(out, "Step %s deleted\n", opts.id)
+	fmt.Fprintf(out, "Step %s deleted\n", opts.ID)
 	return nil
 }

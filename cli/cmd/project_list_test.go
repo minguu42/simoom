@@ -23,7 +23,7 @@ func TestProjectListRun(t *testing.T) {
 		wantOut string
 	}{
 		{
-			name: "プロジェクトを編集する",
+			name: "プロジェクトを一覧で取得する",
 			args: args{
 				ctx: context.Background(),
 				opts: cmd.ProjectListOpts{

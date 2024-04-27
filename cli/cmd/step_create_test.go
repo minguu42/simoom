@@ -13,10 +13,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestProjectCreateRun(t *testing.T) {
+func TestStepCreateRun(t *testing.T) {
 	type args struct {
 		ctx  context.Context
-		opts cmd.ProjectCreateOpts
+		opts cmd.StepCreateOpts
 	}
 	tests := []struct {
 		name    string
@@ -24,30 +24,30 @@ func TestProjectCreateRun(t *testing.T) {
 		wantOut string
 	}{
 		{
-			name: "プロジェクトを作成する",
+			name: "ステップを作成する",
 			args: args{
 				ctx: context.Background(),
-				opts: cmd.ProjectCreateOpts{
+				opts: cmd.StepCreateOpts{
 					Client: &api.ClientMock{
-						CreateProjectFunc: func(_ context.Context, _ *connect.Request[simoompb.CreateProjectRequest]) (*connect.Response[simoompb.Project], error) {
-							return connect.NewResponse(&simoompb.Project{
-								Id:    "project-01",
-								Name:  "テストプロジェクト1",
-								Color: "#123456",
+						CreateStepFunc: func(_ context.Context, _ *connect.Request[simoompb.CreateStepRequest]) (*connect.Response[simoompb.Step], error) {
+							return connect.NewResponse(&simoompb.Step{
+								Id:     "step-01",
+								TaskId: "task-01",
+								Name:   "テストステップ1",
 							}), nil
 						},
 					},
-					Name:  "テストプロジェクト1",
-					Color: "#123456",
+					TaskID: "step-01",
+					Name:   "テストステップ1",
 				},
 			},
-			wantOut: "Project テストプロジェクト1 (project-01) created\n",
+			wantOut: "Step テストステップ1 (step-01) created\n",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			out := &bytes.Buffer{}
-			err := cmd.ProjectCreateRun(tt.args.ctx, out, tt.args.opts)
+			err := cmd.StepCreateRun(tt.args.ctx, out, tt.args.opts)
 			require.NoError(t, err)
 			assert.Equal(t, tt.wantOut, out.String())
 		})
