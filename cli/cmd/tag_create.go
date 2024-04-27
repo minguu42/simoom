@@ -12,14 +12,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type tagCreateOpts struct {
+type TagCreateOpts struct {
 	client api.Client
 
 	name string
 }
 
-func newCmdTagCreate() *cobra.Command {
-	var opts tagCreateOpts
+func NewCmdTagCreate() *cobra.Command {
+	var opts TagCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a tag",
@@ -31,16 +31,14 @@ func newCmdTagCreate() *cobra.Command {
 			if opts.name == "" {
 				return fmt.Errorf("name is required")
 			}
-			return runTagCreate(cmd.Context(), opts)
+			return TagCreateRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.name, "name", "", "tag name")
-
 	return cmd
 }
 
-func runTagCreate(ctx context.Context, opts tagCreateOpts) error {
+func TagCreateRun(ctx context.Context, opts TagCreateOpts) error {
 	resp, err := opts.client.CreateTag(ctx, connect.NewRequest(&simoompb.CreateTagRequest{
 		Name: opts.name,
 	}))

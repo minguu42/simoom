@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type authSigninOpts struct {
+type AuthSigninOpts struct {
 	profile string
 	client  api.Client
 
@@ -21,8 +21,8 @@ type authSigninOpts struct {
 	password string
 }
 
-func newCmdAuthSignin() *cobra.Command {
-	var opts authSigninOpts
+func NewCmdAuthSignin() *cobra.Command {
+	var opts AuthSigninOpts
 	cmd := &cobra.Command{
 		Use:   "signin",
 		Short: "Sign in to Simoom",
@@ -38,18 +38,17 @@ func newCmdAuthSignin() *cobra.Command {
 			if opts.password == "" {
 				return errors.New("password is required")
 			}
-			return runAuthSignin(cmd.Context(), opts)
+			return AuthSigninRun(cmd.Context(), opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
 
 	cmd.Flags().StringVar(&opts.email, "email", "", "email")
 	cmd.Flags().StringVar(&opts.password, "password", "", "password")
-
 	return cmd
 }
 
-func runAuthSignin(ctx context.Context, opts authSigninOpts) error {
+func AuthSigninRun(ctx context.Context, opts AuthSigninOpts) error {
 	resp, err := opts.client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
 		Email:    opts.email,
 		Password: opts.password,

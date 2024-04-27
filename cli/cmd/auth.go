@@ -8,9 +8,9 @@ func NewCmdAuth() *cobra.Command {
 		Short: "Authenticate simoom",
 	}
 	cmd.AddCommand(
-		newCmdAuthRefresh(),
-		newCmdAuthSignin(),
-		newCmdAuthSignup(),
+		NewCmdAuthRefresh(),
+		NewCmdAuthSignin(),
+		NewCmdAuthSignup(),
 	)
 	return cmd
 }

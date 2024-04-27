@@ -12,15 +12,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type projectListOpts struct {
+type ProjectListOpts struct {
 	client api.Client
 
 	limit  uint64
 	offset uint64
 }
 
-func newCmdProjectList() *cobra.Command {
-	var opts projectListOpts
+func NewCmdProjectList() *cobra.Command {
+	var opts ProjectListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
@@ -30,17 +30,15 @@ func newCmdProjectList() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			return runProjectList(cmd.Context(), opts)
+			return ProjectListRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
 	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
-
 	return cmd
 }
 
-func runProjectList(ctx context.Context, opts projectListOpts) error {
+func ProjectListRun(ctx context.Context, opts ProjectListOpts) error {
 	resp, err := opts.client.ListProjects(ctx, connect.NewRequest(&simoompb.ListProjectsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,

@@ -11,14 +11,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type projectDeleteOpts struct {
+type ProjectDeleteOpts struct {
 	client api.Client
 
 	id string
 }
 
-func newCmdProjectDelete() *cobra.Command {
-	var opts projectDeleteOpts
+func NewCmdProjectDelete() *cobra.Command {
+	var opts ProjectDeleteOpts
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a project",
@@ -28,12 +28,12 @@ func newCmdProjectDelete() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return runProjectDelete(cmd.Context(), opts)
+			return ProjectDeleteRun(cmd.Context(), opts)
 		},
 	}
 }
 
-func runProjectDelete(ctx context.Context, opts projectDeleteOpts) error {
+func ProjectDeleteRun(ctx context.Context, opts ProjectDeleteOpts) error {
 	if _, err := opts.client.DeleteProject(ctx, connect.NewRequest(&simoompb.DeleteProjectRequest{
 		Id: opts.id,
 	})); err != nil {

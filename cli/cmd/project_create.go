@@ -13,15 +13,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type projectCreateOpts struct {
+type ProjectCreateOpts struct {
 	client api.Client
 
 	name  string
 	color string
 }
 
-func newCmdProjectCreate() *cobra.Command {
-	var opts projectCreateOpts
+func NewCmdProjectCreate() *cobra.Command {
+	var opts ProjectCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a project",
@@ -36,17 +36,15 @@ func newCmdProjectCreate() *cobra.Command {
 			if opts.color == "" {
 				return errors.New("color is required")
 			}
-			return runProjectCreate(cmd.Context(), opts)
+			return ProjectCreateRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
 	cmd.Flags().StringVar(&opts.color, "color", "", "project color")
-
 	return cmd
 }
 
-func runProjectCreate(ctx context.Context, opts projectCreateOpts) error {
+func ProjectCreateRun(ctx context.Context, opts ProjectCreateOpts) error {
 	resp, err := opts.client.CreateProject(ctx, connect.NewRequest(&simoompb.CreateProjectRequest{
 		Name:  opts.name,
 		Color: opts.color,

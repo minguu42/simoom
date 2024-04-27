@@ -11,14 +11,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type taskDeleteOpts struct {
+type TaskDeleteOpts struct {
 	client api.Client
 
 	id string
 }
 
-func newCmdTaskDelete() *cobra.Command {
-	var opts taskDeleteOpts
+func NewCmdTaskDelete() *cobra.Command {
+	var opts TaskDeleteOpts
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a task",
@@ -28,12 +28,12 @@ func newCmdTaskDelete() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return runTaskDelete(cmd.Context(), opts)
+			return TaskDeleteRun(cmd.Context(), opts)
 		},
 	}
 }
 
-func runTaskDelete(ctx context.Context, opts taskDeleteOpts) error {
+func TaskDeleteRun(ctx context.Context, opts TaskDeleteOpts) error {
 	if _, err := opts.client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
 		Id: opts.id,
 	})); err != nil {

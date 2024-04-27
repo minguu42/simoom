@@ -11,14 +11,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type stepDeleteOpts struct {
+type StepDeleteOpts struct {
 	client api.Client
 
 	id string
 }
 
-func newCmdStepDelete() *cobra.Command {
-	var opts stepDeleteOpts
+func NewCmdStepDelete() *cobra.Command {
+	var opts StepDeleteOpts
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a step",
@@ -28,12 +28,12 @@ func newCmdStepDelete() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return runStepDelete(cmd.Context(), opts)
+			return StepDeleteRun(cmd.Context(), opts)
 		},
 	}
 }
 
-func runStepDelete(ctx context.Context, opts stepDeleteOpts) error {
+func StepDeleteRun(ctx context.Context, opts StepDeleteOpts) error {
 	if _, err := opts.client.DeleteStep(ctx, connect.NewRequest(&simoompb.DeleteStepRequest{
 		Id: opts.id,
 	})); err != nil {

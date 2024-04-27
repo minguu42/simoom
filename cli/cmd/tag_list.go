@@ -12,15 +12,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type tagListOpts struct {
+type TagListOpts struct {
 	client api.Client
 
 	limit  uint64
 	offset uint64
 }
 
-func newCmdTagList() *cobra.Command {
-	var opts tagListOpts
+func NewCmdTagList() *cobra.Command {
+	var opts TagListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
@@ -30,17 +30,15 @@ func newCmdTagList() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			return runTagList(cmd.Context(), opts)
+			return TagListRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
 	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
-
 	return cmd
 }
 
-func runTagList(ctx context.Context, opts tagListOpts) error {
+func TagListRun(ctx context.Context, opts TagListOpts) error {
 	resp, err := opts.client.ListTags(ctx, connect.NewRequest(&simoompb.ListTagsRequest{
 		Limit:  opts.limit,
 		Offset: opts.offset,

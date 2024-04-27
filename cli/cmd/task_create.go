@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type taskCreateOpts struct {
+type TaskCreateOpts struct {
 	client api.Client
 
 	projectID string
@@ -20,8 +20,8 @@ type taskCreateOpts struct {
 	priority  uint32
 }
 
-func newCmdTaskCreate() *cobra.Command {
-	var opts taskCreateOpts
+func NewCmdTaskCreate() *cobra.Command {
+	var opts TaskCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a task",
@@ -39,18 +39,16 @@ func newCmdTaskCreate() *cobra.Command {
 			if opts.priority == 99 {
 				return fmt.Errorf("priority is required")
 			}
-			return runTaskCreate(cmd.Context(), opts)
+			return TaskCreateRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.projectID, "project-id", "", "project id")
 	cmd.Flags().StringVar(&opts.name, "name", "", "task name")
 	cmd.Flags().Uint32Var(&opts.priority, "priority", 99, "task priority")
-
 	return cmd
 }
 
-func runTaskCreate(ctx context.Context, opts taskCreateOpts) error {
+func TaskCreateRun(ctx context.Context, opts TaskCreateOpts) error {
 	resp, err := opts.client.CreateTask(ctx, connect.NewRequest(&simoompb.CreateTaskRequest{
 		ProjectId: opts.projectID,
 		Name:      opts.name,

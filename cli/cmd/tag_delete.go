@@ -11,14 +11,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type tagDeleteOpts struct {
+type TagDeleteOpts struct {
 	client api.Client
 
 	id string
 }
 
-func newCmdTagDelete() *cobra.Command {
-	var opts tagDeleteOpts
+func NewCmdTagDelete() *cobra.Command {
+	var opts TagDeleteOpts
 	return &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a tag",
@@ -28,12 +28,12 @@ func newCmdTagDelete() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return runTagDelete(cmd.Context(), opts)
+			return TagDeleteRun(cmd.Context(), opts)
 		},
 	}
 }
 
-func runTagDelete(ctx context.Context, opts tagDeleteOpts) error {
+func TagDeleteRun(ctx context.Context, opts TagDeleteOpts) error {
 	if _, err := opts.client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
 		Id: opts.id,
 	})); err != nil {

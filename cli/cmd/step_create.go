@@ -13,15 +13,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type stepCreateOpts struct {
+type StepCreateOpts struct {
 	client api.Client
 
 	taskID string
 	name   string
 }
 
-func newCmdStepCreate() *cobra.Command {
-	var opts stepCreateOpts
+func NewCmdStepCreate() *cobra.Command {
+	var opts StepCreateOpts
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a step",
@@ -36,17 +36,15 @@ func newCmdStepCreate() *cobra.Command {
 			if opts.name == "" {
 				return errors.New("name is required")
 			}
-			return runStepCreate(cmd.Context(), opts)
+			return StepCreateRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.taskID, "task-id", "", "task id")
 	cmd.Flags().StringVar(&opts.name, "name", "", "step name")
-
 	return cmd
 }
 
-func runStepCreate(ctx context.Context, opts stepCreateOpts) error {
+func StepCreateRun(ctx context.Context, opts StepCreateOpts) error {
 	resp, err := opts.client.CreateStep(ctx, connect.NewRequest(&simoompb.CreateStepRequest{
 		TaskId: opts.taskID,
 		Name:   opts.name,

@@ -12,15 +12,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type tagEditOpts struct {
+type TagEditOpts struct {
 	client api.Client
 
 	id   string
 	name string
 }
 
-func newCmdTagEdit() *cobra.Command {
-	var opts tagEditOpts
+func NewCmdTagEdit() *cobra.Command {
+	var opts TagEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a tag",
@@ -30,16 +30,14 @@ func newCmdTagEdit() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return runTagEdit(cmd.Context(), opts)
+			return TagEditRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.name, "name", "", "tag name")
-
 	return cmd
 }
 
-func runTagEdit(ctx context.Context, opts tagEditOpts) error {
+func TagEditRun(ctx context.Context, opts TagEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name

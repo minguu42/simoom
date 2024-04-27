@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type stepEditOpts struct {
+type StepEditOpts struct {
 	client api.Client
 
 	id        string
@@ -21,8 +21,8 @@ type stepEditOpts struct {
 	completed bool
 }
 
-func newCmdStepEdit() *cobra.Command {
-	var opts stepEditOpts
+func NewCmdStepEdit() *cobra.Command {
+	var opts StepEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a step",
@@ -32,17 +32,15 @@ func newCmdStepEdit() *cobra.Command {
 			opts.client = f.Client
 
 			opts.id = args[0]
-			return runStepEdit(cmd.Context(), opts)
+			return StepEditRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.name, "name", "", "step name")
 	cmd.Flags().BoolVar(&opts.completed, "completed", false, "completed")
-
 	return cmd
 }
 
-func runStepEdit(ctx context.Context, opts stepEditOpts) error {
+func StepEditRun(ctx context.Context, opts StepEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name

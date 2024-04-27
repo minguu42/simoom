@@ -21,7 +21,7 @@ type projectEditOpts struct {
 	isArchived bool
 }
 
-func newCmdProjectEdit() *cobra.Command {
+func NewCmdProjectEdit() *cobra.Command {
 	var opts projectEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
@@ -35,11 +35,9 @@ func newCmdProjectEdit() *cobra.Command {
 			return runProjectEdit(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
 	cmd.Flags().StringVar(&opts.color, "color", "", "project color")
 	cmd.Flags().BoolVar(&opts.isArchived, "archived", false, "whether to archive the project")
-
 	return cmd
 }
 

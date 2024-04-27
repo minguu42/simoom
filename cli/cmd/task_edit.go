@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type taskEditOpts struct {
+type TaskEditOpts struct {
 	client api.Client
 
 	id        string
@@ -23,8 +23,8 @@ type taskEditOpts struct {
 	completed bool
 }
 
-func newCmdTaskEdit() *cobra.Command {
-	var opts taskEditOpts
+func NewCmdTaskEdit() *cobra.Command {
+	var opts TaskEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a task",
@@ -37,19 +37,17 @@ func newCmdTaskEdit() *cobra.Command {
 				return fmt.Errorf("id is required")
 			}
 			opts.id = args[0]
-			return runTaskEdit(cmd.Context(), opts)
+			return TaskEditRun(cmd.Context(), opts)
 		},
 	}
-
 	cmd.Flags().StringVar(&opts.name, "name", "", "task name")
 	cmd.Flags().StringVar(&opts.content, "content", "", "task content")
 	cmd.Flags().Uint32Var(&opts.priority, "priority", 99, "task priority")
 	cmd.Flags().BoolVar(&opts.completed, "completed", false, "whether to complete the task")
-
 	return cmd
 }
 
-func runTaskEdit(ctx context.Context, opts taskEditOpts) error {
+func TaskEditRun(ctx context.Context, opts TaskEditOpts) error {
 	var name *string
 	if opts.name != "" {
 		name = &opts.name

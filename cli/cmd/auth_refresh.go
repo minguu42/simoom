@@ -13,15 +13,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type authRefreshOpts struct {
+type AuthRefreshOpts struct {
 	profile string
 	client  api.Client
 
 	refreshToken string
 }
 
-func newCmdAuthRefresh() *cobra.Command {
-	var opts authRefreshOpts
+func NewCmdAuthRefresh() *cobra.Command {
+	var opts AuthRefreshOpts
 	cmd := &cobra.Command{
 		Use:   "refresh",
 		Short: "Refresh the access token",
@@ -36,17 +36,16 @@ func newCmdAuthRefresh() *cobra.Command {
 				}
 				opts.refreshToken = opts.client.GetRefreshToken()
 			}
-			return runAuthRefresh(cmd.Context(), opts)
+			return AuthRefreshRun(cmd.Context(), opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
 
 	cmd.Flags().StringVar(&opts.refreshToken, "refresh-token", "", "refresh token")
-
 	return cmd
 }
 
-func runAuthRefresh(ctx context.Context, opts authRefreshOpts) error {
+func AuthRefreshRun(ctx context.Context, opts AuthRefreshOpts) error {
 	resp, err := opts.client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
 		RefreshToken: opts.refreshToken,
 	}))

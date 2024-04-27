@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type taskListOpts struct {
+type TaskListOpts struct {
 	client api.Client
 
 	limit     uint64
@@ -21,8 +21,8 @@ type taskListOpts struct {
 	tagID     string
 }
 
-func newCmdTaskList() *cobra.Command {
-	var opts taskListOpts
+func NewCmdTaskList() *cobra.Command {
+	var opts TaskListOpts
 	cmd := &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
@@ -31,7 +31,7 @@ func newCmdTaskList() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
-			return runTaskList(cmd.Context(), opts)
+			return TaskListRun(cmd.Context(), opts)
 		},
 	}
 	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "Maximum number of tasks to fetch")
@@ -41,7 +41,7 @@ func newCmdTaskList() *cobra.Command {
 	return cmd
 }
 
-func runTaskList(ctx context.Context, opts taskListOpts) error {
+func TaskListRun(ctx context.Context, opts TaskListOpts) error {
 	var projectID *string
 	if opts.projectID != "" {
 		projectID = &opts.projectID
