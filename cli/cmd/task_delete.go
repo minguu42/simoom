@@ -13,9 +13,9 @@ import (
 )
 
 type TaskDeleteOpts struct {
-	client api.Client
+	Client api.Client
 
-	id string
+	ID string
 }
 
 func NewCmdTaskDelete() *cobra.Command {
@@ -26,21 +26,21 @@ func NewCmdTaskDelete() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
+			opts.ID = args[0]
 			return TaskDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
 func TaskDeleteRun(ctx context.Context, out io.Writer, opts TaskDeleteOpts) error {
-	if _, err := opts.client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
-		Id: opts.id,
+	if _, err := opts.Client.DeleteTask(ctx, connect.NewRequest(&simoompb.DeleteTaskRequest{
+		Id: opts.ID,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTask method: %w", err)
 	}
 
-	fmt.Fprintf(out, "Task %s deleted\n", opts.id)
+	fmt.Fprintf(out, "Task %s deleted\n", opts.ID)
 	return nil
 }

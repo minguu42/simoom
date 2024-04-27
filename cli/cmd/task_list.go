@@ -13,12 +13,12 @@ import (
 )
 
 type TaskListOpts struct {
-	client api.Client
+	Client api.Client
 
-	limit     uint64
-	offset    uint64
-	projectID string
-	tagID     string
+	Limit     uint64
+	Offset    uint64
+	ProjectID string
+	TagID     string
 }
 
 func NewCmdTaskList() *cobra.Command {
@@ -30,29 +30,29 @@ func NewCmdTaskList() *cobra.Command {
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 			return TaskListRun(cmd.Context(), f.Out, opts)
 		},
 	}
-	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "Maximum number of tasks to fetch")
-	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
-	cmd.Flags().StringVar(&opts.projectID, "project-id", "", "Filter by project")
-	cmd.Flags().StringVar(&opts.tagID, "tag-id", "", "Filter by tag")
+	cmd.Flags().Uint64Var(&opts.Limit, "limit", 10, "Maximum number of tasks to fetch")
+	cmd.Flags().Uint64Var(&opts.Offset, "offset", 0, "offset")
+	cmd.Flags().StringVar(&opts.ProjectID, "project-id", "", "Filter by project")
+	cmd.Flags().StringVar(&opts.TagID, "tag-id", "", "Filter by tag")
 	return cmd
 }
 
 func TaskListRun(ctx context.Context, out io.Writer, opts TaskListOpts) error {
 	var projectID *string
-	if opts.projectID != "" {
-		projectID = &opts.projectID
+	if opts.ProjectID != "" {
+		projectID = &opts.ProjectID
 	}
 	var tagID *string
-	if opts.tagID != "" {
-		tagID = &opts.tagID
+	if opts.TagID != "" {
+		tagID = &opts.TagID
 	}
-	resp, err := opts.client.ListTasks(ctx, connect.NewRequest(&simoompb.ListTasksRequest{
-		Limit:     opts.limit,
-		Offset:    opts.offset,
+	resp, err := opts.Client.ListTasks(ctx, connect.NewRequest(&simoompb.ListTasksRequest{
+		Limit:     opts.Limit,
+		Offset:    opts.Offset,
 		ProjectId: projectID,
 		TagId:     tagID,
 	}))

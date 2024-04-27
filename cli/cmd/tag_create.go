@@ -13,9 +13,9 @@ import (
 )
 
 type TagCreateOpts struct {
-	client api.Client
+	Client api.Client
 
-	name string
+	Name string
 }
 
 func NewCmdTagCreate() *cobra.Command {
@@ -26,19 +26,19 @@ func NewCmdTagCreate() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
 			return TagCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
-	cmd.Flags().StringVar(&opts.name, "name", "", "tag name")
+	cmd.Flags().StringVar(&opts.Name, "name", "", "tag name")
 	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
 
 func TagCreateRun(ctx context.Context, out io.Writer, opts TagCreateOpts) error {
-	resp, err := opts.client.CreateTag(ctx, connect.NewRequest(&simoompb.CreateTagRequest{
-		Name: opts.name,
+	resp, err := opts.Client.CreateTag(ctx, connect.NewRequest(&simoompb.CreateTagRequest{
+		Name: opts.Name,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call CreateTag method: %w", err)

@@ -13,10 +13,10 @@ import (
 )
 
 type TagListOpts struct {
-	client api.Client
+	Client api.Client
 
-	limit  uint64
-	offset uint64
+	Limit  uint64
+	Offset uint64
 }
 
 func NewCmdTagList() *cobra.Command {
@@ -28,20 +28,20 @@ func NewCmdTagList() *cobra.Command {
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
 			return TagListRun(cmd.Context(), f.Out, opts)
 		},
 	}
-	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
-	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
+	cmd.Flags().Uint64Var(&opts.Limit, "limit", 10, "limit")
+	cmd.Flags().Uint64Var(&opts.Offset, "offset", 0, "offset")
 	return cmd
 }
 
 func TagListRun(ctx context.Context, out io.Writer, opts TagListOpts) error {
-	resp, err := opts.client.ListTags(ctx, connect.NewRequest(&simoompb.ListTagsRequest{
-		Limit:  opts.limit,
-		Offset: opts.offset,
+	resp, err := opts.Client.ListTags(ctx, connect.NewRequest(&simoompb.ListTagsRequest{
+		Limit:  opts.Limit,
+		Offset: opts.Offset,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call ListTags method: %w", err)

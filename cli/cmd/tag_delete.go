@@ -13,9 +13,9 @@ import (
 )
 
 type TagDeleteOpts struct {
-	client api.Client
+	Client api.Client
 
-	id string
+	ID string
 }
 
 func NewCmdTagDelete() *cobra.Command {
@@ -26,21 +26,21 @@ func NewCmdTagDelete() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
+			opts.ID = args[0]
 			return TagDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
 func TagDeleteRun(ctx context.Context, out io.Writer, opts TagDeleteOpts) error {
-	if _, err := opts.client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
-		Id: opts.id,
+	if _, err := opts.Client.DeleteTag(ctx, connect.NewRequest(&simoompb.DeleteTagRequest{
+		Id: opts.ID,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteTag method: %w", err)
 	}
 
-	fmt.Fprintf(out, "Tag %s deleted\n", opts.id)
+	fmt.Fprintf(out, "Tag %s deleted\n", opts.ID)
 	return nil
 }

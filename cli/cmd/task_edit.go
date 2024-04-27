@@ -14,13 +14,13 @@ import (
 )
 
 type TaskEditOpts struct {
-	client api.Client
+	Client api.Client
 
-	id        string
-	name      string
-	content   string
-	priority  uint32
-	completed bool
+	ID        string
+	Name      string
+	Content   string
+	Priority  uint32
+	Completed bool
 }
 
 func NewCmdTaskEdit() *cobra.Command {
@@ -31,41 +31,41 @@ func NewCmdTaskEdit() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
 			if args[0] == "" {
 				return fmt.Errorf("id is required")
 			}
-			opts.id = args[0]
+			opts.ID = args[0]
 			return TaskEditRun(cmd.Context(), f.Out, opts)
 		},
 	}
-	cmd.Flags().StringVar(&opts.name, "name", "", "task name")
-	cmd.Flags().StringVar(&opts.content, "content", "", "task content")
-	cmd.Flags().Uint32Var(&opts.priority, "priority", 99, "task priority")
-	cmd.Flags().BoolVar(&opts.completed, "completed", false, "whether to complete the task")
+	cmd.Flags().StringVar(&opts.Name, "name", "", "task name")
+	cmd.Flags().StringVar(&opts.Content, "content", "", "task content")
+	cmd.Flags().Uint32Var(&opts.Priority, "priority", 99, "task priority")
+	cmd.Flags().BoolVar(&opts.Completed, "completed", false, "whether to complete the task")
 	return cmd
 }
 
 func TaskEditRun(ctx context.Context, out io.Writer, opts TaskEditOpts) error {
 	var name *string
-	if opts.name != "" {
-		name = &opts.name
+	if opts.Name != "" {
+		name = &opts.Name
 	}
 	var content *string
-	if opts.content != "" {
-		content = &opts.content
+	if opts.Content != "" {
+		content = &opts.Content
 	}
 	var priority *uint32
-	if opts.priority != 99 {
-		priority = &opts.priority
+	if opts.Priority != 99 {
+		priority = &opts.Priority
 	}
 	var completedAt *timestamppb.Timestamp
-	if opts.completed {
+	if opts.Completed {
 		completedAt = timestamppb.Now()
 	}
-	resp, err := opts.client.UpdateTask(ctx, connect.NewRequest(&simoompb.UpdateTaskRequest{
-		Id:          opts.id,
+	resp, err := opts.Client.UpdateTask(ctx, connect.NewRequest(&simoompb.UpdateTaskRequest{
+		Id:          opts.ID,
 		Name:        name,
 		Content:     content,
 		Priority:    priority,
