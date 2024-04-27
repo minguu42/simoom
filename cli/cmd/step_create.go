@@ -41,6 +41,8 @@ func NewCmdStepCreate() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.taskID, "task-id", "", "task id")
 	cmd.Flags().StringVar(&opts.name, "name", "", "step name")
+	_ = cmd.MarkFlagRequired("task-id")
+	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
 

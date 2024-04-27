@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"connectrpc.com/connect"
@@ -30,17 +29,13 @@ func NewCmdProjectCreate() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			if opts.name == "" {
-				return errors.New("name is required")
-			}
-			if opts.color == "" {
-				return errors.New("color is required")
-			}
 			return ProjectCreateRun(cmd.Context(), opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
 	cmd.Flags().StringVar(&opts.color, "color", "", "project color")
+	_ = cmd.MarkFlagRequired("name")
+	_ = cmd.MarkFlagRequired("color")
 	return cmd
 }
 

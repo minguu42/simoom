@@ -28,13 +28,11 @@ func NewCmdTagCreate() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			if opts.name == "" {
-				return fmt.Errorf("name is required")
-			}
 			return TagCreateRun(cmd.Context(), opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.name, "name", "", "tag name")
+	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
 

@@ -30,21 +30,15 @@ func NewCmdTaskCreate() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.client = f.Client
 
-			if opts.projectID == "" {
-				return fmt.Errorf("project-id is required")
-			}
-			if opts.name == "" {
-				return fmt.Errorf("name is required")
-			}
-			if opts.priority == 99 {
-				return fmt.Errorf("priority is required")
-			}
 			return TaskCreateRun(cmd.Context(), opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.projectID, "project-id", "", "project id")
 	cmd.Flags().StringVar(&opts.name, "name", "", "task name")
-	cmd.Flags().Uint32Var(&opts.priority, "priority", 99, "task priority")
+	cmd.Flags().Uint32Var(&opts.priority, "priority", 0, "task priority")
+	_ = cmd.MarkFlagRequired("project-id")
+	_ = cmd.MarkFlagRequired("name")
+	_ = cmd.MarkFlagRequired("priority")
 	return cmd
 }
 

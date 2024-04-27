@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"connectrpc.com/connect"
@@ -33,15 +32,6 @@ func NewCmdAuthSignup() *cobra.Command {
 			opts.profile = f.Profile
 			opts.client = f.Client
 
-			if opts.name == "" {
-				return errors.New("name is required")
-			}
-			if opts.email == "" {
-				return errors.New("email is required")
-			}
-			if opts.password == "" {
-				return errors.New("password is required")
-			}
 			return AuthSignupRun(cmd.Context(), opts)
 		},
 	}
@@ -50,6 +40,9 @@ func NewCmdAuthSignup() *cobra.Command {
 	cmd.Flags().StringVar(&opts.name, "name", "", "username")
 	cmd.Flags().StringVar(&opts.email, "email", "", "email")
 	cmd.Flags().StringVar(&opts.password, "password", "", "password")
+	_ = cmd.MarkFlagRequired("name")
+	_ = cmd.MarkFlagRequired("email")
+	_ = cmd.MarkFlagRequired("password")
 	return cmd
 }
 
