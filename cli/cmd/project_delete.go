@@ -13,9 +13,9 @@ import (
 )
 
 type ProjectDeleteOpts struct {
-	client api.Client
+	Client api.Client
 
-	id string
+	ID string
 }
 
 func NewCmdProjectDelete() *cobra.Command {
@@ -26,21 +26,21 @@ func NewCmdProjectDelete() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
+			opts.ID = args[0]
 			return ProjectDeleteRun(cmd.Context(), f.Out, opts)
 		},
 	}
 }
 
 func ProjectDeleteRun(ctx context.Context, out io.Writer, opts ProjectDeleteOpts) error {
-	if _, err := opts.client.DeleteProject(ctx, connect.NewRequest(&simoompb.DeleteProjectRequest{
-		Id: opts.id,
+	if _, err := opts.Client.DeleteProject(ctx, connect.NewRequest(&simoompb.DeleteProjectRequest{
+		Id: opts.ID,
 	})); err != nil {
 		return fmt.Errorf("failed to call DeleteProject method: %w", err)
 	}
 
-	fmt.Fprintf(out, "Project %s deleted\n", opts.id)
+	fmt.Fprintf(out, "Project %s deleted\n", opts.ID)
 	return nil
 }

@@ -12,50 +12,50 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type projectEditOpts struct {
-	client api.Client
+type ProjectEditOpts struct {
+	Client api.Client
 
-	id         string
-	name       string
-	color      string
-	isArchived bool
+	ID         string
+	Name       string
+	Color      string
+	IsArchived bool
 }
 
 func NewCmdProjectEdit() *cobra.Command {
-	var opts projectEditOpts
+	var opts ProjectEditOpts
 	cmd := &cobra.Command{
 		Use:   "edit",
 		Short: "Edit a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
-			opts.id = args[0]
+			opts.ID = args[0]
 			return ProjectEditRun(cmd.Context(), f.Out, opts)
 		},
 	}
-	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
-	cmd.Flags().StringVar(&opts.color, "color", "", "project color")
-	cmd.Flags().BoolVar(&opts.isArchived, "archived", false, "whether to archive the project")
+	cmd.Flags().StringVar(&opts.Name, "name", "", "project name")
+	cmd.Flags().StringVar(&opts.Color, "color", "", "project color")
+	cmd.Flags().BoolVar(&opts.IsArchived, "archived", false, "whether to archive the project")
 	return cmd
 }
 
-func ProjectEditRun(ctx context.Context, out io.Writer, opts projectEditOpts) error {
+func ProjectEditRun(ctx context.Context, out io.Writer, opts ProjectEditOpts) error {
 	var name *string
-	if opts.name != "" {
-		name = &opts.name
+	if opts.Name != "" {
+		name = &opts.Name
 	}
 	var color *string
-	if opts.color != "" {
-		color = &opts.color
+	if opts.Color != "" {
+		color = &opts.Color
 	}
 	var isArchived *bool
-	if opts.isArchived {
-		isArchived = &opts.isArchived
+	if opts.IsArchived {
+		isArchived = &opts.IsArchived
 	}
-	resp, err := opts.client.UpdateProject(ctx, connect.NewRequest(&simoompb.UpdateProjectRequest{
-		Id:         opts.id,
+	resp, err := opts.Client.UpdateProject(ctx, connect.NewRequest(&simoompb.UpdateProjectRequest{
+		Id:         opts.ID,
 		Name:       name,
 		Color:      color,
 		IsArchived: isArchived,

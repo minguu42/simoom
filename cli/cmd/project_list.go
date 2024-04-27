@@ -13,10 +13,10 @@ import (
 )
 
 type ProjectListOpts struct {
-	client api.Client
+	Client api.Client
 
-	limit  uint64
-	offset uint64
+	Limit  uint64
+	Offset uint64
 }
 
 func NewCmdProjectList() *cobra.Command {
@@ -28,20 +28,20 @@ func NewCmdProjectList() *cobra.Command {
 		Args:    cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
 			return ProjectListRun(cmd.Context(), f.Out, opts)
 		},
 	}
-	cmd.Flags().Uint64Var(&opts.limit, "limit", 10, "limit")
-	cmd.Flags().Uint64Var(&opts.offset, "offset", 0, "offset")
+	cmd.Flags().Uint64Var(&opts.Limit, "limit", 10, "limit")
+	cmd.Flags().Uint64Var(&opts.Offset, "offset", 0, "offset")
 	return cmd
 }
 
 func ProjectListRun(ctx context.Context, out io.Writer, opts ProjectListOpts) error {
-	resp, err := opts.client.ListProjects(ctx, connect.NewRequest(&simoompb.ListProjectsRequest{
-		Limit:  opts.limit,
-		Offset: opts.offset,
+	resp, err := opts.Client.ListProjects(ctx, connect.NewRequest(&simoompb.ListProjectsRequest{
+		Limit:  opts.Limit,
+		Offset: opts.Offset,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call ListProjects method: %w", err)

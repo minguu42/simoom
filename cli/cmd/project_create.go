@@ -13,10 +13,10 @@ import (
 )
 
 type ProjectCreateOpts struct {
-	client api.Client
+	Client api.Client
 
-	name  string
-	color string
+	Name  string
+	Color string
 }
 
 func NewCmdProjectCreate() *cobra.Command {
@@ -27,22 +27,22 @@ func NewCmdProjectCreate() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.client = f.Client
+			opts.Client = f.Client
 
 			return ProjectCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
-	cmd.Flags().StringVar(&opts.name, "name", "", "project name")
-	cmd.Flags().StringVar(&opts.color, "color", "", "project color")
+	cmd.Flags().StringVar(&opts.Name, "name", "", "project name")
+	cmd.Flags().StringVar(&opts.Color, "color", "", "project color")
 	_ = cmd.MarkFlagRequired("name")
 	_ = cmd.MarkFlagRequired("color")
 	return cmd
 }
 
 func ProjectCreateRun(ctx context.Context, out io.Writer, opts ProjectCreateOpts) error {
-	resp, err := opts.client.CreateProject(ctx, connect.NewRequest(&simoompb.CreateProjectRequest{
-		Name:  opts.name,
-		Color: opts.color,
+	resp, err := opts.Client.CreateProject(ctx, connect.NewRequest(&simoompb.CreateProjectRequest{
+		Name:  opts.Name,
+		Color: opts.Color,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call CreateProject method: %w", err)
