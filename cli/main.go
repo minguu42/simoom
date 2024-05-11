@@ -46,6 +46,7 @@ func mainRun() exitCode {
 			cmd.SetContext(factory.ContextWithFactory(cmd.Context(), f))
 			return nil
 		},
+		SilenceUsage: true,
 	}
 	rootCmd.PersistentFlags().StringVar(&flags.profile, "profile", "default", "user profile")
 

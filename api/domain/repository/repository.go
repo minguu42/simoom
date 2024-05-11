@@ -1,4 +1,3 @@
-// Package repository はデータベースにデータを保存する
 package repository
 
 import (

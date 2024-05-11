@@ -1,4 +1,3 @@
-// Package ulidgen はULIDを生成する機能を提供するパッケージ
 package ulidgen
 
 import "github.com/oklog/ulid/v2"

@@ -1,4 +1,3 @@
-// Package jwtauth はJWTを用いて認証器を実装するパッケージ
 package jwtauth
 
 import (

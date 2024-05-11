@@ -1,4 +1,3 @@
-// Package auth は認証に関わる処理を扱うパッケージ
 package auth
 
 import (

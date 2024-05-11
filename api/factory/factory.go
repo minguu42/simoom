@@ -1,4 +1,3 @@
-// Package factory は技術的関心事を生成するファクトリを定義する
 package factory
 
 import (
