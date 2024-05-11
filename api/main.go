@@ -40,16 +40,15 @@ func mainRun(ctx context.Context) error {
 	}
 	defer f.Close()
 
-	h, err := handler.New(f)
+	h, err := handler.New(f, conf.API.Timeout)
 	if err != nil {
 		return fmt.Errorf("failed to create handler: %w", err)
 	}
 	s := &http.Server{
 		Addr:              net.JoinHostPort(conf.API.Host, strconv.Itoa(conf.API.Port)),
 		Handler:           h,
-		ReadTimeout:       10 * time.Second,
-		ReadHeaderTimeout: 10 * time.Second,
-		MaxHeaderBytes:    1 << 20,
+		ReadTimeout:       conf.API.ReadTimeout,
+		ReadHeaderTimeout: conf.API.ReadHeaderTimeout,
 	}
 	go func() {
 		logging.Event(ctx, "Start accepting requests")

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/factory"
@@ -74,7 +75,7 @@ func TestAPI(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	h, err := handler.New(f)
+	h, err := handler.New(f, 5*time.Second)
 	require.NoError(t, err)
 
 	ts := httptest.NewServer(h)

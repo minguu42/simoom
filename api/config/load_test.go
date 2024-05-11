@@ -2,6 +2,7 @@ package config_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/minguu42/simoom/api/config"
 	"github.com/stretchr/testify/assert"
@@ -24,8 +25,11 @@ func TestLoad(t *testing.T) {
 
 	want := config.Config{
 		API: config.API{
-			Host: "0.0.0.0",
-			Port: 8080,
+			Host:              "0.0.0.0",
+			Port:              8080,
+			ReadTimeout:       2 * time.Second,
+			ReadHeaderTimeout: 2 * time.Second,
+			Timeout:           5 * time.Second,
 		},
 		Auth: config.Auth{
 			AccessTokenExpiryHour:  2,

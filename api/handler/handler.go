@@ -29,7 +29,7 @@ type handler struct {
 }
 
 // New はハンドラを生成する
-func New(f *factory.Factory) (http.Handler, error) {
+func New(f *factory.Factory, timeout time.Duration) (http.Handler, error) {
 	validator, err := protovalidate.New()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create validator: %w", err)
@@ -37,7 +37,7 @@ func New(f *factory.Factory) (http.Handler, error) {
 
 	opt := connect.WithInterceptors(
 		interceptor.WithLogger(),
-		interceptor.Timeout(2*time.Second),
+		interceptor.Timeout(timeout),
 		interceptor.ArrangeError(),
 		interceptor.AccessLog(),
 		interceptor.Authenticate(f.Authn, f.Repo),
