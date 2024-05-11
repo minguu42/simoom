@@ -1,5 +1,3 @@
-// Package apperr はアプリケーション独自のエラーを定義する
-// このパッケージで定義されたエラーは handler パッケージと usecase パッケージから利用する
 package apperr
 
 import (

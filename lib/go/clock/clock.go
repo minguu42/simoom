@@ -1,4 +1,3 @@
-// Package clock は現在時刻をテスト可能にするための関数を提供する
 package clock
 
 import (

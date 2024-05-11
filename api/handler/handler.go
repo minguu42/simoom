@@ -1,4 +1,3 @@
-// Package handler はハンドラを定義する
 package handler
 
 import (

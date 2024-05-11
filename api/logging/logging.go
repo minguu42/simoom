@@ -1,4 +1,3 @@
-// Package logging はアプリケーションのロギングを行う関数を提供する
 package logging
 
 import (

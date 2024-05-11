@@ -1,4 +1,3 @@
-// Package config はアプリケーションの設定値を扱うパッケージ
 package config
 
 // Config はアプリケーションで使用する設定値

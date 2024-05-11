@@ -1,4 +1,3 @@
-// Package mysql はMySQLを扱うパッケージ
 package mysql
 
 import (
