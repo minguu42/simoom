@@ -1,19 +1,21 @@
 package config
 
-// Config はアプリケーションで使用する設定値
+import "time"
+
 type Config struct {
 	API  API
 	Auth Auth
 	DB   DB
 }
 
-// API はAPIに関する設定
 type API struct {
-	Host string `envconfig:"API_HOST" default:"0.0.0.0"`
-	Port int    `envconfig:"API_PORT" default:"8080"`
+	Host              string        `envconfig:"API_HOST" default:"0.0.0.0"`
+	Port              int           `envconfig:"API_PORT" default:"8080"`
+	ReadTimeout       time.Duration `envconfig:"API_READ_TIMEOUT" default:"2s"`
+	ReadHeaderTimeout time.Duration `envconfig:"API_READ_HEADER_TIMEOUT" default:"2s"`
+	Timeout           time.Duration `envconfig:"API_TIMEOUT" default:"5s"`
 }
 
-// Auth は認証に関する設定
 type Auth struct {
 	AccessTokenExpiryHour  int    `envconfig:"ACCESS_TOKEN_EXPIRY_HOUR" default:"2"`
 	RefreshTokenExpiryHour int    `envconfig:"REFRESH_TOKEN_EXPIRY_HOUR" default:"168"`
@@ -21,7 +23,6 @@ type Auth struct {
 	RefreshTokenSecret     string `envconfig:"REFRESH_TOKEN_SECRET" required:"true"`
 }
 
-// DB はデータベースに関する設定
 type DB struct {
 	Host               string `envconfig:"DB_HOST" required:"true"`
 	Port               int    `envconfig:"DB_PORT" required:"true"`
