@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/infra/mysql/sqlc"
 )
@@ -33,7 +32,9 @@ func NewClient(conf config.DB) (*Client, error) {
 		conf.Database,
 	)
 
-	db, err := sql.Open("mysql", dsn)
+	name := "mysql-proxy"
+	registerDriverWithHooks(name)
+	db, err := sql.Open(name, dsn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open a database: %w", err)
 	}
