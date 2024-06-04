@@ -67,7 +67,7 @@ type AccessFields struct {
 
 // Access はアクセスログを出力する
 func Access(ctx context.Context, fields AccessFields) {
-	message := "Request is accepted"
+	message := "Request accepted"
 	executionTimeAttr := slog.Int64("execution_time", fields.ExecutionTime.Milliseconds())
 	requestAttr := slog.Group("request",
 		slog.String("http_method", fields.HTTPMethod),
@@ -97,4 +97,27 @@ func Access(ctx context.Context, fields AccessFields) {
 		slog.String("error_text", appErr.Code().String()),
 		slog.String("error_message", appErr.Error()),
 	)
+}
+
+// SQL はクエリログを出力する
+func SQL(ctx context.Context, query string, args []any, executionTime time.Duration, err error) {
+	level := slog.LevelInfo
+	message := "Query executed"
+	queryAttr := slog.String("query", query)
+	argsAttr := slog.Any("args", args)
+	executionTimeAttr := slog.Int64("execution_time", executionTime.Milliseconds())
+	if err != nil {
+		logger(ctx).LogAttrs(ctx, level, message,
+			queryAttr,
+			argsAttr,
+			executionTimeAttr,
+			slog.String("error_message", err.Error()),
+		)
+	} else {
+		logger(ctx).LogAttrs(ctx, level, message,
+			queryAttr,
+			argsAttr,
+			executionTimeAttr,
+		)
+	}
 }
