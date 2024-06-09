@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -50,17 +49,21 @@ func mainRun(ctx context.Context) error {
 		ReadTimeout:       conf.API.ReadTimeout,
 		ReadHeaderTimeout: conf.API.ReadHeaderTimeout,
 	}
+
+	serveErr := make(chan error)
 	go func() {
 		logging.Event(ctx, "Start accepting requests")
-		if err := s.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			logging.Error(ctx, fmt.Sprintf("failed to listen and handle requests: %s", err))
-			return
-		}
+		serveErr <- s.ListenAndServe()
 	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, os.Interrupt)
-	<-quit
+	select {
+	case err := <-serveErr:
+		return fmt.Errorf("failed to listen and serve: %w", err)
+	case <-quit:
+	}
+
 	if err := s.Shutdown(ctx); err != nil {
 		return fmt.Errorf("failed to shutdown server: %w", err)
 	}
