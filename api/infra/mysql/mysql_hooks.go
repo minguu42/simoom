@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/minguu42/simoom/api/logging"
-	"github.com/shogo82148/go-sql-proxy"
+	proxy "github.com/shogo82148/go-sql-proxy"
 )
 
 func registerDriverWithHooks(name string) {
