@@ -14,14 +14,20 @@ import (
 var applicationLogger *slog.Logger
 
 func init() {
-	applicationLogger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+	w := os.Stdout
+	opts := &slog.HandlerOptions{
 		ReplaceAttr: func(_ []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.MessageKey {
 				a.Key = "message"
 			}
 			return a
 		},
-	}))
+	}
+	if os.Getenv("USE_DEBUG_LOGGER") == "true" {
+		applicationLogger = slog.New(NewJSONIndentHandler(w, opts))
+	} else {
+		applicationLogger = slog.New(slog.NewJSONHandler(w, opts))
+	}
 }
 
 type loggerKey struct{}

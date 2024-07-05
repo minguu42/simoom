@@ -6,6 +6,8 @@ services:
       target: dev
     container_name: simoom-api
     env_file: .env
+    environment:
+      USE_DEBUG_LOGGER: true
     tty: true
     ports:
       - 8080:8080
