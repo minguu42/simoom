@@ -13,7 +13,7 @@ resource "aws_ecs_service" "api" {
   launch_type     = "FARGATE"
   desired_count   = 2
   network_configuration {
-    subnets         = data.terraform_remote_state.main.outputs.private_subnet_ids
+    subnets         = [aws_subnet.private_a.id, aws_subnet.private_c.id]
     security_groups = [aws_security_group.ecs_api.id]
   }
   load_balancer {
@@ -29,7 +29,7 @@ resource "aws_ecs_service" "api" {
 
 resource "aws_security_group" "ecs_api" {
   name   = "${local.product}-${var.env}-ecs-api"
-  vpc_id = data.terraform_remote_state.main.outputs.vpc_id
+  vpc_id = aws_vpc.main.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ecs_api_ingress" {
@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions = jsonencode([
     {
       name  = "${local.product}-api"
-      image = "${data.terraform_remote_state.main.outputs.api_repository_url}:${var.api_image_tag}"
+      image = "${aws_ecr_repository.api.repository_url}:${var.api_image_tag}"
       portMappings = [
         {
           containerPort = 8080

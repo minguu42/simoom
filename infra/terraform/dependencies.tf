@@ -1,18 +1,17 @@
-data "terraform_remote_state" "main" {
-  backend = "s3"
-  config = {
-    bucket = "${local.product}-${var.env}-tf-remote-state"
-    key    = "terraform.tfstate"
-    region = "ap-northeast-1"
-  }
-}
-
 data "aws_ssm_parameter" "api_access_token_secret" {
   name = "/${local.product}/${var.env}/api/access_token_secret"
 }
 
 data "aws_ssm_parameter" "api_refresh_token_secret" {
   name = "/${local.product}/${var.env}/api/refresh_token_secret"
+}
+
+data "aws_ssm_parameter" "db_master_username" {
+  name = "/${local.product}/${var.env}/db/master_username"
+}
+
+data "aws_ssm_parameter" "db_master_password" {
+  name = "/${local.product}/${var.env}/db/master_password"
 }
 
 data "aws_ssm_parameter" "db_database" {
