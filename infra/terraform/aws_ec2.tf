@@ -1,3 +1,38 @@
+resource "aws_eip" "nat_a" {
+  domain = "vpc"
+  tags = {
+    Name = "${local.product}-${var.env}-nat-a"
+  }
+}
+
+resource "aws_eip" "nat_c" {
+  count  = local.isProduction ? 1 : 0
+  domain = "vpc"
+  tags = {
+    Name = "${local.product}-${var.env}-nat-c"
+  }
+}
+
+resource "aws_instance" "bastion" {
+  ami                    = "ami-0b5c74e235ed808b9" # Amazon Linux 2023 AMI
+  instance_type          = "t2.micro"              # vCPU: 1, Memory: 1.0GiB
+  key_name               = aws_key_pair.bastion.key_name
+  subnet_id              = aws_subnet.private_a.id
+  vpc_security_group_ids = [aws_security_group.bastion.id]
+  root_block_device {
+    volume_type = "gp3"
+    volume_size = 30
+  }
+  tags = {
+    Name = "${local.product}-${var.env}-bastion"
+  }
+}
+
+resource "aws_key_pair" "bastion" {
+  key_name   = "${local.product}-${var.env}-bastion"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAVHKIFgKq+Gzyx/u1yczsSEzM7bl9TnpuZUF2+Tjr6D"
+}
+
 resource "aws_lb" "api" {
   name               = "${local.product}-${var.env}-api-public"
   internal           = false
@@ -8,25 +43,6 @@ resource "aws_lb" "api" {
     bucket  = aws_s3_bucket.alb_api_logs.id
     enabled = true
   }
-}
-
-resource "aws_security_group" "alb_api" {
-  name   = "${local.product}-${var.env}-alb-api"
-  vpc_id = aws_vpc.main.id
-}
-
-resource "aws_vpc_security_group_ingress_rule" "alb_api_ingress" {
-  security_group_id = aws_security_group.alb_api.id
-  from_port         = 80
-  to_port           = 80
-  ip_protocol       = "tcp"
-  cidr_ipv4         = "0.0.0.0/0"
-}
-
-resource "aws_vpc_security_group_egress_rule" "alb_api_egress" {
-  security_group_id = aws_security_group.alb_api.id
-  ip_protocol       = "-1"
-  cidr_ipv4         = "0.0.0.0/0"
 }
 
 resource "aws_lb_listener" "api_http" {

@@ -49,21 +49,6 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
-resource "aws_eip" "nat_a" {
-  domain = "vpc"
-  tags = {
-    Name = "${local.product}-${var.env}-nat-a"
-  }
-}
-
-resource "aws_eip" "nat_c" {
-  count  = local.isProduction ? 1 : 0
-  domain = "vpc"
-  tags = {
-    Name = "${local.product}-${var.env}-nat-c"
-  }
-}
-
 resource "aws_nat_gateway" "a" {
   allocation_id = aws_eip.nat_a.id
   subnet_id     = aws_subnet.public_a.id
@@ -147,4 +132,12 @@ resource "aws_route_table" "private_c" {
 resource "aws_route_table_association" "private_c" {
   subnet_id      = aws_subnet.private_c.id
   route_table_id = local.isProduction ? aws_route_table.private_c[0].id : aws_route_table.private_a.id
+}
+
+resource "aws_ec2_instance_connect_endpoint" "eic" {
+  subnet_id          = aws_subnet.private_a.id
+  security_group_ids = [aws_security_group.eic.id]
+  tags = {
+    Name = "${local.product}-${var.env}-eic"
+  }
 }
