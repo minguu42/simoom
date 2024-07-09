@@ -21,12 +21,12 @@ provider "aws" {
   }
 }
 
-data "aws_ssm_parameter" "db_master_username" {
-  name = "/${local.product}/${var.env}/db/master_username"
-}
-
-data "aws_ssm_parameter" "db_master_password" {
-  name = "/${local.product}/${var.env}/db/master_password"
+variable "api_image_tag" {
+  type = string
+  validation {
+    condition     = length(var.api_image_tag) == 40
+    error_message = "The api image tag is a 40-character string"
+  }
 }
 
 variable "env" {

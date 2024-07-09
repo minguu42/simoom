@@ -13,7 +13,7 @@ resource "aws_ecs_service" "api" {
   launch_type     = "FARGATE"
   desired_count   = 2
   network_configuration {
-    subnets         = data.terraform_remote_state.main.outputs.private_subnet_ids
+    subnets         = [aws_subnet.private_a.id, aws_subnet.private_c.id]
     security_groups = [aws_security_group.ecs_api.id]
   }
   load_balancer {
@@ -27,25 +27,6 @@ resource "aws_ecs_service" "api" {
   }
 }
 
-resource "aws_security_group" "ecs_api" {
-  name   = "${local.product}-${var.env}-ecs-api"
-  vpc_id = data.terraform_remote_state.main.outputs.vpc_id
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ecs_api_ingress" {
-  security_group_id = aws_security_group.ecs_api.id
-  from_port         = 8080
-  to_port           = 8080
-  ip_protocol       = "tcp"
-  cidr_ipv4         = "10.0.0.0/16"
-}
-
-resource "aws_vpc_security_group_egress_rule" "ecs_api_egress" {
-  security_group_id = aws_security_group.ecs_api.id
-  ip_protocol       = "-1"
-  cidr_ipv4         = "0.0.0.0/0"
-}
-
 resource "aws_ecs_task_definition" "api" {
   family                   = "${local.product}-${var.env}-api"
   requires_compatibilities = ["FARGATE"]
@@ -56,7 +37,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions = jsonencode([
     {
       name  = "${local.product}-api"
-      image = "${data.terraform_remote_state.main.outputs.api_repository_url}:${var.api_image_tag}"
+      image = "${aws_ecr_repository.api.repository_url}:${var.api_image_tag}"
       portMappings = [
         {
           containerPort = 8080
@@ -109,58 +90,4 @@ resource "aws_ecs_task_definition" "api" {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
-}
-
-resource "aws_iam_role" "ecs_api_execution" {
-  name = "${local.product}-${var.env}-ecs-api-task-execution"
-  assume_role_policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Sid" : "",
-        "Effect" : "Allow",
-        "Principal" : {
-          "Service" : "ecs-tasks.amazonaws.com"
-        },
-        "Action" : "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy" "ecs_api_execution" {
-  name = "${local.product}-${var.env}-ecs-api-execution"
-  role = aws_iam_role.ecs_api_execution.id
-  policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "ecr:GetAuthorizationToken",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:BatchGetImage",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-        ],
-        "Resource" : "*"
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "ssm:GetParameters"
-        ],
-        "Resource" : [
-          data.aws_ssm_parameter.api_access_token_secret.arn,
-          data.aws_ssm_parameter.api_refresh_token_secret.arn,
-          data.aws_ssm_parameter.db_database.arn,
-          data.aws_ssm_parameter.db_host.arn,
-          data.aws_ssm_parameter.db_password.arn,
-          data.aws_ssm_parameter.db_port.arn,
-          data.aws_ssm_parameter.db_user.arn,
-        ]
-      }
-    ]
-  })
 }
