@@ -25,8 +25,7 @@ terraform -chdir=./infra/terraform destroy \
   -target=aws_lb_listener.api_http \
   -target=aws_lb_listener_rule.api \
   -target=aws_lb_target_group.api \
-  -target=aws_ecs_service.api \
-  -target=aws_ecs_task_definition.api
+  -target=aws_ecs_service.api
 ```
 
 ## Terraformの管理対象外
