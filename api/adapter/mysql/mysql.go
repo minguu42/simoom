@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/minguu42/simoom/api/adapter/mysql/sqlc"
 	"github.com/minguu42/simoom/api/config"
-	"github.com/minguu42/simoom/api/infra/mysql/sqlc"
 )
 
 type transactionKey struct{}

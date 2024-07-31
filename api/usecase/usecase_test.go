@@ -3,15 +3,16 @@ package usecase_test
 import (
 	"context"
 	"log"
+	"path"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/go-testfixtures/testfixtures/v3"
+	"github.com/minguu42/simoom/api/adapter/mysql"
 	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/infra/mysql"
-	"github.com/minguu42/simoom/api/infra/ulidgen"
-	"github.com/minguu42/simoom/api/usecase"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -23,10 +24,11 @@ var (
 		Name:  "ユーザ1",
 		Email: "testuser1@example.com",
 	})
-	project  usecase.Project
-	step     usecase.Step
-	tag      usecase.Tag
-	task     usecase.Task
+	tctxUser2 = auth.WithUser(context.Background(), model.User{
+		ID:    "user_02",
+		Name:  "ユーザ2",
+		Email: "testuser2@example.com",
+	})
 	fixtures *testfixtures.Loader
 )
 
@@ -71,13 +73,10 @@ func TestMain(m *testing.M) {
 		log.Fatalf("failed to create test mysql client: %s", err)
 	}
 	defer tc.Close()
-	project = usecase.NewProject(tc, ulidgen.Generator{})
-	step = usecase.NewStep(tc, ulidgen.Generator{})
-	tag = usecase.NewTag(tc, ulidgen.Generator{})
-	task = usecase.NewTask(tc, ulidgen.Generator{})
 
 	mysql.Migrate(tc)
-	fixtures = mysql.NewFixtureLoader(tc)
+	_, f, _, _ := runtime.Caller(0)
+	fixtures = mysql.NewFixtureLoader(tc, filepath.Join(path.Dir(f), "testdata"))
 	if err := fixtures.Load(); err != nil {
 		log.Fatalf("failed to load test data: %s", err)
 	}

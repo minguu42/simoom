@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/minguu42/simoom/api/adapter/mysql/sqlc"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/domain/repository"
-	"github.com/minguu42/simoom/api/infra/mysql/sqlc"
 )
 
 func newModelStep(s sqlc.Step) model.Step {

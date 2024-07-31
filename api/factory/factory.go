@@ -3,10 +3,10 @@ package factory
 import (
 	"fmt"
 
+	"github.com/minguu42/simoom/api/adapter/jwtauth"
+	"github.com/minguu42/simoom/api/adapter/mysql"
+	"github.com/minguu42/simoom/api/adapter/ulidgen"
 	"github.com/minguu42/simoom/api/config"
-	"github.com/minguu42/simoom/api/infra/jwtauth"
-	"github.com/minguu42/simoom/api/infra/mysql"
-	"github.com/minguu42/simoom/api/infra/ulidgen"
 )
 
 type Factory struct {
