@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"connectrpc.com/connect"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -105,8 +104,6 @@ func ErrInvalidAuthorizationFormat() Error {
 }
 
 func ErrAuthentication(err error) Error {
-	t := time.Time{}
-	t.IsZero()
 	return Error{
 		err:             err,
 		id:              "authentication",
