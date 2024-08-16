@@ -3,7 +3,7 @@ package ulidgen_test
 import (
 	"testing"
 
-	"github.com/minguu42/simoom/api/infra/ulidgen"
+	"github.com/minguu42/simoom/api/adapter/ulidgen"
 	"github.com/stretchr/testify/assert"
 )
 

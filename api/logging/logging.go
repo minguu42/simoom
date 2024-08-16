@@ -92,15 +92,16 @@ func Access(ctx context.Context, fields AccessFields) {
 	}
 
 	appErr := apperr.NewError(fields.Err)
+	code := appErr.ConnectError().Code()
 	level := slog.LevelWarn
-	if appErr.Code() == connect.CodeUnknown {
+	if code == connect.CodeUnknown {
 		level = slog.LevelError
 	}
 	logger(ctx).LogAttrs(ctx, level, message,
 		executionTimeAttr,
 		requestAttr,
-		slog.Int("error_code", int(appErr.Code())),
-		slog.String("error_text", appErr.Code().String()),
+		slog.Int("error_code", int(code)),
+		slog.String("error_text", code.String()),
 		slog.String("error_message", appErr.Error()),
 	)
 }

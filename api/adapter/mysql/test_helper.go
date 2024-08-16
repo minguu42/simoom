@@ -33,13 +33,11 @@ func Migrate(client *Client) {
 }
 
 // NewFixtureLoader はtestdataディレクトリ配下のyamlファイルを読み込むテストデータローダーを返す
-func NewFixtureLoader(client *Client) *testfixtures.Loader {
-	_, f, _, _ := runtime.Caller(0)
-	dir := filepath.Join(path.Dir(f), "..", "..", "testdata")
+func NewFixtureLoader(client *Client, testdataDir string) *testfixtures.Loader {
 	fixtures, err := testfixtures.New(
 		testfixtures.Database(client.db),
 		testfixtures.Dialect("mysql"),
-		testfixtures.Directory(dir),
+		testfixtures.Directory(testdataDir),
 	)
 	if err != nil {
 		log.Fatalf("failed to create fixture loader: %s", err)

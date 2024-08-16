@@ -11,7 +11,7 @@ import (
 	"github.com/minguu42/simoom/api/usecase"
 )
 
-var testHandler handler
+var th handler
 
 func TestMain(m *testing.M) {
 	v, err := protovalidate.New()
@@ -21,7 +21,7 @@ func TestMain(m *testing.M) {
 	authn := &auth.AuthenticatorMock{}
 	repo := &repository.RepositoryMock{}
 	idgen := &model.IDGeneratorMock{}
-	testHandler = handler{
+	th = handler{
 		validator:  v,
 		auth:       usecase.NewAuth(authn, repo, idgen),
 		monitoring: usecase.Monitoring{},

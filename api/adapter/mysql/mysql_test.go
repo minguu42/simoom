@@ -4,12 +4,15 @@ import (
 	"context"
 	"errors"
 	"log"
+	"path"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/go-testfixtures/testfixtures/v3"
+	"github.com/minguu42/simoom/api/adapter/mysql"
 	"github.com/minguu42/simoom/api/config"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/infra/mysql"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
@@ -64,7 +67,8 @@ func TestMain(m *testing.M) {
 	defer tc.Close()
 
 	mysql.Migrate(tc)
-	fixtures = mysql.NewFixtureLoader(tc)
+	_, f, _, _ := runtime.Caller(0)
+	fixtures = mysql.NewFixtureLoader(tc, filepath.Join(path.Dir(f), "testdata"))
 	if err := fixtures.Load(); err != nil {
 		log.Fatalf("failed to load test data: %s", err)
 	}

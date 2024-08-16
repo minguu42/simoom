@@ -8,106 +8,35 @@ import (
 	"github.com/minguu42/simoom/api/apperr"
 	"github.com/minguu42/simoom/lib/go/simoompb/v1"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHandler_SignUp(t *testing.T) {
-	type args struct {
-		ctx context.Context
-		req *connect.Request[simoompb.SignUpRequest]
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    *connect.Response[simoompb.SignUpResponse]
-		wantErr apperr.Error
-	}{
-		{
-			name: "不正なリクエストはバリデーションではじく",
-			args: args{
-				ctx: context.Background(),
-				req: connect.NewRequest(&simoompb.SignUpRequest{}),
-			},
-			want:    nil,
-			wantErr: apperr.ErrInvalidRequest(nil),
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			resp, err := testHandler.SignUp(tt.args.ctx, tt.args.req)
-			assert.Equal(t, tt.want, resp)
-
+	t.Run("不正なリクエストはバリデーションではじく", func(t *testing.T) {
+		if _, err := th.SignUp(context.Background(), connect.NewRequest(&simoompb.SignUpRequest{})); assert.Error(t, err) {
 			var appErr apperr.Error
-			if tt.wantErr.Error() != "" && assert.ErrorAs(t, err, &appErr) {
-				assert.Equal(t, tt.wantErr.ConnectError().Code(), appErr.ConnectError().Code())
-			}
-		})
-	}
+			require.ErrorAs(t, err, &appErr)
+			assert.Equal(t, connect.CodeInvalidArgument, appErr.ConnectError().Code())
+		}
+	})
 }
 
 func TestHandler_SignIn(t *testing.T) {
-	type args struct {
-		ctx context.Context
-		req *connect.Request[simoompb.SignInRequest]
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    *connect.Response[simoompb.SignInResponse]
-		wantErr apperr.Error
-	}{
-		{
-			name: "不正なリクエストはバリデーションではじく",
-			args: args{
-				ctx: context.Background(),
-				req: connect.NewRequest(&simoompb.SignInRequest{}),
-			},
-			want:    nil,
-			wantErr: apperr.ErrInvalidRequest(nil),
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			resp, err := testHandler.SignIn(tt.args.ctx, tt.args.req)
-			assert.Equal(t, tt.want, resp)
-
+	t.Run("不正なリクエストはバリデーションではじく", func(t *testing.T) {
+		if _, err := th.SignIn(context.Background(), connect.NewRequest(&simoompb.SignInRequest{})); assert.Error(t, err) {
 			var appErr apperr.Error
-			if tt.wantErr.Error() != "" && assert.ErrorAs(t, err, &appErr) {
-				assert.Equal(t, tt.wantErr.ConnectError().Code(), appErr.ConnectError().Code())
-			}
-		})
-	}
+			require.ErrorAs(t, err, &appErr)
+			assert.Equal(t, connect.CodeInvalidArgument, appErr.ConnectError().Code())
+		}
+	})
 }
 
 func TestHandler_RefreshToken(t *testing.T) {
-	type args struct {
-		ctx context.Context
-		req *connect.Request[simoompb.RefreshTokenRequest]
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    *connect.Response[simoompb.RefreshTokenResponse]
-		wantErr apperr.Error
-	}{
-		{
-			name: "不正なリクエストはバリデーションではじく",
-			args: args{
-				ctx: context.Background(),
-				req: connect.NewRequest(&simoompb.RefreshTokenRequest{}),
-			},
-			want:    nil,
-			wantErr: apperr.ErrInvalidRequest(nil),
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			resp, err := testHandler.RefreshToken(tt.args.ctx, tt.args.req)
-			assert.Equal(t, tt.want, resp)
-
+	t.Run("不正なリクエストはバリデーションではじく", func(t *testing.T) {
+		if _, err := th.RefreshToken(context.Background(), connect.NewRequest(&simoompb.RefreshTokenRequest{})); assert.Error(t, err) {
 			var appErr apperr.Error
-			if tt.wantErr.Error() != "" && assert.ErrorAs(t, err, &appErr) {
-				assert.Equal(t, tt.wantErr.ConnectError().Code(), appErr.ConnectError().Code())
-			}
-		})
-	}
+			require.ErrorAs(t, err, &appErr)
+			assert.Equal(t, connect.CodeInvalidArgument, appErr.ConnectError().Code())
+		}
+	})
 }
