@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 	mysqlC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
-			Image: "mysql:8.0.32",
+			Image: "mysql:8.0.28",
 			Env: map[string]string{
 				"MYSQL_DATABASE":             database,
 				"MYSQL_ALLOW_EMPTY_PASSWORD": "yes",
