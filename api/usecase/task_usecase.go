@@ -7,17 +7,16 @@ import (
 	"time"
 
 	"github.com/minguu42/simoom/api/apperr"
-	"github.com/minguu42/simoom/api/domain/auth"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 type Task struct {
-	repo  repository.Repository
-	idgen model.IDGenerator
+	repo  domain.Repository
+	idgen domain.IDGenerator
 }
 
-func NewTask(repo repository.Repository, idgen model.IDGenerator) Task {
+func NewTask(repo domain.Repository, idgen domain.IDGenerator) Task {
 	return Task{
 		repo:  repo,
 		idgen: idgen,
@@ -39,7 +38,7 @@ type CreateTaskInput struct {
 	Priority  uint
 }
 
-func (in CreateTaskInput) Create(g model.IDGenerator, userID model.UserID) model.Task {
+func (in CreateTaskInput) Create(g domain.IDGenerator, userID model.UserID) model.Task {
 	return model.Task{
 		ID:        model.TaskID(g.Generate()),
 		UserID:    userID,
@@ -52,12 +51,12 @@ func (in CreateTaskInput) Create(g model.IDGenerator, userID model.UserID) model
 func (uc Task) CreateTask(ctx context.Context, in CreateTaskInput) (TaskOutput, error) {
 	p, err := uc.repo.GetProjectByID(ctx, in.ProjectID)
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+		if errors.Is(err, domain.ErrModelNotFound) {
 			return TaskOutput{}, apperr.ErrProjectNotFound(err)
 		}
 		return TaskOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
-	user := auth.User(ctx)
+	user := model.UserFromContext(ctx)
 	if !user.HasProject(p) {
 		return TaskOutput{}, apperr.ErrProjectNotFound(err)
 	}
@@ -77,11 +76,11 @@ type ListTasksInput struct {
 }
 
 func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, error) {
-	user := auth.User(ctx)
+	user := model.UserFromContext(ctx)
 	if in.ProjectID != nil {
 		p, err := uc.repo.GetProjectByID(ctx, *in.ProjectID)
 		if err != nil {
-			if errors.Is(err, repository.ErrModelNotFound) {
+			if errors.Is(err, domain.ErrModelNotFound) {
 				return TasksOutput{}, apperr.ErrProjectNotFound(err)
 			}
 			return TasksOutput{}, fmt.Errorf("failed to get project: %w", err)
@@ -93,7 +92,7 @@ func (uc Task) ListTasks(ctx context.Context, in ListTasksInput) (TasksOutput, e
 	if in.TagID != nil {
 		t, err := uc.repo.GetTagByID(ctx, *in.TagID)
 		if err != nil {
-			if errors.Is(err, repository.ErrModelNotFound) {
+			if errors.Is(err, domain.ErrModelNotFound) {
 				return TasksOutput{}, apperr.ErrTagNotFound(err)
 			}
 			return TasksOutput{}, fmt.Errorf("failed to get tag: %w", err)
@@ -132,12 +131,12 @@ type UpdateTaskInput struct {
 func (uc Task) UpdateTask(ctx context.Context, in UpdateTaskInput) (TaskOutput, error) {
 	t, err := uc.repo.GetTaskByID(ctx, in.ID)
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+		if errors.Is(err, domain.ErrModelNotFound) {
 			return TaskOutput{}, apperr.ErrTaskNotFound(err)
 		}
 		return TaskOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
-	if !auth.User(ctx).HasTask(t) {
+	if !model.UserFromContext(ctx).HasTask(t) {
 		return TaskOutput{}, apperr.ErrTaskNotFound(err)
 	}
 
@@ -185,12 +184,12 @@ func (uc Task) DeleteTask(ctx context.Context, in DeleteTaskInput) error {
 	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
 		t, err := uc.repo.GetTaskByID(ctxWithTx, in.ID)
 		if err != nil {
-			if errors.Is(err, repository.ErrModelNotFound) {
+			if errors.Is(err, domain.ErrModelNotFound) {
 				return apperr.ErrTaskNotFound(err)
 			}
 			return fmt.Errorf("failed to get task: %w", err)
 		}
-		if !auth.User(ctx).HasTask(t) {
+		if !model.UserFromContext(ctx).HasTask(t) {
 			return apperr.ErrTaskNotFound(err)
 		}
 

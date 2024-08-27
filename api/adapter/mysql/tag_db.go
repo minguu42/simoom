@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/adapter/mysql/sqlc"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 func newModelTag(t sqlc.Tag) model.Tag {
@@ -54,7 +54,7 @@ func (c *Client) GetTagByID(ctx context.Context, id model.TagID) (model.Tag, err
 	t, err := c.queries(ctx).GetTagByID(ctx, string(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.Tag{}, repository.ErrModelNotFound
+			return model.Tag{}, domain.ErrModelNotFound
 		}
 		return model.Tag{}, fmt.Errorf("failed to get tag: %w", err)
 	}

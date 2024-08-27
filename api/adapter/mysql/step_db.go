@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/adapter/mysql/sqlc"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 func newModelStep(s sqlc.Step) model.Step {
@@ -45,7 +45,7 @@ func (c *Client) GetStepByID(ctx context.Context, id model.StepID) (model.Step, 
 	s, err := c.queries(ctx).GetStepByID(ctx, string(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.Step{}, repository.ErrModelNotFound
+			return model.Step{}, domain.ErrModelNotFound
 		}
 		return model.Step{}, fmt.Errorf("failed to get step: %w", err)
 	}

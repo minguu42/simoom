@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/adapter/mysql/sqlc"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 func newModelUser(u sqlc.User) model.User {
@@ -36,7 +36,7 @@ func (c *Client) GetUserByID(ctx context.Context, id model.UserID) (model.User, 
 	u, err := c.queries(ctx).GetUserByID(ctx, string(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.User{}, repository.ErrModelNotFound
+			return model.User{}, domain.ErrModelNotFound
 		}
 		return model.User{}, fmt.Errorf("failed to get user: %w", err)
 	}
@@ -47,7 +47,7 @@ func (c *Client) GetUserByName(ctx context.Context, name string) (model.User, er
 	u, err := c.queries(ctx).GetUserByName(ctx, name)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.User{}, repository.ErrModelNotFound
+			return model.User{}, domain.ErrModelNotFound
 		}
 		return model.User{}, fmt.Errorf("failed to get user: %w", err)
 	}
@@ -58,7 +58,7 @@ func (c *Client) GetUserByEmail(ctx context.Context, email string) (model.User, 
 	u, err := c.queries(ctx).GetUserByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.User{}, repository.ErrModelNotFound
+			return model.User{}, domain.ErrModelNotFound
 		}
 		return model.User{}, fmt.Errorf("failed to get user: %w", err)
 	}

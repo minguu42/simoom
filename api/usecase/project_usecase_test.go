@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/minguu42/simoom/api/apperr"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/pointers"
@@ -13,7 +14,7 @@ import (
 )
 
 func TestProjectUsecase_CreateProject(t *testing.T) {
-	project := usecase.NewProject(tc, &model.IDGeneratorMock{GenerateFunc: func() string {
+	project := usecase.NewProject(tc, &domain.IDGeneratorMock{GenerateFunc: func() string {
 		return "project_99"
 	}})
 	type args struct {
@@ -58,7 +59,7 @@ func TestProjectUsecase_CreateProject(t *testing.T) {
 func TestProjectUsecase_ListProjects(t *testing.T) {
 	t.Parallel()
 
-	project := usecase.NewProject(tc, &model.IDGeneratorMock{})
+	project := usecase.NewProject(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.ListProjectsInput
@@ -153,7 +154,7 @@ func TestProjectUsecase_ListProjects(t *testing.T) {
 }
 
 func TestProjectUsecase_UpdateProject(t *testing.T) {
-	project := usecase.NewProject(tc, &model.IDGeneratorMock{})
+	project := usecase.NewProject(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.UpdateProjectInput
@@ -226,7 +227,7 @@ func TestProjectUsecase_UpdateProject(t *testing.T) {
 }
 
 func TestProjectUsecase_DeleteProject(t *testing.T) {
-	project := usecase.NewProject(tc, &model.IDGeneratorMock{})
+	project := usecase.NewProject(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.DeleteProjectInput

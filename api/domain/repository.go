@@ -1,4 +1,4 @@
-package repository
+package domain
 
 import (
 	"context"
@@ -11,7 +11,6 @@ import (
 
 var ErrModelNotFound = errors.New("model not found in database")
 
-// Repository は DB による永続化を抽象化する
 type Repository interface {
 	Transaction(ctx context.Context, fn func(ctxWithTx context.Context) error) error
 

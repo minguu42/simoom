@@ -6,19 +6,18 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/apperr"
-	"github.com/minguu42/simoom/api/domain/auth"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Auth struct {
-	authenticator auth.Authenticator
-	repo          repository.Repository
-	idgen         model.IDGenerator
+	authenticator domain.Authenticator
+	repo          domain.Repository
+	idgen         domain.IDGenerator
 }
 
-func NewAuth(authenticator auth.Authenticator, repo repository.Repository, idgen model.IDGenerator) Auth {
+func NewAuth(authenticator domain.Authenticator, repo domain.Repository, idgen domain.IDGenerator) Auth {
 	return Auth{
 		authenticator: authenticator,
 		repo:          repo,
@@ -32,7 +31,7 @@ type SignUpInput struct {
 	Password string
 }
 
-func (in SignUpInput) Create(g model.IDGenerator) (model.User, error) {
+func (in SignUpInput) Create(g domain.IDGenerator) (model.User, error) {
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return model.User{}, fmt.Errorf("failed to generate encypted password: %w", err)
@@ -51,10 +50,10 @@ type SignUpOutput struct {
 }
 
 func (uc Auth) SingUp(ctx context.Context, in SignUpInput) (SignUpOutput, error) {
-	if _, err := uc.repo.GetUserByName(ctx, in.Name); !errors.Is(err, repository.ErrModelNotFound) {
+	if _, err := uc.repo.GetUserByName(ctx, in.Name); !errors.Is(err, domain.ErrModelNotFound) {
 		return SignUpOutput{}, apperr.ErrDuplicateUserName(err)
 	}
-	if _, err := uc.repo.GetUserByEmail(ctx, in.Email); !errors.Is(err, repository.ErrModelNotFound) {
+	if _, err := uc.repo.GetUserByEmail(ctx, in.Email); !errors.Is(err, domain.ErrModelNotFound) {
 		return SignUpOutput{}, apperr.ErrDuplicateUserEmail(err)
 	}
 

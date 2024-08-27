@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/minguu42/simoom/api/apperr"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/pointers"
@@ -14,7 +15,7 @@ import (
 )
 
 func TestStepUsecase_CreateStep(t *testing.T) {
-	step := usecase.NewStep(tc, &model.IDGeneratorMock{GenerateFunc: func() string {
+	step := usecase.NewStep(tc, &domain.IDGeneratorMock{GenerateFunc: func() string {
 		return "step_99"
 	}})
 	type args struct {
@@ -87,7 +88,7 @@ func TestStepUsecase_CreateStep(t *testing.T) {
 }
 
 func TestStepUsecase_UpdateStep(t *testing.T) {
-	step := usecase.NewStep(tc, &model.IDGeneratorMock{})
+	step := usecase.NewStep(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.UpdateStepInput
@@ -159,7 +160,7 @@ func TestStepUsecase_UpdateStep(t *testing.T) {
 }
 
 func TestStepUsecase_DeleteStep(t *testing.T) {
-	step := usecase.NewStep(tc, &model.IDGeneratorMock{})
+	step := usecase.NewStep(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.DeleteStepInput

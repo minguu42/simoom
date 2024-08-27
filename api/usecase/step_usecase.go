@@ -7,17 +7,16 @@ import (
 	"time"
 
 	"github.com/minguu42/simoom/api/apperr"
-	"github.com/minguu42/simoom/api/domain/auth"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 type Step struct {
-	repo  repository.Repository
-	idgen model.IDGenerator
+	repo  domain.Repository
+	idgen domain.IDGenerator
 }
 
-func NewStep(repo repository.Repository, idgen model.IDGenerator) Step {
+func NewStep(repo domain.Repository, idgen domain.IDGenerator) Step {
 	return Step{
 		repo:  repo,
 		idgen: idgen,
@@ -38,7 +37,7 @@ type CreateStepInput struct {
 	Name   string
 }
 
-func (in CreateStepInput) Create(g model.IDGenerator, userID model.UserID) model.Step {
+func (in CreateStepInput) Create(g domain.IDGenerator, userID model.UserID) model.Step {
 	return model.Step{
 		ID:     model.StepID(g.Generate()),
 		UserID: userID,
@@ -50,12 +49,12 @@ func (in CreateStepInput) Create(g model.IDGenerator, userID model.UserID) model
 func (uc Step) CreateStep(ctx context.Context, in CreateStepInput) (StepOutput, error) {
 	t, err := uc.repo.GetTaskByID(ctx, in.TaskID)
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+		if errors.Is(err, domain.ErrModelNotFound) {
 			return StepOutput{}, apperr.ErrTaskNotFound(err)
 		}
 		return StepOutput{}, fmt.Errorf("failed to get task: %w", err)
 	}
-	user := auth.User(ctx)
+	user := model.UserFromContext(ctx)
 	if !user.HasTask(t) {
 		return StepOutput{}, apperr.ErrTaskNotFound(err)
 	}
@@ -76,12 +75,12 @@ type UpdateStepInput struct {
 func (uc Step) UpdateStep(ctx context.Context, in UpdateStepInput) (StepOutput, error) {
 	s, err := uc.repo.GetStepByID(ctx, in.ID)
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+		if errors.Is(err, domain.ErrModelNotFound) {
 			return StepOutput{}, apperr.ErrStepNotFound(err)
 		}
 		return StepOutput{}, fmt.Errorf("failed to get step: %w", err)
 	}
-	if !auth.User(ctx).HasStep(s) {
+	if !model.UserFromContext(ctx).HasStep(s) {
 		return StepOutput{}, apperr.ErrStepNotFound(err)
 	}
 
@@ -105,12 +104,12 @@ func (uc Step) DeleteStep(ctx context.Context, in DeleteStepInput) error {
 	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
 		s, err := uc.repo.GetStepByID(ctxWithTx, in.ID)
 		if err != nil {
-			if errors.Is(err, repository.ErrModelNotFound) {
+			if errors.Is(err, domain.ErrModelNotFound) {
 				return apperr.ErrStepNotFound(err)
 			}
 			return fmt.Errorf("failed to get step: %w", err)
 		}
-		if !auth.User(ctx).HasStep(s) {
+		if !model.UserFromContext(ctx).HasStep(s) {
 			return apperr.ErrStepNotFound(err)
 		}
 

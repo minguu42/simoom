@@ -5,9 +5,7 @@ import (
 	"testing"
 
 	"github.com/bufbuild/protovalidate-go"
-	"github.com/minguu42/simoom/api/domain/auth"
-	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/usecase"
 )
 
@@ -18,9 +16,9 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("failed to create validator: %s", err)
 	}
-	authn := &auth.AuthenticatorMock{}
-	repo := &repository.RepositoryMock{}
-	idgen := &model.IDGeneratorMock{}
+	authn := &domain.AuthenticatorMock{}
+	repo := &domain.RepositoryMock{}
+	idgen := &domain.IDGeneratorMock{}
 	th = handler{
 		validator:  v,
 		auth:       usecase.NewAuth(authn, repo, idgen),
