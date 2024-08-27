@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/adapter/mysql/sqlc"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 func newModelProject(p sqlc.Project) model.Project {
@@ -58,7 +58,7 @@ func (c *Client) GetProjectByID(ctx context.Context, id model.ProjectID) (model.
 	p, err := c.queries(ctx).GetProjectByID(ctx, string(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.Project{}, repository.ErrModelNotFound
+			return model.Project{}, domain.ErrModelNotFound
 		}
 		return model.Project{}, fmt.Errorf("failed to get project: %w", err)
 	}

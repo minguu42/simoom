@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/minguu42/simoom/api/apperr"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/pointers"
@@ -14,7 +15,7 @@ import (
 )
 
 func TestTaskUsecase_CreateTask(t *testing.T) {
-	task := usecase.NewTask(tc, &model.IDGeneratorMock{GenerateFunc: func() string {
+	task := usecase.NewTask(tc, &domain.IDGeneratorMock{GenerateFunc: func() string {
 		return "task_99"
 	}})
 	type args struct {
@@ -90,7 +91,7 @@ func TestTaskUsecase_CreateTask(t *testing.T) {
 func TestTaskUsecase_ListTasks(t *testing.T) {
 	t.Parallel()
 
-	task := usecase.NewTask(tc, &model.IDGeneratorMock{})
+	task := usecase.NewTask(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.ListTasksInput
@@ -271,7 +272,7 @@ func TestTaskUsecase_ListTasks(t *testing.T) {
 }
 
 func TestTaskUsecase_UpdateTask(t *testing.T) {
-	task := usecase.NewTask(tc, &model.IDGeneratorMock{})
+	task := usecase.NewTask(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.UpdateTaskInput
@@ -357,7 +358,7 @@ func TestTaskUsecase_UpdateTask(t *testing.T) {
 }
 
 func TestTaskUsecase_DeleteTask(t *testing.T) {
-	task := usecase.NewTask(tc, &model.IDGeneratorMock{})
+	task := usecase.NewTask(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.DeleteTaskInput

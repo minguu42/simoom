@@ -11,7 +11,6 @@ import (
 	"github.com/go-testfixtures/testfixtures/v3"
 	"github.com/minguu42/simoom/api/adapter/mysql"
 	"github.com/minguu42/simoom/api/config"
-	"github.com/minguu42/simoom/api/domain/auth"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -19,12 +18,12 @@ import (
 
 var (
 	tc   *mysql.Client
-	tctx = auth.WithUser(context.Background(), model.User{
+	tctx = model.ContextWithUser(context.Background(), model.User{
 		ID:    "user_01",
 		Name:  "ユーザ1",
 		Email: "testuser1@example.com",
 	})
-	tctxUser2 = auth.WithUser(context.Background(), model.User{
+	tctxUser2 = model.ContextWithUser(context.Background(), model.User{
 		ID:    "user_02",
 		Name:  "ユーザ2",
 		Email: "testuser2@example.com",

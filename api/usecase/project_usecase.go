@@ -6,17 +6,16 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/apperr"
-	"github.com/minguu42/simoom/api/domain/auth"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 type Project struct {
-	repo  repository.Repository
-	idgen model.IDGenerator
+	repo  domain.Repository
+	idgen domain.IDGenerator
 }
 
-func NewProject(repo repository.Repository, idgen model.IDGenerator) Project {
+func NewProject(repo domain.Repository, idgen domain.IDGenerator) Project {
 	return Project{
 		repo:  repo,
 		idgen: idgen,
@@ -37,7 +36,7 @@ type CreateProjectInput struct {
 	Color string
 }
 
-func (in CreateProjectInput) Create(g model.IDGenerator, userID model.UserID) model.Project {
+func (in CreateProjectInput) Create(g domain.IDGenerator, userID model.UserID) model.Project {
 	return model.Project{
 		ID:         model.ProjectID(g.Generate()),
 		UserID:     userID,
@@ -48,7 +47,7 @@ func (in CreateProjectInput) Create(g model.IDGenerator, userID model.UserID) mo
 }
 
 func (uc Project) CreateProject(ctx context.Context, in CreateProjectInput) (ProjectOutput, error) {
-	p := in.Create(uc.idgen, auth.User(ctx).ID)
+	p := in.Create(uc.idgen, model.UserFromContext(ctx).ID)
 	if err := uc.repo.CreateProject(ctx, p); err != nil {
 		return ProjectOutput{}, fmt.Errorf("failed to create project: %w", err)
 	}
@@ -61,7 +60,7 @@ type ListProjectsInput struct {
 }
 
 func (uc Project) ListProjects(ctx context.Context, in ListProjectsInput) (ProjectsOutput, error) {
-	ps, err := uc.repo.ListProjectsByUserID(ctx, auth.User(ctx).ID, in.Limit+1, in.Offset)
+	ps, err := uc.repo.ListProjectsByUserID(ctx, model.UserFromContext(ctx).ID, in.Limit+1, in.Offset)
 	if err != nil {
 		return ProjectsOutput{}, fmt.Errorf("failed to list projects: %w", err)
 	}
@@ -87,12 +86,12 @@ type UpdateProjectInput struct {
 func (uc Project) UpdateProject(ctx context.Context, in UpdateProjectInput) (ProjectOutput, error) {
 	p, err := uc.repo.GetProjectByID(ctx, in.ID)
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+		if errors.Is(err, domain.ErrModelNotFound) {
 			return ProjectOutput{}, apperr.ErrProjectNotFound(err)
 		}
 		return ProjectOutput{}, fmt.Errorf("failed to get project: %w", err)
 	}
-	if !auth.User(ctx).HasProject(p) {
+	if !model.UserFromContext(ctx).HasProject(p) {
 		return ProjectOutput{}, apperr.ErrProjectNotFound(err)
 	}
 
@@ -119,12 +118,12 @@ func (uc Project) DeleteProject(ctx context.Context, in DeleteProjectInput) erro
 	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
 		p, err := uc.repo.GetProjectByID(ctxWithTx, in.ID)
 		if err != nil {
-			if errors.Is(err, repository.ErrModelNotFound) {
+			if errors.Is(err, domain.ErrModelNotFound) {
 				return apperr.ErrProjectNotFound(err)
 			}
 			return fmt.Errorf("failed to get project: %w", err)
 		}
-		if !auth.User(ctxWithTx).HasProject(p) {
+		if !model.UserFromContext(ctxWithTx).HasProject(p) {
 			return apperr.ErrProjectNotFound(err)
 		}
 

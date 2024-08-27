@@ -9,12 +9,12 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/minguu42/simoom/api/apperr"
-	"github.com/minguu42/simoom/api/domain/auth"
-	"github.com/minguu42/simoom/api/domain/repository"
+	"github.com/minguu42/simoom/api/domain"
+	"github.com/minguu42/simoom/api/domain/model"
 )
 
 // Authenticate はユーザ認証を行うインターセプタを返す
-func Authenticate(authenticator auth.Authenticator, repo repository.Repository) connect.UnaryInterceptorFunc {
+func Authenticate(authenticator domain.Authenticator, repo domain.Repository) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			excludedProcedures := []string{"CheckHealth", "SignIn", "SignUp", "RefreshToken"}
@@ -34,13 +34,13 @@ func Authenticate(authenticator auth.Authenticator, repo repository.Repository) 
 			}
 			u, err := repo.GetUserByID(ctx, userID)
 			if err != nil {
-				if errors.Is(err, repository.ErrModelNotFound) {
+				if errors.Is(err, domain.ErrModelNotFound) {
 					return nil, apperr.ErrUserNotFound(err)
 				}
 				return nil, fmt.Errorf("failed to get user: %w", err)
 			}
 
-			return next(auth.WithUser(ctx, u), req)
+			return next(model.ContextWithUser(ctx, u), req)
 		}
 	}
 }

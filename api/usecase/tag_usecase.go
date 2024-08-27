@@ -6,17 +6,16 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/apperr"
-	"github.com/minguu42/simoom/api/domain/auth"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 type Tag struct {
-	repo  repository.Repository
-	idgen model.IDGenerator
+	repo  domain.Repository
+	idgen domain.IDGenerator
 }
 
-func NewTag(repo repository.Repository, idgen model.IDGenerator) Tag {
+func NewTag(repo domain.Repository, idgen domain.IDGenerator) Tag {
 	return Tag{
 		repo:  repo,
 		idgen: idgen,
@@ -36,7 +35,7 @@ type CreateTagInput struct {
 	Name string
 }
 
-func (in CreateTagInput) Create(g model.IDGenerator, userID model.UserID) model.Tag {
+func (in CreateTagInput) Create(g domain.IDGenerator, userID model.UserID) model.Tag {
 	return model.Tag{
 		ID:     model.TagID(g.Generate()),
 		UserID: userID,
@@ -45,7 +44,7 @@ func (in CreateTagInput) Create(g model.IDGenerator, userID model.UserID) model.
 }
 
 func (uc Tag) CreateTag(ctx context.Context, in CreateTagInput) (TagOutput, error) {
-	t := in.Create(uc.idgen, auth.User(ctx).ID)
+	t := in.Create(uc.idgen, model.UserFromContext(ctx).ID)
 	if err := uc.repo.CreateTag(ctx, t); err != nil {
 		return TagOutput{}, fmt.Errorf("failed to create tag: %w", err)
 	}
@@ -58,7 +57,7 @@ type ListTagsInput struct {
 }
 
 func (uc Tag) ListTags(ctx context.Context, in ListTagsInput) (TagsOutput, error) {
-	ts, err := uc.repo.ListTagsByUserID(ctx, auth.User(ctx).ID, in.Limit+1, in.Offset)
+	ts, err := uc.repo.ListTagsByUserID(ctx, model.UserFromContext(ctx).ID, in.Limit+1, in.Offset)
 	if err != nil {
 		return TagsOutput{}, fmt.Errorf("failed to list tags: %w", err)
 	}
@@ -82,12 +81,12 @@ type UpdateTagInput struct {
 func (uc Tag) UpdateTag(ctx context.Context, in UpdateTagInput) (TagOutput, error) {
 	t, err := uc.repo.GetTagByID(ctx, in.ID)
 	if err != nil {
-		if errors.Is(err, repository.ErrModelNotFound) {
+		if errors.Is(err, domain.ErrModelNotFound) {
 			return TagOutput{}, apperr.ErrTagNotFound(err)
 		}
 		return TagOutput{}, fmt.Errorf("failed to get tag: %w", err)
 	}
-	if !auth.User(ctx).HasTag(t) {
+	if !model.UserFromContext(ctx).HasTag(t) {
 		return TagOutput{}, apperr.ErrTagNotFound(err)
 	}
 
@@ -108,12 +107,12 @@ func (uc Tag) DeleteTag(ctx context.Context, in DeleteTagInput) error {
 	if err := uc.repo.Transaction(ctx, func(ctxWithTx context.Context) error {
 		t, err := uc.repo.GetTagByID(ctxWithTx, in.ID)
 		if err != nil {
-			if errors.Is(err, repository.ErrModelNotFound) {
+			if errors.Is(err, domain.ErrModelNotFound) {
 				return apperr.ErrTagNotFound(err)
 			}
 			return fmt.Errorf("failed to get tag: %w", err)
 		}
-		if !auth.User(ctxWithTx).HasTag(t) {
+		if !model.UserFromContext(ctxWithTx).HasTag(t) {
 			return apperr.ErrTagNotFound(err)
 		}
 

@@ -7,8 +7,8 @@ import (
 	"fmt"
 
 	"github.com/minguu42/simoom/api/adapter/mysql/sqlc"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
-	"github.com/minguu42/simoom/api/domain/repository"
 )
 
 func newModelTask(t sqlc.Task, ss []sqlc.Step, ts []sqlc.Tag) model.Task {
@@ -108,7 +108,7 @@ func (c *Client) GetTaskByID(ctx context.Context, id model.TaskID) (model.Task, 
 	t, err := c.queries(ctx).GetTaskByID(ctx, string(id))
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return model.Task{}, repository.ErrModelNotFound
+			return model.Task{}, domain.ErrModelNotFound
 		}
 		return model.Task{}, fmt.Errorf("failed to get task: %w", err)
 	}

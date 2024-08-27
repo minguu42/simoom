@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/minguu42/simoom/api/apperr"
+	"github.com/minguu42/simoom/api/domain"
 	"github.com/minguu42/simoom/api/domain/model"
 	"github.com/minguu42/simoom/api/usecase"
 	"github.com/minguu42/simoom/lib/go/pointers"
@@ -14,7 +15,7 @@ import (
 )
 
 func TestTagUsecase_CreateTag(t *testing.T) {
-	tag := usecase.NewTag(tc, &model.IDGeneratorMock{GenerateFunc: func() string {
+	tag := usecase.NewTag(tc, &domain.IDGeneratorMock{GenerateFunc: func() string {
 		return "tag_99"
 	}})
 	type args struct {
@@ -55,7 +56,7 @@ func TestTagUsecase_CreateTag(t *testing.T) {
 func TestTagUsecase_ListTags(t *testing.T) {
 	t.Parallel()
 
-	tag := usecase.NewTag(tc, &model.IDGeneratorMock{})
+	tag := usecase.NewTag(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.ListTagsInput
@@ -130,7 +131,7 @@ func TestTagUsecase_ListTags(t *testing.T) {
 }
 
 func TestTagUsecase_UpdateTag(t *testing.T) {
-	tag := usecase.NewTag(tc, &model.IDGeneratorMock{})
+	tag := usecase.NewTag(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.UpdateTagInput
@@ -199,7 +200,7 @@ func TestTagUsecase_UpdateTag(t *testing.T) {
 }
 
 func TestTagUsecase_DeleteTag(t *testing.T) {
-	tag := usecase.NewTag(tc, &model.IDGeneratorMock{})
+	tag := usecase.NewTag(tc, &domain.IDGeneratorMock{})
 	type args struct {
 		ctx context.Context
 		in  usecase.DeleteTagInput
