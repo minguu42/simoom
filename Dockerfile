@@ -1,7 +1,7 @@
-FROM golang:1.22 AS dev
+FROM golang:1.23 AS dev
 WORKDIR /go/src/myapp
 
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/air-verse/air@latest
 
 RUN --mount=type=bind,source=go.mod,target=go.mod \
     --mount=type=bind,source=go.sum,target=go.sum \
@@ -9,7 +9,7 @@ RUN --mount=type=bind,source=go.mod,target=go.mod \
 
 CMD ["air", "-c", ".air.toml"]
 
-FROM golang:1.22 AS build
+FROM golang:1.23 AS build
 WORKDIR /go/src/myapp
 
 RUN --mount=type=cache,target=/go/pkg/mod/ \
