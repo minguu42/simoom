@@ -10,7 +10,7 @@ services:
       USE_DEBUG_LOGGER: true
     tty: true
     ports:
-      - 8080:8080
+      - "8080:8080"
     volumes:
       - .:/go/src/myapp
     depends_on:
@@ -22,7 +22,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
     restart: always
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - ./infra/mysql/initdb:/docker-entrypoint-initdb.d
       - ./infra/mysql/schema.sql:/schema.sql
