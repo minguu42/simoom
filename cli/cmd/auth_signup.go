@@ -14,12 +14,12 @@ import (
 )
 
 type AuthSignupOpts struct {
-	profile string
-	client  api.Client
+	Profile string
+	Client  api.Client
 
-	name     string
-	email    string
-	password string
+	Name     string
+	Email    string
+	Password string
 }
 
 func NewCmdAuthSignup() *cobra.Command {
@@ -30,35 +30,41 @@ func NewCmdAuthSignup() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.profile = f.Profile
-			opts.client = f.Client
+			opts.Profile = f.Profile
+			opts.Client = f.Client
 
+			if opts.Name == "" {
+				opts.Name = f.Prompter.Input("Username")
+			}
+			if opts.Email == "" {
+				opts.Email = f.Prompter.Input("Email")
+			}
+			if opts.Password == "" {
+				opts.Password = f.Prompter.Input("Password")
+			}
 			return AuthSignupRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
 
-	cmd.Flags().StringVar(&opts.name, "name", "", "username")
-	cmd.Flags().StringVar(&opts.email, "email", "", "email")
-	cmd.Flags().StringVar(&opts.password, "password", "", "password")
-	_ = cmd.MarkFlagRequired("name")
-	_ = cmd.MarkFlagRequired("email")
-	_ = cmd.MarkFlagRequired("password")
+	cmd.Flags().StringVar(&opts.Name, "name", "", "username")
+	cmd.Flags().StringVar(&opts.Email, "email", "", "email")
+	cmd.Flags().StringVar(&opts.Password, "password", "", "password")
 	return cmd
 }
 
 func AuthSignupRun(ctx context.Context, out io.Writer, opts AuthSignupOpts) error {
-	resp, err := opts.client.SignUp(ctx, connect.NewRequest(&simoompb.SignUpRequest{
-		Name:     opts.name,
-		Email:    opts.email,
-		Password: opts.password,
+	resp, err := opts.Client.SignUp(ctx, connect.NewRequest(&simoompb.SignUpRequest{
+		Name:     opts.Name,
+		Email:    opts.Email,
+		Password: opts.Password,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call SignUp method: %w", err)
 	}
 	fmt.Fprintln(out, "Successfully authenticated")
 
-	if err := api.SaveCredentials(opts.profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+	if err := api.SaveCredentials(opts.Profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)
 	}
 	return nil

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 
@@ -31,18 +30,16 @@ func NewCmdStepCreate() *cobra.Command {
 			opts.Client = f.Client
 
 			if opts.TaskID == "" {
-				return errors.New("task-id is required")
+				opts.TaskID = f.Prompter.Input("Task id")
 			}
 			if opts.Name == "" {
-				return errors.New("name is required")
+				opts.Name = f.Prompter.Input("Step name")
 			}
 			return StepCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.TaskID, "task-id", "", "task id")
 	cmd.Flags().StringVar(&opts.Name, "name", "", "step name")
-	_ = cmd.MarkFlagRequired("task-id")
-	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }
 

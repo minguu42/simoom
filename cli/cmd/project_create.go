@@ -29,13 +29,14 @@ func NewCmdProjectCreate() *cobra.Command {
 			f := factory.FromContext(cmd.Context())
 			opts.Client = f.Client
 
+			if opts.Name == "" {
+				opts.Name = f.Prompter.Input("Project name")
+			}
 			return ProjectCreateRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmd.Flags().StringVar(&opts.Name, "name", "", "project name")
-	cmd.Flags().StringVar(&opts.Color, "color", "", "project color")
-	_ = cmd.MarkFlagRequired("name")
-	_ = cmd.MarkFlagRequired("color")
+	cmd.Flags().StringVar(&opts.Color, "color", "#000000", "project color")
 	return cmd
 }
 
