@@ -7,12 +7,14 @@ import (
 	"os"
 
 	"github.com/minguu42/simoom/cli/api"
+	"github.com/minguu42/simoom/cli/prompter"
 )
 
 type Factory struct {
-	Out     io.Writer
-	Profile string
-	Client  api.Client
+	Out      io.Writer
+	Profile  string
+	Client   api.Client
+	Prompter *prompter.Prompter
 }
 
 // New は Factory を生成する
@@ -22,9 +24,10 @@ func New(profile string) (*Factory, error) {
 		return nil, fmt.Errorf("failed to create api client: %w", err)
 	}
 	return &Factory{
-		Out:     os.Stdout,
-		Profile: profile,
-		Client:  c,
+		Out:      os.Stdout,
+		Profile:  profile,
+		Client:   c,
+		Prompter: prompter.New(os.Stdin, os.Stdout),
 	}, nil
 }
 

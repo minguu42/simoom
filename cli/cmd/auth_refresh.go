@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 
@@ -15,10 +14,10 @@ import (
 )
 
 type AuthRefreshOpts struct {
-	profile string
-	client  api.Client
+	Profile string
+	Client  api.Client
 
-	refreshToken string
+	RefreshToken string
 }
 
 func NewCmdAuthRefresh() *cobra.Command {
@@ -28,34 +27,35 @@ func NewCmdAuthRefresh() *cobra.Command {
 		Short: "Refresh the access token",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.profile = f.Profile
-			opts.client = f.Client
+			opts.Profile = f.Profile
+			opts.Client = f.Client
 
-			if opts.refreshToken == "" {
-				if opts.client.GetRefreshToken() == "" {
-					return errors.New("refresh token is required")
+			if opts.RefreshToken == "" {
+				if opts.Client.GetRefreshToken() == "" {
+					opts.RefreshToken = f.Prompter.Input("Refresh token")
+				} else {
+					opts.RefreshToken = opts.Client.GetRefreshToken()
 				}
-				opts.refreshToken = opts.client.GetRefreshToken()
 			}
 			return AuthRefreshRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
 
-	cmd.Flags().StringVar(&opts.refreshToken, "refresh-token", "", "refresh token")
+	cmd.Flags().StringVar(&opts.RefreshToken, "refresh-token", "", "refresh token")
 	return cmd
 }
 
 func AuthRefreshRun(ctx context.Context, out io.Writer, opts AuthRefreshOpts) error {
-	resp, err := opts.client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
-		RefreshToken: opts.refreshToken,
+	resp, err := opts.Client.RefreshToken(ctx, connect.NewRequest(&simoompb.RefreshTokenRequest{
+		RefreshToken: opts.RefreshToken,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call RefreshToken method: %w", err)
 	}
 	fmt.Fprintln(out, "Successfully authenticated")
 
-	if err := api.SaveCredentials(opts.profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+	if err := api.SaveCredentials(opts.Profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)
 	}
 	return nil

@@ -14,11 +14,11 @@ import (
 )
 
 type AuthSigninOpts struct {
-	profile string
-	client  api.Client
+	Profile string
+	Client  api.Client
 
-	email    string
-	password string
+	Email    string
+	Password string
 }
 
 func NewCmdAuthSignin() *cobra.Command {
@@ -29,32 +29,36 @@ func NewCmdAuthSignin() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			f := factory.FromContext(cmd.Context())
-			opts.profile = f.Profile
-			opts.client = f.Client
+			opts.Profile = f.Profile
+			opts.Client = f.Client
 
+			if opts.Email == "" {
+				opts.Email = f.Prompter.Input("Email")
+			}
+			if opts.Password == "" {
+				opts.Password = f.Prompter.Input("Password")
+			}
 			return AuthSigninRun(cmd.Context(), f.Out, opts)
 		},
 	}
 	cmdutil.DisableAuthCheck(cmd)
 
-	cmd.Flags().StringVar(&opts.email, "email", "", "email")
-	cmd.Flags().StringVar(&opts.password, "password", "", "password")
-	_ = cmd.MarkFlagRequired("email")
-	_ = cmd.MarkFlagRequired("password")
+	cmd.Flags().StringVar(&opts.Email, "email", "", "email")
+	cmd.Flags().StringVar(&opts.Password, "password", "", "password")
 	return cmd
 }
 
 func AuthSigninRun(ctx context.Context, out io.Writer, opts AuthSigninOpts) error {
-	resp, err := opts.client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
-		Email:    opts.email,
-		Password: opts.password,
+	resp, err := opts.Client.SignIn(ctx, connect.NewRequest(&simoompb.SignInRequest{
+		Email:    opts.Email,
+		Password: opts.Password,
 	}))
 	if err != nil {
 		return fmt.Errorf("failed to call SignIn method. %w", err)
 	}
 	fmt.Fprintln(out, "Successfully authenticated")
 
-	if err := api.SaveCredentials(opts.profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
+	if err := api.SaveCredentials(opts.Profile, resp.Msg.AccessToken, resp.Msg.RefreshToken); err != nil {
 		return fmt.Errorf("failed to write credentials: %w", err)
 	}
 	return nil
