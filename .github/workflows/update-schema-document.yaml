@@ -17,7 +17,7 @@ jobs:
       pull-requests: write
     services:
       db:
-        image: mysql:8.0.32
+        image: mysql:8.0.28
         env:
           MYSQL_DATABASE: simoomdb
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
