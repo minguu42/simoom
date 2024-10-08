@@ -42,13 +42,11 @@ func NewClient(conf config.DB) (*Client, error) {
 	db.SetMaxOpenConns(conf.MaxOpenConns)
 	db.SetMaxIdleConns(conf.MaxIdleConns)
 
-	maxRetryCount := 10
+	maxRetryCount := 20
 	for c := range maxRetryCount {
-		err := db.Ping()
-		if err == nil { // if NO error
+		if err := db.Ping(); err == nil {
 			break
-		}
-		if c == maxRetryCount-1 {
+		} else if c == maxRetryCount-1 {
 			return nil, fmt.Errorf("failed to connect to database: %w", err)
 		}
 		time.Sleep(1 * time.Second)
