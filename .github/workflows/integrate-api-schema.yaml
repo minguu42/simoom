@@ -16,6 +16,7 @@ concurrency:
 jobs:
   check-format:
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,6 +30,7 @@ jobs:
         run: buf format --exit-code
   lint:
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
