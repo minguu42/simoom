@@ -47,20 +47,6 @@ jobs:
         run: |
           go vet $(go list ./... | grep -v -e /cli -e /simoompb -e /sqlc)
           staticcheck $(go list ./... | grep -v -e /cli -e /simoompb -e /sqlc)
-  test:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-      - name: Run tests
-        run: go test $(go list ./... | grep -v -e /cli -e /simoompb -e /sqlc)
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -75,3 +61,36 @@ jobs:
           go-version-file: go.mod
       - name: Build
         run: go build -o ./bin/api ./api
+  test:
+    needs: [build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Run tests
+        run: go test $(go list ./... | grep -v -e /cli -e /simoompb -e /sqlc)
+  build-container-image:
+    needs: [build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build container image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          provenance: false
+          tags: ${{ github.event.pull_request.head.sha }}
+          target: prod
