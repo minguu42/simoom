@@ -1,7 +1,7 @@
 name: Update schema document
 on:
   pull_request:
-    types: [ opened, reopened, synchronize ]
+    types: [opened, synchronize, reopened]
     paths:
       - .github/workflows/update-schema-document.yaml
       - infra/mysql/schema.sql

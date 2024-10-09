@@ -1,15 +1,12 @@
 name: Integrate api schema
 on:
   pull_request:
-    types: [ opened, reopened, synchronize ]
+    types: [opened, synchronize, reopened]
     paths:
       - .github/workflows/integrate-api-schema.yaml
       - "simoompb/**"
       - buf.gen.yaml
       - buf.yaml
-  push:
-    branches:
-      - main
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -21,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+          ref: ${{ github.head_ref }}
       - name: Set up Buf
         uses: bufbuild/buf-setup-action@v1.28.1
         with:
@@ -35,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+          ref: ${{ github.head_ref }}
       - name: Set up Buf
         uses: bufbuild/buf-setup-action@v1.28.1
         with:
