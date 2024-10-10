@@ -16,7 +16,7 @@ CREATE TABLE users (
 CREATE TABLE projects (
     id          CHAR(26)    NOT NULL COMMENT 'プロジェクトID',
     user_id     CHAR(26)    NOT NULL COMMENT '所有するユーザのID',
-    name        VARCHAR(20) NOT NULL COMMENT 'プロジェクト名',
+    name        VARCHAR(40) NOT NULL COMMENT 'プロジェクト名',
     color       CHAR(7)     NOT NULL COMMENT 'カラー',
     is_archived BOOLEAN     NOT NULL COMMENT 'アーカイブされたか',
     created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
