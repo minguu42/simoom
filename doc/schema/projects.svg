@@ -25,7 +25,7 @@
 <text text-anchor="start" x="296.7882" y="-543.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="240,-502.5 240,-532.5 444,-532.5 444,-502.5 240,-502.5"/>
 <text text-anchor="start" x="247" y="-513.9" font-family="Arial" font-size="14.00" fill="#000000">name </text>
-<text text-anchor="start" x="285.899" y="-513.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(20)]</text>
+<text text-anchor="start" x="285.899" y="-513.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(40)]</text>
 <polygon fill="none" stroke="#000000" points="240,-472.5 240,-502.5 444,-502.5 444,-472.5 240,-472.5"/>
 <text text-anchor="start" x="247" y="-483.9" font-family="Arial" font-size="14.00" fill="#000000">color </text>
 <text text-anchor="start" x="281.223" y="-483.9" font-family="Arial" font-size="14.00" fill="#666666">[char(7)]</text>

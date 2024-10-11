@@ -53,7 +53,7 @@
 <text text-anchor="start" x="130.1024" y="-591.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="43,-550.5 43,-580.5 247,-580.5 247,-550.5 43,-550.5"/>
 <text text-anchor="start" x="50" y="-561.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
-<text text-anchor="start" x="119.2132" y="-561.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(20)]</text>
+<text text-anchor="start" x="119.2132" y="-561.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(40)]</text>
 <polygon fill="none" stroke="#000000" points="43,-520.5 43,-550.5 247,-550.5 247,-520.5 43,-520.5"/>
 <text text-anchor="start" x="50" y="-531.9" font-family="Arial" font-size="14.00" fill="#000000">color    </text>
 <text text-anchor="start" x="114.5372" y="-531.9" font-family="Arial" font-size="14.00" fill="#666666">[char(7)]</text>

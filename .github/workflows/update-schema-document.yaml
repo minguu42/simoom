@@ -29,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up MySQL
         run: |
           curl -fsSL https://github.com/sqldef/sqldef/releases/latest/download/mysqldef_linux_amd64.tar.gz | tar -zxvf -
@@ -55,12 +55,7 @@ jobs:
           git push
       - if: ${{ steps.check_diff.outputs.file_count != '0' }}
         name: Create comment
-        uses: actions/github-script@v4
-        with:
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'データベースのスキーマドキュメントを更新しました🤖'
-            })
+        run: gh pr comment "$PR_NUMBER" --body "データベースのスキーマドキュメントを更新しました🤖"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
