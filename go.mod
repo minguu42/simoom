@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.33.0-20240221180331-f05a6f4403ce.1
-	connectrpc.com/connect v1.15.0
+	connectrpc.com/connect v1.17.0
 	github.com/bufbuild/protovalidate-go v0.6.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/go-testfixtures/testfixtures/v3 v3.10.0
@@ -17,9 +17,9 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.29.1
 	golang.org/x/crypto v0.21.0
-	golang.org/x/net v0.22.0
+	golang.org/x/net v0.23.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240304212257-790db918fca8
-	google.golang.org/protobuf v1.33.0
+	google.golang.org/protobuf v1.34.2
 )
 
 require (
