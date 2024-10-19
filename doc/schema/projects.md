@@ -11,7 +11,7 @@
 CREATE TABLE `projects` (
   `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'プロジェクトID',
   `user_id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT '所有するユーザのID',
-  `name` varchar(40) COLLATE utf8mb4_bin NOT NULL COMMENT 'プロジェクト名',
+  `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT 'プロジェクト名',
   `color` char(7) COLLATE utf8mb4_bin NOT NULL COMMENT 'カラー',
   `is_archived` tinyint(1) NOT NULL COMMENT 'アーカイブされたか',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日',
@@ -30,7 +30,7 @@ CREATE TABLE `projects` (
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
 | id | char(26) |  | false |  | [tasks](tasks.md) |  | プロジェクトID |
 | user_id | char(26) |  | false |  |  | [users](users.md) | 所有するユーザのID |
-| name | varchar(40) |  | false |  |  |  | プロジェクト名 |
+| name | varchar(20) |  | false |  |  |  | プロジェクト名 |
 | color | char(7) |  | false |  |  |  | カラー |
 | is_archived | tinyint(1) |  | false |  |  |  | アーカイブされたか |
 | created_at | datetime | CURRENT_TIMESTAMP | false | DEFAULT_GENERATED |  |  | 作成日 |
