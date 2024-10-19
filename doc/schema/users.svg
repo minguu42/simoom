@@ -19,7 +19,7 @@
 <text text-anchor="start" x="585.9231" y="-238.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
 <polygon fill="none" stroke="#000000" points="501,-195.5 501,-225.5 686,-225.5 686,-195.5 501,-195.5"/>
 <text text-anchor="start" x="508" y="-206.9" font-family="Arial" font-size="14.00" fill="#000000">id </text>
-<text text-anchor="start" x="522.7798" y="-206.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
+<text text-anchor="start" x="522.7798" y="-206.9" font-family="Arial" font-size="14.00" fill="#666666">[char(30)]</text>
 <polygon fill="none" stroke="#000000" points="501,-165.5 501,-195.5 686,-195.5 686,-165.5 501,-165.5"/>
 <text text-anchor="start" x="508" y="-176.9" font-family="Arial" font-size="14.00" fill="#000000">name </text>
 <text text-anchor="start" x="546.899" y="-176.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(15)]</text>

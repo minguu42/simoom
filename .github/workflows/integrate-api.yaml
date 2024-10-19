@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -36,7 +36,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -54,7 +54,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -69,7 +69,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -84,7 +84,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build container image
@@ -92,5 +92,5 @@ jobs:
         with:
           context: .
           provenance: false
-          tags: ${{ github.event.pull_request.head.sha }}
+          tags: ${{ github.event.pull_request.head.ref }}
           target: prod
