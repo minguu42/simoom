@@ -50,7 +50,7 @@
 <text text-anchor="start" x="333.9231" y="-235.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
 <polygon fill="none" stroke="#000000" points="249,-192.5 249,-222.5 434,-222.5 434,-192.5 249,-192.5"/>
 <text text-anchor="start" x="256" y="-203.9" font-family="Arial" font-size="14.00" fill="#000000">id    </text>
-<text text-anchor="start" x="301.094" y="-203.9" font-family="Arial" font-size="14.00" fill="#666666">[char(30)]</text>
+<text text-anchor="start" x="301.094" y="-203.9" font-family="Arial" font-size="14.00" fill="#666666">[char(26)]</text>
 <polygon fill="none" stroke="#000000" points="249,-162.5 249,-192.5 434,-192.5 434,-162.5 249,-162.5"/>
 <text text-anchor="start" x="256" y="-173.9" font-family="Arial" font-size="14.00" fill="#000000">name    </text>
 <text text-anchor="start" x="325.2132" y="-173.9" font-family="Arial" font-size="14.00" fill="#666666">[varchar(15)]</text>
