@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id         CHAR(26)     NOT NULL COMMENT 'ユーザID',
+    id         CHAR(30)     NOT NULL COMMENT 'ユーザID',
     name       VARCHAR(15)  NOT NULL COMMENT 'ユーザ名',
     email      VARCHAR(254) NOT NULL COMMENT 'メールアドレス',
     password   CHAR(60)     NOT NULL COMMENT 'パスワード',
