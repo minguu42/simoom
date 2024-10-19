@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `users` (
-  `id` char(30) COLLATE utf8mb4_bin NOT NULL COMMENT 'ユーザID',
+  `id` char(26) COLLATE utf8mb4_bin NOT NULL COMMENT 'ユーザID',
   `name` varchar(15) COLLATE utf8mb4_bin NOT NULL COMMENT 'ユーザ名',
   `email` varchar(254) COLLATE utf8mb4_bin NOT NULL COMMENT 'メールアドレス',
   `password` char(60) COLLATE utf8mb4_bin NOT NULL COMMENT 'パスワード',
@@ -27,7 +27,7 @@ CREATE TABLE `users` (
 
 | Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
-| id | char(30) |  | false |  | [projects](projects.md) [steps](steps.md) [tags](tags.md) [tasks](tasks.md) |  | ユーザID |
+| id | char(26) |  | false |  | [projects](projects.md) [steps](steps.md) [tags](tags.md) [tasks](tasks.md) |  | ユーザID |
 | name | varchar(15) |  | false |  |  |  | ユーザ名 |
 | email | varchar(254) |  | false |  |  |  | メールアドレス |
 | password | char(60) |  | false |  |  |  | パスワード |
