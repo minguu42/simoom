@@ -1,6 +1,6 @@
 module github.com/minguu42/simoom
 
-go 1.23
+go 1.23.2
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240920164238-5a7b106cbb87.2
