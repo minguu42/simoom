@@ -3,7 +3,7 @@ services:
     image: simoom-api-dev
     build:
       context: .
-      target: dev
+      target: local
     container_name: simoom-api
     env_file: .env
     environment:
