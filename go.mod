@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240920164238-5a7b106cbb87.2
-	connectrpc.com/connect v1.15.0
+	connectrpc.com/connect v1.17.0
 	github.com/bufbuild/protovalidate-go v0.7.2
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/go-testfixtures/testfixtures/v3 v3.10.0
