@@ -3,7 +3,7 @@ module github.com/minguu42/simoom
 go 1.23.2
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240920164238-5a7b106cbb87.2
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.1-20240920164238-5a7b106cbb87.1
 	connectrpc.com/connect v1.17.0
 	github.com/bufbuild/protovalidate-go v0.7.2
 	github.com/go-sql-driver/mysql v1.8.1
