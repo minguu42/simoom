@@ -1,11 +1,12 @@
 name: Update schema document
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
     paths:
       - .github/workflows/update-schema-document.yaml
       - infra/mysql/schema.sql
       - tbls.yml
+permissions:
+  contents: read
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

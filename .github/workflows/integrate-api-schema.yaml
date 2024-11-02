@@ -1,12 +1,13 @@
 name: Integrate api schema
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
     paths:
       - .github/workflows/integrate-api-schema.yaml
       - "simoompb/**"
       - buf.gen.yaml
       - buf.yaml
+permissions:
+  contents: read
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
