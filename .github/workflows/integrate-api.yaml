@@ -1,7 +1,6 @@
 name: Integrate api
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
     paths:
       - .github/workflows/integrate-api.yaml
       - "api/**"
@@ -9,6 +8,8 @@ on:
       - go.mod
       - go.sum
       - staticcheck.conf
+permissions:
+  contents: read
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
