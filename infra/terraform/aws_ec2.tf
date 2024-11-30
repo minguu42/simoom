@@ -1,5 +1,5 @@
 resource "aws_eip" "nat_a" {
-  domain = "vpc"
+  domain    = "vpc"
   tags = {
     Name = "${local.product}-${var.env}-nat-a"
   }
