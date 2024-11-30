@@ -2,7 +2,7 @@ name: Integrate infra
 on:
   pull_request:
     paths:
-      - .github/workflows/integrate-infrastructure.yaml
+      - .github/workflows/integrate-infra.yaml
       - "infra/terraform/**"
 permissions:
   contents: read
