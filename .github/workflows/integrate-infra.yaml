@@ -20,6 +20,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~> 1.9.0"
       - name: Check code format
         run: terraform fmt -check -recursive ./infra/terraform
   validation:
@@ -32,6 +34,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~> 1.9.0"
       - name: Initialize Terraform working directory
         run: terraform -chdir=./infra/terraform init -backend=false
       - name: Validate configuration files
