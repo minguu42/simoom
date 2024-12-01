@@ -21,7 +21,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "~> 1.8.0"
+          terraform_version: "~> 1.9.0"
       - name: Check code format
         run: terraform fmt -check -recursive ./infra/terraform
   validation:
@@ -35,7 +35,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "~> 1.8.0"
+          terraform_version: "~> 1.9.0"
       - name: Initialize Terraform working directory
         run: terraform -chdir=./infra/terraform init -backend=false
       - name: Validate configuration files
