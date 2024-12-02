@@ -19,7 +19,7 @@ require (
 	golang.org/x/crypto v0.28.0
 	golang.org/x/net v0.30.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda
-	google.golang.org/protobuf v1.35.1
+	google.golang.org/protobuf v1.35.2
 )
 
 require (
